@@ -113,9 +113,8 @@ def build(spec):
         "sigsub": ParagraphStyle("sigsub", fontName="Helvetica", fontSize=8, textColor=colors.HexColor("#5b6b7c"), leading=11),
     }
     story = []
-    story.append(HRFlowable(width="100%", thickness=2.2, color=BRAND, spaceAfter=8))
     story.append(Paragraph(spec["title"], styles["title"]))
-    story.append(HRFlowable(width="100%", thickness=0.6, color=colors.HexColor("#d0d4da"), spaceBefore=4, spaceAfter=9))
+    story.append(HRFlowable(width="100%", thickness=0.6, color=colors.HexColor("#c9ced6"), spaceBefore=5, spaceAfter=10))
     story.append(Paragraph(spec["intro"], styles["intro"]))
     for head, body in spec["sections"]:
         story.append(Paragraph("<b>%s</b> %s" % (head, body), styles["body"]))
