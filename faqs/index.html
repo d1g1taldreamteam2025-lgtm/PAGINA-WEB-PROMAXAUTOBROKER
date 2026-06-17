@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preguntas Frecuentes | Promax Auto Broker</title>
+<meta name="description" content="Preguntas frecuentes de Promax Auto Broker: comprar un auto, financiamiento, ITIN, pago inicial, pruebas de manejo y más. Respuestas claras en español.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/theme.css">
+<link rel="icon" href="/assets/img/favicon.svg">
+<style>
+/* ===== FAQS (fq_) ===== */
+.fq-hero{background:var(--ink);color:#fff;text-align:center;position:relative;overflow:hidden;}
+.fq-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--brand),var(--brand-2),var(--brand));}
+.fq-hero__inner{max-width:720px;margin:0 auto;padding:84px 24px;}
+.fq-hero h1{font-size:46px;font-weight:800;letter-spacing:-1px;margin:14px 0 16px;line-height:1.08;}
+.fq-hero p{font-size:18px;color:rgba(255,255,255,.85);margin:0 0 28px;}
+.fq-hero .pmx-eyebrow{color:#fff;background:rgba(225,29,42,.9);padding:6px 14px;border-radius:999px;}
+.fq-search{position:relative;max-width:520px;margin:0 auto;}
+.fq-search .material-icons-outlined{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--text-faint);font-size:22px;}
+.fq-search input{width:100%;padding:15px 18px 15px 48px;border:1.5px solid transparent;border-radius:var(--radius-sm);font-size:16px;font-family:inherit;color:var(--ink);background:#fff;outline:none;transition:box-shadow .2s;}
+.fq-search input:focus{box-shadow:0 0 0 3px rgba(225,29,42,.4);}
+@media(max-width:768px){.fq-hero__inner{padding:56px 24px;}.fq-hero h1{font-size:32px;}.fq-hero p{font-size:16px;}}
+
+/* Categories */
+.fq-cat{margin-bottom:48px;}
+.fq-cat:last-child{margin-bottom:0;}
+.fq-cat__title{font-size:24px;font-weight:800;color:var(--ink);margin:0 0 18px;display:flex;align-items:center;gap:10px;letter-spacing:-.3px;}
+.fq-cat__title .material-icons-outlined{color:var(--brand);font-size:26px;}
+.fq-list{display:flex;flex-direction:column;gap:12px;}
+
+/* Accordion (details/summary as cards) */
+.fq-item{background:#fff;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:border-color .2s,box-shadow .2s;}
+.fq-item[open]{border-color:var(--brand);box-shadow:var(--shadow-sm);}
+.fq-item summary{list-style:none;cursor:pointer;padding:20px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px;font-size:16.5px;font-weight:700;color:var(--ink);}
+.fq-item summary::-webkit-details-marker{display:none;}
+.fq-item summary:hover{color:var(--brand);}
+.fq-item .plus{flex-shrink:0;width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;color:var(--brand);font-size:26px;font-weight:400;line-height:1;transition:transform .25s;}
+.fq-item[open] summary .plus{transform:rotate(45deg);}
+.fq-item__a{padding:0 22px 22px;font-size:15.5px;line-height:1.7;color:#37475a;}
+.fq-item__a a{color:var(--brand);text-decoration:underline;}
+
+.fq-empty{text-align:center;color:var(--text-muted);font-size:16px;padding:40px 20px;}
+
+/* CTA band */
+.fq-cta{background:var(--ink);color:#fff;text-align:center;}
+.fq-cta h2{font-size:32px;font-weight:800;margin:0 0 14px;letter-spacing:-.5px;}
+.fq-cta p{font-size:17px;color:rgba(255,255,255,.82);margin:0 0 28px;}
+.fq-cta__btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+@media(max-width:768px){.fq-cta h2{font-size:26px;}}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="fq-hero">
+  <div class="fq-hero__inner">
+    <span class="pmx-eyebrow" data-i18n="fq_eyebrow">Ayuda</span>
+    <h1 data-i18n="fq_title">Preguntas Frecuentes</h1>
+    <p data-i18n="fq_sub">Resolvemos las dudas más comunes sobre comprar tu carro y tu financiamiento con Promax.</p>
+    <div class="fq-search">
+      <span class="material-icons-outlined">search</span>
+      <input type="search" id="pmxFqSearch" data-i18n-ph="fq_search_ph" placeholder="Buscar preguntas..." autocomplete="off" aria-label="Buscar preguntas">
+    </div>
+  </div>
+</section>
+
+<!-- FAQ LIST -->
+<section class="pmx-section">
+  <div class="pmx-container" style="max-width:920px">
+
+    <!-- Category 1: Comprar un auto -->
+    <div class="fq-cat" data-fq-cat>
+      <h3 class="fq-cat__title"><span class="material-icons-outlined">directions_car</span><span data-i18n="fq_c1_h">Comprar un auto</span></h3>
+      <div class="fq-list">
+        <details class="fq-item">
+          <summary><span data-i18n="fq_c1q1">¿Puedo ver el vehículo antes de comprarlo?</span><span class="plus">+</span></summary>
+          <div class="fq-item__a" data-i18n="fq_c1a1">Claro que sí. Te invitamos a ver e inspeccionar cualquier vehículo en persona antes de tomar una decisión. Solo coordina una cita con nosotros y con gusto te lo mostramos.</div>
+        </details>
+        <details class="fq-item">
+          <summary><span data-i18n="fq_c1q2">¿Puedo hacer una prueba de manejo?</span><span class="plus">+</span></summary>
+          <div class="fq-item__a" data-i18n="fq_c1a2">Sí. La prueba de manejo es parte importante del proceso. Trae tu licencia de conducir vigente y te acompañamos para que pruebes el carro con confianza.</div>
+        </details>
+        <details class="fq-item">
+          <summary><span data-i18n="fq_c1q3">¿Los vehículos están inspeccionados?</span><span class="plus">+</span></summary>
+          <div class="fq-item__a" data-i18n="fq_c1a3">Cada vehículo pasa por una revisión de calidad antes de ofrecértelo. Solo te mostramos carros en los que nosotros mismos confiaríamos.</div>
+        </details>
+        <details class="fq-item">
+          <summary><span data-i18n="fq_c1q4">¿Con qué frecuencia llegan autos nuevos?</span><span class="plus">+</span></summary>
+          <div class="fq-item__a" data-i18n="fq_c1a4">Recibimos vehículos nuevos constantemente. Si no ves lo que buscas hoy, escríbenos: con gusto te avisamos cuando llegue algo que se ajuste a lo que necesitas.</div>
+        </details>
+        <details class="fq-item">
+          <summary><span data-i18n="fq_c1q5">¿Qué pasa si no encuentro el carro que busco?</span><span class="plus">+</span></summary>
+          <div class="fq-item__a" data-i18n="fq_c1a5">Como broker, podemos ayudarte a localizar el vehículo específico que quieres. Cuéntanos marca, modelo y presupuesto, y buscamos las mejores opciones para ti.</div>
+        </details>
+      </div>
+    </div>
+
+    <!-- Category 2: Financiamiento -->
+    <div class="fq-cat" data-fq-cat>
+      <h3 class="fq-cat__title"><span class="material-icons-outlined">credit_card</span><span data-i18n="fq_c2_h">Financiamiento</span></h3>
+      <div class="fq-list">
+        <details class="fq-item">
+          <summary><span data-i18n="fq_c2q1">¿Pre-calificar afecta mi crédito?</span><span class="plus">+</span></summary>
+          <div class="fq-item__a" data-i18n="fq_c2a1">No. La pre-calificación usa una consulta suave (soft pull) que <strong>no afecta tu puntaje de crédito</strong>. Puedes ver tus opciones sin compromiso ni impacto en tu historial.</div>
+        </details>
+        <details class="fq-item">
+          <summary><span data-i18n="fq_c2q2">¿Aceptan ITIN?</span><span class="plus">+</span></summary>
+          <div class="fq-item__a" data-i18n="fq_c2a2">Sí, aceptamos ITIN. Trabajamos con varios prestamistas y opciones de financiamiento para clientes con ITIN, incluso si estás construyendo tu crédito.</div>
+        </details>
+        <details class="fq-item">
+          <summary><span data-i18n="fq_c2q3">¿Cuánto necesito de pago inicial?</span><span class="plus">+</span></summary>
+          <div class="fq-item__a" data-i18n="fq_c2a3">El pago inicial varía según el vehículo, el prestamista y tu perfil. Tenemos opciones de pago inicial bajo. Pre-califica y te damos una estimación clara para tu caso.</div>
+        </details>
+        <details class="fq-item">
+          <summary><span data-i18n="fq_c2q4">¿Puedo calificar con crédito en construcción o sin historial?</span><span class="plus">+</span></summary>
+          <div class="fq-item__a" data-i18n="fq_c2a4">Sí. Trabajamos con una amplia red de prestamistas para ayudarte a calificar incluso si apenas estás construyendo tu crédito o no tienes historial todavía.</div>
+        </details>
+        <details class="fq-item">
+          <summary><span data-i18n="fq_c2q5">¿Cuánto tarda la aprobación?</span><span class="plus">+</span></summary>
+          <div class="fq-item__a" data-i18n="fq_c2a5">En muchos casos la pre-calificación toma solo unos minutos. Una vez que tengamos tu información, te contactamos rápido con tus opciones.</div>
+        </details>
+      </div>
+    </div>
+
+    <!-- Category 3: General -->
+    <div class="fq-cat" data-fq-cat>
+      <h3 class="fq-cat__title"><span class="material-icons-outlined">info</span><span data-i18n="fq_c3_h">General</span></h3>
+      <div class="fq-list">
+        <details class="fq-item">
+          <summary><span data-i18n="fq_c3q1">¿Hablan español?</span><span class="plus">+</span></summary>
+          <div class="fq-item__a" data-i18n="fq_c3a1">Sí. Te atendemos en español de principio a fin, con paciencia y sin presión. También podemos ayudarte en inglés.</div>
+        </details>
+        <details class="fq-item">
+          <summary><span data-i18n="fq_c3q2">¿Cuáles son sus horarios?</span><span class="plus">+</span></summary>
+          <div class="fq-item__a" data-i18n="fq_c3a2">Atendemos de lunes a sábado y los domingos en horario reducido. Consulta los horarios actualizados y nuestra ubicación en la página de <a href="/contact/">Contacto</a>.</div>
+        </details>
+        <details class="fq-item">
+          <summary><span data-i18n="fq_c3q3">¿Dónde están ubicados?</span><span class="plus">+</span></summary>
+          <div class="fq-item__a" data-i18n="fq_c3a3">Encuentra nuestra dirección, el mapa y la opción de abrir en Google Maps en la página de <a href="/contact/">Contacto</a>.</div>
+        </details>
+        <details class="fq-item">
+          <summary><span data-i18n="fq_c3q4">¿Qué necesito para empezar?</span><span class="plus">+</span></summary>
+          <div class="fq-item__a" data-i18n="fq_c3a4">Para empezar solo necesitas una identificación válida y, para financiamiento, algunos datos básicos. Puedes <a href="/financing/apply/">pre-calificar en línea</a> en minutos.</div>
+        </details>
+        <details class="fq-item">
+          <summary><span data-i18n="fq_c3q5">¿Tiene algún costo hablar con un asesor?</span><span class="plus">+</span></summary>
+          <div class="fq-item__a" data-i18n="fq_c3a5">No. Asesorarte es gratis y sin compromiso. Estamos para ayudarte a encontrar el carro y el financiamiento correctos para ti.</div>
+        </details>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <p class="fq-empty pmx-hidden" id="fqEmpty" data-i18n="fq_empty">No encontramos preguntas que coincidan con tu búsqueda. Intenta con otras palabras o <a href="/contact/">contáctanos</a>.</p>
+
+  </div>
+</section>
+
+<!-- CTA BAND -->
+<section class="pmx-section fq-cta">
+  <div class="pmx-container">
+    <h2 data-i18n="fq_cta_h">¿Aún tienes preguntas?</h2>
+    <p data-i18n="fq_cta_p">Nuestro equipo está listo para ayudarte en español o inglés.</p>
+    <div class="fq-cta__btns">
+      <a href="/contact/" class="pmx-btn pmx-btn--primary" data-i18n="fq_cta_b1">Contáctanos</a>
+      <a href="#" id="fqCallBtn" class="pmx-btn pmx-btn--ghost-light" data-i18n="fq_cta_b2">Llamar</a>
+    </div>
+  </div>
+</section>
+
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/site.js"></script>
+<script>
+PMX.addTranslations({
+  es: {
+    fq_eyebrow:"Ayuda",
+    fq_title:"Preguntas Frecuentes",
+    fq_sub:"Resolvemos las dudas más comunes sobre comprar tu carro y tu financiamiento con Promax.",
+    fq_search_ph:"Buscar preguntas...",
+    fq_c1_h:"Comprar un auto",
+    fq_c1q1:"¿Puedo ver el vehículo antes de comprarlo?",
+    fq_c1a1:"Claro que sí. Te invitamos a ver e inspeccionar cualquier vehículo en persona antes de tomar una decisión. Solo coordina una cita con nosotros y con gusto te lo mostramos.",
+    fq_c1q2:"¿Puedo hacer una prueba de manejo?",
+    fq_c1a2:"Sí. La prueba de manejo es parte importante del proceso. Trae tu licencia de conducir vigente y te acompañamos para que pruebes el carro con confianza.",
+    fq_c1q3:"¿Los vehículos están inspeccionados?",
+    fq_c1a3:"Cada vehículo pasa por una revisión de calidad antes de ofrecértelo. Solo te mostramos carros en los que nosotros mismos confiaríamos.",
+    fq_c1q4:"¿Con qué frecuencia llegan autos nuevos?",
+    fq_c1a4:"Recibimos vehículos nuevos constantemente. Si no ves lo que buscas hoy, escríbenos: con gusto te avisamos cuando llegue algo que se ajuste a lo que necesitas.",
+    fq_c1q5:"¿Qué pasa si no encuentro el carro que busco?",
+    fq_c1a5:"Como broker, podemos ayudarte a localizar el vehículo específico que quieres. Cuéntanos marca, modelo y presupuesto, y buscamos las mejores opciones para ti.",
+    fq_c2_h:"Financiamiento",
+    fq_c2q1:"¿Pre-calificar afecta mi crédito?",
+    fq_c2a1:"No. La pre-calificación usa una consulta suave (soft pull) que <strong>no afecta tu puntaje de crédito</strong>. Puedes ver tus opciones sin compromiso ni impacto en tu historial.",
+    fq_c2q2:"¿Aceptan ITIN?",
+    fq_c2a2:"Sí, aceptamos ITIN. Trabajamos con varios prestamistas y opciones de financiamiento para clientes con ITIN, incluso si estás construyendo tu crédito.",
+    fq_c2q3:"¿Cuánto necesito de pago inicial?",
+    fq_c2a3:"El pago inicial varía según el vehículo, el prestamista y tu perfil. Tenemos opciones de pago inicial bajo. Pre-califica y te damos una estimación clara para tu caso.",
+    fq_c2q4:"¿Puedo calificar con crédito en construcción o sin historial?",
+    fq_c2a4:"Sí. Trabajamos con una amplia red de prestamistas para ayudarte a calificar incluso si apenas estás construyendo tu crédito o no tienes historial todavía.",
+    fq_c2q5:"¿Cuánto tarda la aprobación?",
+    fq_c2a5:"En muchos casos la pre-calificación toma solo unos minutos. Una vez que tengamos tu información, te contactamos rápido con tus opciones.",
+    fq_c3_h:"General",
+    fq_c3q1:"¿Hablan español?",
+    fq_c3a1:"Sí. Te atendemos en español de principio a fin, con paciencia y sin presión. También podemos ayudarte en inglés.",
+    fq_c3q2:"¿Cuáles son sus horarios?",
+    fq_c3a2:"Atendemos de lunes a sábado y los domingos en horario reducido. Consulta los horarios actualizados y nuestra ubicación en la página de <a href=\"/contact/\">Contacto</a>.",
+    fq_c3q3:"¿Dónde están ubicados?",
+    fq_c3a3:"Encuentra nuestra dirección, el mapa y la opción de abrir en Google Maps en la página de <a href=\"/contact/\">Contacto</a>.",
+    fq_c3q4:"¿Qué necesito para empezar?",
+    fq_c3a4:"Para empezar solo necesitas una identificación válida y, para financiamiento, algunos datos básicos. Puedes <a href=\"/financing/apply/\">pre-calificar en línea</a> en minutos.",
+    fq_c3q5:"¿Tiene algún costo hablar con un asesor?",
+    fq_c3a5:"No. Asesorarte es gratis y sin compromiso. Estamos para ayudarte a encontrar el carro y el financiamiento correctos para ti.",
+    fq_empty:"No encontramos preguntas que coincidan con tu búsqueda. Intenta con otras palabras o <a href=\"/contact/\">contáctanos</a>.",
+    fq_cta_h:"¿Aún tienes preguntas?",
+    fq_cta_p:"Nuestro equipo está listo para ayudarte en español o inglés.",
+    fq_cta_b1:"Contáctanos", fq_cta_b2:"Llamar",
+  },
+  en: {
+    fq_eyebrow:"Help",
+    fq_title:"Frequently Asked Questions",
+    fq_sub:"We answer the most common questions about buying your car and financing with Promax.",
+    fq_search_ph:"Search questions...",
+    fq_c1_h:"Buying a car",
+    fq_c1q1:"Can I see the vehicle before buying it?",
+    fq_c1a1:"Absolutely. We invite you to see and inspect any vehicle in person before making a decision. Just schedule an appointment with us and we'll gladly show it to you.",
+    fq_c1q2:"Can I take a test drive?",
+    fq_c1a2:"Yes. The test drive is an important part of the process. Bring your valid driver's license and we'll go with you so you can try the car with confidence.",
+    fq_c1q3:"Are the vehicles inspected?",
+    fq_c1a3:"Every vehicle goes through a quality check before we offer it to you. We only show you cars we would trust ourselves.",
+    fq_c1q4:"How often do new cars arrive?",
+    fq_c1a4:"We get new vehicles constantly. If you don't see what you're looking for today, message us: we'll gladly let you know when something that fits your needs arrives.",
+    fq_c1q5:"What if I can't find the car I'm looking for?",
+    fq_c1a5:"As a broker, we can help you locate the specific vehicle you want. Tell us the make, model, and budget, and we'll find the best options for you.",
+    fq_c2_h:"Financing",
+    fq_c2q1:"Does pre-qualifying affect my credit?",
+    fq_c2a1:"No. Pre-qualification uses a soft pull that <strong>does not affect your credit score</strong>. You can see your options with no commitment and no impact on your history.",
+    fq_c2q2:"Do you accept ITIN?",
+    fq_c2a2:"Yes, we accept ITIN. We work with several lenders and financing options for ITIN customers, even if you're building your credit.",
+    fq_c2q3:"How much down payment do I need?",
+    fq_c2a3:"The down payment varies based on the vehicle, the lender, and your profile. We have low down payment options. Pre-qualify and we'll give you a clear estimate for your case.",
+    fq_c2q4:"Can I qualify with building credit or no history?",
+    fq_c2a4:"Yes. We work with a wide network of lenders to help you qualify even if you're just building your credit or don't have a history yet.",
+    fq_c2q5:"How long does approval take?",
+    fq_c2a5:"In many cases pre-qualification takes just a few minutes. Once we have your information, we'll contact you quickly with your options.",
+    fq_c3_h:"General",
+    fq_c3q1:"Do you speak Spanish?",
+    fq_c3a1:"Yes. We serve you in Spanish from start to finish, with patience and no pressure. We can also help you in English.",
+    fq_c3q2:"What are your hours?",
+    fq_c3a2:"We're open Monday through Saturday and Sundays with reduced hours. Check our updated hours and location on the <a href=\"/contact/\">Contact</a> page.",
+    fq_c3q3:"Where are you located?",
+    fq_c3a3:"Find our address, the map, and the option to open in Google Maps on the <a href=\"/contact/\">Contact</a> page.",
+    fq_c3q4:"What do I need to get started?",
+    fq_c3a4:"To get started you only need a valid ID and, for financing, some basic information. You can <a href=\"/financing/apply/\">pre-qualify online</a> in minutes.",
+    fq_c3q5:"Is there a cost to talk to an advisor?",
+    fq_c3a5:"No. Getting advice is free and with no commitment. We're here to help you find the right car and financing for you.",
+    fq_empty:"We couldn't find questions matching your search. Try other words or <a href=\"/contact/\">contact us</a>.",
+    fq_cta_h:"Still have questions?",
+    fq_cta_p:"Our team is ready to help you in Spanish or English.",
+    fq_cta_b1:"Contact Us", fq_cta_b2:"Call",
+  }
+});
+
+(function(){
+  /* ---- Call button from config ---- */
+  var C = (window.PROMAX && window.PROMAX.contact) || {};
+  var callBtn = document.getElementById("fqCallBtn");
+  if (callBtn && C.phoneRaw){
+    callBtn.setAttribute("href", "tel:+" + C.phoneRaw);
+    if (C.phone) callBtn.textContent = C.phone;
+  }
+
+  /* ---- Search filter ---- */
+  var input = document.getElementById("pmxFqSearch");
+  var items = Array.prototype.slice.call(document.querySelectorAll(".fq-item"));
+  var cats  = Array.prototype.slice.call(document.querySelectorAll("[data-fq-cat]"));
+  var empty = document.getElementById("fqEmpty");
+
+  function norm(s){
+    return (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+  }
+
+  function filter(){
+    var q = norm(input.value.trim());
+    var anyVisible = false;
+
+    items.forEach(function(it){
+      var match = q === "" || norm(it.textContent).indexOf(q) !== -1;
+      it.classList.toggle("pmx-hidden", !match);
+      if (match) anyVisible = true;
+    });
+
+    // Hide categories with no visible items
+    cats.forEach(function(cat){
+      var visible = cat.querySelectorAll(".fq-item:not(.pmx-hidden)").length;
+      cat.classList.toggle("pmx-hidden", visible === 0);
+    });
+
+    empty.classList.toggle("pmx-hidden", anyVisible);
+  }
+
+  if (input){
+    input.addEventListener("input", filter);
+    // Re-run after language switch (textContent changes)
+    window.addEventListener("pmx-lang", function(){ setTimeout(filter, 0); });
+  }
+})();
+</script>
+</body>
+</html>

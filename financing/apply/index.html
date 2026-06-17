@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aplicar a Financiamiento | Promax Auto Broker</title>
+<meta name="description" content="Completa tu solicitud de financiamiento con Promax Auto Broker. Proceso seguro, aceptamos ITIN, sin impacto al crédito en la pre-calificación.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/theme.css">
+<link rel="icon" href="/assets/img/favicon.svg">
+<style>
+.pmx-apply{background:var(--bg-soft);padding:64px 0 90px;}
+.pmx-apply__in{max-width:1080px;margin:0 auto;padding:0 24px;}
+.pmx-apply__head{text-align:center;margin-bottom:40px;}
+.pmx-apply__head h1{font-size:40px;margin:10px 0 12px;}
+.pmx-apply__head p{color:var(--text-muted);max-width:640px;margin:0 auto;}
+.pmx-apply__form{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);padding:42px;box-shadow:var(--shadow-sm);}
+@media(max-width:768px){.pmx-apply__form{padding:24px 18px;}.pmx-apply__head h1{font-size:28px;}}
+.pmx-apply__sect{margin-bottom:32px;padding-bottom:26px;border-bottom:1px solid var(--line);}
+.pmx-apply__sect:last-of-type{border-bottom:0;}
+.pmx-apply__sect h3{font-size:18px;margin:0 0 18px;padding-left:12px;border-left:4px solid var(--brand);}
+.pmx-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+@media(max-width:768px){.pmx-grid3{grid-template-columns:1fr;}}
+.pmx-col-full{grid-column:1/-1;}
+.pmx-vehbox{background:var(--brand-soft);border:1px solid rgba(225,29,42,.25);border-radius:10px;padding:14px 16px;font-size:14px;margin-bottom:24px;display:none;}
+.pmx-vehbox strong{color:var(--brand-dark);}
+.pmx-apply__submit{text-align:center;margin-top:8px;}
+.pmx-apply__note{font-size:12px;color:var(--text-muted);margin-top:14px;}
+.pmx-apply__note a{color:var(--brand);}
+.pmx-success{text-align:center;padding:50px 24px;display:none;}
+.pmx-success svg{margin-bottom:14px;}
+.pmx-success h3{font-size:26px;margin:0 0 8px;}
+.pmx-success p{color:var(--text-muted);margin:0;}
+</style>
+</head>
+<body>
+
+<section class="pmx-apply">
+  <div class="pmx-apply__in">
+    <div class="pmx-apply__head">
+      <span class="pmx-eyebrow pmx-eyebrow--pill" data-i18n="ap_eyebrow">Solicitud de crédito</span>
+      <h1 data-i18n="ap_title">Aplica a Financiamiento</h1>
+      <p data-i18n="ap_sub">Completa el formulario para iniciar tu pre-calificación. Tu información está protegida y será revisada por nuestro equipo en 1 día hábil.</p>
+    </div>
+
+    <form class="pmx-apply__form" id="pmxApply" novalidate>
+      <div class="pmx-vehbox" id="pmxVehBox"></div>
+
+      <div class="pmx-apply__sect">
+        <h3 data-i18n="ap_s1">Información personal</h3>
+        <div class="pmx-grid3">
+          <div class="pmx-field"><label data-i18n="ap_fname">Nombre</label><input name="first_name" required></div>
+          <div class="pmx-field"><label data-i18n="ap_lname">Apellido</label><input name="last_name" required></div>
+          <div class="pmx-field"><label data-i18n="ap_phone">Teléfono</label><input name="phone" type="tel" required></div>
+          <div class="pmx-field"><label data-i18n="ap_email">Email</label><input name="email" type="email" required></div>
+          <div class="pmx-field"><label data-i18n="ap_dob">Fecha de nacimiento</label><input name="dob" type="date"></div>
+          <div class="pmx-field"><label data-i18n="ap_ssn">SSN o ITIN <span style="font-weight:400;color:var(--text-faint)" data-i18n="ap_opt">(opcional)</span></label><input name="ssn_itin"></div>
+        </div>
+      </div>
+
+      <div class="pmx-apply__sect">
+        <h3 data-i18n="ap_s2">Dirección</h3>
+        <div class="pmx-grid3">
+          <div class="pmx-field pmx-col-full"><label data-i18n="ap_address">Dirección</label><input name="address"></div>
+          <div class="pmx-field"><label data-i18n="ap_city">Ciudad</label><input name="city"></div>
+          <div class="pmx-field"><label data-i18n="ap_state">Estado</label><input name="state"></div>
+          <div class="pmx-field"><label data-i18n="ap_zip">Código postal</label><input name="zip"></div>
+        </div>
+      </div>
+
+      <div class="pmx-apply__sect">
+        <h3 data-i18n="ap_s3">Empleo e ingresos</h3>
+        <div class="pmx-grid3">
+          <div class="pmx-field"><label data-i18n="ap_employer">Empleador</label><input name="employer"></div>
+          <div class="pmx-field"><label data-i18n="ap_occupation">Ocupación</label><input name="occupation"></div>
+          <div class="pmx-field"><label data-i18n="ap_emptime">Tiempo en el empleo</label><input name="employed_time"></div>
+          <div class="pmx-field"><label data-i18n="ap_payfreq">Frecuencia de pago</label>
+            <select name="pay_frequency"><option value=""></option><option value="weekly" data-i18n="ap_weekly">Semanal</option><option value="biweekly" data-i18n="ap_biweekly">Quincenal</option><option value="monthly" data-i18n="ap_monthly">Mensual</option></select></div>
+          <div class="pmx-field"><label data-i18n="ap_gross">Ingreso mensual (bruto)</label><input name="gross_income" type="number" placeholder="$"></div>
+          <div class="pmx-field"><label data-i18n="ap_down">Pago inicial disponible</label><input name="down_payment" type="number" placeholder="$"></div>
+        </div>
+      </div>
+
+      <div class="pmx-apply__sect">
+        <h3 data-i18n="ap_s4">Autorización</h3>
+        <div class="pmx-field pmx-col-full" style="margin-bottom:16px">
+          <label data-i18n="ap_authorize">Autorizo a Promax Auto Broker a consultar mi crédito con el fin de obtener una aprobación para un préstamo vehicular.</label>
+          <select name="authorize" required style="margin-top:6px"><option value=""></option><option value="yes" data-i18n="ap_yes">Sí, autorizo</option><option value="no" data-i18n="ap_no">No</option></select>
+        </div>
+        <div class="pmx-field pmx-col-full">
+          <label data-i18n="ap_signature">Firma (iniciales)</label>
+          <input name="signature" maxlength="10" placeholder="ej. J.P." data-i18n-ph="ap_sig_ph" required>
+        </div>
+      </div>
+
+      <div class="pmx-apply__sect" style="border-bottom:0">
+        <div class="pmx-consent" style="margin-bottom:8px">
+          <input type="checkbox" name="sms_consent" required>
+          <span data-i18n="ap_consent">Al marcar esta casilla doy mi consentimiento para recibir SMS y llamadas de <strong>Promax Auto Broker</strong> sobre mi solicitud. Responde STOP para cancelar, HELP para soporte. Pueden aplicar tarifas. Ver <a href="/privacy/" target="_blank">Privacidad</a> y <a href="/terms/" target="_blank">Términos</a>.</span>
+        </div>
+      </div>
+
+      <div class="pmx-apply__submit">
+        <button type="submit" class="pmx-btn pmx-btn--primary" style="padding:16px 50px" data-i18n="ap_submit">Enviar Solicitud</button>
+        <p class="pmx-apply__note" data-i18n="ap_note">Tu información está cifrada y solo se comparte con prestamistas de confianza. Esta es una consulta suave — sin impacto en tu puntaje.</p>
+      </div>
+    </form>
+
+    <div class="pmx-success" id="pmxSuccess">
+      <svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/></svg>
+      <h3 data-i18n="ap_ok_t">¡Solicitud recibida!</h3>
+      <p data-i18n="ap_ok_s">Gracias. Nuestro equipo revisará tu solicitud y te contactará en 1 día hábil.</p>
+    </div>
+  </div>
+</section>
+
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/site.js"></script>
+<script src="/assets/js/data.js"></script>
+<script>
+PMX.addTranslations({
+  es:{ ap_eyebrow:"Solicitud de crédito", ap_title:"Aplica a Financiamiento",
+    ap_sub:"Completa el formulario para iniciar tu pre-calificación. Tu información está protegida y será revisada por nuestro equipo en 1 día hábil.",
+    ap_s1:"Información personal", ap_fname:"Nombre", ap_lname:"Apellido", ap_phone:"Teléfono", ap_email:"Email",
+    ap_dob:"Fecha de nacimiento", ap_ssn:"SSN o ITIN", ap_opt:"(opcional)",
+    ap_s2:"Dirección", ap_address:"Dirección", ap_city:"Ciudad", ap_state:"Estado", ap_zip:"Código postal",
+    ap_s3:"Empleo e ingresos", ap_employer:"Empleador", ap_occupation:"Ocupación", ap_emptime:"Tiempo en el empleo",
+    ap_payfreq:"Frecuencia de pago", ap_weekly:"Semanal", ap_biweekly:"Quincenal", ap_monthly:"Mensual",
+    ap_gross:"Ingreso mensual (bruto)", ap_down:"Pago inicial disponible",
+    ap_s4:"Autorización", ap_authorize:"Autorizo a Promax Auto Broker a consultar mi crédito con el fin de obtener una aprobación para un préstamo vehicular.",
+    ap_yes:"Sí, autorizo", ap_no:"No", ap_signature:"Firma (iniciales)", ap_sig_ph:"ej. J.P.",
+    ap_consent:'Al marcar esta casilla doy mi consentimiento para recibir SMS y llamadas de <strong>Promax Auto Broker</strong> sobre mi solicitud. Responde STOP para cancelar, HELP para soporte. Pueden aplicar tarifas. Ver <a href="/privacy/" target="_blank">Privacidad</a> y <a href="/terms/" target="_blank">Términos</a>.',
+    ap_submit:"Enviar Solicitud", ap_sending:"Enviando...",
+    ap_note:"Tu información está cifrada y solo se comparte con prestamistas de confianza. Esta es una consulta suave — sin impacto en tu puntaje.",
+    ap_ok_t:"¡Solicitud recibida!", ap_ok_s:"Gracias. Nuestro equipo revisará tu solicitud y te contactará en 1 día hábil.",
+    ap_veh:"Vehículo de interés:", ap_err:"Algo salió mal. Intenta de nuevo o llámanos." },
+  en:{ ap_eyebrow:"Credit application", ap_title:"Apply for Financing",
+    ap_sub:"Complete the form to start your pre-qualification. Your info is protected and reviewed by our team within 1 business day.",
+    ap_s1:"Personal information", ap_fname:"First name", ap_lname:"Last name", ap_phone:"Phone", ap_email:"Email",
+    ap_dob:"Date of birth", ap_ssn:"SSN or ITIN", ap_opt:"(optional)",
+    ap_s2:"Address", ap_address:"Address", ap_city:"City", ap_state:"State", ap_zip:"Zip code",
+    ap_s3:"Employment & income", ap_employer:"Employer", ap_occupation:"Occupation", ap_emptime:"Time at job",
+    ap_payfreq:"Pay frequency", ap_weekly:"Weekly", ap_biweekly:"Bi-weekly", ap_monthly:"Monthly",
+    ap_gross:"Monthly income (gross)", ap_down:"Down payment available",
+    ap_s4:"Authorization", ap_authorize:"I authorize Promax Auto Broker to check my credit to obtain approval for a vehicle loan.",
+    ap_yes:"Yes, I authorize", ap_no:"No", ap_signature:"Signature (initials)", ap_sig_ph:"e.g. J.D.",
+    ap_consent:'By checking this box I consent to receive SMS and calls from <strong>Promax Auto Broker</strong> about my application. Reply STOP to cancel, HELP for help. Rates may apply. See <a href="/privacy/" target="_blank">Privacy</a> and <a href="/terms/" target="_blank">Terms</a>.',
+    ap_submit:"Submit Application", ap_sending:"Sending...",
+    ap_note:"Your information is encrypted and only shared with trusted lenders. This is a soft inquiry — no impact on your score.",
+    ap_ok_t:"Application received!", ap_ok_s:"Thank you. Our team will review your application and contact you within 1 business day.",
+    ap_veh:"Vehicle of interest:", ap_err:"Something went wrong. Please try again or call us." }
+});
+
+(function(){
+  // Prefill desde sessionStorage (si vino del mini-form)
+  try{ var pre=JSON.parse(sessionStorage.getItem("pmx_prefill")||"{}");
+    ["first_name","last_name","email","phone"].forEach(function(k){ if(pre[k]){var el=document.querySelector('[name="'+k+'"]'); if(el) el.value=pre[k];} });
+    sessionStorage.removeItem("pmx_prefill");
+  }catch(e){}
+
+  // Vehículo de interés via ?vin=
+  var vin = new URLSearchParams(location.search).get("vin");
+  if(vin){
+    PMX.loadInventory().then(function(cars){
+      var c = cars.filter(function(x){return String(x.id)===String(vin);})[0];
+      var box = document.getElementById("pmxVehBox");
+      if(c){ box.style.display="block"; box.innerHTML = PMX.t("ap_veh")+' <strong>'+c.year+' '+c.make+' '+c.model+'</strong> · '+PMX.money(c.price); }
+    });
+  }
+
+  var form = document.getElementById("pmxApply");
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var btn = form.querySelector('button[type=submit]');
+    btn.disabled = true; btn.textContent = PMX.t("ap_sending");
+    var d = {}; new FormData(form).forEach(function(v,k){ d[k]=v; });
+    var name = ((d.first_name||"")+" "+(d.last_name||"")).trim();
+    var lines = [
+      "=== SOLICITUD DE FINANCIAMIENTO ===",
+      "Nombre: "+name, "Teléfono: "+(d.phone||"-"), "Email: "+(d.email||"-"), "Nac.: "+(d.dob||"-"), "SSN/ITIN: "+(d.ssn_itin||"-"),
+      "Dirección: "+(d.address||"-")+", "+(d.city||"-")+", "+(d.state||"-")+" "+(d.zip||"-"),
+      "Empleador: "+(d.employer||"-")+" | Ocupación: "+(d.occupation||"-")+" | Tiempo: "+(d.employed_time||"-"),
+      "Pago: "+(d.pay_frequency||"-")+" | Ingreso: $"+(d.gross_income||"-")+" | Inicial: $"+(d.down_payment||"-"),
+      "Autoriza crédito: "+(d.authorize||"-")+" | Firma: "+(d.signature||"-"),
+      vin ? "Vehículo de interés (id): "+vin : ""
+    ].filter(Boolean);
+    PMX.submitLead({ form_type:"financing", name:name, email:d.email||"", phone:d.phone||"",
+      message:lines.join("\n"), raw_fields:d, vehicle_id:vin||"" })
+      .then(function(){
+        form.style.display="none";
+        var s=document.getElementById("pmxSuccess"); s.style.display="block"; s.scrollIntoView({behavior:"smooth",block:"center"});
+      })
+      .catch(function(){ btn.disabled=false; btn.textContent=PMX.t("ap_submit"); alert(PMX.t("ap_err")); });
+  });
+})();
+</script>
+</body>
+</html>

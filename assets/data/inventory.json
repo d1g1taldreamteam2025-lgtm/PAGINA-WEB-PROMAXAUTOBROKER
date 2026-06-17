@@ -1,0 +1,92 @@
+[
+  {
+    "id": "px-001", "stock": "PX1001", "vin": "1HGCV1F3XLA000001",
+    "year": 2021, "make": "Toyota", "model": "RAV4", "trim": "XLE", "body_type": "suv",
+    "price": 24990, "msrp": 27500, "mileage": 38500, "fuel": "Gasolina", "transmission": "Automática",
+    "drivetrain": "AWD", "exterior_color": "Blanco", "interior_color": "Negro", "badge": "DESTACADO",
+    "featured": true, "cover_image": "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=900&q=80",
+    "gallery": ["https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1200&q=80"],
+    "features": ["CarPlay", "Cámara de reversa", "Sensores", "Bluetooth"],
+    "description": "SUV confiable, bajo millaje, ideal para familia."
+  },
+  {
+    "id": "px-002", "stock": "PX1002", "vin": "3FA6P0H7XLR000002",
+    "year": 2020, "make": "Honda", "model": "Civic", "trim": "Sport", "body_type": "sedan",
+    "price": 18990, "msrp": 20990, "mileage": 41200, "fuel": "Gasolina", "transmission": "Automática",
+    "drivetrain": "FWD", "exterior_color": "Gris", "interior_color": "Negro", "badge": "",
+    "featured": true, "cover_image": "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=900&q=80",
+    "gallery": ["https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=1200&q=80"],
+    "features": ["Apple CarPlay", "Android Auto", "Rines deportivos"],
+    "description": "Sedán deportivo, excelente en gasolina."
+  },
+  {
+    "id": "px-003", "stock": "PX1003", "vin": "1FTFW1E5XLF000003",
+    "year": 2019, "make": "Ford", "model": "F-150", "trim": "XLT", "body_type": "truck",
+    "price": 29990, "msrp": 33990, "mileage": 56800, "fuel": "Gasolina", "transmission": "Automática",
+    "drivetrain": "4WD", "exterior_color": "Negro", "interior_color": "Gris", "badge": "OFERTA",
+    "featured": true, "cover_image": "https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=900&q=80",
+    "gallery": ["https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=1200&q=80"],
+    "features": ["Tow package", "Cámara", "Pantalla táctil"],
+    "description": "Pickup poderosa lista para trabajo y familia."
+  },
+  {
+    "id": "px-004", "stock": "PX1004", "vin": "5XYZU3LBXLG000004",
+    "year": 2021, "make": "Hyundai", "model": "Tucson", "trim": "SEL", "body_type": "suv",
+    "price": 21990, "msrp": 24500, "mileage": 33400, "fuel": "Gasolina", "transmission": "Automática",
+    "drivetrain": "FWD", "exterior_color": "Azul", "interior_color": "Negro", "badge": "",
+    "featured": false, "cover_image": "https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=900&q=80",
+    "gallery": ["https://images.unsplash.com/photo-1619767886558-efdc259cde1a?w=1200&q=80"],
+    "features": ["Pantalla 8\"", "Cámara", "Control crucero"],
+    "description": "SUV moderna con garantía restante de fábrica."
+  },
+  {
+    "id": "px-005", "stock": "PX1005", "vin": "1N4BL4BVXLC000005",
+    "year": 2018, "make": "Nissan", "model": "Altima", "trim": "SV", "body_type": "sedan",
+    "price": 14990, "msrp": 16990, "mileage": 62100, "fuel": "Gasolina", "transmission": "Automática",
+    "drivetrain": "FWD", "exterior_color": "Plata", "interior_color": "Gris", "badge": "",
+    "featured": false, "cover_image": "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=900&q=80",
+    "gallery": ["https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=1200&q=80"],
+    "features": ["Cámara de reversa", "Bluetooth", "Llave inteligente"],
+    "description": "Sedán cómodo y económico, perfecto primer carro."
+  },
+  {
+    "id": "px-006", "stock": "PX1006", "vin": "1GNSKBKCXLR000006",
+    "year": 2020, "make": "Chevrolet", "model": "Equinox", "trim": "LT", "body_type": "suv",
+    "price": 19990, "msrp": 22990, "mileage": 47300, "fuel": "Gasolina", "transmission": "Automática",
+    "drivetrain": "FWD", "exterior_color": "Rojo", "interior_color": "Negro", "badge": "OFERTA",
+    "featured": false, "cover_image": "https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=900&q=80",
+    "gallery": ["https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=1200&q=80"],
+    "features": ["Apple CarPlay", "Cámara", "Asientos calefaccionados"],
+    "description": "SUV versátil con amplio espacio de carga."
+  },
+  {
+    "id": "px-007", "stock": "PX1007", "vin": "WBA8E1C5XLK000007",
+    "year": 2019, "make": "BMW", "model": "330i", "trim": "Sport Line", "body_type": "sedan",
+    "price": 26990, "msrp": 30990, "mileage": 44900, "fuel": "Gasolina", "transmission": "Automática",
+    "drivetrain": "RWD", "exterior_color": "Negro", "interior_color": "Café", "badge": "PREMIUM",
+    "featured": true, "cover_image": "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=900&q=80",
+    "gallery": ["https://images.unsplash.com/photo-1555215695-3004980ad54e?w=1200&q=80"],
+    "features": ["Cuero", "Techo panorámico", "Navegación"],
+    "description": "Lujo deportivo con acabados premium."
+  },
+  {
+    "id": "px-008", "stock": "PX1008", "vin": "5TDKZ3DCXLS000008",
+    "year": 2017, "make": "Toyota", "model": "Sienna", "trim": "LE", "body_type": "suv",
+    "price": 17990, "msrp": 20990, "mileage": 78400, "fuel": "Gasolina", "transmission": "Automática",
+    "drivetrain": "FWD", "exterior_color": "Gris", "interior_color": "Beige", "badge": "",
+    "featured": false, "cover_image": "https://images.unsplash.com/photo-1632245889029-e406faaa34cd?w=900&q=80",
+    "gallery": ["https://images.unsplash.com/photo-1632245889029-e406faaa34cd?w=1200&q=80"],
+    "features": ["8 pasajeros", "Puertas eléctricas", "Cámara"],
+    "description": "Minivan familiar espaciosa y confiable."
+  },
+  {
+    "id": "px-009", "stock": "PX1009", "vin": "2T3W1RFVXLW000009",
+    "year": 2022, "make": "Kia", "model": "Sportage", "trim": "EX", "body_type": "suv",
+    "price": 23490, "msrp": 26490, "mileage": 21800, "fuel": "Gasolina", "transmission": "Automática",
+    "drivetrain": "AWD", "exterior_color": "Blanco", "interior_color": "Negro", "badge": "NUEVO INGRESO",
+    "featured": false, "cover_image": "https://images.unsplash.com/photo-1633867668918-9b56b1e35e8a?w=900&q=80",
+    "gallery": ["https://images.unsplash.com/photo-1633867668918-9b56b1e35e8a?w=1200&q=80"],
+    "features": ["Pantalla grande", "CarPlay", "Cámara 360"],
+    "description": "SUV casi nueva con tecnología de punta."
+  }
+]
