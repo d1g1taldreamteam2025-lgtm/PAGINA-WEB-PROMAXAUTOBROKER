@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contacto | ProMax Auto Broker</title>
+<meta name="description" content="Contacta a ProMax Auto Broker. WhatsApp, teléfono y formulario. Joel Jordá — Miami, FL. Servicio a toda Venezuela.">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body data-page="contact">
+<div id="site-header"></div>
+
+<section class="pm-page-hero">
+  <div class="pm-page-hero__inner">
+    <span class="eyebrow" data-i18n="ct_eyebrow">Contacto</span>
+    <h1 data-i18n="ct_title">Hablemos</h1>
+    <p data-i18n="ct_sub">Escríbenos por WhatsApp para una respuesta rápida, o déjanos tus datos y te contactamos.</p>
+  </div>
+</section>
+
+<section class="pm-section pm-section--gray">
+  <div style="max-width:var(--maxw);margin:0 auto;padding:0 24px;display:grid;grid-template-columns:1fr 1.2fr;gap:32px" class="pm-contact-grid">
+    <!-- Info -->
+    <div class="pm-form-card" style="max-width:none">
+      <h3 style="margin:0 0 18px" data-i18n="ct_info_t">Información de contacto</h3>
+      <ul class="pm-footer__contact" style="list-style:none;padding:0;margin:0;display:grid;gap:16px;color:var(--pm-text)">
+        <li style="display:flex;gap:10px;align-items:flex-start"><span class="material-icons-outlined" style="color:var(--pm-orange)">person</span><span><strong id="pmAgent"></strong></span></li>
+        <li style="display:flex;gap:10px;align-items:flex-start"><span class="material-icons-outlined" style="color:var(--pm-orange)">call</span><a id="pmTel" href="#" style="text-decoration:none;color:inherit"></a></li>
+        <li style="display:flex;gap:10px;align-items:flex-start"><span class="material-icons-outlined" style="color:#25D366">chat</span><a id="pmWaC" href="#" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">WhatsApp</a></li>
+        <li style="display:flex;gap:10px;align-items:flex-start"><span class="material-icons-outlined" style="color:var(--pm-orange)">place</span><span data-i18n="header_address">Miami, FL · Servicio a toda Venezuela</span></li>
+        <li style="display:flex;gap:10px;align-items:flex-start"><span class="material-icons-outlined" style="color:var(--pm-orange)">schedule</span><span data-i18n="header_hours">Lun–Sáb 9AM–7PM</span></li>
+        <li style="display:flex;gap:10px;align-items:flex-start"><span class="material-icons-outlined" style="color:var(--pm-orange)">photo_camera</span><a id="pmIg" href="#" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">@promaxautobroker</a></li>
+      </ul>
+      <a id="pmWaBig" href="#" target="_blank" rel="noopener" class="pm-btn pm-btn--wa" style="width:100%;margin-top:24px"><span class="material-icons-outlined">chat</span> <span data-i18n="btn_whatsapp">Escríbenos por WhatsApp</span></a>
+    </div>
+    <!-- Form -->
+    <div class="pm-form-card" style="max-width:none">
+      <h3 style="margin:0 0 6px" data-i18n="ct_form_t">Envíanos un mensaje</h3>
+      <p style="color:var(--pm-muted);margin:0 0 20px" data-i18n="ct_form_s">Te respondemos lo antes posible.</p>
+      <form data-pm-form="contact" novalidate>
+        <div class="pm-form__section" style="border:0;padding:0;margin:0">
+          <div class="pm-field"><label data-i18n="f_name">Nombre completo</label><input type="text" name="name" required></div>
+          <div class="pm-grid--2" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+            <div class="pm-field"><label data-i18n="f_email">Email</label><input type="email" name="email" required></div>
+            <div class="pm-field"><label data-i18n="f_phone">Teléfono</label><input type="tel" name="phone" required></div>
+          </div>
+          <div class="pm-field" style="margin-top:14px"><label data-i18n="ct_msg">¿En qué te ayudamos?</label><textarea name="message" rows="4" data-i18n-ph="ct_msg_ph" placeholder="Cuéntanos qué vehículo buscas o tu consulta..."></textarea></div>
+          <label class="pm-consent" style="margin-top:14px"><input type="checkbox" name="sms_consent" required><span data-i18n="f_consent">Acepto recibir SMS y llamadas de ProMax Auto Broker sobre mi consulta. Responde STOP para cancelar. Pueden aplicar tarifas. Ver <a href="/privacidad/">Política de Privacidad</a>.</span></label>
+        </div>
+        <div class="pm-form__submit" style="margin-top:18px">
+          <button type="submit" class="pm-btn pm-btn--primary" style="width:100%" data-i18n="ct_send">Enviar Mensaje</button>
+          <div class="pm-alert"></div>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/i18n.js"></script>
+<script>
+PROMAX_I18N.add({ en:{
+  ct_eyebrow:"Contact", ct_title:"Let's talk", ct_sub:"Message us on WhatsApp for a quick reply, or leave your details and we'll contact you.",
+  ct_info_t:"Contact information", ct_form_t:"Send us a message", ct_form_s:"We'll get back to you as soon as possible.",
+  f_name:"Full name", f_email:"Email", f_phone:"Phone", ct_msg:"How can we help?", ct_msg_ph:"Tell us which vehicle you're looking for or your question...",
+  f_consent:'I agree to receive SMS and calls from ProMax Auto Broker about my inquiry. Reply STOP to opt out. Rates may apply. See <a href="/privacidad/">Privacy Policy</a>.',
+  ct_send:"Send Message"
+}});
+(function(){
+  var C=PROMAX_CONFIG;
+  function fill(){
+    var l=PROMAX_I18N.get(); var m=l==='en'?C.waMessageEn:C.waMessageEs;
+    var wa="https://wa.me/"+C.whatsappNumber+"?text="+encodeURIComponent(m);
+    var set=function(id,prop,val){var e=document.getElementById(id); if(e)e[prop]=val;};
+    set('pmAgent','textContent',C.agentName);
+    var tel=document.getElementById('pmTel'); if(tel){tel.href='tel:+'+C.phoneRaw; tel.textContent=C.phoneDisplay;}
+    ['pmWaC','pmWaBig'].forEach(function(id){var e=document.getElementById(id); if(e)e.href=wa;});
+    var ig=document.getElementById('pmIg'); if(ig)ig.href=C.instagram;
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fill);else fill();
+  window.addEventListener('promax-lang-change',fill);
+})();
+</script>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/forms.js"></script>
+</body>
+</html>

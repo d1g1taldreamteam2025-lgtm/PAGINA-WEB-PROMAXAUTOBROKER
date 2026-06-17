@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aplicar a Financiamiento | ProMax Auto Broker</title>
+<meta name="description" content="Completa tu solicitud de crédito con ProMax Auto Broker. Información cifrada y revisada por nuestro equipo. Crédito malo OK, ITIN aceptado.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body data-page="financing">
+<div id="site-header"></div>
+
+<section class="pm-page-hero">
+  <div class="pm-page-hero__inner">
+    <span class="eyebrow" data-i18n="ap_eyebrow">Solicitud de crédito</span>
+    <h1 data-i18n="ap_title">Aplica para Financiamiento</h1>
+    <p data-i18n="ap_sub">Completa el formulario para iniciar tu pre-calificación. Tu información es revisada por nuestro equipo en 1 día hábil.</p>
+  </div>
+</section>
+
+<section class="pm-section pm-section--gray">
+  <form class="pm-form-card pm-form-card--wide" data-pm-form="financing" novalidate>
+    <input type="hidden" name="vehiculo" value="">
+
+    <div class="pm-form__section">
+      <h3 data-i18n="ap_s1">Información Personal</h3>
+      <div class="pm-grid">
+        <div class="pm-field"><label data-i18n="ap_license">ID / Licencia</label><input type="text" name="license_id"></div>
+        <div class="pm-field"><label data-i18n="f_fname">Nombre</label><input type="text" name="first_name" required></div>
+        <div class="pm-field"><label data-i18n="f_lname">Apellido</label><input type="text" name="last_name" required></div>
+        <div class="pm-field"><label data-i18n="f_phone">Teléfono</label><input type="tel" name="phone" required></div>
+        <div class="pm-field"><label data-i18n="f_email">Email</label><input type="email" name="email" required></div>
+        <div class="pm-field"><label data-i18n="ap_dob">Fecha de Nacimiento</label><input type="date" name="dob"></div>
+        <div class="pm-field pm-field--full"><label data-i18n="ap_ssn">Social Security o ITIN (opcional, acelera la aprobación)</label><input type="text" name="ssn_itin"></div>
+      </div>
+    </div>
+
+    <div class="pm-form__section">
+      <h3 data-i18n="ap_s2">Dirección</h3>
+      <div class="pm-grid">
+        <div class="pm-field pm-field--full"><label data-i18n="ap_address">Dirección</label><input type="text" name="address"></div>
+        <div class="pm-field"><label data-i18n="ap_city">Ciudad</label><input type="text" name="city"></div>
+        <div class="pm-field"><label data-i18n="ap_state">Estado</label><input type="text" name="state"></div>
+        <div class="pm-field"><label data-i18n="ap_zip">Código Postal</label><input type="text" name="zip"></div>
+        <div class="pm-field pm-field--full"><label data-i18n="ap_res_time">¿Cuánto tiempo en esta dirección?</label><input type="text" name="residence_time" data-i18n-ph="ap_res_ph" placeholder="ej. 2 años"></div>
+      </div>
+    </div>
+
+    <div class="pm-form__section">
+      <h3 data-i18n="ap_s3">Empleo</h3>
+      <div class="pm-grid">
+        <div class="pm-field"><label data-i18n="ap_employer">Empleador Actual</label><input type="text" name="employer"></div>
+        <div class="pm-field"><label data-i18n="ap_emp_time">Tiempo en el trabajo</label><input type="text" name="employed_time"></div>
+        <div class="pm-field"><label data-i18n="ap_occupation">Ocupación</label><input type="text" name="occupation"></div>
+        <div class="pm-field"><label data-i18n="ap_pay">Frecuencia de pago</label><select name="pay_frequency"><option value="">--</option><option value="semanal" data-i18n="ap_weekly">Semanal</option><option value="quincenal" data-i18n="ap_biweekly">Quincenal</option><option value="mensual" data-i18n="ap_monthly">Mensual</option></select></div>
+        <div class="pm-field"><label data-i18n="ap_income">Ingreso mensual (bruto)</label><input type="number" name="gross_income" placeholder="$"></div>
+        <div class="pm-field"><label data-i18n="ap_down">Pago Inicial</label><input type="number" name="down_payment" placeholder="$"></div>
+      </div>
+    </div>
+
+    <div class="pm-form__section">
+      <h3 data-i18n="ap_s4">Vehículo de Intercambio (Opcional)</h3>
+      <div class="pm-grid">
+        <div class="pm-field"><label data-i18n="ap_make">Marca</label><input type="text" name="trade_make"></div>
+        <div class="pm-field"><label data-i18n="ap_model">Modelo</label><input type="text" name="trade_model"></div>
+        <div class="pm-field"><label data-i18n="ap_year">Año</label><input type="number" name="trade_year"></div>
+        <div class="pm-field"><label data-i18n="ap_miles">Millas</label><input type="number" name="trade_miles"></div>
+        <div class="pm-field"><label data-i18n="ap_balance">Saldo pendiente</label><input type="number" name="trade_balance" placeholder="$"></div>
+      </div>
+    </div>
+
+    <div class="pm-form__section">
+      <h3 data-i18n="ap_s5">Autorización</h3>
+      <div class="pm-field pm-field--full"><label data-i18n="ap_authorize">Autorizo a ProMax Auto Broker a consultar mi crédito para obtener una aprobación de préstamo vehicular.</label>
+        <select name="authorize" required><option value="">--</option><option value="si" data-i18n="ap_yes">Sí</option><option value="no" data-i18n="ap_no">No</option></select>
+      </div>
+      <div class="pm-field pm-field--full" style="margin-top:14px"><label data-i18n="ap_signature">Firma (iniciales)</label><p class="hint" data-i18n="ap_sign_hint">Al colocar tus iniciales autorizas la consulta de crédito.</p><input type="text" name="signature" maxlength="10" data-i18n-ph="ap_sign_ph" placeholder="ej. J.J." required></div>
+      <div class="pm-field pm-field--full" style="margin-top:14px"><label data-i18n="ap_notes">Notas (opcional)</label><textarea name="notes" rows="3"></textarea></div>
+    </div>
+
+    <div class="pm-form__submit">
+      <label class="pm-consent"><input type="checkbox" name="sms_consent" required><span data-i18n="f_consent">Acepto recibir SMS y llamadas de ProMax Auto Broker sobre mi consulta. Responde STOP para cancelar. Pueden aplicar tarifas. Ver <a href="/privacidad/">Política de Privacidad</a>.</span></label>
+      <button type="submit" class="pm-btn pm-btn--primary" data-i18n="ap_submit">Enviar Solicitud</button>
+      <div class="pm-alert"></div>
+      <p class="pm-form__note" data-i18n="ap_note">Tu información es cifrada y solo se comparte con nuestros prestamistas de confianza.</p>
+    </div>
+
+    <div class="pm-form__success" id="pmApplySuccess" style="display:none;text-align:center;padding:30px">
+      <span class="material-icons-outlined" style="font-size:56px;color:var(--pm-green)">check_circle</span>
+      <h3 style="font-size:26px;margin:12px 0 6px" data-i18n="ap_ok_t">¡Solicitud Recibida!</h3>
+      <p style="color:var(--pm-muted)" data-i18n="ap_ok_p">Gracias. Nuestro equipo revisará tu solicitud y te contactará en 1 día hábil.</p>
+    </div>
+  </form>
+</section>
+
+<div id="site-footer"></div>
+
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/i18n.js"></script>
+<script>
+PROMAX_I18N.add({ en:{
+  ap_eyebrow:"Credit application", ap_title:"Apply for Financing",
+  ap_sub:"Complete the form to start your pre-qualification. Your information is reviewed by our team within 1 business day.",
+  ap_s1:"Personal Information", ap_license:"ID / License", f_fname:"First Name", f_lname:"Last Name", f_phone:"Phone", f_email:"Email",
+  ap_dob:"Date of Birth", ap_ssn:"Social Security or ITIN (optional, speeds up approval)",
+  ap_s2:"Address", ap_address:"Address", ap_city:"City", ap_state:"State", ap_zip:"Zip Code", ap_res_time:"How long at this address?", ap_res_ph:"e.g. 2 years",
+  ap_s3:"Employment", ap_employer:"Present Employer", ap_emp_time:"Time at job", ap_occupation:"Occupation", ap_pay:"Pay frequency",
+  ap_weekly:"Weekly", ap_biweekly:"Bi-weekly", ap_monthly:"Monthly", ap_income:"Monthly income (gross)", ap_down:"Down Payment",
+  ap_s4:"Trade-in Vehicle (Optional)", ap_make:"Make", ap_model:"Model", ap_year:"Year", ap_miles:"Miles", ap_balance:"Balance due",
+  ap_s5:"Authorization", ap_authorize:"I authorize ProMax Auto Broker to check my credit to obtain a vehicle loan approval.",
+  ap_yes:"Yes", ap_no:"No", ap_signature:"Signature (initials)", ap_sign_hint:"By entering your initials you authorize the credit check.", ap_sign_ph:"e.g. J.J.",
+  ap_notes:"Notes (optional)", f_consent:'I agree to receive SMS and calls from ProMax Auto Broker about my inquiry. Reply STOP to opt out. Rates may apply. See <a href="/privacidad/">Privacy Policy</a>.',
+  ap_submit:"Submit Application", ap_note:"Your information is encrypted and only shared with our trusted lending partners.",
+  ap_ok_t:"Application Received!", ap_ok_p:"Thank you. Our team will review your application and contact you within 1 business day."
+}});
+</script>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/forms.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inventario | ProMax Auto Broker</title>
+<meta name="description" content="Explora el inventario de ProMax Auto Broker: Toyota, autos, SUVs, camionetas, chutos, vans y motos. Compra e importación desde USA a Venezuela.">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body data-page="inventory">
+<div id="site-header"></div>
+
+<section class="pm-page-hero">
+  <div class="pm-page-hero__inner">
+    <span class="eyebrow" data-i18n="iv_eyebrow">Vehículos disponibles</span>
+    <h1 data-i18n="iv_title">Encuentra tu próximo vehículo</h1>
+    <p data-i18n="iv_sub">Autos, camionetas, chutos y más — inspeccionados y listos para ti o para importar.</p>
+    <div class="pm-page-hero__stats">
+      <div class="stat"><strong id="pmStatCount">0</strong><span data-i18n="iv_stat1">Disponibles</span></div>
+      <div class="stat"><strong>4.9★</strong><span data-i18n="iv_stat2">Calificación</span></div>
+      <div class="stat"><strong>USA→VE</strong><span data-i18n="iv_stat3">Importación</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="pm-inv__toolbar">
+  <div class="pm-inv__toolbar-inner">
+    <div class="pm-qf">
+      <button data-quick="all" class="active"><span class="material-icons-outlined">apps</span><span data-i18n="iv_f_all">Todos</span></button>
+      <button data-quick="auto"><span class="material-icons-outlined">directions_car</span><span data-i18n="iv_f_auto">Autos</span></button>
+      <button data-quick="suv"><span class="material-icons-outlined">airport_shuttle</span><span data-i18n="iv_f_suv">SUVs</span></button>
+      <button data-quick="camioneta"><span class="material-icons-outlined">local_shipping</span><span data-i18n="iv_f_pickup">Camionetas</span></button>
+      <button data-quick="chuto"><span class="material-icons-outlined">local_shipping</span><span data-i18n="iv_f_truck">Chutos</span></button>
+      <button data-quick="van"><span class="material-icons-outlined">airport_shuttle</span><span data-i18n="iv_f_van">Vans</span></button>
+      <button data-quick="moto"><span class="material-icons-outlined">two_wheeler</span><span data-i18n="iv_f_moto">Motos</span></button>
+    </div>
+    <div class="pm-inv__controls">
+      <label class="pm-inv__search"><span class="material-icons-outlined">search</span><input type="search" id="pmSearch" data-i18n-ph="iv_search" placeholder="Buscar por marca, modelo, año..."></label>
+      <select class="pm-inv__sort" id="pmSort" aria-label="Ordenar">
+        <option value="new" data-i18n="iv_sort_new">Más recientes</option>
+        <option value="pl" data-i18n="iv_sort_pl">Precio: bajo → alto</option>
+        <option value="ph" data-i18n="iv_sort_ph">Precio: alto → bajo</option>
+      </select>
+      <button class="pm-inv__filter-btn" id="pmFilterBtn"><span class="material-icons-outlined">tune</span><span data-i18n="iv_filters">Filtros</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="pm-inv__main">
+  <aside class="pm-inv__sidebar" id="pmSidebar">
+    <h3><span class="material-icons-outlined">tune</span><span data-i18n="iv_refine">Filtrar</span>
+      <button id="pmSidebarClose" style="margin-left:auto;background:none;border:0;cursor:pointer" class="material-icons-outlined">close</button>
+    </h3>
+    <details class="pm-fg" open><summary data-i18n="iv_make">Marca</summary><div class="pm-fg__body" id="pmFMake"></div></details>
+    <details class="pm-fg" open><summary data-i18n="iv_cond">Condición</summary><div class="pm-fg__body" id="pmFCond"></div></details>
+    <details class="pm-fg"><summary data-i18n="iv_loc">Ubicación</summary><div class="pm-fg__body" id="pmFLoc"></div></details>
+    <details class="pm-fg"><summary data-i18n="iv_price">Precio (USD)</summary><div class="pm-fg__body"><div class="pm-range"><input type="number" id="pmPmin" data-i18n-ph="iv_min" placeholder="Mín" min="0"><span>—</span><input type="number" id="pmPmax" data-i18n-ph="iv_max" placeholder="Máx" min="0"></div></div></details>
+  </aside>
+
+  <div class="pm-inv__results">
+    <div class="pm-inv__results-bar">
+      <span class="pm-inv__count"><strong id="pmInvCount">0</strong> <span data-i18n="iv_match">vehículos</span></span>
+      <a href="/contacto/" class="pm-service__body" style="display:inline-flex;align-items:center;gap:6px;color:var(--pm-orange-dk);font-weight:700;text-decoration:none"><span class="material-icons-outlined">support_agent</span><span data-i18n="iv_help">¿Necesitas ayuda? Habla con nosotros</span></a>
+    </div>
+    <div class="pm-inv__grid" id="pmInvGrid"></div>
+  </div>
+</div>
+<div class="pm-inv__overlay" id="pmInvOverlay"></div>
+
+<div id="site-footer"></div>
+
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/i18n.js"></script>
+<script>
+PROMAX_I18N.add({ en:{
+  iv_eyebrow:"Available vehicles", iv_title:"Find your next vehicle",
+  iv_sub:"Cars, pickups, semi-trucks and more — inspected and ready for you or to import.",
+  iv_stat1:"Available", iv_stat2:"Rating", iv_stat3:"Import",
+  iv_f_all:"All", iv_f_auto:"Cars", iv_f_suv:"SUVs", iv_f_pickup:"Pickups", iv_f_truck:"Semis", iv_f_van:"Vans", iv_f_moto:"Motorcycles",
+  iv_search:"Search by make, model, year...", iv_sort_new:"Newest", iv_sort_pl:"Price: low → high", iv_sort_ph:"Price: high → low",
+  iv_filters:"Filters", iv_refine:"Refine", iv_make:"Make", iv_cond:"Condition", iv_loc:"Location", iv_price:"Price (USD)",
+  iv_min:"Min", iv_max:"Max", iv_match:"vehicles", iv_help:"Need help? Talk to us"
+}});
+</script>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/inventory.js"></script>
+</body>
+</html>

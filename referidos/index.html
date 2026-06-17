@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Referidos (Interno) | ProMax Auto Broker</title>
+<meta name="description" content="Panel interno de referidos de ProMax Auto Broker.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/styles.css">
+</head>
+<body data-page="">
+<div id="site-header"></div>
+
+<section class="pm-page-hero">
+  <div class="pm-page-hero__inner">
+    <span class="eyebrow" data-i18n="rf_eyebrow">Uso interno · ProMax</span>
+    <h1 data-i18n="rf_title">Programa de Referidos</h1>
+    <p data-i18n="rf_sub">Registra cada referido. Marca la venta en la hoja y avanza hacia el sorteo de las 100 ventas.</p>
+  </div>
+</section>
+
+<section class="pm-section pm-section--gray">
+
+  <!-- GATE -->
+  <div class="pm-gate" id="pmGate">
+    <span class="material-icons-outlined">lock</span>
+    <h2 data-i18n="rf_gate_t">Acceso interno</h2>
+    <p data-i18n="rf_gate_p">Ingresa la clave del equipo para continuar.</p>
+    <input type="password" id="pmGateInput" data-i18n-ph="rf_gate_ph" placeholder="Clave" autocomplete="off">
+    <div class="pm-gate__err" id="pmGateErr"></div>
+    <button class="pm-btn pm-btn--primary" id="pmGateBtn" style="width:100%" data-i18n="rf_gate_btn">Entrar</button>
+  </div>
+
+  <!-- PANEL -->
+  <div id="pmRefPanel" style="display:none">
+
+    <!-- Progreso -->
+    <div class="pm-progress">
+      <h3 data-i18n="rf_prog_t">Progreso hacia el sorteo</h3>
+      <div class="pm-progress__count" id="pmRefCount">0 <span>/ 100</span></div>
+      <div class="pm-progress__bar"><div class="pm-progress__fill" id="pmRefFill"></div></div>
+      <p class="pm-progress__hint" id="pmRefHint">—</p>
+      <div class="pm-progress__win" id="pmRefWin" data-i18n="rf_win">🎉 ¡Meta alcanzada! Es hora del sorteo.</div>
+    </div>
+
+    <!-- Form -->
+    <div class="pm-form-card">
+      <h3 style="margin:0 0 6px" data-i18n="rf_form_t">Registrar un referido</h3>
+      <p style="color:var(--pm-muted);margin:0 0 20px" data-i18n="rf_form_s">Los datos se guardan automáticamente en la Google Sheet del equipo.</p>
+      <form id="pmRefForm" novalidate>
+        <div class="pm-form__section" style="border:0;padding:0;margin:0">
+          <div class="pm-grid--2" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div class="pm-field"><label data-i18n="rf_name">Cliente referido</label><input type="text" name="ref_name" required></div>
+            <div class="pm-field"><label data-i18n="rf_phone">Teléfono</label><input type="tel" name="ref_phone" required></div>
+            <div class="pm-field"><label data-i18n="rf_vehicle">Vehículo de interés</label><input type="text" name="ref_vehicle" data-i18n-ph="rf_vehicle_ph" placeholder="ej. Toyota RAV4"></div>
+            <div class="pm-field"><label data-i18n="rf_by">Referido por</label><input type="text" name="referred_by" data-i18n-ph="rf_by_ph" placeholder="Vendedor o cliente"></div>
+            <div class="pm-field"><label data-i18n="rf_status">Estatus</label>
+              <select name="status">
+                <option value="Pendiente" data-i18n="rf_st_pending">Pendiente</option>
+                <option value="En proceso" data-i18n="rf_st_progress">En proceso</option>
+                <option value="vendido" data-i18n="rf_st_sold">Vendido</option>
+              </select>
+            </div>
+            <div class="pm-field"><label data-i18n="rf_notes">Notas</label><input type="text" name="notes"></div>
+          </div>
+        </div>
+        <div class="pm-form__submit" style="margin-top:20px">
+          <button type="submit" class="pm-btn pm-btn--primary" style="width:100%" data-i18n="rf_save">Guardar Referido</button>
+          <div class="pm-alert"></div>
+        </div>
+      </form>
+      <p class="pm-form__note" style="margin-top:14px" data-i18n="rf_tip">Tip: para contar una venta, marca el estatus como “Vendido” aquí o directamente en la columna “Estatus” de la hoja.</p>
+    </div>
+
+  </div>
+</section>
+
+<div id="site-footer"></div>
+
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/i18n.js"></script>
+<script>
+PROMAX_I18N.add({ en:{
+  rf_eyebrow:"Internal use · ProMax", rf_title:"Referral Program",
+  rf_sub:"Log every referral. Mark the sale in the sheet and advance toward the 100-sales raffle.",
+  rf_gate_t:"Internal access", rf_gate_p:"Enter the team passcode to continue.", rf_gate_ph:"Passcode", rf_gate_btn:"Enter",
+  rf_prog_t:"Progress toward the raffle", rf_win:"🎉 Goal reached! Time for the raffle.",
+  rf_form_t:"Log a referral", rf_form_s:"Data is saved automatically to the team's Google Sheet.",
+  rf_name:"Referred customer", rf_phone:"Phone", rf_vehicle:"Vehicle of interest", rf_vehicle_ph:"e.g. Toyota RAV4",
+  rf_by:"Referred by", rf_by_ph:"Salesperson or customer", rf_status:"Status",
+  rf_st_pending:"Pending", rf_st_progress:"In progress", rf_st_sold:"Sold", rf_notes:"Notes",
+  rf_save:"Save Referral", rf_tip:"Tip: to count a sale, set the status to “Sold” here or directly in the “Estatus” column of the sheet."
+}});
+</script>
+<script src="/assets/js/components.js"></script>
+<script src="/assets/js/referidos.js"></script>
+</body>
+</html>

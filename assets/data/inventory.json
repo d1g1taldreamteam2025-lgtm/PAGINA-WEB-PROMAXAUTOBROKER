@@ -1,0 +1,119 @@
+[
+  {
+    "id": "rav4-2026",
+    "year": 2026, "make": "Toyota", "model": "RAV4", "trim": "XLE AWD",
+    "type": "suv", "condition": "new",
+    "price": 429, "priceUnit": "month",
+    "mileage": 0, "fuel": "Gasolina", "transmission": "Automática", "drivetrain": "AWD",
+    "location": "USA", "badge": "NUEVO", "image": "", "featured": true,
+    "description": "Toyota RAV4 2026, ideal para familias. Primer comprador, crédito malo OK, $0 de pronto con crédito aprobado."
+  },
+  {
+    "id": "corolla-2026",
+    "year": 2026, "make": "Toyota", "model": "Corolla", "trim": "SE",
+    "type": "auto", "condition": "new",
+    "price": 399, "priceUnit": "month",
+    "mileage": 0, "fuel": "Gasolina", "transmission": "Automática", "drivetrain": "FWD",
+    "location": "USA", "badge": "NUEVO", "image": "", "featured": true,
+    "description": "Toyota Corolla 2026, eficiente y confiable. Excelente rendimiento de combustible y tecnología Toyota Safety Sense."
+  },
+  {
+    "id": "tacoma-2026",
+    "year": 2026, "make": "Toyota", "model": "Tacoma", "trim": "TRD Off-Road 4x4",
+    "type": "camioneta", "condition": "new",
+    "price": 499, "priceUnit": "month",
+    "mileage": 0, "fuel": "Gasolina", "transmission": "Automática", "drivetrain": "4x4",
+    "location": "USA", "badge": "NUEVO", "image": "", "featured": true,
+    "description": "Toyota Tacoma 2026 TRD, hecha para la aventura. Capacidad 4x4 y desempeño probado."
+  },
+  {
+    "id": "4runner-2026",
+    "year": 2026, "make": "Toyota", "model": "4Runner", "trim": "TRD Pro",
+    "type": "suv", "condition": "new",
+    "price": 599, "priceUnit": "month",
+    "mileage": 0, "fuel": "Gasolina", "transmission": "Automática", "drivetrain": "4x4",
+    "location": "USA", "badge": "NUEVO", "image": "", "featured": true,
+    "description": "Toyota 4Runner 2026, poder y confianza para cualquier terreno."
+  },
+  {
+    "id": "crown-2026",
+    "year": 2026, "make": "Toyota", "model": "Crown", "trim": "Limited",
+    "type": "auto", "condition": "new",
+    "price": 459, "priceUnit": "month",
+    "mileage": 0, "fuel": "Híbrido", "transmission": "Automática", "drivetrain": "AWD",
+    "location": "USA", "badge": "NUEVO", "image": "", "featured": false,
+    "description": "Toyota Crown 2026 Limited. Elegancia, desempeño y confianza en un diseño premium."
+  },
+  {
+    "id": "civic-2020",
+    "year": 2020, "make": "Honda", "model": "Civic", "trim": "Sport",
+    "type": "auto", "condition": "used",
+    "price": 20900, "priceUnit": "total",
+    "mileage": 75000, "fuel": "Gasolina", "transmission": "Automática", "drivetrain": "FWD",
+    "location": "USA", "badge": "USADO", "image": "", "featured": true,
+    "description": "Honda Civic Sport limpio y confiable. Listo para llevar hoy."
+  },
+  {
+    "id": "kia-rio-2024",
+    "year": 2024, "make": "Kia", "model": "Rio", "trim": "LX",
+    "type": "auto", "condition": "used",
+    "price": 13900, "priceUnit": "total",
+    "mileage": 35000, "fuel": "Gasolina", "transmission": "Automática", "drivetrain": "FWD",
+    "location": "USA", "badge": "USADO", "image": "", "featured": true,
+    "description": "Kia Rio 2024, nuevo diseño y moderno. Económico y bajo millaje."
+  },
+  {
+    "id": "golf-r-2023",
+    "year": 2023, "make": "Volkswagen", "model": "Golf R", "trim": "DSG",
+    "type": "auto", "condition": "used",
+    "price": 29000, "priceUnit": "total",
+    "mileage": 33000, "fuel": "Gasolina", "transmission": "Automática", "drivetrain": "AWD",
+    "location": "USA", "badge": "REBUILT", "image": "", "featured": false,
+    "description": "Volkswagen Golf R 2023, 33K millas. Título rebuilt. Deportivo y potente."
+  },
+  {
+    "id": "ram-promaster-2021",
+    "year": 2021, "make": "RAM", "model": "ProMaster 2500", "trim": "High Roof",
+    "type": "van", "condition": "used",
+    "price": 19899, "priceUnit": "total",
+    "mileage": 120000, "fuel": "Gasolina", "transmission": "Automática", "drivetrain": "FWD",
+    "location": "USA", "badge": "$2,500 PRONTO", "image": "", "featured": true,
+    "description": "RAM ProMaster 2500 High Roof. Negocio sobre ruedas, lista para trabajar."
+  },
+  {
+    "id": "sprinter-2019",
+    "year": 2019, "make": "Mercedes-Benz", "model": "Sprinter", "trim": "2500",
+    "type": "van", "condition": "used",
+    "price": 32500, "priceUnit": "total",
+    "mileage": 98000, "fuel": "Diésel", "transmission": "Automática", "drivetrain": "RWD",
+    "location": "USA", "badge": "USADO", "image": "", "featured": false,
+    "description": "Mercedes-Benz Sprinter 2500. Ideal para carga, logística o conversión."
+  },
+  {
+    "id": "peterbilt-389-2022",
+    "year": 2022, "make": "Peterbilt", "model": "389", "trim": "Pro",
+    "type": "chuto", "condition": "used",
+    "price": 145000, "priceUnit": "total",
+    "mileage": 410000, "fuel": "Diésel", "transmission": "Manual", "drivetrain": "6x4",
+    "location": "USA", "badge": "CHUTO", "image": "", "featured": true,
+    "description": "Peterbilt 389 2022. Chuto listo para trabajar y generar dinero. Importación a Venezuela disponible."
+  },
+  {
+    "id": "freightliner-cascadia-2020",
+    "year": 2020, "make": "Freightliner", "model": "Cascadia", "trim": "126",
+    "type": "chuto", "condition": "used",
+    "price": 89000, "priceUnit": "total",
+    "mileage": 520000, "fuel": "Diésel", "transmission": "Automática", "drivetrain": "6x4",
+    "location": "USA", "badge": "CHUTO", "image": "", "featured": false,
+    "description": "Freightliner Cascadia 126. Eficiente y confiable para carga pesada."
+  },
+  {
+    "id": "yamaha-tenere-700-2026",
+    "year": 2026, "make": "Yamaha", "model": "Ténéré 700", "trim": "",
+    "type": "moto", "condition": "new",
+    "price": 11499, "priceUnit": "total",
+    "mileage": 0, "fuel": "Gasolina", "transmission": "Manual", "drivetrain": "2WD",
+    "location": "USA", "badge": "NUEVO", "image": "", "featured": false,
+    "description": "Yamaha Ténéré 700 2026. La aventurera por excelencia, lista para importar."
+  }
+]
