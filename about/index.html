@@ -52,6 +52,33 @@
 .ab-cta p{font-size:17px;color:rgba(255,255,255,.82);margin:0 0 28px;}
 .ab-cta__btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
 @media(max-width:768px){.ab-cta h2{font-size:26px;}}
+
+/* ===== INSTAGRAM (pmx-ig) ===== */
+.pmx-ig{background:var(--bg-soft);}
+.pmx-ig__head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:30px;flex-wrap:wrap;}
+.pmx-ig__head .pmx-eyebrow{display:inline-flex;align-items:center;gap:7px;}
+.pmx-ig__head h2{font-size:34px;font-weight:800;color:var(--ink);margin:8px 0 6px;letter-spacing:-.5px;line-height:1.1;}
+.pmx-ig__head p{font-size:16px;color:var(--text-muted);margin:0;max-width:560px;}
+.pmx-ig__follow{display:inline-flex;align-items:center;gap:9px;background:var(--ink);color:#fff;font-weight:700;font-size:15px;padding:13px 22px;border-radius:999px;text-decoration:none;white-space:nowrap;transition:transform .2s,box-shadow .2s;box-shadow:0 8px 22px rgba(0,0,0,.12);}
+.pmx-ig__follow:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(167,2,0,.28);background:var(--brand);}
+.pmx-ig__follow svg{width:20px;height:20px;}
+.pmx-ig__grid{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;}
+.pmx-ig__card{position:relative;display:block;aspect-ratio:9/16;border-radius:16px;overflow:hidden;text-decoration:none;background:#111;box-shadow:0 10px 26px rgba(0,0,0,.14);transition:transform .28s cubic-bezier(.2,.7,.3,1),box-shadow .28s;isolation:isolate;}
+.pmx-ig__card:hover{transform:translateY(-6px) scale(1.015);box-shadow:0 18px 40px rgba(167,2,0,.28);}
+.pmx-ig__media{position:absolute;inset:0;background-size:cover;background-position:center;transition:transform .5s;}
+.pmx-ig__card:hover .pmx-ig__media{transform:scale(1.08);}
+.pmx-ig__card--noimg{background:linear-gradient(150deg,var(--brand-dark),var(--brand) 55%,#000);}
+.pmx-ig__card--noimg:nth-child(3n+2){background:linear-gradient(150deg,#000,var(--brand) 60%,var(--brand-2));}
+.pmx-ig__card--noimg:nth-child(3n){background:linear-gradient(150deg,var(--brand),#2a0a0a 70%,#000);}
+.pmx-ig__card--noimg::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 22%,rgba(244,220,52,.20),transparent 55%);}
+.pmx-ig__shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05) 35%,rgba(0,0,0,.72));z-index:1;}
+.pmx-ig__play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.18);backdrop-filter:blur(3px);border:1.5px solid rgba(255,255,255,.55);color:#fff;display:flex;align-items:center;justify-content:center;z-index:2;transition:transform .25s,background .25s;padding-left:3px;}
+.pmx-ig__card:hover .pmx-ig__play{transform:translate(-50%,-50%) scale(1.12);background:var(--brand);border-color:var(--brand);}
+.pmx-ig__badge{position:absolute;top:11px;right:11px;width:24px;height:24px;color:#fff;z-index:2;opacity:.92;}
+.pmx-ig__badge svg{width:100%;height:100%;}
+.pmx-ig__cap{position:absolute;left:0;right:0;bottom:0;z-index:2;padding:14px 13px;color:#fff;font-size:12.5px;line-height:1.4;font-weight:500;}
+@media(max-width:1100px){.pmx-ig__grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:680px){.pmx-ig__grid{grid-template-columns:repeat(2,1fr);gap:12px;}.pmx-ig__head h2{font-size:27px;}.pmx-ig__follow{width:100%;justify-content:center;}}
 </style>
 </head>
 <body>
@@ -122,6 +149,29 @@
   </div>
 </section>
 
+<!-- INSTAGRAM -->
+<section class="pmx-section pmx-ig">
+  <div class="pmx-container">
+    <div class="pmx-ig__head pmx-reveal">
+      <div>
+        <span class="pmx-eyebrow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4"/><circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/></svg>
+          <span data-i18n="ig_eyebrow">@promaxautobroker</span>
+        </span>
+        <h2 data-i18n="ig_title">Lo más reciente en Instagram</h2>
+        <p data-i18n="ig_sub">Mira nuestros últimos vehículos y promociones. Toca para ver el reel.</p>
+      </div>
+      <a id="pmxIGFollow" class="pmx-ig__follow" href="https://www.instagram.com/promaxautobroker/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4"/><circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/></svg>
+        <span data-i18n="ig_follow">Seguir en Instagram</span>
+      </a>
+    </div>
+    <div id="pmxIGGrid" class="pmx-ig__grid pmx-reveal">
+      <p style="grid-column:1/-1;text-align:center;color:#888;padding:30px" data-i18n="ig_loading">Cargando publicaciones…</p>
+    </div>
+  </div>
+</section>
+
 <!-- CTA BAND -->
 <section class="pmx-section ab-cta">
   <div class="pmx-container">
@@ -136,6 +186,7 @@
 
 <script src="/assets/js/config.js"></script>
 <script src="/assets/js/site.js"></script>
+<script src="/assets/js/instagram.js"></script>
 <script>
 PMX.addTranslations({
   es: {

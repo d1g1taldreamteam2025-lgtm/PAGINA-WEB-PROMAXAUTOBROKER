@@ -65,6 +65,10 @@ window.PROMAX = {
     // Google Apps Script Web App para REFERIDOS -> Google Sheet.
     referralsScriptUrl: "",                          // <-- CONFIRMAR
     referralsToken: "promax-2026",
+
+    // Feed de Instagram (auto-actualizable). Si está vacío, usa /assets/data/instagram.json.
+    // Pega aquí la URL del webhook n8n (promax-instagram) o del widget para que se actualice solo.
+    instagramFeed: "",
   },
 
   /* ---------- REFERIDOS / SORTEO ---------- */

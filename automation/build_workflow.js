@@ -72,9 +72,9 @@ const nodes = [
   {
     parameters: {
       method: "POST",
-      url: "http://ucallnow-interno-evolution-api:8080/message/sendText/Ucallnow MIA_LASHES",
+      url: "http://ucallnow-interno-evolution-api:8080/message/sendText/USELLNOW",
       sendHeaders: true,
-      headerParameters: { parameters: [{ name: "apikey", value: "5755F4A02AEB-4BE6-95EE-C84A25CAF768" }] },
+      headerParameters: { parameters: [{ name: "apikey", value: "A97C1EAEC9B3-4B30-8EB4-E7A2EECCF261" }] },
       sendBody: true, specifyBody: "json",
       jsonBody: '={\n  "number": {{ JSON.stringify($(\'Format Lead\').item.json.recipient_wa) }},\n  "text": {{ JSON.stringify($(\'Format Lead\').item.json.wa_message) }}\n}',
       options: {}
