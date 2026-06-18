@@ -29,7 +29,7 @@ window.PROMAX = {
     phone:        "(305) 676-1259",
     phoneRaw:     "13056761259",
     whatsapp:     "13056761259",
-    email:        "info@promaxautobroker.com",       // <-- CONFIRMAR correo público
+    email:        "Promaxautobroker@gmail.com",     // correo público + destino de leads
     address:      "7875 NW 107 Ave, Miami, FL 33178, United States",
     addressMaps:  "https://maps.google.com/?q=7875+NW+107+Ave,+Miami,+FL+33178",
     hoursShort:   "Lun–Sáb 9AM–7PM · Dom 11AM–5PM",  // <-- CONFIRMAR

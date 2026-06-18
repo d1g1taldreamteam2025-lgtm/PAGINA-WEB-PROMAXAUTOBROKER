@@ -20,7 +20,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const d = $input.item.json.body || $input.item.json;\nconst ft = d.form_type || 'contact';\nconst T = {\n  financing:       ['💳','APLICACIÓN DE FINANCIAMIENTO'],\n  financing_quick: ['⚡','PRE-CALIFICACIÓN RÁPIDA'],\n  contact:         ['📩','CONTACTO'],\n  newsletter:      ['📧','SUSCRIPCIÓN NEWSLETTER'],\n  reserve:         ['🔒','RESERVA DE VEHÍCULO'],\n  quote:           ['💰','SOLICITUD DE PRECIO']\n};\nconst t = T[ft] || T.contact;\nconst isNl = ft === 'newsletter';\nconst ts = new Date().toLocaleString('es-ES',{timeZone:'America/New_York',dateStyle:'medium',timeStyle:'short'});\nlet wa = '*' + t[0] + ' PROMAX · ' + t[1] + '*\\n\\n';\nif (isNl) {\n  wa += 'Nueva suscripción al *newsletter*:\\n📧 ' + (d.email||'—');\n} else {\n  if (d.name)          wa += '*Nombre:* ' + d.name + '\\n';\n  if (d.email)         wa += '*Email:* ' + d.email + '\\n';\n  if (d.phone)         wa += '*Teléfono:* ' + d.phone + '\\n';\n  if (d.vehicle_title) wa += '*Vehículo:* ' + d.vehicle_title + '\\n';\n  if (d.vehicle_id)    wa += '*Vehículo ID:* ' + d.vehicle_id + '\\n';\n  if (d.message)       wa += '\\n*Detalle:*\\n' + d.message;\n}\nwa += '\\n\\n_' + ts + ' ET_';\nlet h = '';\nh += '<div style=\"font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#EFEDEE;padding:20px\">';\nh += '<div style=\"background:#0a0a0a;color:#F4DC34;padding:22px;text-align:center;border-radius:10px 10px 0 0\">';\nh += '<h1 style=\"margin:0;font-size:20px;letter-spacing:1px\">PRO<span style=\"color:#fff\">MAX</span> AUTO BROKER</h1>';\nh += '<p style=\"margin:6px 0 0;color:#fff;font-size:13px\">Nuevo lead recibido</p></div>';\nh += '<div style=\"background:#fff;padding:24px;border-radius:0 0 10px 10px\">';\nh += '<h2 style=\"color:#0a0a0a;font-size:16px;margin:0 0 16px;padding:10px 14px;background:#fbe9e9;border-left:4px solid #A70200;border-radius:4px\">' + t[0] + ' ' + t[1] + '</h2>';\nif (isNl) {\n  h += '<p><strong>Email:</strong> <a href=\"mailto:' + (d.email||'') + '\" style=\"color:#A70200\">' + (d.email||'—') + '</a></p>';\n} else {\n  h += '<table style=\"width:100%;border-collapse:collapse\">';\n  if (d.name)          h += '<tr><td style=\"padding:9px 0;border-bottom:1px solid #eee\"><strong>Nombre:</strong> ' + d.name + '</td></tr>';\n  if (d.email)         h += '<tr><td style=\"padding:9px 0;border-bottom:1px solid #eee\"><strong>Email:</strong> <a href=\"mailto:' + d.email + '\" style=\"color:#A70200\">' + d.email + '</a></td></tr>';\n  if (d.phone)         h += '<tr><td style=\"padding:9px 0;border-bottom:1px solid #eee\"><strong>Teléfono:</strong> <a href=\"tel:' + d.phone + '\" style=\"color:#A70200\">' + d.phone + '</a></td></tr>';\n  if (d.vehicle_title) h += '<tr><td style=\"padding:9px 0;border-bottom:1px solid #eee\"><strong>Vehículo:</strong> ' + d.vehicle_title + '</td></tr>';\n  h += '</table>';\n  if (d.message) h += '<div style=\"margin-top:14px;padding:14px;background:#EFEDEE;border-left:3px solid #F4DC34;border-radius:4px;white-space:pre-wrap\">' + String(d.message).replace(/</g,'&lt;') + '</div>';\n}\nh += '<div style=\"margin-top:20px;padding-top:14px;border-top:1px solid #eee;color:#888;font-size:11px\">Recibido: ' + ts + ' ET</div></div></div>';\nconst subject = 'PROMAX · ' + t[1] + (d.name ? ' · ' + d.name : '');\nreturn { json: {\n  raw: d, wa_message: wa, email_subject: subject, email_html: h,\n  recipient_wa: '13056761259',\n  recipient_email: 'CORREO_PENDIENTE@ejemplo.com'\n} };"
+        "jsCode": "const d = $input.item.json.body || $input.item.json;\nconst ft = d.form_type || 'contact';\nconst T = {\n  financing:       ['💳','APLICACIÓN DE FINANCIAMIENTO'],\n  financing_quick: ['⚡','PRE-CALIFICACIÓN RÁPIDA'],\n  contact:         ['📩','CONTACTO'],\n  newsletter:      ['📧','SUSCRIPCIÓN NEWSLETTER'],\n  reserve:         ['🔒','RESERVA DE VEHÍCULO'],\n  quote:           ['💰','SOLICITUD DE PRECIO']\n};\nconst t = T[ft] || T.contact;\nconst isNl = ft === 'newsletter';\nconst ts = new Date().toLocaleString('es-ES',{timeZone:'America/New_York',dateStyle:'medium',timeStyle:'short'});\nlet wa = '*' + t[0] + ' PROMAX · ' + t[1] + '*\\n\\n';\nif (isNl) {\n  wa += 'Nueva suscripción al *newsletter*:\\n📧 ' + (d.email||'—');\n} else {\n  if (d.name)          wa += '*Nombre:* ' + d.name + '\\n';\n  if (d.email)         wa += '*Email:* ' + d.email + '\\n';\n  if (d.phone)         wa += '*Teléfono:* ' + d.phone + '\\n';\n  if (d.vehicle_title) wa += '*Vehículo:* ' + d.vehicle_title + '\\n';\n  if (d.vehicle_id)    wa += '*Vehículo ID:* ' + d.vehicle_id + '\\n';\n  if (d.message)       wa += '\\n*Detalle:*\\n' + d.message;\n}\nwa += '\\n\\n_' + ts + ' ET_';\nlet h = '';\nh += '<div style=\"font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#EFEDEE;padding:20px\">';\nh += '<div style=\"background:#0a0a0a;color:#F4DC34;padding:22px;text-align:center;border-radius:10px 10px 0 0\">';\nh += '<h1 style=\"margin:0;font-size:20px;letter-spacing:1px\">PRO<span style=\"color:#fff\">MAX</span> AUTO BROKER</h1>';\nh += '<p style=\"margin:6px 0 0;color:#fff;font-size:13px\">Nuevo lead recibido</p></div>';\nh += '<div style=\"background:#fff;padding:24px;border-radius:0 0 10px 10px\">';\nh += '<h2 style=\"color:#0a0a0a;font-size:16px;margin:0 0 16px;padding:10px 14px;background:#fbe9e9;border-left:4px solid #A70200;border-radius:4px\">' + t[0] + ' ' + t[1] + '</h2>';\nif (isNl) {\n  h += '<p><strong>Email:</strong> <a href=\"mailto:' + (d.email||'') + '\" style=\"color:#A70200\">' + (d.email||'—') + '</a></p>';\n} else {\n  h += '<table style=\"width:100%;border-collapse:collapse\">';\n  if (d.name)          h += '<tr><td style=\"padding:9px 0;border-bottom:1px solid #eee\"><strong>Nombre:</strong> ' + d.name + '</td></tr>';\n  if (d.email)         h += '<tr><td style=\"padding:9px 0;border-bottom:1px solid #eee\"><strong>Email:</strong> <a href=\"mailto:' + d.email + '\" style=\"color:#A70200\">' + d.email + '</a></td></tr>';\n  if (d.phone)         h += '<tr><td style=\"padding:9px 0;border-bottom:1px solid #eee\"><strong>Teléfono:</strong> <a href=\"tel:' + d.phone + '\" style=\"color:#A70200\">' + d.phone + '</a></td></tr>';\n  if (d.vehicle_title) h += '<tr><td style=\"padding:9px 0;border-bottom:1px solid #eee\"><strong>Vehículo:</strong> ' + d.vehicle_title + '</td></tr>';\n  h += '</table>';\n  if (d.message) h += '<div style=\"margin-top:14px;padding:14px;background:#EFEDEE;border-left:3px solid #F4DC34;border-radius:4px;white-space:pre-wrap\">' + String(d.message).replace(/</g,'&lt;') + '</div>';\n}\nh += '<div style=\"margin-top:20px;padding-top:14px;border-top:1px solid #eee;color:#888;font-size:11px\">Recibido: ' + ts + ' ET</div></div></div>';\nconst subject = 'PROMAX · ' + t[1] + (d.name ? ' · ' + d.name : '');\nreturn { json: {\n  raw: d, wa_message: wa, email_subject: subject, email_html: h,\n  recipient_wa: '13056761259',\n  recipient_email: 'Promaxautobroker@gmail.com'\n} };"
       },
       "id": "pmx-node-002",
       "name": "Format Lead",
@@ -34,13 +34,13 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "http://TU-EVOLUTION-API:8080/message/sendText/TU_INSTANCIA",
+        "url": "http://ucallnow-interno-evolution-api:8080/message/sendText/Ucallnow MIA_LASHES",
         "sendHeaders": true,
         "headerParameters": {
           "parameters": [
             {
               "name": "apikey",
-              "value": "TU_EVOLUTION_APIKEY"
+              "value": "5755F4A02AEB-4BE6-95EE-C84A25CAF768"
             }
           ]
         },
@@ -79,8 +79,8 @@
       "webhookId": "promax-email",
       "credentials": {
         "gmailOAuth2": {
-          "id": "REEMPLAZAR_CRED",
-          "name": "Promax Gmail"
+          "id": "nEra38Qzo37zecMD",
+          "name": "automations"
         }
       },
       "onError": "continueRegularOutput"
@@ -102,9 +102,9 @@
     },
     {
       "parameters": {
-        "content": "## Promax — Leads por WhatsApp\nRecibe los formularios de la web y los reenvía a Joel por WhatsApp + Email.\n\n**Configura antes de activar:**\n1. *Send WhatsApp* → pon tu URL de Evolution API, tu INSTANCIA y tu APIKEY (las mismas de UCallNow).\n2. *Send Email* → selecciona tu credencial de Gmail y cambia `recipient_email` en *Format Lead* cuando tengan el correo.\n3. El número de WhatsApp ya está: **13056761259** (Joel).\n4. Webhook URL: `https://n8n-ucallnow.ucallnow.fun/webhook/promax-leads` (ya configurada en la web).\n\n*Opcional:* se puede agregar generación de PDF para financiamiento (como en FK).",
-        "height": 320,
-        "width": 420,
+        "content": "## Promax — Leads por WhatsApp\nYa viene PRECONFIGURADO. Solo: Import → Activar (toggle).\n\nIncluye:\n• WhatsApp (Evolution API UCallNow) → Joel **13056761259**\n• Email (credencial Gmail 'automations') → **Promaxautobroker@gmail.com**\n• Webhook: `/webhook/promax-leads` (ya conectado desde la web)\n\nSi el nodo *Send Email* pidiera credencial, elige **automations** del desplegable (1 clic).\n*Opcional:* se puede agregar PDF de financiamiento (como en FK).",
+        "height": 300,
+        "width": 430,
         "color": 4
       },
       "id": "pmx-node-006",

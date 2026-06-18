@@ -55,7 +55,7 @@ const formatCode = [
   "return { json: {",
   "  raw: d, wa_message: wa, email_subject: subject, email_html: h,",
   "  recipient_wa: '13056761259',",            // Joel Jorda (305-676-1259)
-  "  recipient_email: 'CORREO_PENDIENTE@ejemplo.com'", // <-- cambiar cuando lo tengan
+  "  recipient_email: 'Promaxautobroker@gmail.com'",
   "} };"
 ].join("\n");
 
@@ -72,9 +72,9 @@ const nodes = [
   {
     parameters: {
       method: "POST",
-      url: "http://TU-EVOLUTION-API:8080/message/sendText/TU_INSTANCIA",
+      url: "http://ucallnow-interno-evolution-api:8080/message/sendText/Ucallnow MIA_LASHES",
       sendHeaders: true,
-      headerParameters: { parameters: [{ name: "apikey", value: "TU_EVOLUTION_APIKEY" }] },
+      headerParameters: { parameters: [{ name: "apikey", value: "5755F4A02AEB-4BE6-95EE-C84A25CAF768" }] },
       sendBody: true, specifyBody: "json",
       jsonBody: '={\n  "number": {{ JSON.stringify($(\'Format Lead\').item.json.recipient_wa) }},\n  "text": {{ JSON.stringify($(\'Format Lead\').item.json.wa_message) }}\n}',
       options: {}
@@ -91,7 +91,7 @@ const nodes = [
     },
     id: uid(), name: "Send Email", type: "n8n-nodes-base.gmail", typeVersion: 2.2,
     position: [-400, 300], webhookId: "promax-email",
-    credentials: { gmailOAuth2: { id: "REEMPLAZAR_CRED", name: "Promax Gmail" } },
+    credentials: { gmailOAuth2: { id: "nEra38Qzo37zecMD", name: "automations" } },
     onError: "continueRegularOutput"
   },
   {
@@ -102,17 +102,17 @@ const nodes = [
     parameters: {
       content: [
         "## Promax — Leads por WhatsApp",
-        "Recibe los formularios de la web y los reenvía a Joel por WhatsApp + Email.",
+        "Ya viene PRECONFIGURADO. Solo: Import → Activar (toggle).",
         "",
-        "**Configura antes de activar:**",
-        "1. *Send WhatsApp* → pon tu URL de Evolution API, tu INSTANCIA y tu APIKEY (las mismas de UCallNow).",
-        "2. *Send Email* → selecciona tu credencial de Gmail y cambia `recipient_email` en *Format Lead* cuando tengan el correo.",
-        "3. El número de WhatsApp ya está: **13056761259** (Joel).",
-        "4. Webhook URL: `https://n8n-ucallnow.ucallnow.fun/webhook/promax-leads` (ya configurada en la web).",
+        "Incluye:",
+        "• WhatsApp (Evolution API UCallNow) → Joel **13056761259**",
+        "• Email (credencial Gmail 'automations') → **Promaxautobroker@gmail.com**",
+        "• Webhook: `/webhook/promax-leads` (ya conectado desde la web)",
         "",
-        "*Opcional:* se puede agregar generación de PDF para financiamiento (como en FK)."
+        "Si el nodo *Send Email* pidiera credencial, elige **automations** del desplegable (1 clic).",
+        "*Opcional:* se puede agregar PDF de financiamiento (como en FK)."
       ].join("\n"),
-      height: 320, width: 420, color: 4
+      height: 300, width: 430, color: 4
     },
     id: uid(), name: "Instrucciones", type: "n8n-nodes-base.stickyNote", typeVersion: 1, position: [-1120, -60]
   }
