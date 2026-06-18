@@ -1,0 +1,41 @@
+name: Deploy a Hostinger (FTP)
+
+# Sube el sitio a Hostinger por FTP en cada push a main.
+# Se activa SOLO cuando defines la variable de repositorio HOSTINGER_ENABLED = true
+# y agregas los secrets FTP. Mientras tanto no corre (no genera fallos).
+#
+# Configurar en GitHub:
+#   Settings -> Secrets and variables -> Actions
+#     Variables:  HOSTINGER_ENABLED = true   (y opcional FTP_SERVER_DIR)
+#     Secrets:    FTP_SERVER, FTP_USERNAME, FTP_PASSWORD
+#   (Los datos FTP están en hPanel de Hostinger -> Archivos -> Cuentas FTP.)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  ftp-deploy:
+    if: ${{ vars.HOSTINGER_ENABLED == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Subir por FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ vars.FTP_SERVER_DIR || 'public_html/' }}
+          # No subir archivos que no son del sitio público:
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.github/**
+            docs/**
+            google-apps-script/**
+            **/*.py

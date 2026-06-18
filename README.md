@@ -77,14 +77,27 @@ Listo: el formulario interno escribe en la hoja y el contador/sorteo funcionan s
 
 ## 🚀 Desplegar
 
-### Opción A — GitHub Pages (incluida)
-Hay un workflow en `.github/workflows/deploy.yml`. Al hacer **merge a `main`**, se publica solo.
-En el repo: **Settings → Pages → Source: GitHub Actions**.
+> El sitio usa rutas absolutas (`/assets/...`, `/inventory/...`), por lo que se sirve desde la **raíz del dominio**. **Vercel, Netlify y Hostinger funcionan tal cual** (GitHub Pages solo si es con dominio propio).
 
-> ⚠️ El sitio usa rutas absolutas (`/assets/...`, `/inventory/...`), así que debe servirse en la **raíz de un dominio**. Lo ideal es un **dominio propio** (ej. `promaxautobroker.com`). Con un dominio personalizado en GitHub Pages funciona perfecto.
+### Opción A — Vercel (recomendada, deploy en tiempo real) ⚡
+1. Entra a [vercel.com](https://vercel.com) → **Add New → Project** → importa este repo de GitHub.
+2. Framework: **Other** · Build: **vacío** · Output: **vacío** (es estático, no hay build).
+3. Deploy. Te da una URL `*.vercel.app` y **cada push vuelve a desplegar solo** (cada rama/PR genera además su propia URL de *preview*).
+4. **Dominio:** Project → **Settings → Domains** → agrega `promaxautobroker.com` cuando lo tengan (apuntas el DNS y listo, se cambia cuando quieras).
 
-### Opción B — Netlify / Vercel (también raíz)
-Conecta el repo y deploya. No requiere configuración de build (es estático).
+> Para que la rama de trabajo sea la "producción", en Vercel: Settings → Git → Production Branch.
+
+### Opción B — Hostinger 🟣
+**Manual (rápido):** descarga el repo, y en hPanel → **Administrador de archivos** sube **todo el contenido** a `public_html/` (es la raíz del dominio). Para actualizar, vuelves a subir los archivos cambiados.
+
+**Automático (en cada push):** ya hay un workflow en `.github/workflows/deploy-hostinger.yml`. Actívalo así:
+- En GitHub → **Settings → Secrets and variables → Actions**:
+  - **Variables:** `HOSTINGER_ENABLED = true` (y opcional `FTP_SERVER_DIR`, por defecto `public_html/`).
+  - **Secrets:** `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD` (los obtienes en hPanel → Archivos → **Cuentas FTP**).
+- Con eso, cada push a `main` sube el sitio a tu Hostinger automáticamente.
+
+### Opción C — GitHub Pages (incluida)
+Workflow en `.github/workflows/deploy.yml`. En el repo: **Settings → Pages → Source: GitHub Actions**. Requiere **dominio propio** para verse bien (si no, queda en un subpath y las rutas absolutas fallan).
 
 ---
 
