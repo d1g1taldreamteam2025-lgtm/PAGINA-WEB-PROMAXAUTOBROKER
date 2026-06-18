@@ -1,0 +1,5 @@
+# Archivos internos que NO deben publicarse en el sitio
+docs/
+automation/
+google-apps-script/
+**/*.py

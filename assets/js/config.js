@@ -3,9 +3,6 @@
    ---------------------------------------------------------------------
    Cambia los datos de la marca SOLO en este archivo y se actualizan
    en toda la web (header, footer, formularios, WhatsApp, redes, etc.).
-
-   Los valores marcados con  // <-- CONFIRMAR  son provisionales y deben
-   ser validados por el cliente (ver /docs/PREGUNTAS-CLIENTE.md).
    ===================================================================== */
 
 window.PROMAX = {
@@ -14,21 +11,27 @@ window.PROMAX = {
   brand: {
     name: "Promax Auto Broker",
     short: "Promax",
-    // Logo: coloca el archivo real en /assets/img/logo.svg (o .png)
-    logo: "/assets/img/logo.svg",
-    logoLight: "/assets/img/logo-white.svg", // versión para fondos oscuros (footer)
-    // Texto de respaldo que se muestra si aún no hay logo cargado
+    // Logo oficial (SVG en Cloudinary). El header es oscuro, por eso usamos el mismo en ambos.
+    logo: "https://res.cloudinary.com/drbc4wbvw/image/upload/v1781811698/PROMAX-LOGOTIPO_AI_VECTORES_Mesa_de_trabajo_1_copia_5_ak8pwn.svg",
+    logoLight: "https://res.cloudinary.com/drbc4wbvw/image/upload/v1781811698/PROMAX-LOGOTIPO_AI_VECTORES_Mesa_de_trabajo_1_copia_5_ak8pwn.svg",
     logoText: "PROMAX",
+  },
+
+  /* ---------- BANDERAS DEL SELECTOR DE IDIOMA ---------- */
+  // Cambia el código (us, ve, co, es) por el país que prefieras.
+  flags: {
+    en: "https://flagcdn.com/w40/us.png",   // Inglés → Estados Unidos
+    es: "https://flagcdn.com/w40/ve.png",   // Español → Venezuela  (usa /co/ Colombia o /es/ España)
   },
 
   /* ---------- CONTACTO ---------- */
   contact: {
-    phone:        "(000) 000-0000",                 // <-- CONFIRMAR
-    phoneRaw:     "10000000000",                     // <-- CONFIRMAR (solo dígitos, con código país)
-    whatsapp:     "10000000000",                     // <-- CONFIRMAR (número de WhatsApp con código país)
-    email:        "info@promaxautobroker.com",       // <-- CONFIRMAR
-    address:      "Dirección por confirmar",          // <-- CONFIRMAR
-    addressMaps:  "https://maps.google.com/?q=Promax+Auto+Broker", // <-- CONFIRMAR
+    phone:        "(305) 676-1259",
+    phoneRaw:     "13056761259",
+    whatsapp:     "13056761259",
+    email:        "info@promaxautobroker.com",       // <-- CONFIRMAR correo público
+    address:      "7875 NW 107 Ave, Miami, FL 33178, United States",
+    addressMaps:  "https://maps.google.com/?q=7875+NW+107+Ave,+Miami,+FL+33178",
     hoursShort:   "Lun–Sáb 9AM–7PM · Dom 11AM–5PM",  // <-- CONFIRMAR
     hours: [
       { day: "mon", time: "9:00am – 7:00pm" },
@@ -39,11 +42,10 @@ window.PROMAX = {
       { day: "sat", time: "9:00am – 7:00pm" },
       { day: "sun", time: "11:00am – 5:00pm" },
     ],
-    // Coordenadas para el mapa (OpenStreetMap). Por confirmar.
-    geo: { lat: 25.7617, lng: -80.1918 },            // <-- CONFIRMAR (ejemplo: Miami)
+    geo: { lat: 25.8245, lng: -80.3663 },            // 7875 NW 107 Ave, Doral/Miami
   },
 
-  /* ---------- REDES SOCIALES (confirmadas por el cliente) ---------- */
+  /* ---------- REDES SOCIALES ---------- */
   social: {
     instagram: "https://www.instagram.com/promaxautobroker/",
     facebook:  "https://www.facebook.com/104409542167703",
@@ -53,42 +55,35 @@ window.PROMAX = {
 
   /* ---------- INTEGRACIONES / BACKEND ---------- */
   endpoints: {
-    // Webhook donde llegan los leads (financiamiento, contacto, newsletter).
-    // Usa tu n8n / CRM. Déjalo vacío ("") para solo simular el envío.
-    leadsWebhook: "",                                // <-- CONFIRMAR
+    // Webhook n8n que recibe los leads y los envía por WhatsApp/email (ver /automation).
+    leadsWebhook: "https://n8n-ucallnow.ucallnow.fun/webhook/promax-leads",
 
-    // Fuente del inventario:
-    //  - "json"  => lee /assets/data/inventory.json (sin backend, fácil de editar)
-    //  - "api"   => lee de inventoryApiUrl (Supabase/REST)
     inventorySource: "json",
-    inventoryApiUrl: "",                             // opcional si usas "api"
-    inventoryApiKey: "",                             // opcional si usas "api"
+    inventoryApiUrl: "",
+    inventoryApiKey: "",
 
-    // Google Apps Script Web App para la sección REFERIDOS -> Google Sheet.
-    // (Ver /google-apps-script/Code.gs y el README para desplegarlo.)
-    referralsScriptUrl: "",                          // <-- CONFIRMAR (URL del Web App)
-    referralsToken: "promax-2026",                   // <-- debe COINCIDIR con TOKEN en Code.gs
+    // Google Apps Script Web App para REFERIDOS -> Google Sheet.
+    referralsScriptUrl: "",                          // <-- CONFIRMAR
+    referralsToken: "promax-2026",
   },
 
   /* ---------- REFERIDOS / SORTEO ---------- */
   referrals: {
-    goal: 100,            // ventas necesarias para activar el sorteo
-    soldStatus: "Vendido",// estado que cuenta como venta para el sorteo
+    goal: 100,
+    soldStatus: "Vendido",
     raffleEnabled: true,
-    // Clave de acceso a la página interna /referrals/ (vacío = sin clave).
-    // No es seguridad fuerte, solo evita accesos casuales.
-    passcode: "promax",   // <-- CONFIRMAR
+    passcode: "promax",                              // <-- CONFIRMAR
   },
 
   /* ---------- IDIOMA ---------- */
   i18n: {
-    default: "es",        // "es" | "en"
+    default: "es",
     available: ["es", "en"],
   },
 
   /* ---------- BARRA SUPERIOR (marquee) ---------- */
   marquee: {
-    es: ["+500 Clientes Satisfechos", "Bajo Pago Inicial", "Aprobación Rápida", "Aceptamos ITIN", "Atención Personalizada"],
-    en: ["+500 Happy Clients", "Low Down Payment", "Fast Approval", "ITIN Accepted", "Personalized Service"],
+    es: ["+500 Clientes Satisfechos", "Bajo Pago Inicial", "Aprobación Rápida", "Aceptamos ITIN", "Atención Personalizada", "Importamos a Venezuela 🇻🇪"],
+    en: ["+500 Happy Clients", "Low Down Payment", "Fast Approval", "ITIN Accepted", "Personalized Service", "We Import to Venezuela 🇻🇪"],
   },
 };

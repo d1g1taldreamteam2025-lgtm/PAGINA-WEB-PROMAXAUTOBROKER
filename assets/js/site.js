@@ -54,7 +54,7 @@
       header_address: CFG.contact ? CFG.contact.address : "",
       cta_prequalify: "Pre-Calificar",
       nav_home: "Inicio", nav_inventory: "Inventario", nav_financing: "Financiamiento",
-      nav_fin_overview: "Resumen de Financiamiento", nav_fin_apply: "Aplicar a Financiamiento",
+      nav_fin_overview: "Resumen de Financiamiento", nav_fin_overview_sub: "Tasas, pasos y aliados", nav_fin_apply: "Aplicar a Financiamiento",
       nav_about: "Nosotros", nav_contact: "Contacto", nav_faqs: "Preguntas",
       foot_tag: "Tu broker de autos de confianza: vehículos de calidad, precios honestos y financiamiento flexible.",
       foot_inventory: "Inventario", foot_view_all: "Ver Todo el Inventario",
@@ -74,7 +74,7 @@
       header_address: CFG.contact ? CFG.contact.address : "",
       cta_prequalify: "Get Pre-Qualified",
       nav_home: "Home", nav_inventory: "Inventory", nav_financing: "Financing",
-      nav_fin_overview: "Financing Overview", nav_fin_apply: "Apply for Financing",
+      nav_fin_overview: "Financing Overview", nav_fin_overview_sub: "Rates, steps & lenders", nav_fin_apply: "Apply for Financing",
       nav_about: "About", nav_contact: "Contact Us", nav_faqs: "FAQs",
       foot_tag: "Your trusted auto broker: quality vehicles, honest pricing, and flexible financing.",
       foot_inventory: "Inventory", foot_view_all: "View All Inventory",
@@ -114,9 +114,12 @@
   ];
 
   function langPills(extraClass) {
+    var fl = CFG.flags || {};
+    var fes = fl.es ? '<img src="' + fl.es + '" alt="ES">' : "";
+    var fen = fl.en ? '<img src="' + fl.en + '" alt="EN">' : "";
     return '<div class="pmx-lang ' + (extraClass || "") + '">' +
-      '<button class="pmx-lang__btn" type="button" data-lang="es"><span>ES</span></button>' +
-      '<button class="pmx-lang__btn" type="button" data-lang="en"><span>EN</span></button></div>';
+      '<button class="pmx-lang__btn" type="button" data-lang="es">' + fes + '<span>ES</span></button>' +
+      '<button class="pmx-lang__btn" type="button" data-lang="en">' + fen + '<span>EN</span></button></div>';
   }
 
   function logoMarkup(opts) {
@@ -135,8 +138,16 @@
   function buildHeader() {
     var c = CFG.contact || {};
     var navDesktop = NAV.map(function (n) {
-      var caret = n.dropdown ? ' <span style="font-size:13px">▾</span>' : "";
-      return '<a href="' + n.href + '" class="pmx-nav__item"><span data-i18n="' + n.key + '">' + t(n.key) + "</span>" + caret + "</a>";
+      if (n.dropdown) {
+        return '<div class="pmx-nav__dd-wrap" data-dd>' +
+          '<a href="' + n.href + '" class="pmx-nav__item" data-dd-trigger><span data-i18n="' + n.key + '">' + t(n.key) + '</span> <span class="pmx-caret">▾</span></a>' +
+          '<div class="pmx-nav__dd">' +
+            '<a href="/financing/"><span data-i18n="nav_fin_overview">' + t("nav_fin_overview") + '</span><div class="pmx-nav__dd-sub" data-i18n="nav_fin_overview_sub">' + t("nav_fin_overview_sub") + '</div></a>' +
+            '<a href="/financing/apply/" class="pmx-nav__dd-cta"><span data-i18n="nav_fin_apply">' + t("nav_fin_apply") + '</span></a>' +
+          '</div>' +
+        '</div>';
+      }
+      return '<a href="' + n.href + '" class="pmx-nav__item"><span data-i18n="' + n.key + '">' + t(n.key) + "</span></a>";
     }).join("");
 
     var navMobile = NAV.map(function (n) {
@@ -299,6 +310,63 @@
     });
   }
 
+  /* ---------------- MENÚ DESPLEGABLE (Financiamiento) ---------------- */
+  var ddDocWired = false;
+  function wireDropdown() {
+    document.querySelectorAll("[data-dd]").forEach(function (wrap) {
+      var trigger = wrap.querySelector("[data-dd-trigger]");
+      if (!trigger || trigger.__dd) return; trigger.__dd = true;
+      trigger.addEventListener("click", function (e) {
+        if (window.matchMedia("(max-width:1024px)").matches) return; // en móvil usa el menú hamburguesa
+        e.preventDefault();
+        var isOpen = wrap.classList.contains("open");
+        document.querySelectorAll("[data-dd].open").forEach(function (w) { w.classList.remove("open"); });
+        if (!isOpen) wrap.classList.add("open");
+      });
+    });
+    if (!ddDocWired) {
+      ddDocWired = true;
+      document.addEventListener("click", function (e) {
+        if (e.target.closest("[data-dd]")) return;
+        document.querySelectorAll("[data-dd].open").forEach(function (w) { w.classList.remove("open"); });
+      });
+    }
+  }
+
+  /* ---------------- ANIMACIONES ---------------- */
+  function wireCounters() {
+    var els = document.querySelectorAll("[data-count]");
+    if (!els.length) return;
+    function run(el) {
+      var raw = el.getAttribute("data-count");
+      var target = parseFloat(raw) || 0;
+      var dec = raw.indexOf(".") > -1 ? 1 : 0;
+      var pre = el.getAttribute("data-pre") || "", suf = el.getAttribute("data-suf") || "";
+      var dur = 1600, start = null;
+      function fmt(v) { return pre + (dec ? v.toFixed(1) : Math.floor(v).toLocaleString("en-US")) + suf; }
+      function step(ts) { if (!start) start = ts; var p = Math.min((ts - start) / dur, 1); var e = 1 - Math.pow(1 - p, 3); el.textContent = fmt(target * e); if (p < 1) requestAnimationFrame(step); else el.textContent = fmt(target); }
+      requestAnimationFrame(step);
+    }
+    if (!("IntersectionObserver" in window)) { els.forEach(run); return; }
+    var io = new IntersectionObserver(function (ents) { ents.forEach(function (en) { if (en.isIntersecting) { run(en.target); io.unobserve(en.target); } }); }, { threshold: 0.4 });
+    els.forEach(function (el) { io.observe(el); });
+  }
+
+  function wireAnim() {
+    document.documentElement.classList.add("pmx-js");
+    var sel = ".pmx-reveal,.pmx-section__head,.pmx-ctacard,.pmx-why__item,.pmx-review,.pmx-step,.pmx-stats__item,.pmx-card,.pmx-lender-item";
+    var els = Array.prototype.slice.call(document.querySelectorAll(sel)).filter(function (el) { return !el.closest("#pmxSticky") && !el.closest(".pmx-footer"); });
+    els.forEach(function (el) { el.classList.add("pmx-reveal"); });
+    if (!("IntersectionObserver" in window)) { els.forEach(function (el) { el.classList.add("is-visible"); }); }
+    else {
+      var io = new IntersectionObserver(function (ents) { ents.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("is-visible"); io.unobserve(en.target); } }); }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+      els.forEach(function (el) { io.observe(el); });
+      requestAnimationFrame(function () { els.forEach(function (el) { var r = el.getBoundingClientRect(); if (r.top < window.innerHeight * 0.94) el.classList.add("is-visible"); }); });
+    }
+    setTimeout(function () { document.querySelectorAll(".pmx-reveal:not(.is-visible)").forEach(function (el) { el.classList.add("is-visible"); }); }, 2500);
+    wireCounters();
+  }
+
   /* ---------------- INIT ---------------- */
   function mount() {
     // Header al inicio del body
@@ -322,7 +390,9 @@
 
     wireLangButtons();
     wireNewsletter();
+    wireDropdown();
     applyI18n(LANG);
+    wireAnim();
   }
 
   // API pública

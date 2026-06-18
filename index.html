@@ -16,11 +16,12 @@
 <link rel="icon" href="/assets/img/favicon.svg">
 <style>
 /* HERO */
-.pmx-hero{position:relative;min-height:560px;display:flex;align-items:center;color:#fff;
-  background:linear-gradient(120deg,rgba(13,15,18,.86),rgba(13,15,18,.55)),url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1600&q=80') center/cover no-repeat;}
-.pmx-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--brand),var(--brand-2),var(--brand));}
-.pmx-hero__inner{max-width:var(--maxw);margin:0 auto;padding:80px 48px;width:100%;}
-.pmx-hero__eyebrow{display:inline-block;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#fff;background:rgba(225,29,42,.9);padding:6px 14px;border-radius:999px;margin-bottom:18px;}
+.pmx-hero{position:relative;min-height:580px;display:flex;align-items:center;color:#fff;overflow:hidden;background:#0a0a0a;}
+.pmx-hero__bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1600&q=80') center/cover no-repeat;animation:pmxKen 22s ease-in-out infinite alternate;z-index:0;}
+.pmx-hero__ov{position:absolute;inset:0;background:linear-gradient(120deg,rgba(10,10,10,.9) 0%,rgba(10,10,10,.5) 58%,rgba(167,2,0,.28) 100%);z-index:1;}
+.pmx-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--brand),var(--accent),var(--brand));z-index:3;}
+.pmx-hero__inner{position:relative;z-index:2;max-width:var(--maxw);margin:0 auto;padding:80px 48px;width:100%;}
+.pmx-hero__eyebrow{display:inline-block;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#fff;background:rgba(167,2,0,.9);padding:6px 14px;border-radius:999px;margin-bottom:18px;}
 .pmx-hero h1{font-size:54px;font-weight:800;letter-spacing:-1.2px;margin:0 0 16px;max-width:760px;line-height:1.08;}
 .pmx-hero p{font-size:19px;color:rgba(255,255,255,.9);max-width:560px;margin:0 0 30px;}
 .pmx-hero__cta{display:flex;gap:14px;flex-wrap:wrap;}
@@ -63,12 +64,14 @@
 
 <!-- HERO -->
 <section class="pmx-hero">
+  <div class="pmx-hero__bg"></div>
+  <div class="pmx-hero__ov"></div>
   <div class="pmx-hero__inner">
     <span class="pmx-hero__eyebrow" data-i18n="h_eyebrow">Broker de autos · USA</span>
     <h1 data-i18n="h_title">Encuentra tu próximo carro con quien sí te asesora.</h1>
     <p data-i18n="h_sub">En Promax trabajamos para ti: vehículos inspeccionados, precios honestos y financiamiento a tu medida — incluso con crédito en construcción o ITIN.</p>
     <div class="pmx-hero__cta">
-      <a href="/inventory/" class="pmx-btn pmx-btn--primary" data-i18n="h_cta1">Ver Inventario</a>
+      <a href="/inventory/" class="pmx-btn pmx-btn--primary pmx-pulse" data-i18n="h_cta1">Ver Inventario</a>
       <a href="/financing/apply/" class="pmx-btn pmx-btn--ghost-light" data-i18n="h_cta2">Pre-Calificar</a>
     </div>
   </div>
@@ -94,6 +97,16 @@
         <p data-i18n="cc3_s">Pre-califica en minutos</p>
       </a>
     </div>
+  </div>
+</section>
+
+<!-- STATS BAND (contadores animados) -->
+<section class="pmx-stats">
+  <div class="pmx-stats__grid">
+    <div class="pmx-stats__item"><h3><span data-count="500" data-pre="+">+0</span></h3><p data-i18n="st_sold">Vehículos vendidos</p></div>
+    <div class="pmx-stats__item"><h3><span data-count="4.9">0</span><small>★</small></h3><p data-i18n="st_rating">Calificación Google</p></div>
+    <div class="pmx-stats__item"><h3><span data-count="12" data-suf="+">0+</span></h3><p data-i18n="st_lenders">Prestamistas aliados</p></div>
+    <div class="pmx-stats__item"><h3><span data-count="100" data-suf="%">0%</span></h3><p data-i18n="st_inspected">Inspeccionados</p></div>
   </div>
 </section>
 
@@ -173,6 +186,7 @@ PMX.addTranslations({
     cc1_t:"Buscar Carros", cc1_s:"Explora todo nuestro inventario",
     cc2_t:"Promociones", cc2_s:"Vehículos bajo $20k y ofertas",
     cc3_t:"Financiamiento", cc3_s:"Pre-califica en minutos",
+    st_sold:"Vehículos vendidos", st_rating:"Calificación Google", st_lenders:"Prestamistas aliados", st_inspected:"Inspeccionados",
     div1:"Vehículos nuevos y usados de calidad",
     feat_eyebrow:"Selección", feat_title:"Vehículos Destacados", feat_sub:"Seleccionados de nuestras últimas llegadas", feat_all:"Ver Todo el Inventario",
     why_eyebrow:"Por qué Promax", why_title:"Lo que nos hace diferentes",
@@ -201,6 +215,7 @@ PMX.addTranslations({
     cc1_t:"Search Cars", cc1_s:"Browse our full inventory",
     cc2_t:"Promotions", cc2_s:"Vehicles under $20k and deals",
     cc3_t:"Financing", cc3_s:"Get pre-qualified in minutes",
+    st_sold:"Vehicles sold", st_rating:"Google Rating", st_lenders:"Partner lenders", st_inspected:"Inspected",
     div1:"Quality new and pre-owned vehicles",
     feat_eyebrow:"Selection", feat_title:"Featured Vehicles", feat_sub:"Hand-picked from our latest arrivals", feat_all:"View All Inventory",
     why_eyebrow:"Why Promax", why_title:"What makes us different",
