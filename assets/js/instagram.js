@@ -78,7 +78,9 @@
       var u = embedURL(item.permalink);
       if (!u) { window.open(item.permalink, "_blank", "noopener"); return; }
       LB.className = "pmx-iglb pmx-iglb--embed is-open";
-      box.innerHTML = close + '<iframe src="' + u + '" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture" allowfullscreen scrolling="no"></iframe>';
+      box.innerHTML = close +
+        '<iframe src="' + u + '" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture" allowfullscreen scrolling="no"></iframe>' +
+        '<a class="pmx-iglb__open" href="' + item.permalink + '" target="_blank" rel="noopener">Ver en Instagram ↗</a>';
     }
     document.body.style.overflow = "hidden";
   }

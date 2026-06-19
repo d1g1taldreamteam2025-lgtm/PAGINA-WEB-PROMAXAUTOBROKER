@@ -88,6 +88,9 @@
 .pmx-iglb--embed .pmx-iglb__box{height:min(86vh,640px);background:#fff;}
 .pmx-iglb__box video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;}
 .pmx-iglb__box iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+.pmx-iglb--embed .pmx-iglb__box iframe{bottom:42px;height:auto;}
+.pmx-iglb__open{position:absolute;left:0;right:0;bottom:0;z-index:4;height:42px;display:flex;align-items:center;justify-content:center;gap:6px;background:#fff;color:var(--brand);font-weight:700;font-size:13.5px;text-decoration:none;border-top:1px solid #eee;}
+.pmx-iglb__open:hover{background:var(--brand);color:#fff;}
 .pmx-iglb__close{position:absolute;top:10px;right:10px;z-index:4;width:38px;height:38px;border-radius:50%;border:0;cursor:pointer;background:rgba(0,0,0,.55);color:#fff;font-size:24px;line-height:1;display:flex;align-items:center;justify-content:center;transition:background .2s,transform .2s;}
 .pmx-iglb__close:hover{background:var(--brand);transform:scale(1.08);}
 .pmx-ig__video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;background:#111;}
