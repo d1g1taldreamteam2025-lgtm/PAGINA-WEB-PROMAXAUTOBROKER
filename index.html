@@ -58,6 +58,20 @@
 .pmx-seo h2{font-size:32px;margin:0 0 18px;color:var(--ink);}
 .pmx-seo h3{font-size:21px;margin:28px 0 10px;color:var(--ink);}
 .pmx-seo p{font-size:16px;line-height:1.75;color:#37475a;margin:0 0 14px;}
+/* INVITACIÓN A VIDEOS (toast que aparece tras 30s en el home) */
+.pmx-vinvite{position:fixed;z-index:9500;left:24px;bottom:24px;width:344px;max-width:calc(100vw - 32px);background:#fff;border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.25);padding:18px 18px 18px 16px;display:flex;gap:14px;align-items:flex-start;opacity:0;transform:translateY(18px);transition:opacity .3s ease,transform .3s cubic-bezier(.2,.7,.3,1);}
+.pmx-vinvite.is-open{opacity:1;transform:translateY(0);}
+.pmx-vinvite__ic{flex:0 0 auto;width:42px;height:42px;border-radius:50%;background:var(--brand-soft);color:var(--brand);display:flex;align-items:center;justify-content:center;}
+.pmx-vinvite__ic svg{width:22px;height:22px;}
+.pmx-vinvite__body{flex:1;min-width:0;}
+.pmx-vinvite__q{margin:0 0 12px;font-size:15px;font-weight:600;color:var(--ink);line-height:1.35;}
+.pmx-vinvite__cta{appearance:none;border:0;cursor:pointer;background:var(--brand);color:#fff;font-family:var(--font-head);font-weight:700;font-size:14px;padding:10px 18px;border-radius:999px;transition:background .2s,transform .2s;}
+.pmx-vinvite__cta:hover{background:var(--brand-dark);transform:translateY(-1px);}
+.pmx-vinvite__x{position:absolute;top:8px;right:10px;border:0;background:none;cursor:pointer;font-size:22px;line-height:1;color:var(--text-faint);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.pmx-vinvite__x:hover{color:var(--ink);background:var(--bg-soft);}
+.pmx-vid-glow{animation:pmxVidGlow 2.2s ease;}
+@keyframes pmxVidGlow{0%,100%{box-shadow:none;}30%,70%{box-shadow:inset 0 0 0 3px var(--brand);}}
+@media(max-width:600px){.pmx-vinvite{left:12px;right:12px;bottom:84px;width:auto;}}
 </style>
 </head>
 <body>
@@ -126,6 +140,29 @@
   </div>
 </section>
 
+<!-- VIDEOS DE INVENTARIO -->
+<section id="pmxVideos" class="pmx-section pmx-ig">
+  <div class="pmx-container">
+    <div class="pmx-ig__head pmx-reveal">
+      <div>
+        <span class="pmx-eyebrow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <span data-i18n="home_vid_eyebrow">Inventario en video</span>
+        </span>
+        <h2 data-i18n="home_vid_title">Videos de nuestro inventario</h2>
+        <p data-i18n="home_vid_sub">Mira nuestros vehículos en acción. Pasa el mouse para una vista previa y toca para verlo en pantalla completa con sonido.</p>
+      </div>
+      <a id="pmxIGFollow" class="pmx-ig__follow" href="https://www.instagram.com/promaxautobroker/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4"/><circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/></svg>
+        <span data-i18n="ig_follow">Seguir en Instagram</span>
+      </a>
+    </div>
+    <div id="pmxIGGrid" class="pmx-ig__grid pmx-reveal">
+      <p style="grid-column:1/-1;text-align:center;color:#888;padding:30px" data-i18n="ig_loading">Cargando videos…</p>
+    </div>
+  </div>
+</section>
+
 <!-- WHY -->
 <section class="pmx-section pmx-section--soft">
   <div class="pmx-container">
@@ -172,8 +209,19 @@
   </div>
 </section>
 
+<!-- AVISO: invitación a ver los videos (se muestra tras 30s de interacción) -->
+<div class="pmx-vinvite" id="pmxVInvite" role="dialog" aria-live="polite" hidden>
+  <button class="pmx-vinvite__x" type="button" aria-label="Cerrar">&times;</button>
+  <span class="pmx-vinvite__ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+  <div class="pmx-vinvite__body">
+    <p class="pmx-vinvite__q" data-i18n="vid_invite_q">¿Te gustaría ver videos de nuestro inventario?</p>
+    <button class="pmx-vinvite__cta" type="button" data-i18n="vid_invite_yes">Ver videos</button>
+  </div>
+</div>
+
 <script src="/assets/js/config.js"></script>
 <script src="/assets/js/site.js"></script>
+<script src="/assets/js/instagram.js"></script>
 <script src="/assets/js/data.js"></script>
 <script>
 PMX.addTranslations({
@@ -204,6 +252,9 @@ PMX.addTranslations({
     seo_h1:"Lo que nos hace diferentes",
     seo_p2:"Cada vehículo pasa por una inspección de calidad y trabajamos con una amplia red de prestamistas para conseguirte la mejor opción, incluso si estás construyendo tu crédito o tienes ITIN.",
     seo_h2:"Marcas que manejamos", seo_p3:"Toyota, Honda, Ford, Chevrolet, Hyundai, Kia, Nissan, BMW y más.",
+    home_vid_eyebrow:"Inventario en video", home_vid_title:"Videos de nuestro inventario",
+    home_vid_sub:"Mira nuestros vehículos en acción. Pasa el mouse para una vista previa y toca para verlo en pantalla completa con sonido.",
+    vid_invite_q:"¿Te gustaría ver videos de nuestro inventario?", vid_invite_yes:"Ver videos", vid_invite_close:"Cerrar",
     btn_details:"Ver Detalles", btn_prequal:"Pre-Calificar",
   },
   en: {
@@ -233,6 +284,9 @@ PMX.addTranslations({
     seo_h1:"What makes us different",
     seo_p2:"Every vehicle goes through a quality inspection and we work with a wide network of lenders to get you the best option, even if you're building credit or have an ITIN.",
     seo_h2:"Brands we carry", seo_p3:"Toyota, Honda, Ford, Chevrolet, Hyundai, Kia, Nissan, BMW and more.",
+    home_vid_eyebrow:"Inventory in video", home_vid_title:"Our inventory videos",
+    home_vid_sub:"See our vehicles in action. Hover for a preview and tap to watch fullscreen with sound.",
+    vid_invite_q:"Would you like to see videos of our inventory?", vid_invite_yes:"Watch videos", vid_invite_close:"Close",
     btn_details:"View Details", btn_prequal:"Pre-Qualify",
   }
 });
@@ -261,6 +315,50 @@ PMX.addTranslations({
     var host = document.getElementById("pmxFeatured");
     host.innerHTML = feat.length ? feat.map(card).join("") : '<p style="grid-column:1/-1;text-align:center;color:#888">—</p>';
   });
+})();
+
+/* Invitación a ver los videos: aparece tras ~30s de interacción en el home,
+   una sola vez por sesión, y solo si el usuario aún no llegó a la sección. */
+(function(){
+  var KEY = "pmx_vidinvite";
+  var el = document.getElementById("pmxVInvite");
+  var target = document.getElementById("pmxVideos");
+  if (!el || !target) return;
+  try { if (sessionStorage.getItem(KEY)) return; } catch(e){}
+
+  var secs = 0, interacted = false, shown = false, timer = null;
+  function seen(){ var r = target.getBoundingClientRect(); return r.top < window.innerHeight * 0.6; }
+  function remember(){ try { sessionStorage.setItem(KEY, "1"); } catch(e){} }
+  function stop(){ if (timer) { clearInterval(timer); timer = null; } }
+
+  function dismiss(){
+    el.classList.remove("is-open");
+    setTimeout(function(){ el.hidden = true; }, 320);
+    remember();
+  }
+  function show(){
+    if (shown) return; shown = true; stop();
+    if (seen()) { remember(); return; }            // ya vio los videos: no molestar
+    if (window.PMX){ var x = el.querySelector(".pmx-vinvite__x"); if (x) x.setAttribute("aria-label", PMX.t("vid_invite_close")); }
+    el.hidden = false;
+    requestAnimationFrame(function(){ el.classList.add("is-open"); });
+  }
+
+  el.querySelector(".pmx-vinvite__x").addEventListener("click", dismiss);
+  el.querySelector(".pmx-vinvite__cta").addEventListener("click", function(){
+    dismiss();
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+    target.classList.add("pmx-vid-glow");
+    setTimeout(function(){ target.classList.remove("pmx-vid-glow"); }, 2300);
+  });
+
+  ["scroll","mousemove","keydown","touchstart","pointerdown","click"].forEach(function(ev){
+    window.addEventListener(ev, function(){ interacted = true; }, { once:true, passive:true });
+  });
+  timer = setInterval(function(){
+    if (document.hidden || !interacted) return;     // solo cuenta tiempo activo y visible
+    if (++secs >= 30) show();
+  }, 1000);
 })();
 </script>
 </body>

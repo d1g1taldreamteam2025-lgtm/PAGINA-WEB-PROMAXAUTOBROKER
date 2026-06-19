@@ -15,13 +15,16 @@ window.PROMAX = {
     logo: "https://res.cloudinary.com/drbc4wbvw/image/upload/v1781811698/PROMAX-LOGOTIPO_AI_VECTORES_Mesa_de_trabajo_1_copia_5_ak8pwn.svg",
     logoLight: "https://res.cloudinary.com/drbc4wbvw/image/upload/v1781811698/PROMAX-LOGOTIPO_AI_VECTORES_Mesa_de_trabajo_1_copia_5_ak8pwn.svg",
     logoText: "PROMAX",
+    // Logo de WhatsApp para el botón flotante (imagen con transparencia: PNG/WEBP).
+    // Déjalo vacío ("") para volver al ícono SVG por defecto.
+    whatsappLogo: "https://res.cloudinary.com/drbc4wbvw/image/upload/v1781841452/whatsapp-logo-whatsapp-icon-whatsapp-transparent-free-png_amkiik.webp",
   },
 
   /* ---------- BANDERAS DEL SELECTOR DE IDIOMA ---------- */
   // Cambia el código (us, ve, co, es) por el país que prefieras.
   flags: {
     en: "https://flagcdn.com/w40/us.png",   // Inglés → Estados Unidos
-    es: "https://flagcdn.com/w40/ve.png",   // Español → Venezuela  (usa /co/ Colombia o /es/ España)
+    es: "https://flagcdn.com/w40/es.png",   // Español → España
   },
 
   /* ---------- CONTACTO ---------- */
