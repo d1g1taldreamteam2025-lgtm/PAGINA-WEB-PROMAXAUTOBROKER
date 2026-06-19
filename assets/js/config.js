@@ -15,9 +15,11 @@ window.PROMAX = {
     logo: "https://res.cloudinary.com/drbc4wbvw/image/upload/v1781811698/PROMAX-LOGOTIPO_AI_VECTORES_Mesa_de_trabajo_1_copia_5_ak8pwn.svg",
     logoLight: "https://res.cloudinary.com/drbc4wbvw/image/upload/v1781811698/PROMAX-LOGOTIPO_AI_VECTORES_Mesa_de_trabajo_1_copia_5_ak8pwn.svg",
     logoText: "PROMAX",
-    // Logo de WhatsApp para el botón flotante (imagen con transparencia: PNG/WEBP).
-    // Déjalo vacío ("") para volver al ícono SVG por defecto.
-    whatsappLogo: "https://res.cloudinary.com/drbc4wbvw/image/upload/v1781841452/whatsapp-logo-whatsapp-icon-whatsapp-transparent-free-png_amkiik.webp",
+    // Ícono de WhatsApp del botón flotante. Vacío ("") = ícono integrado nítido
+    // (teléfono BLANCO sobre círculo verde). Si quieres una imagen propia, pega su
+    // URL aquí: usa un logo CLARO/BLANCO con fondo transparente (PNG/WEBP), no uno
+    // verde (se confundiría con el fondo verde del botón).
+    whatsappLogo: "",
   },
 
   /* ---------- BANDERAS DEL SELECTOR DE IDIOMA ---------- */
