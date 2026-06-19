@@ -62,7 +62,7 @@
       if (!arr.length) throw 0;
       render(arr);
     }).catch(function () {
-      fetch("/assets/data/instagram.json").then(function (r) { return r.ok ? r.json() : []; })
+      fetch("/assets/data/instagram.json?v=" + Date.now()).then(function (r) { return r.ok ? r.json() : []; })
         .then(render).catch(function () { render([]); });
     });
   }
