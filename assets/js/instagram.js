@@ -29,28 +29,91 @@
   function norm(it) {
     return {
       permalink: it.permalink || it.link || (CFG.social && CFG.social.instagram) || "#",
-      thumb: it.thumbnail_url || it.media_url || it.thumbnail || it.image || "",
-      type: String(it.media_type || it.type || "").toUpperCase(),
+      thumb: it.thumbnail_url || it.media_url || it.thumbnail || it.image || it.poster || "",
+      video: it.video || it.video_url || it.mp4 || "",
       caption: it.caption || it.text || ""
     };
   }
 
-  function card(c) {
-    var media = c.thumb ? '<div class="pmx-ig__media" style="background-image:url(\'' + c.thumb + '\')"></div>' : "";
+  // De un enlace de reel saca la URL de incrustación de Instagram.
+  function embedURL(permalink) {
+    var m = String(permalink || "").match(/instagram\.com\/(?:p|reel|tv)\/([^\/?#]+)/i);
+    return m ? "https://www.instagram.com/p/" + m[1] + "/embed/" : "";
+  }
+
+  function card(c, idx) {
+    var media = c.video
+      ? '<video class="pmx-ig__video" muted loop playsinline preload="metadata"' + (c.thumb ? ' poster="' + c.thumb + '"' : "") + '><source src="' + c.video + '" type="video/mp4"></video>'
+      : (c.thumb ? '<div class="pmx-ig__media" style="background-image:url(\'' + c.thumb + '\')"></div>' : "");
     var cap = c.caption ? '<div class="pmx-ig__cap">' + esc(trunc(c.caption, 84)) + "</div>" : "";
-    return '<a class="pmx-ig__card' + (c.thumb ? "" : " pmx-ig__card--noimg") + '" href="' + c.permalink + '" target="_blank" rel="noopener">' +
+    var noimg = (c.thumb || c.video) ? "" : " pmx-ig__card--noimg";
+    return '<a class="pmx-ig__card' + noimg + '" href="' + c.permalink + '" target="_blank" rel="noopener" data-idx="' + idx + '">' +
       media + '<div class="pmx-ig__shade"></div>' +
       '<span class="pmx-ig__play">' + PLAY + "</span>" +
       '<span class="pmx-ig__badge">' + IG + "</span>" + cap + "</a>";
   }
 
+  // ---- Reproductor (lightbox) para ver el reel sin salir de la web ----
+  var LB = null, STATE = [];
+  function buildLightbox() {
+    if (LB) return;
+    LB = document.createElement("div");
+    LB.className = "pmx-iglb";
+    LB.innerHTML = '<div class="pmx-iglb__box"></div>';
+    document.body.appendChild(LB);
+    LB.addEventListener("click", function (e) {
+      if (e.target === LB || (e.target.closest && e.target.closest(".pmx-iglb__close"))) closeLB();
+    });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeLB(); });
+  }
+  function openLB(item) {
+    if (!item) return;
+    buildLightbox();
+    var box = LB.querySelector(".pmx-iglb__box");
+    var close = '<button class="pmx-iglb__close" type="button" aria-label="Cerrar">&times;</button>';
+    if (item.video) {
+      LB.className = "pmx-iglb pmx-iglb--video is-open";
+      box.innerHTML = close + '<video src="' + item.video + '" controls autoplay playsinline' + (item.thumb ? ' poster="' + item.thumb + '"' : "") + "></video>";
+    } else {
+      var u = embedURL(item.permalink);
+      if (!u) { window.open(item.permalink, "_blank", "noopener"); return; }
+      LB.className = "pmx-iglb pmx-iglb--embed is-open";
+      box.innerHTML = close + '<iframe src="' + u + '" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture" allowfullscreen scrolling="no"></iframe>';
+    }
+    document.body.style.overflow = "hidden";
+  }
+  function closeLB() {
+    if (!LB) return;
+    LB.className = "pmx-iglb";
+    LB.querySelector(".pmx-iglb__box").innerHTML = "";
+    document.body.style.overflow = "";
+  }
+
   function render(items) {
     var host = document.querySelector(GRID);
-    var list = (items || []).map(norm).slice(0, 15);
-    host.innerHTML = list.length ? list.map(card).join("")
+    STATE = (items || []).map(norm).slice(0, 15);
+    host.innerHTML = STATE.length ? STATE.map(function (c, i) { return card(c, i); }).join("")
       : '<p style="grid-column:1/-1;text-align:center;color:#888;padding:30px">' + PMX.t("ig_empty") + "</p>";
     var f = document.getElementById("pmxIGFollow");
     if (f && CFG.social) f.setAttribute("href", CFG.social.instagram || "#");
+
+    // Clic en la tarjeta -> abre el reproductor dentro de la web.
+    if (!host.__pmxBound) {
+      host.__pmxBound = true;
+      host.addEventListener("click", function (e) {
+        var a = e.target.closest(".pmx-ig__card");
+        if (!a) return;
+        e.preventDefault();
+        openLB(STATE[+a.getAttribute("data-idx")]);
+      });
+    }
+    // Vista previa al pasar el mouse (solo si el reel tiene video propio cargado).
+    host.querySelectorAll(".pmx-ig__card").forEach(function (a) {
+      var v = a.querySelector("video.pmx-ig__video");
+      if (!v) return;
+      a.addEventListener("mouseenter", function () { var p = v.play(); if (p && p.catch) p.catch(function () {}); });
+      a.addEventListener("mouseleave", function () { v.pause(); try { v.currentTime = 0; } catch (_) {} });
+    });
   }
 
   function load() {
