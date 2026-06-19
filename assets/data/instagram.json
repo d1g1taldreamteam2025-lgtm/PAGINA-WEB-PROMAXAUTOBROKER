@@ -1,32 +1,7 @@
 [
-  {
-    "permalink": "https://www.instagram.com/p/DZS1UZoyTSh/",
-    "thumbnail": "",
-    "type": "VIDEO",
-    "caption": "🔥 Toyota Crown Limited 2026 — elegancia, tecnología y potencia híbrida. 0 Down."
-  },
-  {
-    "permalink": "https://www.instagram.com/p/DZQ6l19OW6p/",
-    "thumbnail": "",
-    "type": "VIDEO",
-    "caption": "🚙 Toyota RAV4 2026 — la SUV perfecta. $1,500 Down. ¡Móntate hoy!"
-  },
-  {
-    "permalink": "https://www.instagram.com/promaxautobroker/",
-    "thumbnail": "",
-    "type": "VIDEO",
-    "caption": "🔥 Volvo 2022 — $87,900 puesto en Venezuela. Importación segura y confiable."
-  },
-  {
-    "permalink": "https://www.instagram.com/promaxautobroker/",
-    "thumbnail": "",
-    "type": "VIDEO",
-    "caption": "🚐 Van High Roof 3500 — lista para tu negocio. ¿Mal crédito? También te ayudamos."
-  },
-  {
-    "permalink": "https://www.instagram.com/promaxautobroker/",
-    "thumbnail": "",
-    "type": "VIDEO",
-    "caption": "🏔️ Toyota 4Runner TRD Off-Road 2026 — lista para cualquier terreno. 0 Down."
-  }
+  { "link": "https://www.instagram.com/p/DZS1UZoyTSh/", "caption": "🔥 Toyota Crown Limited 2026 — elegancia, tecnología y potencia híbrida. 0 Down." },
+  { "link": "https://www.instagram.com/p/DZQ6l19OW6p/", "caption": "🚙 Toyota RAV4 2026 — la SUV perfecta. $1,500 Down. ¡Móntate hoy!" },
+  { "link": "https://www.instagram.com/promaxautobroker/", "caption": "🔥 Volvo 2022 — $87,900 puesto en Venezuela. Importación segura y confiable." },
+  { "link": "https://www.instagram.com/promaxautobroker/", "caption": "🚐 Van High Roof 3500 — lista para tu negocio. ¿Mal crédito? También te ayudamos." },
+  { "link": "https://www.instagram.com/promaxautobroker/", "caption": "🏔️ Toyota 4Runner TRD Off-Road 2026 — lista para cualquier terreno. 0 Down." }
 ]

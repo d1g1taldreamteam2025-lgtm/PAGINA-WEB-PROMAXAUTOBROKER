@@ -66,8 +66,9 @@ window.PROMAX = {
     referralsScriptUrl: "",                          // <-- CONFIRMAR
     referralsToken: "promax-2026",
 
-    // Feed de Instagram (auto-actualizable). Si está vacío, usa /assets/data/instagram.json.
-    // Pega aquí la URL del webhook n8n (promax-instagram) o del widget para que se actualice solo.
+    // Instagram: déjalo VACÍO para usar la lista manual /assets/data/instagram.json
+    // (ahí agregas o quitas reels; ver docs/INSTAGRAM.md). Si algún día usas un
+    // widget que te dé un enlace de feed, lo pegas aquí y se actualizará solo.
     instagramFeed: "",
   },
 
