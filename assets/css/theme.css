@@ -297,6 +297,43 @@ body.pmx-open .pmx-mobilemenu{ display:block; }
 .pmx-proof__x:hover{background:var(--bg-soft);color:var(--ink);}
 @media(max-width:600px){.pmx-proof{left:10px;bottom:84px;width:270px;}}
 
+/* ===== PROMO 15% OFF (botón flotante + popup, solo al hacer clic) ===== */
+.pmx-promo-fab{position:fixed;right:26px;bottom:100px;z-index:8950;width:74px;height:74px;border-radius:50%;border:0;cursor:pointer;background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;box-shadow:0 8px 24px rgba(167,2,0,.5);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;font-family:var(--font-head);animation:pmxFabPromo 2.4s infinite;transition:transform .2s;}
+.pmx-promo-fab:hover{transform:scale(1.08);animation:none;}
+.pmx-promo-fab__big{font-size:21px;font-weight:800;}
+.pmx-promo-fab__small{font-size:11px;font-weight:700;letter-spacing:1px;margin-top:1px;}
+@keyframes pmxFabPromo{0%{box-shadow:0 8px 24px rgba(167,2,0,.5),0 0 0 0 rgba(167,2,0,.5);}70%{box-shadow:0 8px 24px rgba(167,2,0,.5),0 0 0 16px rgba(167,2,0,0);}100%{box-shadow:0 8px 24px rgba(167,2,0,.5),0 0 0 0 rgba(167,2,0,0);}}
+.pmx-promo{position:fixed;inset:0;z-index:9700;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(10,4,12,.72);backdrop-filter:blur(5px);}
+.pmx-promo.is-open{display:flex;animation:pmxFadeIn .25s ease;}
+@keyframes pmxFadeIn{from{opacity:0}to{opacity:1}}
+.pmx-promo__box{position:relative;display:grid;grid-template-columns:1fr 1fr;max-width:820px;width:100%;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5);animation:pmxPop .35s cubic-bezier(.2,.8,.3,1);}
+@keyframes pmxPop{from{transform:translateY(18px) scale(.96);opacity:0}to{transform:none;opacity:1}}
+.pmx-promo__img{background:#111;}
+.pmx-promo__img img{width:100%;height:100%;object-fit:cover;display:block;}
+.pmx-promo__body{padding:30px 30px 24px;display:flex;flex-direction:column;}
+.pmx-promo__x{position:absolute;top:12px;right:12px;z-index:2;width:34px;height:34px;border-radius:50%;border:0;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.18);color:#333;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.pmx-promo__x:hover{background:var(--brand);color:#fff;}
+.pmx-promo__badge{align-self:flex-start;background:var(--accent);color:#0a0a0a;font-weight:800;font-size:11px;letter-spacing:1px;text-transform:uppercase;padding:5px 12px;border-radius:999px;margin-bottom:14px;}
+.pmx-promo__title{font-family:var(--font-head);font-size:30px;font-weight:800;color:var(--ink);line-height:1.05;margin:0 0 10px;}
+.pmx-promo__sub{font-size:15px;color:var(--text-muted);line-height:1.5;margin:0 0 18px;}
+.pmx-promo__sub b{color:var(--brand);}
+.pmx-promo__timerlbl{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--brand);text-transform:uppercase;margin-bottom:8px;}
+.pmx-promo__timer{display:flex;align-items:center;gap:6px;margin-bottom:20px;}
+.pmx-promo__seg{background:var(--ink);color:#fff;border-radius:10px;padding:8px 0;width:54px;text-align:center;}
+.pmx-promo__seg b{display:block;font-family:var(--font-head);font-size:22px;font-weight:800;line-height:1;}
+.pmx-promo__seg span{font-size:9px;letter-spacing:.5px;color:rgba(255,255,255,.6);}
+.pmx-promo__seg--accent{background:var(--brand);}
+.pmx-promo__seg--accent span{color:rgba(255,255,255,.85);}
+.pmx-promo__colon{font-weight:800;color:var(--text-faint);}
+.pmx-promo__cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto;}
+.pmx-promo__yes{flex:1;min-width:150px;background:var(--brand);color:#fff;border:0;border-radius:999px;padding:14px 18px;font-family:var(--font-head);font-weight:800;font-size:14px;cursor:pointer;transition:background .2s,transform .2s;text-transform:uppercase;letter-spacing:.3px;}
+.pmx-promo__yes:hover{background:var(--brand-dark);transform:translateY(-2px);}
+.pmx-promo__no{background:none;border:1.5px solid var(--line);color:var(--text-muted);border-radius:999px;padding:14px 20px;font-weight:700;font-size:13px;cursor:pointer;}
+.pmx-promo__no:hover{border-color:var(--ink);color:var(--ink);}
+.pmx-promo__fine{font-size:10.5px;color:var(--text-faint);margin:12px 0 0;line-height:1.4;text-transform:uppercase;letter-spacing:.3px;}
+@media(max-width:768px){.pmx-promo-fab{right:16px;bottom:80px;width:62px;height:62px;}.pmx-promo-fab__big{font-size:18px;}.pmx-promo-fab__small{font-size:10px;}}
+@media(max-width:680px){.pmx-promo__box{grid-template-columns:1fr;max-width:360px;max-height:92vh;overflow-y:auto;}.pmx-promo__img{max-height:190px;}.pmx-promo__title{font-size:24px;}.pmx-promo__body{padding:22px 22px 20px;}}
+
 /* ===================== GALERÍA DE VIDEOS / INSTAGRAM (pmx-ig) ===================== */
 .pmx-ig{background:var(--bg-soft);scroll-margin-top:140px;}
 .pmx-ig__head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:30px;flex-wrap:wrap;}

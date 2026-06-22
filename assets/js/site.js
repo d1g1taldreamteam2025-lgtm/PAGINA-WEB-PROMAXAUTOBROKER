@@ -73,6 +73,11 @@
       chat_label: "Chat con Nosotros",
       open_now: "Abierto ahora", closed_now: "Cerrado",
       proof_action: "acaba de reservar", proof_verified: "Reserva verificada",
+      promo_badge: "Solo para ti", promo_title: "Reclama tu 15% OFF",
+      promo_sub: "Aplica hoy a tu financiamiento y recibe <b>15% de descuento</b> en tu primera compra.",
+      promo_ends: "La promo termina en", promo_h: "Horas", promo_m: "Min", promo_s: "Seg",
+      promo_yes: "Quiero mi descuento", promo_no: "No, gracias",
+      promo_fine: "Aplica solo a nuevos clientes. No acumulable con otras promociones.",
     },
     en: {
       header_hours: CFG.contact ? (CFG.contact.hoursShortEn || CFG.contact.hoursShort) : "",
@@ -95,6 +100,11 @@
       chat_label: "Chat with Us",
       open_now: "Open now", closed_now: "Closed",
       proof_action: "just reserved", proof_verified: "Verified reservation",
+      promo_badge: "Just for you", promo_title: "Claim your 15% OFF",
+      promo_sub: "Apply for financing today and get <b>15% off</b> your first purchase.",
+      promo_ends: "Promo ends in", promo_h: "Hours", promo_m: "Min", promo_s: "Sec",
+      promo_yes: "I want my discount", promo_no: "No, thanks",
+      promo_fine: "New clients only. Not combinable with other promotions.",
     },
   });
 
@@ -495,6 +505,65 @@
     setTimeout(function () { showOne(); loopT = setInterval(showOne, 21000); }, 9000);
   }
 
+  /* ---------------- PROMO 15% OFF (botón flotante + popup, solo al hacer clic) ---------------- */
+  function buildPromo() {
+    return '' +
+      '<button class="pmx-promo-fab" id="pmxPromoFab" type="button" aria-label="15% OFF">' +
+        '<span class="pmx-promo-fab__big">15%</span><span class="pmx-promo-fab__small">OFF</span>' +
+      '</button>' +
+      '<div class="pmx-promo" id="pmxPromo">' +
+        '<div class="pmx-promo__box">' +
+          '<button class="pmx-promo__x" id="pmxPromoX" type="button" aria-label="Cerrar">&times;</button>' +
+          '<div class="pmx-promo__img"><img src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782165811/post_1_6_wxp5cw.png" alt="15% OFF"></div>' +
+          '<div class="pmx-promo__body">' +
+            '<span class="pmx-promo__badge" data-i18n="promo_badge">' + t("promo_badge") + '</span>' +
+            '<h3 class="pmx-promo__title" data-i18n="promo_title">' + t("promo_title") + '</h3>' +
+            '<p class="pmx-promo__sub" data-i18n="promo_sub">' + t("promo_sub") + '</p>' +
+            '<div class="pmx-promo__timerlbl" data-i18n="promo_ends">' + t("promo_ends") + '</div>' +
+            '<div class="pmx-promo__timer">' +
+              '<div class="pmx-promo__seg"><b id="ppH">00</b><span data-i18n="promo_h">' + t("promo_h") + '</span></div>' +
+              '<div class="pmx-promo__colon">:</div>' +
+              '<div class="pmx-promo__seg"><b id="ppM">00</b><span data-i18n="promo_m">' + t("promo_m") + '</span></div>' +
+              '<div class="pmx-promo__colon">:</div>' +
+              '<div class="pmx-promo__seg pmx-promo__seg--accent"><b id="ppS">00</b><span data-i18n="promo_s">' + t("promo_s") + '</span></div>' +
+            '</div>' +
+            '<div class="pmx-promo__cta">' +
+              '<button class="pmx-promo__yes" id="pmxPromoYes" type="button" data-i18n="promo_yes">' + t("promo_yes") + '</button>' +
+              '<button class="pmx-promo__no" id="pmxPromoNo" type="button" data-i18n="promo_no">' + t("promo_no") + '</button>' +
+            '</div>' +
+            '<p class="pmx-promo__fine" data-i18n="promo_fine">' + t("promo_fine") + '</p>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+  }
+  function wirePromo() {
+    var modal = document.getElementById("pmxPromo"), fab = document.getElementById("pmxPromoFab");
+    if (!modal || !fab) return;
+    function gd() {
+      var k = "pmx_promo_general", v = +(localStorage.getItem(k) || 0);
+      if (!v || v < Date.now()) { v = Date.now() + 24 * 3600 * 1000; try { localStorage.setItem(k, String(v)); } catch (e) {} }
+      return v;
+    }
+    var deadline = gd(), tick = null;
+    function pad(x) { return (x < 10 ? "0" : "") + x; }
+    function render() {
+      var left = deadline - Date.now(); if (left < 0) left = 0;
+      var h = Math.floor(left / 3600000), m = Math.floor((left % 3600000) / 60000), s = Math.floor((left % 60000) / 1000);
+      var H = document.getElementById("ppH"), M = document.getElementById("ppM"), S = document.getElementById("ppS");
+      if (H) H.textContent = pad(h); if (M) M.textContent = pad(m); if (S) S.textContent = pad(s);
+    }
+    function open() { modal.classList.add("is-open"); render(); if (tick) clearInterval(tick); tick = setInterval(render, 1000); }
+    function close() { modal.classList.remove("is-open"); if (tick) clearInterval(tick); }
+    fab.addEventListener("click", open);
+    document.getElementById("pmxPromoX").addEventListener("click", close);
+    document.getElementById("pmxPromoNo").addEventListener("click", close);
+    modal.addEventListener("click", function (e) { if (e.target === modal) close(); });
+    document.getElementById("pmxPromoYes").addEventListener("click", function () {
+      try { localStorage.setItem("pmx_promo_claim", String(Date.now() + 10 * 60 * 1000)); } catch (e) {}
+      location.href = "/financing/apply/?promo=15";
+    });
+  }
+
   /* ---------------- INIT ---------------- */
   function mount() {
     // Header al inicio del body
@@ -512,6 +581,10 @@
       var w = document.createElement("div"); w.innerHTML = buildWidgets();
       document.body.appendChild(w.firstChild);
     }
+    if (!document.getElementById("pmxPromo")) {
+      var pr = document.createElement("div"); pr.innerHTML = buildPromo();
+      while (pr.firstChild) document.body.appendChild(pr.firstChild);
+    }
 
     var y = document.getElementById("pmxYear");
     if (y) y.textContent = new Date().getFullYear();
@@ -525,6 +598,7 @@
     updateOpenStatus();
     setInterval(updateOpenStatus, 60000);
     wireSocialProof();
+    wirePromo();
   }
 
   // API pública

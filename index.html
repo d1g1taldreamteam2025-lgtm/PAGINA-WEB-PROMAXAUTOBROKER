@@ -86,36 +86,6 @@
 /* Home: centrar los 3 videos del inventario */
 #pmxVideos .pmx-ig__grid{grid-template-columns:repeat(3,1fr);max-width:760px;margin-left:auto;margin-right:auto;}
 @media(max-width:680px){#pmxVideos .pmx-ig__grid{grid-template-columns:repeat(2,1fr);max-width:430px;}}
-/* PROMO MODAL (15% OFF) */
-.pmx-promo{position:fixed;inset:0;z-index:9700;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(10,4,12,.72);backdrop-filter:blur(5px);animation:pmxFadeIn .25s ease;}
-.pmx-promo.is-open{display:flex;}
-@keyframes pmxFadeIn{from{opacity:0}to{opacity:1}}
-.pmx-promo__box{position:relative;display:grid;grid-template-columns:1fr 1fr;max-width:820px;width:100%;background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5);animation:pmxPop .35s cubic-bezier(.2,.8,.3,1);}
-@keyframes pmxPop{from{transform:translateY(18px) scale(.96);opacity:0}to{transform:none;opacity:1}}
-.pmx-promo__img{background:#111;}
-.pmx-promo__img img{width:100%;height:100%;object-fit:cover;display:block;}
-.pmx-promo__body{padding:30px 30px 24px;display:flex;flex-direction:column;}
-.pmx-promo__x{position:absolute;top:12px;right:12px;z-index:2;width:34px;height:34px;border-radius:50%;border:0;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.18);color:#333;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.pmx-promo__x:hover{background:var(--brand);color:#fff;}
-.pmx-promo__badge{align-self:flex-start;background:var(--accent);color:#0a0a0a;font-weight:800;font-size:11px;letter-spacing:1px;text-transform:uppercase;padding:5px 12px;border-radius:999px;margin-bottom:14px;}
-.pmx-promo__title{font-family:var(--font-head);font-size:30px;font-weight:800;color:var(--ink);line-height:1.05;margin:0 0 10px;}
-.pmx-promo__sub{font-size:15px;color:var(--text-muted);line-height:1.5;margin:0 0 18px;}
-.pmx-promo__sub b{color:var(--brand);}
-.pmx-promo__timerlbl{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--brand);text-transform:uppercase;margin-bottom:8px;}
-.pmx-promo__timer{display:flex;align-items:center;gap:6px;margin-bottom:20px;}
-.pmx-promo__seg{background:var(--ink);color:#fff;border-radius:10px;padding:8px 0;width:54px;text-align:center;}
-.pmx-promo__seg b{display:block;font-family:var(--font-head);font-size:22px;font-weight:800;line-height:1;}
-.pmx-promo__seg span{font-size:9px;letter-spacing:.5px;color:rgba(255,255,255,.6);}
-.pmx-promo__seg--accent{background:var(--brand);}
-.pmx-promo__seg--accent span{color:rgba(255,255,255,.85);}
-.pmx-promo__colon{font-weight:800;color:var(--text-faint);}
-.pmx-promo__cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto;}
-.pmx-promo__yes{flex:1;min-width:150px;background:var(--brand);color:#fff;border:0;border-radius:999px;padding:14px 18px;font-family:var(--font-head);font-weight:800;font-size:14px;cursor:pointer;transition:background .2s,transform .2s;text-transform:uppercase;letter-spacing:.3px;}
-.pmx-promo__yes:hover{background:var(--brand-dark);transform:translateY(-2px);}
-.pmx-promo__no{background:none;border:1.5px solid var(--line);color:var(--text-muted);border-radius:999px;padding:14px 20px;font-weight:700;font-size:13px;cursor:pointer;}
-.pmx-promo__no:hover{border-color:var(--ink);color:var(--ink);}
-.pmx-promo__fine{font-size:10.5px;color:var(--text-faint);margin:12px 0 0;line-height:1.4;text-transform:uppercase;letter-spacing:.3px;}
-@media(max-width:680px){.pmx-promo__box{grid-template-columns:1fr;max-width:360px;max-height:92vh;overflow-y:auto;}.pmx-promo__img{max-height:190px;}.pmx-promo__title{font-size:24px;}.pmx-promo__body{padding:22px 22px 20px;}}
 </style>
 </head>
 <body>
@@ -291,32 +261,6 @@
   </div>
 </div>
 
-<!-- POPUP DE DESCUENTO 15% -->
-<div class="pmx-promo" id="pmxPromo">
-  <div class="pmx-promo__box">
-    <button class="pmx-promo__x" id="pmxPromoX" type="button" aria-label="Cerrar">&times;</button>
-    <div class="pmx-promo__img"><img src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782165811/post_1_6_wxp5cw.png" alt="15% OFF en tu primera compra"></div>
-    <div class="pmx-promo__body">
-      <span class="pmx-promo__badge" data-i18n="promo_badge">Solo para ti</span>
-      <h3 class="pmx-promo__title" data-i18n="promo_title">Reclama tu 15% OFF</h3>
-      <p class="pmx-promo__sub" data-i18n="promo_sub">Aplica hoy a tu financiamiento y recibe <b>15% de descuento</b> en tu primera compra.</p>
-      <div class="pmx-promo__timerlbl" data-i18n="promo_ends">La promo termina en</div>
-      <div class="pmx-promo__timer">
-        <div class="pmx-promo__seg"><b id="ppH">00</b><span data-i18n="promo_h">Horas</span></div>
-        <div class="pmx-promo__colon">:</div>
-        <div class="pmx-promo__seg"><b id="ppM">00</b><span data-i18n="promo_m">Min</span></div>
-        <div class="pmx-promo__colon">:</div>
-        <div class="pmx-promo__seg pmx-promo__seg--accent"><b id="ppS">00</b><span data-i18n="promo_s">Seg</span></div>
-      </div>
-      <div class="pmx-promo__cta">
-        <button class="pmx-promo__yes" id="pmxPromoYes" type="button" data-i18n="promo_yes">Quiero mi descuento</button>
-        <button class="pmx-promo__no" id="pmxPromoNo" type="button" data-i18n="promo_no">No, gracias</button>
-      </div>
-      <p class="pmx-promo__fine" data-i18n="promo_fine">Aplica solo a nuevos clientes. No acumulable con otras promociones.</p>
-    </div>
-  </div>
-</div>
-
 <script src="/assets/js/config.js"></script>
 <script src="/assets/js/site.js"></script>
 <script src="/assets/js/instagram.js"></script>
@@ -353,11 +297,6 @@ PMX.addTranslations({
     home_vid_eyebrow:"Inventario en video", home_vid_title:"Videos de nuestro inventario", home_vid_all:"Ver todos los videos",
     home_brands_eyebrow:"Variedad de inventario", home_brands_title:"Marcas que manejamos",
     home_brands_sub:"Especialistas en Toyota — lo bueno y confiable. ¿Buscas otra marca? Pregúntanos y con gusto te ayudamos.",
-    promo_badge:"Solo para ti", promo_title:"Reclama tu 15% OFF",
-    promo_sub:"Aplica hoy a tu financiamiento y recibe <b>15% de descuento</b> en tu primera compra.",
-    promo_ends:"La promo termina en", promo_h:"Horas", promo_m:"Min", promo_s:"Seg",
-    promo_yes:"Quiero mi descuento", promo_no:"No, gracias",
-    promo_fine:"Aplica solo a nuevos clientes. No acumulable con otras promociones.",
     home_vid_sub:"Mira nuestros vehículos en acción. Pasa el mouse para una vista previa y toca para verlo en pantalla completa con sonido.",
     vid_invite_q:"¿Te gustaría ver videos de nuestro inventario?", vid_invite_yes:"Ver videos", vid_invite_close:"Cerrar",
     btn_details:"Ver Detalles", btn_prequal:"Pre-Calificar",
@@ -392,11 +331,6 @@ PMX.addTranslations({
     home_vid_eyebrow:"Inventory in video", home_vid_title:"Our inventory videos", home_vid_all:"Watch all videos",
     home_brands_eyebrow:"Inventory variety", home_brands_title:"Brands we carry",
     home_brands_sub:"Toyota specialists — the good and reliable. Looking for another brand? Just ask and we'll gladly help.",
-    promo_badge:"Just for you", promo_title:"Claim your 15% OFF",
-    promo_sub:"Apply for financing today and get <b>15% off</b> your first purchase.",
-    promo_ends:"Promo ends in", promo_h:"Hours", promo_m:"Min", promo_s:"Sec",
-    promo_yes:"I want my discount", promo_no:"No, thanks",
-    promo_fine:"New clients only. Not combinable with other promotions.",
     home_vid_sub:"See our vehicles in action. Hover for a preview and tap to watch fullscreen with sound.",
     vid_invite_q:"Would you like to see videos of our inventory?", vid_invite_yes:"Watch videos", vid_invite_close:"Close",
     btn_details:"View Details", btn_prequal:"Pre-Qualify",
@@ -510,37 +444,6 @@ PMX.addTranslations({
   applyLang((window.PMX && PMX.lang && PMX.lang()) || 'es');
   window.addEventListener('pmx-lang', function(e){ applyLang(e.detail && e.detail.lang); });
   go(0); start();
-})();
-
-/* Popup de descuento 15% + arranque del temporizador de 10 min */
-(function(){
-  var modal = document.getElementById('pmxPromo');
-  if (!modal) return;
-  var SEEN = 'pmx_promo_seen';
-  function generalDeadline(){
-    var k = 'pmx_promo_general', v = +(localStorage.getItem(k) || 0);
-    if (!v || v < Date.now()) { v = Date.now() + 24*3600*1000; try { localStorage.setItem(k, String(v)); } catch(e){} }
-    return v;
-  }
-  var deadline = generalDeadline(), tick = null;
-  function pad(x){ return (x < 10 ? '0' : '') + x; }
-  function render(){
-    var left = deadline - Date.now(); if (left < 0) left = 0;
-    var h = Math.floor(left/3600000), m = Math.floor((left%3600000)/60000), s = Math.floor((left%60000)/1000);
-    var H = document.getElementById('ppH'), M = document.getElementById('ppM'), S = document.getElementById('ppS');
-    if (H) H.textContent = pad(h); if (M) M.textContent = pad(m); if (S) S.textContent = pad(s);
-  }
-  function open(){ modal.classList.add('is-open'); render(); if (tick) clearInterval(tick); tick = setInterval(render, 1000); }
-  function close(){ modal.classList.remove('is-open'); if (tick) clearInterval(tick); try { sessionStorage.setItem(SEEN, '1'); } catch(e){} }
-  document.getElementById('pmxPromoX').addEventListener('click', close);
-  document.getElementById('pmxPromoNo').addEventListener('click', close);
-  modal.addEventListener('click', function(e){ if (e.target === modal) close(); });
-  document.getElementById('pmxPromoYes').addEventListener('click', function(){
-    try { localStorage.setItem('pmx_promo_claim', String(Date.now() + 10*60*1000)); sessionStorage.setItem(SEEN, '1'); } catch(e){}
-    location.href = '/financing/apply/?promo=15';
-  });
-  var seen = false; try { seen = sessionStorage.getItem(SEEN) === '1'; } catch(e){}
-  if (!seen) setTimeout(open, 2200);
 })();
 </script>
 </body>
