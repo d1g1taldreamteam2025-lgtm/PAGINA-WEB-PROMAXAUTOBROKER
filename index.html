@@ -26,6 +26,16 @@
 .pmx-hero p{font-size:19px;color:rgba(255,255,255,.9);max-width:560px;margin:0 0 30px;}
 .pmx-hero__cta{display:flex;gap:14px;flex-wrap:wrap;}
 @media(max-width:768px){.pmx-hero{min-height:480px;}.pmx-hero__inner{padding:56px 24px;}.pmx-hero h1{font-size:34px;}.pmx-hero p{font-size:16px;}}
+/* HERO CARRUSEL */
+.pmx-hero2{position:relative;overflow:hidden;background:#0a0a0a;}
+.pmx-hero2__track{display:flex;transition:transform .6s cubic-bezier(.4,0,.2,1);}
+.pmx-hero2__slide{flex:0 0 100%;display:block;line-height:0;}
+.pmx-hero2__slide img{width:100%;height:auto;max-height:82vh;object-fit:contain;display:block;}
+.pmx-hero2__dots{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);display:flex;gap:10px;z-index:3;}
+.pmx-hero2__dots button{width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.7);background:rgba(0,0,0,.4);color:#fff;font-weight:700;font-size:14px;cursor:pointer;transition:all .2s;font-family:var(--font-head);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px);}
+.pmx-hero2__dots button:hover{border-color:#fff;}
+.pmx-hero2__dots button.is-on{background:var(--brand);border-color:var(--brand);transform:scale(1.12);}
+@media(max-width:768px){.pmx-hero2__dots{bottom:10px;gap:7px;}.pmx-hero2__dots button{width:27px;height:27px;font-size:12px;}}
 /* CTA CARDS */
 .pmx-ctacards{background:var(--bg-soft);}
 .pmx-ctacards__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
@@ -80,19 +90,23 @@
 </head>
 <body>
 
-<!-- HERO -->
-<section class="pmx-hero">
-  <div class="pmx-hero__bg"></div>
-  <div class="pmx-hero__ov"></div>
-  <div class="pmx-hero__inner">
-    <span class="pmx-hero__eyebrow" data-i18n="h_eyebrow">Broker de autos · USA</span>
-    <h1 data-i18n="h_title">Encuentra tu próximo carro con quien sí te asesora.</h1>
-    <p data-i18n="h_sub">En Promax trabajamos para ti: vehículos inspeccionados, precios honestos y financiamiento a tu medida — incluso con crédito en construcción o ITIN.</p>
-    <div class="pmx-hero__cta">
-      <a href="/inventory/" class="pmx-btn pmx-btn--primary pmx-pulse" data-i18n="h_cta1">Ver Inventario</a>
-      <a href="/financing/apply/" class="pmx-btn pmx-btn--ghost-light" data-i18n="h_cta2">Pre-Calificar</a>
-    </div>
+<!-- HERO CARRUSEL -->
+<section class="pmx-hero2" id="pmxHero" aria-label="Promax Auto Broker">
+  <div class="pmx-hero2__track" id="pmxHeroTrack">
+    <a class="pmx-hero2__slide" href="/inventory/"><img alt="Promax Auto Broker" fetchpriority="high"
+       data-es="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164071/1_imagenen_baowx3.png"
+       data-en="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164184/Post_5_In_2_dfkx29.png"
+       src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164071/1_imagenen_baowx3.png"></a>
+    <a class="pmx-hero2__slide" href="/inventory/"><img alt="Promax Auto Broker"
+       data-es="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164072/2_imagen_bydqug.png"
+       data-en="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164184/Post_6_In_2_ypp9es.png"
+       src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164072/2_imagen_bydqug.png"></a>
+    <a class="pmx-hero2__slide" href="/inventory/"><img alt="Promax Auto Broker"
+       data-es="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164073/3_imagens_png_tssc95.png"
+       data-en="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164183/Post_4_In_siuzku.png"
+       src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164073/3_imagens_png_tssc95.png"></a>
   </div>
+  <div class="pmx-hero2__dots" id="pmxHeroDots"></div>
 </section>
 
 <!-- CTA CARDS -->
@@ -391,6 +405,45 @@ PMX.addTranslations({
     if (document.hidden || !interacted) return;     // solo cuenta tiempo activo y visible
     if (++secs >= 30) show();
   }, 1000);
+})();
+
+/* Carrusel del inicio: numerado, bilingüe (ES/EN) y automático */
+(function(){
+  var track = document.getElementById('pmxHeroTrack');
+  var dotsWrap = document.getElementById('pmxHeroDots');
+  var hero = document.getElementById('pmxHero');
+  if (!track || !dotsWrap || !hero) return;
+  var slides = track.querySelectorAll('.pmx-hero2__slide');
+  var n = slides.length, i = 0, timer = null;
+
+  for (var d = 0; d < n; d++) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.textContent = String(d + 1);
+    b.setAttribute('aria-label', 'Ir a la imagen ' + (d + 1));
+    (function(idx){ b.addEventListener('click', function(){ go(idx); start(); }); })(d);
+    dotsWrap.appendChild(b);
+  }
+  var dots = dotsWrap.querySelectorAll('button');
+
+  function go(idx){
+    i = (idx + n) % n;
+    track.style.transform = 'translateX(-' + (i * 100) + '%)';
+    for (var k = 0; k < dots.length; k++) dots[k].classList.toggle('is-on', k === i);
+  }
+  function start(){ if (timer) clearInterval(timer); timer = setInterval(function(){ go(i + 1); }, 6000); }
+  function applyLang(lang){
+    lang = (lang === 'en') ? 'en' : 'es';
+    for (var s = 0; s < slides.length; s++){
+      var img = slides[s].querySelector('img');
+      var src = img.getAttribute('data-' + lang);
+      if (src && img.getAttribute('src') !== src) img.setAttribute('src', src);
+    }
+  }
+  hero.addEventListener('mouseenter', function(){ if (timer) clearInterval(timer); });
+  hero.addEventListener('mouseleave', start);
+  applyLang((window.PMX && PMX.lang && PMX.lang()) || 'es');
+  window.addEventListener('pmx-lang', function(e){ applyLang(e.detail && e.detail.lang); });
+  go(0); start();
 })();
 </script>
 </body>
