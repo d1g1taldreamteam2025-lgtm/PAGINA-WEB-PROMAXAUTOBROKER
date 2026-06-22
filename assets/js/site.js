@@ -293,10 +293,41 @@
   }
 
   /* ---------------- ENVÍO DE LEADS ---------------- */
+  // Guarda el lead en Supabase (para el panel de leads). No bloquea ni rompe el
+  // flujo si la tabla no existe o la base no responde.
+  function insertInquiry(payload) {
+    var db = CFG.db || {};
+    if (!db.url || !db.anonKey || !db.inquiriesTable) return;
+    var row = {
+      form_type: payload.form_type || payload.action_type || "contact",
+      name: payload.name || payload.full_name || null,
+      email: payload.email || null,
+      phone: payload.phone || null,
+      vehicle_title: payload.vehicle_title || payload.vehicle || null,
+      vehicle_id: payload.vehicle_id || payload.vin || payload.id || null,
+      message: payload.message || payload.comments || payload.comment || null,
+      source_url: payload._source_url || location.href,
+      status: "new",
+      raw: payload,
+    };
+    fetch(db.url + "/rest/v1/" + db.inquiriesTable, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": db.anonKey,
+        "Authorization": "Bearer " + db.anonKey,
+        "Prefer": "return=minimal",
+      },
+      body: JSON.stringify(row),
+      keepalive: true,
+    }).catch(function () {});
+  }
+
   function submitLead(payload) {
     payload._source_url = location.href;
     payload._submitted_at = new Date().toISOString();
     payload._lang = LANG;
+    insertInquiry(payload);
     var url = (CFG.endpoints && CFG.endpoints.leadsWebhook) || "";
     if (!url) {
       console.info("[PROMAX] Lead (sin webhook configurado):", payload);

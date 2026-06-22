@@ -25,21 +25,32 @@
     };
   }
 
+  function fetchJson(url, headers) {
+    return fetch(url, headers ? { headers: headers } : undefined)
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; });
+  }
+
+  function loadStatic() {
+    return fetchJson("/assets/data/inventory.json").then(function (rows) {
+      return Array.isArray(rows) ? rows : [];
+    });
+  }
+
   function load() {
     if (cache) return Promise.resolve(cache);
     var ep = CFG.endpoints || {};
-    var p;
+    var live = Promise.resolve(null);
     if (ep.inventorySource === "api" && ep.inventoryApiUrl) {
       var headers = {};
       if (ep.inventoryApiKey) { headers.apikey = ep.inventoryApiKey; headers.Authorization = "Bearer " + ep.inventoryApiKey; }
-      p = fetch(ep.inventoryApiUrl, { headers: headers }).then(function (r) { return r.ok ? r.json() : []; });
-    } else {
-      p = fetch("/assets/data/inventory.json").then(function (r) { return r.ok ? r.json() : []; });
+      live = fetchJson(ep.inventoryApiUrl, headers);
     }
-    return p.then(function (rows) {
-      cache = (rows || []).map(normalize);
-      return cache;
-    }).catch(function (e) { console.error("[PROMAX] inventario:", e); return []; });
+    return live.then(function (rows) {
+      // Si la base respondió con carros, úsalos; si está vacía o falla, usa el JSON local (respaldo).
+      if (Array.isArray(rows) && rows.length) { cache = rows.map(normalize); return cache; }
+      return loadStatic().then(function (s) { cache = s.map(normalize); return cache; });
+    });
   }
 
   window.PMX = window.PMX || {};

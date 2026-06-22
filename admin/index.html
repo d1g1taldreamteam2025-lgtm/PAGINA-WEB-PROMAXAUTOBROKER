@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Promax · Inventario Admin</title>
+<link rel="icon" type="image/png" href="https://res.cloudinary.com/drbc4wbvw/image/upload/e_trim,c_pad,w_256,h_256,b_transparent/v1781816671/Logos_wbzal9.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Material+Icons+Outlined&display=swap" rel="stylesheet">
+<script src="https://upload-widget.cloudinary.com/global/all.js"></script>
+<style>
+:root{--gold:#F4DC34;--gold-h:#ffe957;--bg:#0c0c0c;--card:#1a1a1a;--border:#2a2a2a;--input-bg:#0c0c0c;--text:#fff;--muted:#888;--subtle:#aaa;--green:#4ade80;--red:#dc2626;--blue:#60a5fa;--purple:#a78bfa;--brand:#A70200;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',-apple-system,sans-serif;}
+body{background:var(--bg);color:var(--text);min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{cursor:pointer;border:0;font-family:inherit;}
+input,select,textarea{font-family:inherit;outline:none;}
+
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#0c0c0c,#1a1a1a);}
+.login__card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:36px;width:100%;max-width:400px;}
+.login__brand{text-align:center;margin-bottom:24px;}
+.login__brand h1{font-size:18px;font-weight:800;color:var(--gold);letter-spacing:1.5px;}
+.login__brand p{color:var(--muted);font-size:13px;margin-top:6px;}
+
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--subtle);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+.field input,.field select,.field textarea{width:100%;padding:11px 14px;border-radius:8px;background:var(--input-bg);border:1px solid var(--border);color:var(--text);font-size:14px;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(244,220,52,.15);}
+.field select option{background:var(--card);color:var(--text);}
+.field textarea{resize:vertical;min-height:80px;}
+
+.btn{padding:11px 18px;border-radius:8px;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.4px;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:all .2s;text-decoration:none;}
+.btn--primary{background:var(--gold);color:#0c0c0c;}
+.btn--primary:hover{background:var(--gold-h);transform:translateY(-1px);}
+.btn--ghost{background:#2a2a2a;color:var(--text);border:1px solid #333;}
+.btn--ghost:hover{background:#333;border-color:#444;}
+.btn--danger{background:var(--red);color:#fff;}
+.btn--danger:hover{background:#b91c1c;}
+.btn--warn{background:#f59e0b;color:#0c0c0c;}
+.btn--warn:hover{background:#d97706;}
+.btn--sm{padding:7px 12px;font-size:11px;}
+.btn-block{width:100%;}
+
+.alert{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;}
+.alert--err{background:rgba(220,38,38,.15);color:#fca5a5;border:1px solid rgba(220,38,38,.4);}
+.alert--ok{background:rgba(74,222,128,.15);color:#86efac;border:1px solid rgba(74,222,128,.4);}
+.alert--info{background:rgba(96,165,250,.1);color:#93c5fd;border:1px solid rgba(96,165,250,.3);}
+.alert--reserve{background:rgba(167,139,250,.1);color:#c4b5fd;border:1px solid rgba(167,139,250,.4);padding:14px;border-radius:8px;margin-bottom:16px;}
+.alert--reserve h4{font-size:13px;font-weight:700;color:var(--purple);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:6px;}
+.alert--reserve .reserve-info{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 16px;font-size:13px;margin-bottom:12px;}
+.alert--reserve .reserve-info b{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;display:block;margin-bottom:2px;}
+.alert--reserve .reserve-info span{color:var(--text);}
+.alert--reserve .reserve-info a{color:var(--gold);text-decoration:underline;}
+
+.app{display:none;min-height:100vh;}
+.app.is-on{display:block;}
+
+.topbar{background:var(--bg);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.topbar__brand{display:flex;align-items:center;gap:12px;}
+.topbar__brand b{font-size:16px;font-weight:800;letter-spacing:.3px;color:var(--text);}
+.topbar__brand .badge{background:var(--gold);color:#0c0c0c;font-size:10px;font-weight:800;padding:3px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.5px;}
+.topbar__nav{display:flex;gap:6px;}
+.topbar__nav a{padding:8px 14px;border-radius:6px;font-size:13px;font-weight:600;color:var(--subtle);}
+.topbar__nav a:hover{background:var(--card);color:var(--text);}
+.topbar__nav a.active{background:var(--gold);color:#0c0c0c;}
+.topbar__user{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted);}
+.topbar__user button{background:transparent;color:var(--muted);font-size:12px;padding:6px 10px;border-radius:6px;display:inline-flex;align-items:center;gap:4px;}
+.topbar__user button:hover{background:var(--card);color:var(--text);}
+
+.main{padding:24px;max-width:1400px;margin:0 auto;}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;display:flex;align-items:center;gap:14px;}
+.stat-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.stat-icon .material-icons-outlined{font-size:22px;}
+.stat-icon--gold{background:rgba(244,220,52,.15);color:var(--gold);}
+.stat-icon--green{background:rgba(74,222,128,.15);color:var(--green);}
+.stat-icon--red{background:rgba(220,38,38,.15);color:#f87171;}
+.stat-icon--blue{background:rgba(96,165,250,.15);color:var(--blue);}
+.stat-icon--purple{background:rgba(167,139,250,.15);color:var(--purple);}
+.stat-info small{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
+.stat-info strong{display:block;font-size:24px;font-weight:800;color:var(--text);margin-top:2px;}
+
+.toolbar{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.toolbar-search{flex:1;min-width:240px;position:relative;}
+.toolbar-search input{width:100%;padding:11px 14px 11px 38px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--input-bg);color:var(--text);}
+.toolbar-search input:focus{border-color:var(--gold);}
+.toolbar-search .material-icons-outlined{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:18px;}
+.toolbar select{padding:11px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--input-bg);color:var(--text);}
+.toolbar select option{background:var(--card);color:var(--text);}
+
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;padding:12px 14px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--border);background:var(--bg);}
+td{padding:14px;border-bottom:1px solid #222;font-size:14px;vertical-align:middle;}
+tr:hover td{background:#222;}
+tr:last-child td{border-bottom:0;}
+
+.veh{display:flex;align-items:center;gap:10px;}
+.veh-img{width:50px;height:38px;border-radius:6px;background:#222 no-repeat center/cover;flex-shrink:0;border:1px solid var(--border);}
+.veh-info strong{display:block;font-weight:600;color:var(--text);font-size:14px;}
+.veh-info span{font-size:12px;color:var(--muted);}
+.price{font-weight:700;color:var(--gold);font-size:15px;}
+
+.badge-stack{display:flex;flex-direction:column;gap:4px;align-items:flex-start;}
+.badge{padding:3px 10px;border-radius:99px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;display:inline-block;white-space:nowrap;}
+.badge--ok{background:rgba(74,222,128,.15);color:var(--green);border:1px solid rgba(74,222,128,.4);}
+.badge--sold{background:rgba(220,38,38,.15);color:#f87171;border:1px solid rgba(220,38,38,.4);}
+.badge--reserved{background:rgba(167,139,250,.15);color:var(--purple);border:1px solid rgba(167,139,250,.4);}
+
+.actions{display:flex;gap:6px;}
+.icon-btn{width:32px;height:32px;border-radius:6px;background:var(--input-bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--subtle);}
+.icon-btn:hover{background:var(--gold);color:#0c0c0c;border-color:var(--gold);}
+.icon-btn .material-icons-outlined{font-size:16px;}
+
+.empty{text-align:center;padding:60px 20px;color:var(--muted);}
+.empty .material-icons-outlined{font-size:48px;color:var(--gold);margin-bottom:8px;display:block;}
+
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:flex-start;justify-content:center;padding:24px;z-index:100;overflow-y:auto;}
+.modal.is-open{display:flex;}
+.modal-box{background:var(--card);border:1px solid var(--border);border-radius:14px;width:100%;max-width:780px;margin:auto;}
+.modal-head{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-head h2{font-size:18px;font-weight:700;color:var(--text);}
+.modal-close{background:transparent;font-size:22px;color:var(--muted);width:32px;height:32px;border-radius:6px;}
+.modal-close:hover{background:var(--border);color:var(--text);}
+.modal-body{padding:22px;max-height:70vh;overflow-y:auto;}
+.modal-foot{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.section-label{font-size:11px;font-weight:600;color:var(--subtle);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:8px;}
+
+.json-hint{background:rgba(244,220,52,.08);padding:12px;border-radius:8px;margin-bottom:14px;display:flex;align-items:center;gap:10px;border:1px solid rgba(244,220,52,.3);flex-wrap:wrap;}
+.json-hint span.material-icons-outlined{color:var(--gold);}
+.json-hint > div{flex:1;font-size:13px;color:var(--subtle);min-width:200px;}
+
+.photos-thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-bottom:10px;max-height:200px;overflow-y:auto;background:var(--bg);padding:10px;border-radius:8px;border:1px solid var(--border);}
+.photos-thumbs:empty{display:none;}
+.photo-thumb{position:relative;aspect-ratio:4/3;border-radius:6px;background:#222 no-repeat center/cover;border:1px solid var(--border);}
+.photo-thumb-x{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.8);color:#fff;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;border:none;}
+.photo-thumb-x:hover{background:var(--red);}
+.photo-cover{position:absolute;top:4px;left:4px;background:var(--gold);color:#0c0c0c;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;text-transform:uppercase;}
+.upload-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+.upload-row .btn{flex:1;min-width:160px;}
+
+/* BOOKMARKLET MODAL */
+.bm-gate{text-align:center;padding:20px 0;}
+.bm-gate .lock-icon{font-size:48px;color:var(--gold);margin-bottom:12px;}
+.bm-gate h3{font-size:18px;font-weight:700;margin-bottom:8px;}
+.bm-gate p{color:var(--subtle);font-size:14px;line-height:1.6;margin-bottom:20px;max-width:420px;margin-left:auto;margin-right:auto;}
+.bm-gate .field{max-width:320px;margin:0 auto 12px;text-align:left;}
+.bm-gate .field input{text-align:center;letter-spacing:2px;font-weight:600;}
+.bm-content h3{font-size:16px;font-weight:700;margin-bottom:10px;}
+.bm-content p{color:var(--subtle);font-size:13px;line-height:1.6;margin-bottom:14px;}
+.bm-drag-area{background:rgba(244,220,52,.05);border:2px dashed rgba(244,220,52,.4);border-radius:10px;padding:30px 20px;text-align:center;margin:20px 0;}
+.bm-drag-area p{margin-bottom:14px;font-weight:600;color:var(--gold);}
+.bookmarklet-link{display:inline-block;background:var(--gold);color:#0c0c0c !important;padding:12px 24px;border-radius:8px;font-weight:800;font-size:14px;text-decoration:none;cursor:grab;box-shadow:0 4px 12px rgba(244,220,52,.3);transition:transform .2s;}
+.bookmarklet-link:hover{transform:scale(1.03);}
+.bookmarklet-link:active{cursor:grabbing;}
+.bm-steps{background:var(--input-bg);padding:16px;border-radius:8px;border:1px solid var(--border);}
+.bm-steps ol{margin-left:20px;color:var(--subtle);font-size:13px;line-height:1.8;}
+.bm-steps b{color:var(--text);}
+
+@media(max-width:768px){.stats{grid-template-columns:repeat(2,1fr);}.grid-2,.grid-3{grid-template-columns:1fr;}.main{padding:14px;}.topbar{padding:12px 16px;flex-wrap:wrap;gap:10px;}.topbar__nav a{padding:6px 10px;font-size:12px;}.alert--reserve .reserve-info{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<div class="login" id="loginScreen">
+  <div class="login__card">
+    <div class="login__brand"><h1>PROMAX AUTO BROKER</h1><p>Panel de Inventario</p></div>
+    <div id="loginAlert"></div>
+    <form id="loginForm">
+      <div class="field"><label>Email</label><input type="email" id="loginEmail" required autocomplete="username"></div>
+      <div class="field"><label>Password</label><input type="password" id="loginPass" required autocomplete="current-password"></div>
+      <button type="submit" class="btn btn--primary btn-block">Entrar</button>
+    </form>
+  </div>
+</div>
+
+<div class="app" id="appScreen">
+  <header class="topbar">
+    <div class="topbar__brand">
+      <b>PROMAX</b>
+      <span class="badge">Inventario</span>
+    </div>
+    <nav class="topbar__nav">
+      <a href="/admin/" class="active">Inventario</a>
+      <a href="/admin/leads.html">Leads</a>
+    </nav>
+    <div class="topbar__user">
+      <span id="userEmail">—</span>
+      <button onclick="logout()"><span class="material-icons-outlined" style="font-size:14px">logout</span> Salir</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="stats">
+      <div class="stat-card"><div class="stat-icon stat-icon--gold"><span class="material-icons-outlined">directions_car</span></div><div class="stat-info"><small>Total</small><strong id="statTotal">0</strong></div></div>
+      <div class="stat-card"><div class="stat-icon stat-icon--green"><span class="material-icons-outlined">check_circle</span></div><div class="stat-info"><small>Disponibles</small><strong id="statAvail">0</strong></div></div>
+      <div class="stat-card"><div class="stat-icon stat-icon--purple"><span class="material-icons-outlined">lock</span></div><div class="stat-info"><small>Reservados</small><strong id="statReserved">0</strong></div></div>
+      <div class="stat-card"><div class="stat-icon stat-icon--red"><span class="material-icons-outlined">sell</span></div><div class="stat-info"><small>Vendidos</small><strong id="statSold">0</strong></div></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="toolbar-search"><span class="material-icons-outlined">search</span><input type="search" id="searchBox" placeholder="Buscar marca, modelo, VIN, stock..."></div>
+      <select id="filterStatus">
+        <option value="">Todos los estados</option>
+        <option value="available">Disponible</option>
+        <option value="reserved">🔒 Reservado</option>
+        <option value="sold">Vendido</option>
+      </select>
+      <select id="filterBody"><option value="">Todos los tipos</option><option>Sedan</option><option>SUV</option><option>Truck</option><option>Coupe</option><option>Hatchback</option><option>Wagon</option><option>Van</option><option>Convertible</option></select>
+      <button class="btn btn--ghost" onclick="openBookmarkletModal()"><span class="material-icons-outlined" style="font-size:16px">bookmark_add</span> Bookmarklet</button>
+      <button class="btn btn--primary" onclick="openAddModal()"><span class="material-icons-outlined" style="font-size:16px">add</span> Agregar Vehículo</button>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Vehículo</th><th>Precio</th><th>Millaje</th><th>Tipo</th><th>Estado</th><th>Stock #</th><th>Acciones</th></tr></thead>
+        <tbody id="tableBody"><tr><td colspan="7" class="empty"><span class="material-icons-outlined">hourglass_top</span><p>Cargando...</p></td></tr></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<div class="modal" id="vehicleModal">
+  <div class="modal-box">
+    <div class="modal-head"><h2 id="modalTitle">Agregar Vehículo</h2><button class="modal-close" onclick="closeVehicleModal()">×</button></div>
+    <div class="modal-body">
+      <div id="vehicleAlert"></div>
+      <div id="reservationBlock" style="display:none"></div>
+      <div class="json-hint">
+        <span class="material-icons-outlined">auto_fix_high</span>
+        <div>¿Usaste el bookmarklet "Extract Promax JSON"? Pega aquí y se llena todo solo:</div>
+        <button type="button" class="btn btn--primary btn--sm" onclick="importJson()"><span class="material-icons-outlined" style="font-size:14px">content_paste</span> Pegar JSON</button>
+      </div>
+      <form id="vehicleForm">
+        <div class="grid-3">
+          <div class="field"><label>Año *</label><input type="number" id="fYear" min="1990" max="2030" required></div>
+          <div class="field"><label>Marca *</label><input type="text" id="fMake" required></div>
+          <div class="field"><label>Modelo *</label><input type="text" id="fModel" required></div>
+        </div>
+        <div class="grid-3">
+          <div class="field"><label>Versión (Trim)</label><input type="text" id="fTrim"></div>
+          <div class="field"><label>Tipo *</label><select id="fBody" required><option value="">—</option><option>Sedan</option><option>SUV</option><option>Truck</option><option>Coupe</option><option>Hatchback</option><option>Wagon</option><option>Van</option><option>Convertible</option></select></div>
+          <div class="field"><label>Estado *</label><select id="fStatus" required><option value="available">Disponible</option><option value="sold">Vendido</option></select></div>
+        </div>
+        <div class="grid-3">
+          <div class="field"><label>Precio ($) *</label><input type="number" id="fPrice" min="0" step="any" required></div>
+          <div class="field"><label>MSRP ($)</label><input type="number" id="fMsrp" min="0" step="any"></div>
+          <div class="field"><label>Millaje *</label><input type="number" id="fMileage" min="0" required></div>
+        </div>
+        <div class="grid-3">
+          <div class="field"><label>Combustible</label><select id="fFuel"><option value="">—</option><option>Gasoline</option><option>Diesel</option><option>Hybrid</option><option>Electric</option><option>Flex</option></select></div>
+          <div class="field"><label>Transmisión</label><input type="text" id="fTrans" placeholder="ej. Automática"></div>
+          <div class="field"><label>Tracción</label><select id="fDrive"><option value="">—</option><option>FWD</option><option>RWD</option><option>AWD</option><option>4WD</option></select></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label>Motor</label><input type="text" id="fEngine" placeholder="ej. 2.5L 4-Cyl"></div>
+          <div class="field"><label>Etiqueta (Badge)</label><input type="text" id="fBadge" placeholder="ej. Certificado, Oferta"></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label>Color Exterior</label><input type="text" id="fExt"></div>
+          <div class="field"><label>Color Interior</label><input type="text" id="fInt"></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label>VIN</label><input type="text" id="fVin"></div>
+          <div class="field"><label>Stock #</label><input type="text" id="fStock"></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label>MPG Ciudad</label><input type="number" id="fMpgC" min="0"></div>
+          <div class="field"><label>MPG Carretera</label><input type="number" id="fMpgH" min="0"></div>
+        </div>
+        <div class="field"><label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="fFeatured" style="width:auto;accent-color:#F4DC34"> Destacado (aparece en la página principal)</label></div>
+        <div class="field"><label>Características (separadas por coma)</label><input type="text" id="fFeats" placeholder="Bluetooth, Cámara de reversa, Sunroof"></div>
+        <div class="field"><label>Descripción</label><textarea id="fDesc" rows="3" placeholder="Se genera automáticamente si la dejas vacía..."></textarea></div>
+        <div>
+          <label class="section-label">Fotos (la 1ra = portada)</label>
+          <div class="photos-thumbs" id="photosThumbs"></div>
+          <div class="upload-row">
+            <button type="button" class="btn btn--ghost" onclick="openCloudinary()"><span class="material-icons-outlined" style="font-size:16px">cloud_upload</span> Subir Fotos</button>
+            <button type="button" class="btn btn--ghost" onclick="document.getElementById('pasteUrls').focus()"><span class="material-icons-outlined" style="font-size:16px">link</span> Pegar URLs Abajo</button>
+          </div>
+          <div class="field">
+            <label>O pega URLs de imágenes (una por línea)</label>
+            <textarea id="pasteUrls" rows="5" placeholder="https://.../foto1.jpg" style="font-family:monospace;font-size:11px"></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn--ghost" onclick="closeVehicleModal()">Cancelar</button>
+      <button class="btn btn--primary" onclick="saveVehicle()" id="saveBtn"><span class="material-icons-outlined" style="font-size:16px">save</span> Guardar Vehículo</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="deleteModal">
+  <div class="modal-box" style="max-width:420px">
+    <div class="modal-head"><h2>¿Borrar vehículo?</h2><button class="modal-close" onclick="closeDeleteModal()">×</button></div>
+    <div class="modal-body"><p style="color:var(--subtle);line-height:1.6">¿Seguro que quieres borrar <strong style="color:var(--text)" id="deleteName">—</strong>? Esta acción no se puede deshacer.</p></div>
+    <div class="modal-foot"><button class="btn btn--ghost" onclick="closeDeleteModal()">Cancelar</button><button class="btn btn--danger" onclick="confirmDelete()">Borrar</button></div>
+  </div>
+</div>
+
+<!-- BOOKMARKLET MODAL -->
+<div class="modal" id="bookmarkletModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2>🔖 Bookmarklet · Extract Promax JSON</h2>
+      <button class="modal-close" onclick="closeBookmarkletModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="bmGate" class="bm-gate">
+        <div class="material-icons-outlined lock-icon">lock</div>
+        <h3>Herramienta Premium</h3>
+        <p>Esta herramienta es parte del <b>Plan Exclusivo</b>. Ingresa la contraseña especial para desbloquearla.</p>
+        <div class="field"><input type="password" id="bmPass" placeholder="••••••••••••" autocomplete="off"></div>
+        <div id="bmErr" class="alert alert--err" style="display:none;max-width:320px;margin:0 auto 12px;">Contraseña incorrecta</div>
+        <button class="btn btn--primary" onclick="unlockBookmarklet()">Desbloquear</button>
+      </div>
+      <div id="bmContent" class="bm-content" style="display:none">
+        <h3>📥 Instala el bookmarklet</h3>
+        <p>Extrae automáticamente toda la info de un carro (año, marca, modelo, precio, especificaciones y todas las fotos) y la copia en formato JSON listo para pegar en "Agregar Vehículo".</p>
+        <div class="bm-drag-area">
+          <p>👉 Arrastra este botón a tu barra de marcadores:</p>
+          <a id="bookmarkletLink" class="bookmarklet-link" draggable="true">📥 Extract Promax JSON</a>
+        </div>
+        <div class="bm-steps">
+          <b style="display:block;margin-bottom:8px;">¿Cómo usarlo?</b>
+          <ol>
+            <li>Abre la página de detalle del carro (sitios Dealer.com / carsforsale).</li>
+            <li>Click al bookmarklet <b>"📥 Extract Promax JSON"</b> en tu barra de marcadores.</li>
+            <li>Espera el mensaje de confirmación (los datos quedan copiados).</li>
+            <li>Vuelve aquí → <b>Agregar Vehículo</b> → <b>Pegar JSON</b> — todo se llena solo.</li>
+            <li>Revisa y guarda.</li>
+          </ol>
+        </div>
+        <p style="margin-top:16px;font-size:12px;color:var(--muted);">⚠️ Si el bookmarklet no se arrastra, click derecho → "Agregar a marcadores".</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL='https://db.ucallnow.fun';
+const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0';
+const CLOUDINARY_CLOUD_NAME='drbc4wbvw';
+const CLOUDINARY_PRESET='promax_unsigned';
+const BOOKMARKLET_PASSWORD='PROMAX123456789';
+// Dominio público de la web (cámbialo por tu dominio cuando lo conectes).
+const SITE_URL='https://pagina-web-promaxautobroker.vercel.app';
+const TABLE='promax_inventory';
+
+const BOOKMARKLET_HREF = `javascript:(function(){try{if(!window.DDC||!DDC.dataLayer||!DDC.dataLayer.vehicles||!DDC.dataLayer.vehicles[0])throw new Error('No es una pagina de detalle de vehiculo Dealer.com. Abre la pagina de un carro especifico (VDP).');var v=DDC.dataLayer.vehicles[0];var imgs=[];try{var ms=DDC.WS&&DDC.WS.state&&DDC.WS.state['ws-vehicle-media'];if(ms){var mk=Object.keys(ms)[0];if(ms[mk]&&ms[mk].media&&Array.isArray(ms[mk].media.images))imgs=ms[mk].media.images.map(function(i){return i.src||i.uri;}).filter(Boolean);}}catch(e){}if(imgs.length===0&&Array.isArray(v.images))imgs=v.images.map(function(i){return typeof i==='string'?i:(i.uri||i.src);}).filter(Boolean);if(imgs.length===0){var di=document.querySelectorAll('img[src*=%22pictures.dealer.com%22]');var sn={};di.forEach(function(g){var s=g.src.split('?')[0];if(!sn[s]&&s.indexOf('blank.gif')===-1&&s.indexOf('thumb_')===-1){sn[s]=true;imgs.push(g.src);}});}var totalFotos=imgs.length;if(imgs.length>0)imgs.shift();imgs=imgs.map(function(u){return u.split('?')[0];});var un=[],su={};imgs.forEach(function(u){if(!su[u]){su[u]=true;un.push(u);}});imgs=un;var bt=v.bodyStyle||v.normalBodyStyle||'Sedan';var vbts=['Sedan','SUV','Truck','Coupe','Hatchback','Wagon','Van','Convertible','Pickup'];for(var bi=0;bi<vbts.length;bi++){if(bt.toLowerCase().indexOf(vbts[bi].toLowerCase())>-1){bt=vbts[bi];break;}}var fr=((v.fuelType||v.normalFuelType||'')+'').toLowerCase();var fuel='Gasoline';if(fr.indexOf('electric')>-1)fuel='Electric';else if(fr.indexOf('hybrid')>-1)fuel='Hybrid';else if(fr.indexOf('diesel')>-1)fuel='Diesel';else if(fr.indexOf('flex')>-1||fr.indexOf('e85')>-1)fuel='Flex';var dr=((v.driveLine||'')+'').toUpperCase();var dv='FWD';if(dr.indexOf('AWD')>-1||dr.indexOf('ALL')>-1)dv='AWD';else if(dr.indexOf('4WD')>-1||dr.indexOf('4X4')>-1||dr.indexOf('FOUR')>-1)dv='4WD';else if(dr.indexOf('REAR')>-1||dr.indexOf('RWD')>-1)dv='RWD';var fe=[];try{var hs=DDC.WS&&DDC.WS.state&&DDC.WS.state['ws-hl-features'];if(hs){var hk=Object.keys(hs)[0];if(hs[hk]&&Array.isArray(hs[hk].features))hs[hk].features.forEach(function(f){if(Array.isArray(f)&&f[1])fe.push(String(f[1]).trim());else if(typeof f==='string')fe.push(f.trim());});}}catch(e){}if(fe.length===0&&Array.isArray(v.features))fe=v.features.map(function(f){if(typeof f==='string')return f;return f.description||'';}).filter(Boolean);var ds=(v.year||'')+' '+(v.make||'')+' '+(v.model||'')+' '+(v.trim||'')+'. '+(v.exteriorColor?v.exteriorColor+' exterior with ':'')+(v.interiorColor?v.interiorColor+' interior. ':'. ')+(v.engine?'Powered by '+v.engine+(v.engineSize?' '+v.engineSize:'')+' engine. ':'')+(v.transmission?v.transmission+' transmission. ':'')+(v.cityFuelEfficiency&&v.highwayFuelEfficiency?'EPA-estimated '+v.cityFuelEfficiency+' city / '+v.highwayFuelEfficiency+' highway MPG. ':'')+(fe.length>0?'Top features: '+fe.slice(0,6).join(', ')+'.':'');ds=ds.substring(0,1500);var data={year:parseInt(v.year||v.modelYear,10)||null,make:v.make||'',model:v.model||'',trim:v.trim||'',body_type:bt,status:'available',price:parseInt(v.internetPrice||v.askingPrice||v.msrp||v.salePrice,10)||0,msrp:parseInt(v.msrp,10)||null,mileage:parseInt(v.odometer,10)||0,fuel:fuel,transmission:v.transmission||'',drivetrain:dv,engine:v.engine||'',exterior_color:v.exteriorColor||'',interior_color:v.interiorColor||'',vin:v.vin||'',stock:v.stockNumber||'',badge:(v.certified===true||v.certified==='true')?'Certified':'',mpg_city:v.cityFuelEfficiency?parseInt(v.cityFuelEfficiency,10):null,mpg_highway:v.highwayFuelEfficiency?parseInt(v.highwayFuelEfficiency,10):null,featured:false,features:fe,description:ds,gallery:imgs};var json=JSON.stringify(data);var ta=document.createElement('textarea');ta.value=json;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);alert('JSON COPIADO al portapapeles'+String.fromCharCode(10)+String.fromCharCode(10)+data.year+' '+data.make+' '+data.model+' '+data.trim+String.fromCharCode(10)+'Precio: $'+data.price.toLocaleString()+String.fromCharCode(10)+'Millas: '+data.mileage+String.fromCharCode(10)+'VIN: '+data.vin+String.fromCharCode(10)+'Fotos: '+data.gallery.length+String.fromCharCode(10)+String.fromCharCode(10)+'Ahora ve al admin: Agregar Vehiculo -> Pegar JSON');}catch(e){alert('Error: '+e.message);}})();`;
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, { auth: { persistSession: true, autoRefreshToken: true } });
+
+let inventory=[],editingId=null,photos=[],deleteId=null,cldWidget=null;
+const $=(id)=>document.getElementById(id);
+const fmt=(n)=>n!=null?'$'+Number(n).toLocaleString('en-US'):'—';
+const fmtNum=(n)=>n!=null?Number(n).toLocaleString('en-US'):'—';
+const esc=(s)=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function showAlert(elId,type,msg){$(elId).innerHTML='<div class="alert alert--'+type+'">'+msg+'</div>';if(type==='ok')setTimeout(()=>$(elId).innerHTML='',3000);}
+
+async function checkAuth(){
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) enterApp(session.user);
+  else { $('loginScreen').style.display='flex'; $('appScreen').classList.remove('is-on'); }
+}
+
+async function logout(){
+  await sb.auth.signOut();
+  $('loginScreen').style.display='flex';
+  $('appScreen').classList.remove('is-on');
+}
+
+function enterApp(user){
+  $('loginScreen').style.display='none';
+  $('appScreen').classList.add('is-on');
+  $('userEmail').textContent = user.email || '';
+  loadInventory();
+}
+
+$('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  $('loginAlert').innerHTML='';
+  const btn = e.target.querySelector('button[type=submit]');
+  btn.disabled = true; btn.innerHTML = 'Entrando...';
+  const email = $('loginEmail').value.trim();
+  const password = $('loginPass').value;
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) {
+    showAlert('loginAlert','err', error.message);
+    btn.disabled = false; btn.innerHTML = 'Entrar';
+    return;
+  }
+  enterApp(data.user);
+  btn.disabled = false; btn.innerHTML = 'Entrar';
+});
+
+async function loadInventory(){
+  try {
+    const { data, error } = await sb.from(TABLE).select('*').order('created_at',{ascending:false});
+    if (error) throw error;
+    inventory = data || [];
+    renderTable();
+    updateStats();
+  } catch (e) {
+    console.error(e);
+    $('tableBody').innerHTML='<tr><td colspan="7" class="empty"><span class="material-icons-outlined">error_outline</span><p>Error: '+e.message+'</p></td></tr>';
+  }
+}
+
+function renderTable(){
+  const q=($('searchBox').value||'').toLowerCase().trim();
+  const fs=$('filterStatus').value, fb=$('filterBody').value;
+  let rows=inventory.filter(c=>{
+    if (fs === 'reserved') { if (!c.reserved_at) return false; }
+    else if (fs && c.status!==fs) return false;
+    if (fb && c.body_type!==fb) return false;
+    if (q) { const blob=(c.year+' '+c.make+' '+c.model+' '+(c.trim||'')+' '+(c.vin||'')+' '+(c.stock||'')).toLowerCase(); if(blob.indexOf(q)===-1) return false; }
+    return true;
+  });
+  if(!rows.length){$('tableBody').innerHTML='<tr><td colspan="7" class="empty"><span class="material-icons-outlined">inbox</span><p>Sin vehículos. Click "Agregar Vehículo" para empezar.</p></td></tr>';return;}
+  $('tableBody').innerHTML=rows.map(c=>{
+    const img=c.cover_image||(Array.isArray(c.gallery)&&c.gallery[0])||'';
+    const statusCls=c.status==='available'?'badge--ok':'badge--sold';
+    const statusTxt=c.status==='available'?'Disponible':(c.status==='sold'?'Vendido':c.status);
+    const reservedBadge = c.reserved_at ? '<span class="badge badge--reserved">🔒 Reservado</span>' : '';
+    const eid=String(c.id).replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+    return '<tr>'+
+      '<td><div class="veh"><div class="veh-img" style="background-image:url(&quot;'+img.replace(/"/g,'%22')+'&quot;)"></div><div class="veh-info"><strong>'+c.year+' '+c.make+' '+c.model+'</strong><span>'+(c.trim||'')+' · '+(c.exterior_color||'—')+' · '+(c.fuel||'—')+'</span></div></div></td>'+
+      '<td class="price">'+fmt(c.price)+'</td>'+
+      '<td>'+fmtNum(c.mileage)+' mi</td>'+
+      '<td>'+(c.body_type||'—')+'</td>'+
+      '<td><div class="badge-stack"><span class="badge '+statusCls+'">'+statusTxt+'</span>'+reservedBadge+'</div></td>'+
+      '<td>'+(c.stock||'—')+'</td>'+
+      '<td><div class="actions">'+
+        '<button class="icon-btn" data-action="edit" data-id="'+eid+'" title="Editar"><span class="material-icons-outlined">edit</span></button>'+
+        '<button class="icon-btn" data-action="view" data-id="'+eid+'" title="Ver en la web"><span class="material-icons-outlined">visibility</span></button>'+
+        '<button class="icon-btn" data-action="delete" data-id="'+eid+'" title="Borrar"><span class="material-icons-outlined">delete</span></button>'+
+      '</div></td></tr>';
+  }).join('');
+}
+
+function updateStats(){
+  $('statTotal').textContent=inventory.length;
+  $('statAvail').textContent=inventory.filter(c=>c.status==='available' && !c.reserved_at).length;
+  $('statReserved').textContent=inventory.filter(c=>c.reserved_at).length;
+  $('statSold').textContent=inventory.filter(c=>c.status==='sold').length;
+}
+
+function openCloudinary(){
+  if(!cldWidget){
+    cldWidget=cloudinary.createUploadWidget({cloudName:CLOUDINARY_CLOUD_NAME,uploadPreset:CLOUDINARY_PRESET,multiple:true,maxFiles:30,folder:'promax/inventory',sources:['local','url','camera'],clientAllowedFormats:['png','jpg','jpeg','webp']},(err,result)=>{
+      if(!err&&result&&result.event==='success'){photos.push(result.info.secure_url);renderPhotos();}
+    });
+  }
+  cldWidget.open();
+}
+
+function renderPhotos(){
+  $('photosThumbs').innerHTML=photos.map((url,i)=>'<div class="photo-thumb" style="background-image:url('+JSON.stringify(url)+')">'+(i===0?'<span class="photo-cover">Portada</span>':'')+'<button type="button" class="photo-thumb-x" onclick="removePhoto('+i+')">×</button></div>').join('');
+}
+function removePhoto(i){photos.splice(i,1);renderPhotos();}
+
+async function importJson(){
+  try{
+    var text='';
+    if(navigator.clipboard && navigator.clipboard.readText){
+      try{text=await navigator.clipboard.readText();}catch(e){text=prompt('Pega el JSON aquí:')||'';}
+    } else { text=prompt('Pega el JSON aquí:')||''; }
+    if(!text)return;
+    var d=JSON.parse(text);
+    if(d.year)$('fYear').value=d.year;
+    if(d.make)$('fMake').value=d.make;
+    if(d.model)$('fModel').value=d.model;
+    if(d.trim!==undefined)$('fTrim').value=d.trim||'';
+    if(d.body_type)$('fBody').value=d.body_type;
+    if(d.status)$('fStatus').value=d.status;
+    if(d.price)$('fPrice').value=d.price;
+    if(d.msrp)$('fMsrp').value=d.msrp;
+    if(d.mileage!==undefined)$('fMileage').value=d.mileage;
+    if(d.fuel)$('fFuel').value=d.fuel;
+    if(d.transmission!==undefined)$('fTrans').value=d.transmission||'';
+    if(d.drivetrain)$('fDrive').value=d.drivetrain;
+    if(d.engine!==undefined)$('fEngine').value=d.engine||'';
+    if(d.badge!==undefined)$('fBadge').value=d.badge||'';
+    if(d.exterior_color!==undefined)$('fExt').value=d.exterior_color||'';
+    if(d.interior_color!==undefined)$('fInt').value=d.interior_color||'';
+    if(d.vin!==undefined)$('fVin').value=d.vin||'';
+    if(d.stock!==undefined)$('fStock').value=d.stock||'';
+    if(d.mpg_city!=null)$('fMpgC').value=d.mpg_city;
+    if(d.mpg_highway!=null)$('fMpgH').value=d.mpg_highway;
+    if(d.featured!==undefined)$('fFeatured').checked=!!d.featured;
+    if(Array.isArray(d.features))$('fFeats').value=d.features.join(', ');
+    if(d.description!==undefined)$('fDesc').value=d.description||'';
+    if(Array.isArray(d.gallery))$('pasteUrls').value=d.gallery.join('\n');
+    showAlert('vehicleAlert','ok','✅ '+(d.year||'')+' '+(d.make||'')+' '+(d.model||'')+' cargado. Revisa y guarda.');
+  }catch(e){
+    showAlert('vehicleAlert','err','Error: '+e.message+'. Asegúrate de copiar primero con el bookmarklet.');
+  }
+}
+
+function openAddModal(){
+  editingId=null;$('modalTitle').textContent='Agregar Vehículo';$('vehicleForm').reset();photos=[];renderPhotos();
+  $('vehicleAlert').innerHTML='';$('reservationBlock').style.display='none';
+  $('fYear').value=new Date().getFullYear();$('fStatus').value='available';
+  $('vehicleModal').classList.add('is-open');
+}
+
+function openEditModal(id){
+  const c=inventory.find(x=>x.id===id);if(!c)return;editingId=id;
+  $('modalTitle').textContent='Editar Vehículo';$('vehicleAlert').innerHTML='';
+  $('fYear').value=c.year||'';$('fMake').value=c.make||'';$('fModel').value=c.model||'';
+  $('fTrim').value=c.trim||'';$('fBody').value=c.body_type||'';$('fStatus').value=c.status||'available';
+  $('fPrice').value=c.price||'';$('fMsrp').value=c.msrp||'';$('fMileage').value=c.mileage||'';
+  $('fFuel').value=c.fuel||'';$('fTrans').value=c.transmission||'';$('fDrive').value=c.drivetrain||'';
+  $('fEngine').value=c.engine||'';$('fBadge').value=c.badge||'';
+  $('fExt').value=c.exterior_color||'';$('fInt').value=c.interior_color||'';
+  $('fVin').value=c.vin||'';$('fStock').value=c.stock||'';
+  $('fMpgC').value=c.mpg_city||'';$('fMpgH').value=c.mpg_highway||'';
+  $('fFeatured').checked=!!c.featured;
+  $('fFeats').value=Array.isArray(c.features)?c.features.join(', '):'';
+  $('fDesc').value=c.description||'';$('pasteUrls').value='';
+  photos=Array.isArray(c.gallery)?c.gallery.slice():[];renderPhotos();
+  const rb = $('reservationBlock');
+  if (c.reserved_at) {
+    const date = new Date(c.reserved_at).toLocaleString('es-ES',{dateStyle:'medium',timeStyle:'short'});
+    const phoneClean = (c.reserved_by_phone||'').replace(/[^\d+]/g,'');
+    const waLink = phoneClean ? 'https://wa.me/'+phoneClean.replace(/^\+/, '') : null;
+    rb.innerHTML = '<div class="alert--reserve">'+
+      '<h4><span class="material-icons-outlined" style="font-size:16px">lock</span> Vehículo Reservado</h4>'+
+      '<div class="reserve-info">'+
+        '<div><b>Nombre</b><span>'+esc(c.reserved_by_name||'—')+'</span></div>'+
+        '<div><b>Fecha</b><span>'+date+'</span></div>'+
+        '<div><b>Email</b><span>'+(c.reserved_by_email?'<a href="mailto:'+esc(c.reserved_by_email)+'">'+esc(c.reserved_by_email)+'</a>':'—')+'</span></div>'+
+        '<div><b>Teléfono</b><span>'+(c.reserved_by_phone?'<a href="tel:'+esc(c.reserved_by_phone)+'">'+esc(c.reserved_by_phone)+'</a>'+(waLink?' · <a href="'+waLink+'" target="_blank">WhatsApp</a>':''):'—')+'</span></div>'+
+      '</div>'+
+      '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
+        '<button type="button" class="btn btn--warn btn--sm" onclick="liberarReserva()"><span class="material-icons-outlined" style="font-size:14px">lock_open</span> Liberar reserva</button>'+
+        '<button type="button" class="btn btn--danger btn--sm" onclick="marcarVendido()"><span class="material-icons-outlined" style="font-size:14px">sell</span> Marcar vendido</button>'+
+      '</div>'+
+    '</div>';
+    rb.style.display='block';
+  } else {
+    rb.style.display='none';
+    rb.innerHTML='';
+  }
+  $('vehicleModal').classList.add('is-open');
+}
+
+function closeVehicleModal(){$('vehicleModal').classList.remove('is-open');}
+
+async function liberarReserva(){
+  if (!editingId) return;
+  if (!confirm('¿Liberar la reserva? El carro volverá a aparecer como disponible en la web.')) return;
+  try {
+    const { error } = await sb.from(TABLE).update({
+      reserved_at: null, reserved_by_name: null, reserved_by_email: null, reserved_by_phone: null
+    }).eq('id', editingId);
+    if (error) throw error;
+    showAlert('vehicleAlert','ok','✅ Reserva liberada.');
+    setTimeout(()=>{closeVehicleModal();loadInventory();},800);
+  } catch (e) {
+    showAlert('vehicleAlert','err','Error: '+(e.message||'Failed'));
+  }
+}
+
+async function marcarVendido(){
+  if (!editingId) return;
+  if (!confirm('¿Marcar este vehículo como VENDIDO? Desaparecerá del inventario público.')) return;
+  try {
+    const { error } = await sb.from(TABLE).update({
+      status: 'sold',
+      sold_at: new Date().toISOString(),
+      reserved_at: null, reserved_by_name: null, reserved_by_email: null, reserved_by_phone: null
+    }).eq('id', editingId);
+    if (error) throw error;
+    showAlert('vehicleAlert','ok','✅ Vehículo marcado como vendido.');
+    setTimeout(()=>{closeVehicleModal();loadInventory();},800);
+  } catch (e) {
+    showAlert('vehicleAlert','err','Error: '+(e.message||'Failed'));
+  }
+}
+
+async function saveVehicle(){
+  const form=$('vehicleForm');if(!form.checkValidity()){form.reportValidity();return;}
+  const pasted=($('pasteUrls').value||'').split('\n').map(u=>u.trim()).filter(u=>u.indexOf('http')===0);
+  const allPhotos=photos.concat(pasted);
+  const body={
+    year:parseInt($('fYear').value,10),make:$('fMake').value.trim(),model:$('fModel').value.trim(),
+    trim:$('fTrim').value.trim()||null,body_type:$('fBody').value,status:$('fStatus').value,
+    price:Number($('fPrice').value),msrp:$('fMsrp').value?Number($('fMsrp').value):null,
+    mileage:parseInt($('fMileage').value,10),
+    fuel:$('fFuel').value||null,transmission:$('fTrans').value.trim()||null,drivetrain:$('fDrive').value||null,
+    engine:$('fEngine').value.trim()||null,exterior_color:$('fExt').value.trim()||null,interior_color:$('fInt').value.trim()||null,
+    vin:$('fVin').value.trim()||null,stock:$('fStock').value.trim()||null,badge:$('fBadge').value.trim()||null,
+    mpg_city:$('fMpgC').value?parseInt($('fMpgC').value,10):null,mpg_highway:$('fMpgH').value?parseInt($('fMpgH').value,10):null,
+    featured:$('fFeatured').checked,
+    features:$('fFeats').value?$('fFeats').value.split(',').map(s=>s.trim()).filter(Boolean):[],
+    description:$('fDesc').value.trim()||null,
+    gallery:allPhotos,cover_image:allPhotos[0]||null
+  };
+  $('saveBtn').disabled=true;$('saveBtn').innerHTML='<span class="material-icons-outlined" style="font-size:16px">hourglass_top</span> Guardando...';
+  try {
+    let result;
+    if (editingId) {
+      result = await sb.from(TABLE).update(body).eq('id', editingId);
+    } else {
+      body.id = 'promax-' + Math.random().toString(16).slice(2,10);
+      result = await sb.from(TABLE).insert(body);
+    }
+    if (result.error) throw result.error;
+    showAlert('vehicleAlert','ok',editingId?'¡Vehículo actualizado!':'¡Vehículo agregado!');
+    setTimeout(()=>{closeVehicleModal();loadInventory();},800);
+  } catch (e) {
+    showAlert('vehicleAlert','err','Error: '+(e.message||e.hint||'No se pudo guardar'));
+  } finally {
+    $('saveBtn').disabled=false;
+    $('saveBtn').innerHTML='<span class="material-icons-outlined" style="font-size:16px">save</span> Guardar Vehículo';
+  }
+}
+
+function openDeleteModal(id){const c=inventory.find(x=>x.id===id);if(!c)return;deleteId=id;$('deleteName').textContent=c.year+' '+c.make+' '+c.model;$('deleteModal').classList.add('is-open');}
+function closeDeleteModal(){$('deleteModal').classList.remove('is-open');deleteId=null;}
+async function confirmDelete(){
+  if(!deleteId)return;
+  try {
+    const { error } = await sb.from(TABLE).delete().eq('id', deleteId);
+    if (error) throw error;
+    closeDeleteModal();
+    loadInventory();
+  } catch (e) {
+    alert('Error: ' + (e.message || 'Delete failed'));
+  }
+}
+
+// ============ BOOKMARKLET ============
+function openBookmarkletModal(){
+  if (localStorage.getItem('promax_bm_unlocked') === '1') {
+    $('bmGate').style.display='none';
+    $('bmContent').style.display='block';
+    $('bookmarkletLink').setAttribute('href', BOOKMARKLET_HREF);
+  } else {
+    $('bmGate').style.display='block';
+    $('bmContent').style.display='none';
+    $('bmPass').value='';
+    $('bmErr').style.display='none';
+  }
+  $('bookmarkletModal').classList.add('is-open');
+}
+function closeBookmarkletModal(){ $('bookmarkletModal').classList.remove('is-open'); }
+function unlockBookmarklet(){
+  if ($('bmPass').value === BOOKMARKLET_PASSWORD) {
+    localStorage.setItem('promax_bm_unlocked', '1');
+    $('bmGate').style.display='none';
+    $('bmContent').style.display='block';
+    $('bookmarkletLink').setAttribute('href', BOOKMARKLET_HREF);
+  } else {
+    $('bmErr').style.display='block';
+  }
+}
+$('bmPass').addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); unlockBookmarklet(); } });
+
+['searchBox','filterStatus','filterBody'].forEach(id=>{$(id).addEventListener('input',renderTable);$(id).addEventListener('change',renderTable);});
+
+$('tableBody').addEventListener('click', function(e){
+  const btn = e.target.closest('[data-action]');
+  if(!btn) return;
+  const id = btn.getAttribute('data-id');
+  const action = btn.getAttribute('data-action');
+  if (action === 'edit') openEditModal(id);
+  else if (action === 'view') window.open(SITE_URL + '/vehicle/?id='+encodeURIComponent(id), '_blank');
+  else if (action === 'delete') openDeleteModal(id);
+});
+
+checkAuth();
+</script>
+</body>
+</html>
