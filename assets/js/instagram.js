@@ -93,7 +93,8 @@
 
   function render(items) {
     var host = document.querySelector(GRID);
-    STATE = (items || []).map(norm).slice(0, 15);
+    var limit = parseInt(host.getAttribute("data-limit"), 10) || 15;
+    STATE = (items || []).map(norm).slice(0, limit);
     host.innerHTML = STATE.length ? STATE.map(function (c, i) { return card(c, i); }).join("")
       : '<p style="grid-column:1/-1;text-align:center;color:#888;padding:30px">' + PMX.t("ig_empty") + "</p>";
     var f = document.getElementById("pmxIGFollow");

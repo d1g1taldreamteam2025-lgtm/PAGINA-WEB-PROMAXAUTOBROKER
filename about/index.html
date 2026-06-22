@@ -25,6 +25,8 @@
 .ab-story__grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;}
 .ab-story__img{border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow);}
 .ab-story__img img{width:100%;height:100%;object-fit:cover;aspect-ratio:4/3;}
+.ab-story__img--video{aspect-ratio:auto;background:#000;}
+.ab-story__video{display:block;width:100%;height:auto;}
 .ab-story__text .pmx-eyebrow{margin-bottom:10px;}
 .ab-story__text h2{font-size:34px;font-weight:800;color:var(--ink);margin:0 0 18px;letter-spacing:-.5px;}
 .ab-story__text p{font-size:16px;line-height:1.75;color:#37475a;margin:0 0 16px;}
@@ -71,8 +73,14 @@
 <section class="pmx-section">
   <div class="pmx-container">
     <div class="ab-story__grid">
-      <div class="ab-story__img">
-        <img src="https://images.unsplash.com/photo-1542362567-b07e54358753?w=900&q=80" alt="Promax Auto Broker" loading="lazy">
+      <div class="ab-story__img ab-story__img--video">
+        <video id="abWelcome" class="ab-story__video" controls playsinline preload="metadata"
+               poster="https://res.cloudinary.com/drbc4wbvw/video/upload/v1782140344/PROMAX_ESPA%C3%91OL_jwoj9a.jpg"
+               data-es="https://res.cloudinary.com/drbc4wbvw/video/upload/v1782140344/PROMAX_ESPA%C3%91OL_jwoj9a.mp4"
+               data-en="https://res.cloudinary.com/drbc4wbvw/video/upload/v1782140318/PROMAX_INGLES_wcvbbw.mp4"
+               data-poster-es="https://res.cloudinary.com/drbc4wbvw/video/upload/v1782140344/PROMAX_ESPA%C3%91OL_jwoj9a.jpg"
+               data-poster-en="https://res.cloudinary.com/drbc4wbvw/video/upload/v1782140318/PROMAX_INGLES_wcvbbw.jpg">
+        </video>
       </div>
       <div class="ab-story__text">
         <span class="pmx-eyebrow" data-i18n="ab_story_eyebrow">Nuestra historia</span>
@@ -124,8 +132,8 @@
   </div>
 </section>
 
-<!-- INSTAGRAM -->
-<section class="pmx-section pmx-ig">
+<!-- VIDEOS DE INVENTARIO -->
+<section id="videos" class="pmx-section pmx-ig">
   <div class="pmx-container">
     <div class="pmx-ig__head pmx-reveal">
       <div>
@@ -215,6 +223,27 @@ PMX.addTranslations({
     ab_cta_b1:"View Inventory", ab_cta_b2:"Get Pre-Qualified",
   }
 });
+
+/* Video de bienvenida: cambia entre español e inglés según el idioma del sitio */
+(function(){
+  var v = document.getElementById("abWelcome");
+  if(!v) return;
+  function apply(lang){
+    lang = (lang === "en") ? "en" : "es";
+    if(v.getAttribute("data-cur") === lang) return;
+    var src = v.getAttribute("data-" + lang);
+    if(!src) return;
+    var wasPlaying = !v.paused && !v.ended && v.currentTime > 0;
+    v.setAttribute("data-cur", lang);
+    v.src = src;
+    var p = v.getAttribute("data-poster-" + lang);
+    if(p) v.setAttribute("poster", p);
+    v.load();
+    if(wasPlaying){ var pr = v.play(); if(pr && pr.catch) pr.catch(function(){}); }
+  }
+  apply((window.PMX && PMX.lang && PMX.lang()) || "es");
+  window.addEventListener("pmx-lang", function(e){ apply(e.detail && e.detail.lang); });
+})();
 </script>
 </body>
 </html>

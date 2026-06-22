@@ -72,6 +72,7 @@
 .pmx-vid-glow{animation:pmxVidGlow 2.2s ease;}
 @keyframes pmxVidGlow{0%,100%{box-shadow:none;}30%,70%{box-shadow:inset 0 0 0 3px var(--brand);}}
 @media(max-width:600px){.pmx-vinvite{left:12px;right:12px;bottom:84px;width:auto;}}
+.pmx-at-footer .pmx-vinvite{display:none!important;}
 </style>
 </head>
 <body>
@@ -157,9 +158,10 @@
         <span data-i18n="ig_follow">Seguir en Instagram</span>
       </a>
     </div>
-    <div id="pmxIGGrid" class="pmx-ig__grid pmx-reveal">
+    <div id="pmxIGGrid" class="pmx-ig__grid pmx-reveal" data-limit="3">
       <p style="grid-column:1/-1;text-align:center;color:#888;padding:30px" data-i18n="ig_loading">Cargando videos…</p>
     </div>
+    <div style="text-align:center;margin-top:36px"><a href="/about/#videos" class="pmx-btn pmx-btn--ghost" data-i18n="home_vid_all">Ver todos los videos</a></div>
   </div>
 </section>
 
@@ -187,7 +189,7 @@
   <div class="pmx-container">
     <div class="pmx-section__head">
       <h2 data-i18n="rev_title">Lo que dicen nuestros clientes</h2>
-      <p><span style="color:var(--brand);font-size:20px">★★★★★</span> &nbsp;<strong>4.9 / 5</strong> &nbsp;<span data-i18n="rev_count">basado en reseñas de Google</span></p>
+      <p style="display:inline-flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:center"><img src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782140867/png-transparent-google-logo-google-text-trademark-logo-thumbnail_kblunh.png" alt="Google" style="height:22px;width:auto"><span style="color:var(--brand);font-size:20px">★★★★★</span> <strong>4.9 / 5</strong> <span data-i18n="rev_count">basado en reseñas de Google</span></p>
     </div>
     <div class="pmx-reviews__grid">
       <div class="pmx-review"><div class="pmx-review__stars">★★★★★</div><p data-i18n="rev1">"Me explicaron todo el financiamiento con paciencia, sin presión. Salí con mi carro el mismo día y entendiendo cada pago."</p><div class="pmx-review__author"><strong>Maricela I.</strong><span data-i18n="rev_verified">· Cliente verificado</span></div></div>
@@ -252,7 +254,7 @@ PMX.addTranslations({
     seo_h1:"Lo que nos hace diferentes",
     seo_p2:"Cada vehículo pasa por una inspección de calidad y trabajamos con una amplia red de prestamistas para conseguirte la mejor opción, incluso si estás construyendo tu crédito o tienes ITIN.",
     seo_h2:"Marcas que manejamos", seo_p3:"Toyota, Honda, Ford, Chevrolet, Hyundai, Kia, Nissan, BMW y más.",
-    home_vid_eyebrow:"Inventario en video", home_vid_title:"Videos de nuestro inventario",
+    home_vid_eyebrow:"Inventario en video", home_vid_title:"Videos de nuestro inventario", home_vid_all:"Ver todos los videos",
     home_vid_sub:"Mira nuestros vehículos en acción. Pasa el mouse para una vista previa y toca para verlo en pantalla completa con sonido.",
     vid_invite_q:"¿Te gustaría ver videos de nuestro inventario?", vid_invite_yes:"Ver videos", vid_invite_close:"Cerrar",
     btn_details:"Ver Detalles", btn_prequal:"Pre-Calificar",
@@ -284,7 +286,7 @@ PMX.addTranslations({
     seo_h1:"What makes us different",
     seo_p2:"Every vehicle goes through a quality inspection and we work with a wide network of lenders to get you the best option, even if you're building credit or have an ITIN.",
     seo_h2:"Brands we carry", seo_p3:"Toyota, Honda, Ford, Chevrolet, Hyundai, Kia, Nissan, BMW and more.",
-    home_vid_eyebrow:"Inventory in video", home_vid_title:"Our inventory videos",
+    home_vid_eyebrow:"Inventory in video", home_vid_title:"Our inventory videos", home_vid_all:"Watch all videos",
     home_vid_sub:"See our vehicles in action. Hover for a preview and tap to watch fullscreen with sound.",
     vid_invite_q:"Would you like to see videos of our inventory?", vid_invite_yes:"Watch videos", vid_invite_close:"Close",
     btn_details:"View Details", btn_prequal:"Pre-Qualify",

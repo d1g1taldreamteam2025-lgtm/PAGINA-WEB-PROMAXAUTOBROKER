@@ -44,6 +44,8 @@
       b.classList.toggle("active", b.getAttribute("data-lang") === LANG);
     });
     document.documentElement.setAttribute("lang", LANG);
+    var mtrack = document.querySelector(".pmx-marquee__track");
+    if (mtrack) mtrack.innerHTML = marqueeTrackHTML(LANG);
     updateWidgets(LANG);
   }
 
@@ -135,6 +137,14 @@
     return img + '<span class="pmx-nav__logo-text" style="' + style + '">' + txt + "</span>";
   }
 
+  function marqueeTrackHTML(lang) {
+    var items = ((CFG.marquee && CFG.marquee[lang]) || (CFG.marquee && CFG.marquee.es) || []).map(function (txt) {
+      return '<span class="pmx-marquee__item">★ ' + txt + '</span><span class="pmx-marquee__sep">●</span>';
+    }).join("");
+    var group = '<div class="pmx-marquee__group">' + items + "</div>";
+    return group + group;
+  }
+
   function buildHeader() {
     var c = CFG.contact || {};
     var navDesktop = NAV.map(function (n) {
@@ -155,10 +165,7 @@
     }).join("") +
       '<a href="/financing/apply/" class="pmx-mobilemenu__cta"><span data-i18n="cta_prequalify">' + t("cta_prequalify") + "</span></a>";
 
-    var marqueeItems = ((CFG.marquee && CFG.marquee[LANG]) || []).map(function (txt) {
-      return '<span class="pmx-marquee__item">★ ' + txt + '</span><span class="pmx-marquee__sep">●</span>';
-    }).join("");
-    var marqueeGroup = '<div class="pmx-marquee__group">' + marqueeItems + "</div>";
+    var marqueeGroup = marqueeTrackHTML(LANG);
 
     return '' +
       '<div id="pmxSticky">' +
@@ -187,7 +194,7 @@
         // Mobile menu
         '<div class="pmx-mobilemenu">' + navMobile + '</div>' +
         // Marquee
-        '<section class="pmx-marquee"><div class="pmx-marquee__track">' + marqueeGroup + marqueeGroup + '</div></section>' +
+        '<section class="pmx-marquee"><div class="pmx-marquee__track">' + marqueeGroup + '</div></section>' +
       '</div>';
   }
 
@@ -371,6 +378,16 @@
     wireCounters();
   }
 
+  /* ---------------- FAB: ocultar la pestaña "Chat" al llegar al footer ---------------- */
+  function wireFooterFab() {
+    var footer = document.querySelector(".pmx-footer");
+    if (!footer || !("IntersectionObserver" in window)) return;
+    var io = new IntersectionObserver(function (ents) {
+      ents.forEach(function (en) { document.body.classList.toggle("pmx-at-footer", en.isIntersecting); });
+    }, { threshold: 0.02 });
+    io.observe(footer);
+  }
+
   /* ---------------- INIT ---------------- */
   function mount() {
     // Header al inicio del body
@@ -397,6 +414,7 @@
     wireDropdown();
     applyI18n(LANG);
     wireAnim();
+    wireFooterFab();
   }
 
   // API pública
