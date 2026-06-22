@@ -47,6 +47,7 @@
     var mtrack = document.querySelector(".pmx-marquee__track");
     if (mtrack) mtrack.innerHTML = marqueeTrackHTML(LANG);
     updateWidgets(LANG);
+    updateOpenStatus();
   }
 
   /* ---------------- DICCIONARIO BASE (header/footer/widgets) ---------------- */
@@ -70,6 +71,8 @@
       foot_sitemap: "Mapa del Sitio", foot_accessibility: "Accesibilidad",
       wa_msg: "Hola, quiero información para comprar un carro",
       chat_label: "Chat con Nosotros",
+      open_now: "Abierto ahora", closed_now: "Cerrado",
+      proof_action: "acaba de reservar", proof_verified: "Reserva verificada",
     },
     en: {
       header_hours: CFG.contact ? (CFG.contact.hoursShortEn || CFG.contact.hoursShort) : "",
@@ -90,6 +93,8 @@
       foot_sitemap: "Sitemap", foot_accessibility: "Accessibility",
       wa_msg: "Hi, I want information about buying a car",
       chat_label: "Chat with Us",
+      open_now: "Open now", closed_now: "Closed",
+      proof_action: "just reserved", proof_verified: "Verified reservation",
     },
   });
 
@@ -172,7 +177,7 @@
         // Top bar
         '<div class="pmx-topbar"><div class="pmx-topbar__inner">' +
           '<div class="pmx-topbar__info">' +
-            '<span>' + IC.schedule + ' <span data-i18n="header_hours">' + t("header_hours") + '</span></span>' +
+            '<span>' + IC.schedule + ' <span data-i18n="header_hours">' + t("header_hours") + '</span> <span class="pmx-openstatus" id="pmxOpenStatus"></span></span>' +
             '<span>' + IC.place + ' <span data-i18n="header_address">' + t("header_address") + '</span></span>' +
           '</div>' +
           '<div class="pmx-topbar__actions">' +
@@ -419,6 +424,77 @@
     io.observe(footer);
   }
 
+  /* ---------------- ESTADO ABIERTO / CERRADO (luz en vivo) ---------------- */
+  function parseTime12(str) {
+    var m = String(str).match(/(\d{1,2}):(\d{2})\s*(a|p)\.?m/i);
+    if (!m) return null;
+    var h = parseInt(m[1], 10) % 12; if (/p/i.test(m[3])) h += 12;
+    return h * 60 + parseInt(m[2], 10);
+  }
+  function isOpenNow() {
+    var c = CFG.contact || {}, hrs = c.hours || [];
+    if (!hrs.length) return null;
+    var tz = c.tz || "America/New_York", wd = "", hh = 0, mm = 0;
+    try {
+      new Intl.DateTimeFormat("en-US", { timeZone: tz, weekday: "short", hour: "2-digit", minute: "2-digit", hour12: false })
+        .formatToParts(new Date()).forEach(function (p) {
+          if (p.type === "weekday") wd = p.value.toLowerCase().slice(0, 3);
+          else if (p.type === "hour") hh = parseInt(p.value, 10);
+          else if (p.type === "minute") mm = parseInt(p.value, 10);
+        });
+    } catch (e) {
+      var dt = new Date(), nm = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+      wd = nm[dt.getDay()]; hh = dt.getHours(); mm = dt.getMinutes();
+    }
+    if (hh >= 24) hh -= 24;
+    var entry = hrs.filter(function (h) { return h.day === wd; })[0];
+    if (!entry || !entry.time || /cerrado|closed/i.test(entry.time)) return false;
+    var seg = entry.time.split(/[–-]/); if (seg.length < 2) return false;
+    var s = parseTime12(seg[0]), e = parseTime12(seg[1]);
+    if (s == null || e == null) return false;
+    var now = hh * 60 + mm; return now >= s && now < e;
+  }
+  function updateOpenStatus() {
+    var el = document.getElementById("pmxOpenStatus"); if (!el) return;
+    var open = isOpenNow();
+    if (open === null) { el.innerHTML = ""; el.className = "pmx-openstatus"; return; }
+    el.className = "pmx-openstatus " + (open ? "pmx-openstatus--open" : "pmx-openstatus--closed");
+    el.innerHTML = '<span class="pmx-openstatus__dot"></span>' + (open ? t("open_now") : t("closed_now"));
+  }
+
+  /* ---------------- PRUEBA SOCIAL (FOMO) ---------------- */
+  var PROOF_NAMES = ["Carlos R.", "María G.", "José L.", "Ana P.", "Luis M.", "Daniela V.", "Andrés C.", "Gabriela S.", "Miguel T.", "Valentina R.", "Jorge D.", "Camila F.", "Ricardo N.", "Sofía H.", "Pedro A.", "Isabella M.", "Roberto S.", "Patricia L."];
+  var PROOF_ITEMS = ["Toyota RAV4 2026", "Toyota 4Runner TRD", "Toyota Crown Limited", "Toyota Sienna XLE", "Toyota Sequoia", "Van High Roof 3500", "Toyota Land Cruiser", "Ford Mustang", "Suzuki Swift", "Toyota Tacoma", "Honda CR-V"];
+  function wireSocialProof() {
+    var off = false; try { off = sessionStorage.getItem("pmx_proof_off") === "1"; } catch (e) {}
+    if (off) return;
+    var host = document.createElement("div");
+    host.className = "pmx-proof"; host.id = "pmxProof";
+    host.innerHTML = '<span class="pmx-proof__ic">🚗</span>' +
+      '<div class="pmx-proof__body"><p class="pmx-proof__top"></p><p class="pmx-proof__item"></p><p class="pmx-proof__meta"></p></div>' +
+      '<button class="pmx-proof__x" type="button" aria-label="Cerrar">&times;</button>';
+    document.body.appendChild(host);
+    var hideT = null, loopT = null;
+    function rnd(a) { return a[Math.floor(Math.random() * a.length)]; }
+    function showOne() {
+      if (document.hidden) return;
+      var n = 2 + Math.floor(Math.random() * 44);
+      var ago = (LANG === "en") ? (n + " min ago") : ("hace " + n + " min");
+      host.querySelector(".pmx-proof__top").innerHTML = '<b>' + rnd(PROOF_NAMES) + '</b> ' + t("proof_action");
+      host.querySelector(".pmx-proof__item").textContent = rnd(PROOF_ITEMS);
+      host.querySelector(".pmx-proof__meta").innerHTML = '<span class="pmx-proof__dot"></span> ' + ago + ' · ' + t("proof_verified");
+      host.classList.add("is-on");
+      if (hideT) clearTimeout(hideT);
+      hideT = setTimeout(function () { host.classList.remove("is-on"); }, 6000);
+    }
+    host.querySelector(".pmx-proof__x").addEventListener("click", function () {
+      host.classList.remove("is-on");
+      if (loopT) clearInterval(loopT); if (hideT) clearTimeout(hideT);
+      try { sessionStorage.setItem("pmx_proof_off", "1"); } catch (e) {}
+    });
+    setTimeout(function () { showOne(); loopT = setInterval(showOne, 21000); }, 9000);
+  }
+
   /* ---------------- INIT ---------------- */
   function mount() {
     // Header al inicio del body
@@ -446,6 +522,9 @@
     applyI18n(LANG);
     wireAnim();
     wireFooterFab();
+    updateOpenStatus();
+    setInterval(updateOpenStatus, 60000);
+    wireSocialProof();
   }
 
   // API pública

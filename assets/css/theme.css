@@ -277,6 +277,26 @@ body.pmx-open .pmx-mobilemenu{ display:block; }
 }
 @media print{ .pmx-fab{ display:none; } }
 
+/* ===== ESTADO ABIERTO (luz) + PRUEBA SOCIAL (FOMO) ===== */
+.pmx-openstatus{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:11.5px;letter-spacing:.3px;padding:2px 9px;border-radius:999px;vertical-align:middle;white-space:nowrap;}
+.pmx-openstatus--open{color:#22c55e;background:rgba(34,197,94,.13);}
+.pmx-openstatus--closed{color:#9aa0aa;background:rgba(255,255,255,.07);}
+.pmx-openstatus__dot{width:8px;height:8px;border-radius:50%;background:currentColor;}
+.pmx-openstatus--open .pmx-openstatus__dot{background:#22c55e;animation:pmxPulseDot 1.6s infinite;}
+@keyframes pmxPulseDot{0%{box-shadow:0 0 0 0 rgba(34,197,94,.6);}70%{box-shadow:0 0 0 7px rgba(34,197,94,0);}100%{box-shadow:0 0 0 0 rgba(34,197,94,0);}}
+.pmx-proof{position:fixed;left:20px;bottom:20px;z-index:9400;width:300px;max-width:calc(100vw - 32px);background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,.22);padding:14px 36px 14px 14px;display:flex;gap:12px;align-items:flex-start;opacity:0;transform:translateY(16px) scale(.96);pointer-events:none;transition:opacity .35s,transform .35s;}
+.pmx-proof.is-on{opacity:1;transform:none;pointer-events:auto;}
+.pmx-proof__ic{flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:var(--brand-soft);display:flex;align-items:center;justify-content:center;font-size:20px;}
+.pmx-proof__body{flex:1;min-width:0;}
+.pmx-proof__top{margin:0;font-size:13px;color:var(--text-muted);line-height:1.3;}
+.pmx-proof__top b{color:var(--ink);font-weight:700;}
+.pmx-proof__item{margin:2px 0 4px;font-size:14px;font-weight:700;color:var(--brand);line-height:1.25;}
+.pmx-proof__meta{margin:0;font-size:11px;color:var(--text-faint);display:flex;align-items:center;gap:6px;}
+.pmx-proof__dot{width:7px;height:7px;border-radius:50%;background:#22c55e;flex:0 0 auto;animation:pmxPulseDot 1.6s infinite;}
+.pmx-proof__x{position:absolute;top:8px;right:9px;border:0;background:none;font-size:18px;line-height:1;color:var(--text-faint);cursor:pointer;width:22px;height:22px;border-radius:50%;}
+.pmx-proof__x:hover{background:var(--bg-soft);color:var(--ink);}
+@media(max-width:600px){.pmx-proof{left:10px;bottom:84px;width:270px;}}
+
 /* ===================== GALERÍA DE VIDEOS / INSTAGRAM (pmx-ig) ===================== */
 .pmx-ig{background:var(--bg-soft);scroll-margin-top:140px;}
 .pmx-ig__head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:30px;flex-wrap:wrap;}

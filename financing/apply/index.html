@@ -34,12 +34,30 @@
 .pmx-success svg{margin-bottom:14px;}
 .pmx-success h3{font-size:26px;margin:0 0 8px;}
 .pmx-success p{color:var(--text-muted);margin:0;}
+/* Barra de descuento 15% con cuenta regresiva */
+.pmx-promobar{display:flex;align-items:center;gap:14px;background:linear-gradient(120deg,var(--brand),var(--brand-2));color:#fff;border-radius:14px;padding:14px 18px;margin-bottom:24px;box-shadow:0 12px 30px rgba(167,2,0,.3);animation:pmxBarIn .4s ease;}
+@keyframes pmxBarIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:none}}
+.pmx-promobar__ic{font-size:26px;line-height:1;}
+.pmx-promobar__txt{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.3;}
+.pmx-promobar__txt b{font-size:15px;}
+.pmx-promobar__txt span{font-size:12.5px;color:rgba(255,255,255,.88);}
+.pmx-promobar__time{font-family:var(--font-head);font-weight:800;font-size:23px;background:rgba(0,0,0,.25);padding:8px 14px;border-radius:10px;min-width:132px;text-align:center;font-variant-numeric:tabular-nums;}
+.pmx-promobar.is-exp{background:#4b5563;box-shadow:none;}
+@media(max-width:600px){.pmx-promobar{flex-wrap:wrap;}.pmx-promobar__time{font-size:20px;min-width:112px;}}
 </style>
 </head>
 <body>
 
 <section class="pmx-apply">
   <div class="pmx-apply__in">
+    <div class="pmx-promobar" id="pmxPromoBar" hidden>
+      <span class="pmx-promobar__ic">⏳</span>
+      <div class="pmx-promobar__txt">
+        <b id="pmxPromoBarTitle">¡Tu 15% de descuento está reservado!</b>
+        <span id="pmxPromoBarSub">Válido SOLO si completas el formulario antes de que se acabe el tiempo.</span>
+      </div>
+      <div class="pmx-promobar__time" id="pmxPromoBarTime">10:00.000</div>
+    </div>
     <div class="pmx-apply__head">
       <span class="pmx-eyebrow pmx-eyebrow--pill" data-i18n="ap_eyebrow">Solicitud de crédito</span>
       <h1 data-i18n="ap_title">Aplica a Financiamiento</h1>
@@ -171,6 +189,40 @@ PMX.addTranslations({
     });
   }
 
+  // ===== Descuento 15% (viene del popup del inicio). Solo aplica si llegó por ahí. =====
+  var promoBar = document.getElementById("pmxPromoBar");
+  var promoState = "none", promoIv = null;
+  var claim = 0; try { claim = +(localStorage.getItem("pmx_promo_claim") || 0); } catch(e){}
+  if (promoBar && claim && claim > Date.now()) {
+    promoState = "valid";
+    promoBar.hidden = false;
+    var timeEl = document.getElementById("pmxPromoBarTime");
+    var titleEl = document.getElementById("pmxPromoBarTitle");
+    var subEl = document.getElementById("pmxPromoBarSub");
+    var lang = (window.PMX && PMX.lang && PMX.lang()) || "es";
+    if (lang === "en") {
+      titleEl.textContent = "Your 15% discount is reserved!";
+      subEl.textContent = "Valid ONLY if you complete the form before time runs out.";
+    }
+    var fmtClaim = function(ms){ if (ms < 0) ms = 0; var m = Math.floor(ms/60000), s = Math.floor((ms%60000)/1000), x = ms%1000; return (m<10?"0":"")+m+":"+(s<10?"0":"")+s+"."+("00"+x).slice(-3); };
+    var ptick = function(){
+      var left = claim - Date.now();
+      if (left <= 0) {
+        promoState = "expired";
+        timeEl.textContent = "00:00.000";
+        promoBar.classList.add("is-exp");
+        titleEl.textContent = (lang === "en") ? "Discount expired" : "Descuento expirado";
+        subEl.textContent = (lang === "en") ? "The time to claim 15% has ended." : "El tiempo para reclamar el 15% terminó.";
+        if (promoIv) clearInterval(promoIv);
+        return;
+      }
+      timeEl.textContent = fmtClaim(left);
+    };
+    promoIv = setInterval(ptick, 43); ptick();
+  } else if (claim) {
+    promoState = "expired";
+  }
+
   var form = document.getElementById("pmxApply");
   form.addEventListener("submit", function(e){
     e.preventDefault();
@@ -185,11 +237,14 @@ PMX.addTranslations({
       "Empleador: "+(d.employer||"-")+" | Ocupación: "+(d.occupation||"-")+" | Tiempo: "+(d.employed_time||"-"),
       "Pago: "+(d.pay_frequency||"-")+" | Ingreso: $"+(d.gross_income||"-")+" | Inicial: $"+(d.down_payment||"-"),
       "Autoriza crédito: "+(d.authorize||"-")+" | Firma: "+(d.signature||"-"),
-      vin ? "Vehículo de interés (id): "+vin : ""
+      vin ? "Vehículo de interés (id): "+vin : "",
+      promoState==="valid" ? "🎟️ DESCUENTO 15%: VÁLIDO (reclamado a tiempo)" : (promoState==="expired" ? "DESCUENTO 15%: EXPIRADO (no llegó a tiempo)" : "")
     ].filter(Boolean);
     PMX.submitLead({ form_type:"financing", name:name, email:d.email||"", phone:d.phone||"",
-      message:lines.join("\n"), raw_fields:d, vehicle_id:vin||"" })
+      message:lines.join("\n"), raw_fields:d, vehicle_id:vin||"", descuento_15:promoState })
       .then(function(){
+        try{ localStorage.removeItem("pmx_promo_claim"); }catch(_){}
+        if(promoIv) clearInterval(promoIv);
         form.style.display="none";
         var s=document.getElementById("pmxSuccess"); s.style.display="block"; s.scrollIntoView({behavior:"smooth",block:"center"});
       })
