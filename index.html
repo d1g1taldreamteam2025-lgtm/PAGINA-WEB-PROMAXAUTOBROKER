@@ -73,6 +73,9 @@
 @keyframes pmxVidGlow{0%,100%{box-shadow:none;}30%,70%{box-shadow:inset 0 0 0 3px var(--brand);}}
 @media(max-width:600px){.pmx-vinvite{left:12px;right:12px;bottom:84px;width:auto;}}
 .pmx-at-footer .pmx-vinvite{display:none!important;}
+/* Home: centrar los 3 videos del inventario */
+#pmxVideos .pmx-ig__grid{grid-template-columns:repeat(3,1fr);max-width:760px;margin-left:auto;margin-right:auto;}
+@media(max-width:680px){#pmxVideos .pmx-ig__grid{grid-template-columns:repeat(2,1fr);max-width:430px;}}
 </style>
 </head>
 <body>
