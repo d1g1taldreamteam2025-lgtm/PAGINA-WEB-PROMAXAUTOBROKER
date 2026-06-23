@@ -1,0 +1,7 @@
+# Pega aquí las direcciones de los carros (una por línea) y renombra este
+# archivo a  urls.txt  para usarlo con:   node scrape.js --live --urls urls.txt
+# Las líneas que empiezan con # se ignoran.
+
+https://www.toyotaofnorthmiami.com/used/Toyota/2024-Toyota-Corolla-Hatchback-b35b7d9dac185e3b261a3038c33c572b.htm
+# https://www.toyotaofnorthmiami.com/used/Toyota/...otra...htm
+# https://www.toyotaofnorthmiami.com/new/Toyota/...otra...htm

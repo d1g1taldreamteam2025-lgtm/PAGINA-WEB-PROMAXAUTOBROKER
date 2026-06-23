@@ -1,0 +1,2 @@
+# Guarda aquí las páginas de los carros (.html) para el modo OFFLINE.
+# node scrape.js  las lee y arma inventory.json
