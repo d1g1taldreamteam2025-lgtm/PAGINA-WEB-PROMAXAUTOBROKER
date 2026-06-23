@@ -13,7 +13,9 @@ Mientras conectas el dominio, funcionan con la URL de Vercel:
 |---|---|
 | Inventario | `…/admin/` |
 | Leads | `…/admin/leads.html` |
+| **Sorteo / Referidos** | `…/admin/sorteo.html` |
 | Instalar herramienta (bookmarklet) | `…/admin/install.html` |
+| Progreso público del sorteo (compartible) | `…/referrals/` |
 
 Ejemplo: `https://pagina-web-promaxautobroker.vercel.app/admin/`
 Con tu dominio quedará: `https://promaxautobroker.com/admin/`
@@ -116,11 +118,10 @@ La web sigue en **Vercel** (gratis y rápido); Hostinger solo aporta el **domini
 > Usa exactamente los valores que te muestre Vercel (a veces cambian). La
 > propagación tarda de minutos a unas horas.
 
-**Después de conectar el dominio**, edita una línea en `/admin/index.html`:
-```js
-const SITE_URL='https://promaxautobroker.com';
-```
-(así el botón 👁 "Ver en la web" abre tu dominio).
+> ✅ Ya dejamos el sitio listo para producción: `robots.txt`, `sitemap.xml` y el
+> `SITE_URL` de `/admin/index.html` ya apuntan a `https://promaxautobroker.com`.
+> Solo falta que hagas los pasos A y B de arriba (agregar el dominio en Vercel y
+> los 2 registros DNS en Hostinger) y la web queda en tu dominio.
 
 ---
 
@@ -129,6 +130,66 @@ const SITE_URL='https://promaxautobroker.com';
 2. Arrastra el botón a tu barra de marcadores (instrucciones en la página).
 3. En la página de un carro (Dealer.com / carsforsale), click al marcador → copia los datos.
 4. Panel → **Agregar Vehículo** → **Pegar JSON** → revisar → guardar.
+
+---
+
+## 🎉 Sorteo / Referidos (panel `…/admin/sorteo.html`)
+
+Página **con login** (la misma cuenta del panel) donde el dueño registra cada
+venta/cliente y corre el sorteo. Guarda en Supabase (tablas propias de Promax).
+
+**Qué hace:**
+- Formulario con los datos del comprador: **Nombre y apellido · Teléfono · Correo ·
+  Dirección · Vehículo comprado · VIN · Quién ayudó a vender · Estado · Notas.**
+- Barra de progreso **X / meta** (las ventas en estado *Vendido* cuentan al sorteo).
+- **Ajustar la meta** (la cantidad) cuando quieras, sin tocar código.
+- **Realizar sorteo 🎉**: cuando llegas a la meta, elige un ganador al azar entre
+  las ventas registradas (muestra quién ayudó + comprador + vehículo).
+- **Nueva ronda ↺**: reinicia el contador a 0 para el siguiente sorteo. Los
+  registros anteriores **no se borran** (quedan archivados; los ves con el filtro
+  "Todas las rondas").
+- **Buscador y filtros** por estado/ronda. Botones de WhatsApp/correo por cliente.
+- La página pública `…/referrals/` muestra solo el **contador** (X/meta) — **sin
+  datos personales** — para compartir y motivar a quienes ayudan a vender.
+
+**SQL (una sola vez):** Supabase → **SQL Editor** → pega y ejecuta:
+
+```sql
+-- ===== Sorteo / Referidos =====
+create extension if not exists pgcrypto;
+create table if not exists public.promax_referrals (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz default now(),
+  round int default 1,
+  name text, address text, phone text, email text,
+  vehicle text, vin text, helper text,
+  status text default 'Vendido',
+  notes text
+);
+alter table public.promax_referrals enable row level security;
+create policy "promax_ref_admin_all" on public.promax_referrals
+  for all to authenticated using (true) with check (true);
+
+-- ===== Ajustes (meta + ronda + contador público del sorteo) =====
+create table if not exists public.promax_settings (
+  key text primary key,
+  value jsonb,
+  updated_at timestamptz default now()
+);
+alter table public.promax_settings enable row level security;
+create policy "promax_set_admin_all" on public.promax_settings
+  for all to authenticated using (true) with check (true);
+-- solo el contador (sin datos personales) es de lectura pública:
+create policy "promax_set_public_read" on public.promax_settings
+  for select to anon using (true);
+
+-- Tiempo real en el panel (opcional)
+alter publication supabase_realtime add table public.promax_referrals;
+```
+
+> Los **datos del comprador** (`promax_referrals`) **solo** los puede leer/escribir
+> un usuario con sesión (login). La tabla `promax_settings` solo expone el número
+> del contador para la página pública; no contiene datos personales.
 
 ---
 

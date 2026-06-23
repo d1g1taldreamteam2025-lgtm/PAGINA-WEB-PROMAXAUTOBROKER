@@ -4,243 +4,93 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
-<title>Referidos (interno) | Promax Auto Broker</title>
+<title>Sorteo Promax — Progreso</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/theme.css">
 <link rel="icon" type="image/png" href="https://res.cloudinary.com/drbc4wbvw/image/upload/e_trim,c_pad,w_256,h_256,b_transparent/v1781816671/Logos_wbzal9.png">
 <style>
-.pmx-ref{max-width:1080px;margin:0 auto;padding:36px 24px 80px;}
-.pmx-ref__banner{background:var(--ink);color:#fff;border-radius:var(--radius);padding:18px 22px;display:flex;align-items:center;gap:12px;margin-bottom:24px;}
-.pmx-ref__banner .material-icons-outlined{color:var(--brand-2);}
-.pmx-ref__banner b{color:#fff;}
-.pmx-ref__banner span{font-size:14px;color:#cbd5e1;}
-.pmx-ref__grid{display:grid;grid-template-columns:1fr 1.2fr;gap:26px;align-items:start;}
-@media(max-width:900px){.pmx-ref__grid{grid-template-columns:1fr;}}
-.pmx-ref__card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:26px;}
-.pmx-prog__head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
-.pmx-prog__num{font-family:var(--font-head);font-size:42px;font-weight:800;color:var(--ink);line-height:1;}
-.pmx-prog__num span{color:var(--brand);}
-.pmx-prog__goal{font-size:14px;color:var(--text-muted);}
-.pmx-prog__bar{height:16px;border-radius:999px;background:var(--bg-soft);overflow:hidden;margin:14px 0 8px;border:1px solid var(--line);}
-.pmx-prog__fill{height:100%;background:linear-gradient(90deg,var(--brand),var(--brand-2));width:0;transition:width .6s ease;}
-.pmx-prog__sub{font-size:13px;color:var(--text-muted);margin-bottom:18px;}
-.pmx-prog__stats{display:flex;gap:22px;margin-bottom:18px;}
-.pmx-prog__stat strong{font-family:var(--font-head);font-size:22px;display:block;}
-.pmx-prog__stat span{font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.5px;}
-.pmx-ref__form .pmx-field{margin-bottom:14px;}
-.pmx-ref__row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-@media(max-width:520px){.pmx-ref__row{grid-template-columns:1fr;}}
-.pmx-toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:10px;font-size:14px;opacity:0;pointer-events:none;transition:all .3s;z-index:99999;}
-.pmx-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.pmx-recent{margin-top:14px;}
-.pmx-recent__item{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line-soft);font-size:13.5px;}
-.pmx-recent__item:last-child{border-bottom:0;}
-.pmx-badge-status{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--bg-soft);color:var(--text-muted);}
-.pmx-badge-status.sold{background:rgba(22,163,74,.12);color:#16a34a;}
-/* Gate */
-.pmx-gate{position:fixed;inset:0;background:rgba(13,15,18,.96);z-index:100000;display:flex;align-items:center;justify-content:center;padding:20px;}
-.pmx-gate__box{background:#fff;border-radius:var(--radius);padding:36px 30px;max-width:360px;width:100%;text-align:center;}
-.pmx-gate__box h2{margin:0 0 8px;}
-.pmx-gate__box p{color:var(--text-muted);font-size:14px;margin:0 0 18px;}
-.pmx-gate__box input{width:100%;padding:13px;border:1.5px solid var(--line);border-radius:8px;font-size:16px;text-align:center;margin-bottom:12px;}
-.pmx-gate__err{color:var(--brand);font-size:13px;height:16px;margin-bottom:8px;}
-/* Modal sorteo */
-.pmx-modal{position:fixed;inset:0;background:rgba(13,15,18,.85);z-index:100001;display:none;align-items:center;justify-content:center;padding:20px;}
-.pmx-modal.open{display:flex;}
-.pmx-modal__box{background:#fff;border-radius:var(--radius-lg);padding:40px 32px;max-width:440px;width:100%;text-align:center;}
-.pmx-modal__box h2{color:var(--brand);margin:0 0 6px;}
-.pmx-winner{font-family:var(--font-head);font-size:26px;font-weight:800;margin:14px 0 4px;}
-.pmx-notice{background:#fff8e1;border:1px solid #f5d98b;color:#8a6d1a;border-radius:10px;padding:14px 16px;font-size:13.5px;margin-bottom:20px;}
-.pmx-notice a{color:var(--brand);font-weight:600;}
+.pmx-sorteo{max-width:620px;margin:0 auto;padding:48px 24px 80px;text-align:center;}
+.pmx-sorteo__logo{height:48px;width:auto;margin:0 auto 28px;display:block;}
+.pmx-sorteo__card{background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);padding:40px 32px;box-shadow:0 18px 50px rgba(13,15,18,.10);}
+.pmx-sorteo__tag{display:inline-flex;align-items:center;gap:7px;background:var(--bg-soft);color:var(--brand);font-size:13px;font-weight:700;padding:6px 14px;border-radius:999px;margin-bottom:18px;}
+.pmx-sorteo__title{font-family:var(--font-head);font-size:26px;font-weight:800;margin:0 0 6px;color:var(--ink);}
+.pmx-sorteo__sub{color:var(--text-muted);font-size:14.5px;margin:0 0 28px;}
+.pmx-sorteo__num{font-family:var(--font-head);font-size:64px;font-weight:800;line-height:1;color:var(--ink);}
+.pmx-sorteo__num span{color:var(--brand);}
+.pmx-sorteo__goal{font-size:15px;color:var(--text-muted);margin-top:4px;}
+.pmx-sorteo__bar{height:20px;border-radius:999px;background:var(--bg-soft);overflow:hidden;border:1px solid var(--line);margin:24px 0 12px;}
+.pmx-sorteo__fill{height:100%;background:linear-gradient(90deg,var(--brand),var(--brand-2));width:0;transition:width 1s ease;}
+.pmx-sorteo__rem{font-size:15px;color:var(--text-muted);}
+.pmx-sorteo__rem b{color:var(--brand);}
+.pmx-sorteo__ready{font-size:16px;color:#16a34a;font-weight:700;}
+.pmx-sorteo__foot{margin-top:30px;font-size:13px;color:var(--text-faint);line-height:1.6;}
+.pmx-sorteo__cta{display:inline-flex;align-items:center;gap:8px;margin-top:22px;background:var(--brand);color:#fff;font-weight:700;font-size:15px;padding:13px 24px;border-radius:999px;text-decoration:none;}
+.pmx-sorteo__cta:hover{filter:brightness(.95);}
 </style>
 </head>
 <body>
 
-<!-- GATE -->
-<div class="pmx-gate" id="pmxGate" style="display:none">
-  <div class="pmx-gate__box">
-    <span class="material-icons-outlined" style="font-size:40px;color:var(--brand)">lock</span>
-    <h2 data-i18n="rf_gate_t">Panel interno</h2>
-    <p data-i18n="rf_gate_s">Ingresa la clave del equipo Promax.</p>
-    <input type="password" id="pmxGateInput" placeholder="Clave" autocomplete="off">
-    <div class="pmx-gate__err" id="pmxGateErr"></div>
-    <button class="pmx-btn pmx-btn--primary pmx-btn--block" id="pmxGateBtn" data-i18n="rf_gate_btn">Entrar</button>
+<div class="pmx-sorteo">
+  <img class="pmx-sorteo__logo" id="logo" src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782163987/Logos-05_cqy7tj.png" alt="Promax Auto Broker">
+  <div class="pmx-sorteo__card">
+    <span class="pmx-sorteo__tag">🎉 Sorteo Promax</span>
+    <h1 class="pmx-sorteo__title">¡Ayúdanos a vender y participa!</h1>
+    <p class="pmx-sorteo__sub">Por cada meta de ventas alcanzada, sorteamos un auto entre quienes nos ayudan a vender.</p>
+
+    <div class="pmx-sorteo__num"><span id="sold">0</span> / <span id="goal">100</span></div>
+    <div class="pmx-sorteo__goal">ventas para el próximo sorteo</div>
+
+    <div class="pmx-sorteo__bar"><div class="pmx-sorteo__fill" id="fill"></div></div>
+    <div id="msg" class="pmx-sorteo__rem"></div>
+
+    <a class="pmx-sorteo__cta" id="waCta" href="#" target="_blank" rel="noopener">💬 Quiero ayudar a vender</a>
+
+    <p class="pmx-sorteo__foot">El progreso se actualiza en tiempo real.<br>Promax Auto Broker · Miami, FL</p>
   </div>
 </div>
-
-<div class="pmx-ref" id="pmxRefApp" style="display:none">
-  <div class="pmx-ref__banner">
-    <span class="material-icons-outlined">groups</span>
-    <div><b data-i18n="rf_title">Programa de Referidos — Uso interno</b><br>
-    <span data-i18n="rf_sub">Registra cada referido y venta. Al llegar a la meta se activa el sorteo.</span></div>
-  </div>
-
-  <div class="pmx-notice" id="pmxRefNotice" style="display:none">
-    <span data-i18n="rf_notice">⚠️ El Google Sheet aún no está conectado. Sigue las instrucciones del archivo</span>
-    <a href="https://github.com/d1g1taldreamteam2025-lgtm/pagina-web-promaxautobroker/blob/main/README.md" target="_blank">README</a> (Code.gs).
-  </div>
-
-  <div class="pmx-ref__grid">
-    <!-- PROGRESO -->
-    <div class="pmx-ref__card">
-      <div class="pmx-prog__head">
-        <span class="pmx-prog__num"><span id="pmxSold">0</span> / <span id="pmxGoal">100</span></span>
-        <span class="pmx-prog__goal" data-i18n="rf_goal">ventas para el sorteo</span>
-      </div>
-      <div class="pmx-prog__bar"><div class="pmx-prog__fill" id="pmxFill"></div></div>
-      <p class="pmx-prog__sub" id="pmxRemaining"></p>
-      <div class="pmx-prog__stats">
-        <div class="pmx-prog__stat"><strong id="pmxTotal">0</strong><span data-i18n="rf_total">Referidos totales</span></div>
-        <div class="pmx-prog__stat"><strong id="pmxSold2">0</strong><span data-i18n="rf_sold">Ventas</span></div>
-      </div>
-      <button class="pmx-btn pmx-btn--dark pmx-btn--block" id="pmxRaffleBtn" disabled data-i18n="rf_raffle">Realizar sorteo 🎉</button>
-      <div class="pmx-recent" id="pmxRecent"></div>
-    </div>
-
-    <!-- FORMULARIO -->
-    <div class="pmx-ref__card">
-      <h3 style="margin:0 0 4px" data-i18n="rf_form_t">Registrar referido / venta</h3>
-      <p style="color:var(--text-muted);font-size:13px;margin:0 0 18px" data-i18n="rf_form_s">Todos los campos quedan guardados en la hoja de Google.</p>
-      <form class="pmx-ref__form" id="pmxRefForm">
-        <div class="pmx-ref__row">
-          <div class="pmx-field"><label data-i18n="rf_referrer">Quién refiere</label><input name="referrer" required></div>
-          <div class="pmx-field"><label data-i18n="rf_referrer_ph">Tel. de quien refiere</label><input name="referrer_phone" type="tel"></div>
-        </div>
-        <div class="pmx-ref__row">
-          <div class="pmx-field"><label data-i18n="rf_referred">Cliente referido</label><input name="referred" required></div>
-          <div class="pmx-field"><label data-i18n="rf_referred_ph">Tel. del cliente</label><input name="referred_phone" type="tel"></div>
-        </div>
-        <div class="pmx-field"><label data-i18n="rf_vehicle">Vehículo / interés</label><input name="vehicle" placeholder="Ej. Toyota RAV4 2021"></div>
-        <div class="pmx-ref__row">
-          <div class="pmx-field"><label data-i18n="rf_status">Estado</label>
-            <select name="status"><option data-i18n="rf_st_ref">Referido</option><option data-i18n="rf_st_proc">En proceso</option><option data-i18n="rf_st_sold">Vendido</option></select></div>
-          <div class="pmx-field"><label data-i18n="rf_by">Registrado por</label><input name="added_by"></div>
-        </div>
-        <div class="pmx-field"><label data-i18n="rf_notes">Notas</label><textarea name="notes" rows="2"></textarea></div>
-        <button type="submit" class="pmx-btn pmx-btn--primary pmx-btn--block" style="margin-top:8px" data-i18n="rf_save">Guardar referido</button>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL SORTEO -->
-<div class="pmx-modal" id="pmxModal">
-  <div class="pmx-modal__box">
-    <span style="font-size:46px">🎉</span>
-    <h2 data-i18n="rf_winner_t">¡Tenemos ganador!</h2>
-    <div class="pmx-winner" id="pmxWinnerName"></div>
-    <p id="pmxWinnerInfo" style="color:var(--text-muted);margin:0 0 20px"></p>
-    <button class="pmx-btn pmx-btn--primary" id="pmxModalClose" data-i18n="rf_close">Cerrar</button>
-  </div>
-</div>
-
-<div class="pmx-toast" id="pmxToast"></div>
 
 <script src="/assets/js/config.js"></script>
-<script src="/assets/js/site.js"></script>
-<script src="/assets/js/referrals.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-PMX.addTranslations({
-  es:{ rf_gate_t:"Panel interno", rf_gate_s:"Ingresa la clave del equipo Promax.", rf_gate_btn:"Entrar", rf_gate_bad:"Clave incorrecta",
-    rf_title:"Programa de Referidos — Uso interno", rf_sub:"Registra cada referido y venta. Al llegar a la meta se activa el sorteo.",
-    rf_notice:"⚠️ El Google Sheet aún no está conectado. Sigue las instrucciones del archivo",
-    rf_goal:"ventas para el sorteo", rf_total:"Referidos totales", rf_sold:"Ventas", rf_raffle:"Realizar sorteo 🎉",
-    rf_remaining:"Faltan {n} ventas para el sorteo.", rf_ready:"¡Meta alcanzada! Ya puedes hacer el sorteo.",
-    rf_form_t:"Registrar referido / venta", rf_form_s:"Todos los campos quedan guardados en la hoja de Google.",
-    rf_referrer:"Quién refiere", rf_referrer_ph:"Tel. de quien refiere", rf_referred:"Cliente referido", rf_referred_ph:"Tel. del cliente",
-    rf_vehicle:"Vehículo / interés", rf_status:"Estado", rf_st_ref:"Referido", rf_st_proc:"En proceso", rf_st_sold:"Vendido",
-    rf_by:"Registrado por", rf_notes:"Notas", rf_save:"Guardar referido", rf_saving:"Guardando...",
-    rf_saved:"✓ Referido guardado", rf_err:"Error al guardar. Revisa la conexión.", rf_notconf:"Conecta primero el Google Sheet (ver README).",
-    rf_winner_t:"¡Tenemos ganador!", rf_close:"Cerrar", rf_noeligible:"Aún no hay ventas registradas para sortear.", rf_recent:"Últimos registros" },
-  en:{ rf_gate_t:"Internal panel", rf_gate_s:"Enter the Promax team passcode.", rf_gate_btn:"Enter", rf_gate_bad:"Wrong passcode",
-    rf_title:"Referral Program — Internal use", rf_sub:"Log every referral and sale. The raffle unlocks when you reach the goal.",
-    rf_notice:"⚠️ The Google Sheet isn't connected yet. Follow the instructions in",
-    rf_goal:"sales until the raffle", rf_total:"Total referrals", rf_sold:"Sales", rf_raffle:"Run raffle 🎉",
-    rf_remaining:"{n} sales left until the raffle.", rf_ready:"Goal reached! You can run the raffle.",
-    rf_form_t:"Log referral / sale", rf_form_s:"All fields are saved to the Google Sheet.",
-    rf_referrer:"Referred by", rf_referrer_ph:"Referrer phone", rf_referred:"Referred customer", rf_referred_ph:"Customer phone",
-    rf_vehicle:"Vehicle / interest", rf_status:"Status", rf_st_ref:"Referral", rf_st_proc:"In progress", rf_st_sold:"Sold",
-    rf_by:"Logged by", rf_notes:"Notes", rf_save:"Save referral", rf_saving:"Saving...",
-    rf_saved:"✓ Referral saved", rf_err:"Save error. Check the connection.", rf_notconf:"Connect the Google Sheet first (see README).",
-    rf_winner_t:"We have a winner!", rf_close:"Close", rf_noeligible:"No sales logged to raffle yet.", rf_recent:"Latest entries" }
-});
-
 (function(){
-  var REF = (PROMAX.referrals)||{};
-  function toast(msg){ var t=document.getElementById("pmxToast"); t.textContent=msg; t.classList.add("show"); setTimeout(function(){t.classList.remove("show");},2600); }
+  var CFG = window.PROMAX || {};
+  var DB  = CFG.db || {};
+  var REF = CFG.referrals || {};
+  // Logo desde config
+  try{ if(CFG.brand && CFG.brand.logo) document.getElementById('logo').src = CFG.brand.logo; }catch(e){}
+  // CTA WhatsApp desde config
+  try{ if(CFG.contact && CFG.contact.whatsapp){
+    document.getElementById('waCta').href = 'https://wa.me/'+CFG.contact.whatsapp+'?text='+encodeURIComponent('Hola, quiero ayudar a vender y participar en el sorteo Promax.');
+  } }catch(e){}
 
-  // ---- GATE ----
-  function reveal(){ document.getElementById("pmxGate").style.display="none"; document.getElementById("pmxRefApp").style.display="block"; init(); }
-  function startGate(){
-    var pass = REF.passcode||"";
-    if(!pass || sessionStorage.getItem("pmx_ref_ok")==="1"){ reveal(); return; }
-    var g=document.getElementById("pmxGate"); g.style.display="flex";
-    var inp=document.getElementById("pmxGateInput"), err=document.getElementById("pmxGateErr");
-    function tryPass(){ if(inp.value===pass){ sessionStorage.setItem("pmx_ref_ok","1"); reveal(); } else { err.textContent=PMX.t("rf_gate_bad"); inp.value=""; } }
-    document.getElementById("pmxGateBtn").addEventListener("click",tryPass);
-    inp.addEventListener("keydown",function(e){ if(e.key==="Enter") tryPass(); });
-    inp.focus();
+  var sb = (DB.url && DB.anonKey && window.supabase) ? supabase.createClient(DB.url, DB.anonKey) : null;
+
+  function render(goal, sold){
+    goal = +goal || (REF.goal || 100); sold = +sold || 0;
+    document.getElementById('goal').textContent = goal;
+    document.getElementById('sold').textContent = sold;
+    var pct = Math.min(100, goal ? (sold/goal*100) : 0);
+    document.getElementById('fill').style.width = pct + '%';
+    var rem = Math.max(0, goal - sold);
+    document.getElementById('msg').innerHTML = rem > 0
+      ? 'Faltan <b>' + rem + '</b> ventas para el sorteo.'
+      : '<span class="pmx-sorteo__ready">🎉 ¡Meta alcanzada! El sorteo está por realizarse.</span>';
   }
 
-  // ---- APP ----
-  function setProgress(d){
-    var goal=d.goal||PMXRef.goal||100, sold=d.sold||0, total=d.total||0;
-    document.getElementById("pmxSold").textContent=sold;
-    document.getElementById("pmxSold2").textContent=sold;
-    document.getElementById("pmxGoal").textContent=goal;
-    document.getElementById("pmxTotal").textContent=total;
-    var pct=Math.min(100, goal? (sold/goal*100):0);
-    document.getElementById("pmxFill").style.width=pct+"%";
-    var rem=Math.max(0, goal-sold);
-    document.getElementById("pmxRemaining").textContent = rem>0 ? PMX.t("rf_remaining").replace("{n}",rem) : PMX.t("rf_ready");
-    document.getElementById("pmxRaffleBtn").disabled = !(d.raffleReady || sold>=goal);
-  }
-  function refresh(){
-    if(!PMXRef.configured()){ document.getElementById("pmxRefNotice").style.display="block"; setProgress({goal:PMXRef.goal,sold:0,total:0}); return; }
-    PMXRef.count().then(setProgress).catch(function(){ document.getElementById("pmxRefNotice").style.display="block"; });
-    PMXRef.list(8).then(function(r){
-      if(!r||!r.rows) return;
-      document.getElementById("pmxRecent").innerHTML = r.rows.length ?
-        '<div style="font-size:12px;color:var(--text-faint);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 6px">'+PMX.t("rf_recent")+'</div>'+
-        r.rows.map(function(x){ var sold=String(x.status).toLowerCase()==="vendido";
-          return '<div class="pmx-recent__item"><span><b>'+(x.referrer||"-")+'</b> → '+(x.referred||"-")+'</span><span class="pmx-badge-status'+(sold?" sold":"")+'">'+(x.status||"-")+'</span></div>'; }).join("") : "";
-    }).catch(function(){});
+  function load(){
+    if(!sb){ render(REF.goal||100, 0); return; }
+    sb.from('promax_settings').select('value').eq('key','raffle').maybeSingle()
+      .then(function(res){
+        var v = res && res.data && res.data.value ? res.data.value : null;
+        if(v) render(v.goal, v.sold); else render(REF.goal||100, 0);
+      })
+      .catch(function(){ render(REF.goal||100, 0); });
   }
 
-  function init(){
-    document.getElementById("pmxGoal").textContent = PMXRef.goal||100;
-    refresh();
-
-    document.getElementById("pmxRefForm").addEventListener("submit",function(e){
-      e.preventDefault();
-      var f=e.target, btn=f.querySelector("button[type=submit]");
-      if(!PMXRef.configured()){ toast(PMX.t("rf_notconf")); return; }
-      btn.disabled=true; var old=btn.textContent; btn.textContent=PMX.t("rf_saving");
-      var d={}; new FormData(f).forEach(function(v,k){ d[k]=v; });
-      PMXRef.add(d).then(function(res){
-        if(res&&res.ok){ toast(PMX.t("rf_saved")); f.reset(); setProgress(res); refresh(); }
-        else toast(PMX.t("rf_err"));
-      }).catch(function(){ toast(PMX.t("rf_err")); })
-        .then(function(){ btn.disabled=false; btn.textContent=old; });
-    });
-
-    document.getElementById("pmxRaffleBtn").addEventListener("click",function(){
-      if(!PMXRef.configured()){ toast(PMX.t("rf_notconf")); return; }
-      PMXRef.raffle().then(function(res){
-        if(res&&res.ok&&res.winner){
-          document.getElementById("pmxWinnerName").textContent=res.winner.referrer||"-";
-          document.getElementById("pmxWinnerInfo").textContent=(res.winner.referred?("Referido: "+res.winner.referred):"")+(res.winner.vehicle?(" · "+res.winner.vehicle):"");
-          document.getElementById("pmxModal").classList.add("open");
-        } else toast(PMX.t("rf_noeligible"));
-      }).catch(function(){ toast(PMX.t("rf_err")); });
-    });
-    document.getElementById("pmxModalClose").addEventListener("click",function(){ document.getElementById("pmxModal").classList.remove("open"); });
-  }
-
-  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",startGate); else startGate();
+  load();
+  setInterval(load, 30000); // refresca cada 30s
 })();
 </script>
 </body>
