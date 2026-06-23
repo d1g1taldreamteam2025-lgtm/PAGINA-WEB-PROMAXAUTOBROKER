@@ -59,21 +59,21 @@ URLs completas:
 | Hyundai | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782222942/images_jij23e.jpg` |
 | Kia | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782222897/50fa1e9ae66d7c0aa547b8f50918b258_wnvvvd.jpg` |
 | Nissan | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223148/images_2_ni1wr6.jpg` |
-| BMW | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223077/9b98fe7973d0cb009e68fee1a586417a_ll0s3d.jpg` |
-| Mazda | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223075/c58353b0f56de7cf26b5ed3bbf69e7d0_mqkbju.jpg` |
+| BMW | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782226211/images_5_afbpyv.jpg` |
+| Mazda | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782226309/mazda-logo-editorial-ilustrativo-sobre-fondo-blanco-icono-vectorial-logotipos-iconos-conjunto-redes-sociales-banner-plano-vectores-210443199_luyciq.webp` |
 | Jeep | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782222919/11eeec868f528be972314d1f07ac212f_tbv11o.jpg` |
-| Lexus | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782222996/036a1b841a795befc0062028078927c1_z9b1na.jpg` |
-| Subaru | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223018/images_1_c6ixrw.jpg` |
+| Lexus | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782226155/Lexus-cars-logo-emblem_hvls4h.jpg` |
+| Subaru | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782226192/Subaru-logo-symbol_ytniz5.png` |
 
 ## 5) Financiamiento — aliados / prestamistas — 6 logos
 
 | Banco / Entidad | URL (limpia) |
 |---|---|
 | Ally | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223498/images_4_vcehja.jpg` |
-| Capital One | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223405/images_3_jenqnt.jpg` |
+| Capital One | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782226041/images_1_1_kjzeck.png` |
 | Chase | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223546/images_f22ogl.png` |
 | Wells Fargo | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223586/png-clipart-wells-fargo-logo-banner-bank-logos_gmemml.png` |
-| Santander | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223605/png-clipart-santander-group-logo-brand-banco-santander-brazilian-festivals-text-logo_cngoto.png` |
+| Santander | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782225933/logo_BANCO_SANTANDER_c_1_gqk2a9.png` |
 | Service Credit Union | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223450/OneTrustBlueLogo1_bdbtnl.png` |
 
 > ✅ **Confirmado:** la imagen en esa URL es el logo correcto de **Service Credit Union**
