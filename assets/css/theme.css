@@ -284,7 +284,7 @@ body.pmx-open .pmx-mobilemenu{ display:block; }
 .pmx-openstatus__dot{width:8px;height:8px;border-radius:50%;background:currentColor;}
 .pmx-openstatus--open .pmx-openstatus__dot{background:#22c55e;animation:pmxPulseDot 1.6s infinite;}
 @keyframes pmxPulseDot{0%{box-shadow:0 0 0 0 rgba(34,197,94,.6);}70%{box-shadow:0 0 0 7px rgba(34,197,94,0);}100%{box-shadow:0 0 0 0 rgba(34,197,94,0);}}
-.pmx-proof{position:fixed;left:20px;bottom:20px;z-index:9400;width:300px;max-width:calc(100vw - 32px);background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,.22);padding:14px 36px 14px 14px;display:flex;gap:12px;align-items:flex-start;opacity:0;transform:translateY(16px) scale(.96);pointer-events:none;transition:opacity .35s,transform .35s;}
+.pmx-proof{position:fixed;left:20px;bottom:118px;z-index:9400;width:300px;max-width:calc(100vw - 32px);background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 16px 40px rgba(0,0,0,.22);padding:14px 36px 14px 14px;display:flex;gap:12px;align-items:flex-start;opacity:0;transform:translateY(16px) scale(.96);pointer-events:none;transition:opacity .35s,transform .35s;}
 .pmx-proof.is-on{opacity:1;transform:none;pointer-events:auto;}
 .pmx-proof__ic{flex:0 0 auto;width:40px;height:40px;border-radius:50%;background:var(--brand-soft);display:flex;align-items:center;justify-content:center;font-size:20px;}
 .pmx-proof__body{flex:1;min-width:0;}
@@ -295,10 +295,10 @@ body.pmx-open .pmx-mobilemenu{ display:block; }
 .pmx-proof__dot{width:7px;height:7px;border-radius:50%;background:#22c55e;flex:0 0 auto;animation:pmxPulseDot 1.6s infinite;}
 .pmx-proof__x{position:absolute;top:8px;right:9px;border:0;background:none;font-size:18px;line-height:1;color:var(--text-faint);cursor:pointer;width:22px;height:22px;border-radius:50%;}
 .pmx-proof__x:hover{background:var(--bg-soft);color:var(--ink);}
-@media(max-width:600px){.pmx-proof{left:10px;bottom:84px;width:270px;}}
+@media(max-width:600px){.pmx-proof{left:10px;bottom:90px;width:270px;}}
 
 /* ===== PROMO 15% OFF (botón flotante + popup, solo al hacer clic) ===== */
-.pmx-promo-fab{position:fixed;right:20px;top:50%;transform:translateY(-50%);z-index:8950;width:76px;height:76px;border-radius:50%;border:2px solid rgba(255,255,255,.85);cursor:pointer;background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;box-shadow:0 10px 26px rgba(167,2,0,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;font-family:var(--font-head);animation:pmxFabPromo 2.4s infinite;transition:box-shadow .2s;}
+.pmx-promo-fab{position:fixed;left:22px;bottom:22px;z-index:8950;width:76px;height:76px;border-radius:50%;border:2px solid rgba(255,255,255,.85);cursor:pointer;background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;box-shadow:0 10px 26px rgba(167,2,0,.55);display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1;font-family:var(--font-head);animation:pmxFabPromo 2.4s infinite;transition:box-shadow .2s;}
 .pmx-promo-fab:hover{animation:none;box-shadow:0 14px 32px rgba(167,2,0,.75);}
 .pmx-promo-fab__big{font-size:21px;font-weight:800;}
 .pmx-promo-fab__small{font-size:11px;font-weight:700;letter-spacing:1px;margin-top:1px;}
@@ -331,7 +331,7 @@ body.pmx-open .pmx-mobilemenu{ display:block; }
 .pmx-promo__no{background:none;border:1.5px solid var(--line);color:var(--text-muted);border-radius:999px;padding:14px 20px;font-weight:700;font-size:13px;cursor:pointer;}
 .pmx-promo__no:hover{border-color:var(--ink);color:var(--ink);}
 .pmx-promo__fine{font-size:10.5px;color:var(--text-faint);margin:12px 0 0;line-height:1.4;text-transform:uppercase;letter-spacing:.3px;}
-@media(max-width:768px){.pmx-promo-fab{right:12px;width:62px;height:62px;}.pmx-promo-fab__big{font-size:18px;}.pmx-promo-fab__small{font-size:10px;}}
+@media(max-width:768px){.pmx-promo-fab{left:14px;bottom:14px;width:62px;height:62px;}.pmx-promo-fab__big{font-size:18px;}.pmx-promo-fab__small{font-size:10px;}}
 @media(max-width:680px){.pmx-promo__box{grid-template-columns:1fr;max-width:360px;max-height:92vh;overflow-y:auto;}.pmx-promo__img{max-height:190px;}.pmx-promo__title{font-size:24px;}.pmx-promo__body{padding:22px 22px 20px;}}
 
 /* ===================== GALERÍA DE VIDEOS / INSTAGRAM (pmx-ig) ===================== */
