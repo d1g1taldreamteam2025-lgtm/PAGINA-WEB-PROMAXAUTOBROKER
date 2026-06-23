@@ -71,7 +71,7 @@ URLs completas:
 |---|---|
 | Ally | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223498/images_4_vcehja.jpg` |
 | Capital One | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782226041/images_1_1_kjzeck.png` |
-| Chase | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223546/images_f22ogl.png` |
+| Chase | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782237733/Chase-logo_pggeio.jpg` |
 | Wells Fargo | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223586/png-clipart-wells-fargo-logo-banner-bank-logos_gmemml.png` |
 | Santander | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782225933/logo_BANCO_SANTANDER_c_1_gqk2a9.png` |
 | Service Credit Union | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223450/OneTrustBlueLogo1_bdbtnl.png` |
