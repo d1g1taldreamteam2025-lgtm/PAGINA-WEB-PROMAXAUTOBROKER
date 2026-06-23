@@ -118,8 +118,11 @@ PMX.addTranslations({
       if(C.phoneRaw)el.setAttribute("href","tel:+"+C.phoneRaw);
     });
   }
-  fillPhone();
-  window.addEventListener("pmx-lang",fillPhone);
+  // Se rellena DESPUÉS de applyI18n (que reescribe el párrafo y borraría el teléfono).
+  function schedule(){ setTimeout(fillPhone, 0); }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", schedule);
+  else schedule();
+  window.addEventListener("pmx-lang", schedule);
 })();
 </script>
 </body>

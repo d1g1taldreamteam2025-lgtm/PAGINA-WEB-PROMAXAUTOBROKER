@@ -115,8 +115,11 @@ PMX.addTranslations({
       el.setAttribute("href","mailto:"+(C.email||"Promaxautobroker@gmail.com"));
     });
   }
-  fillContact();
-  window.addEventListener("pmx-lang",fillContact);
+  // Se rellena DESPUÉS de applyI18n (que reescribe el párrafo y borraría teléfono/email).
+  function schedule(){ setTimeout(fillContact, 0); }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", schedule);
+  else schedule();
+  window.addEventListener("pmx-lang", schedule);
 })();
 </script>
 </body>

@@ -76,9 +76,9 @@ URLs completas:
 | Santander | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223605/png-clipart-santander-group-logo-brand-banco-santander-brazilian-festivals-text-logo_cngoto.png` |
 | Service Credit Union | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223450/OneTrustBlueLogo1_bdbtnl.png` |
 
-> ⚠️ **Revisar:** el archivo de *Service Credit Union* se llama `OneTrustBlueLogo1`,
-> que parece ser el logo de **OneTrust** (otra empresa), no de Service Credit Union.
-> Si fue una subida equivocada, reemplaza esa imagen en Cloudinary y la URL seguirá funcionando.
+> ✅ **Confirmado:** la imagen en esa URL es el logo correcto de **Service Credit Union**
+> (PNG con fondo transparente). El `public_id` quedó como `OneTrustBlueLogo1` por cómo se subió
+> a Cloudinary, pero el contenido es el correcto.
 
 ## 6) Otros recursos
 
