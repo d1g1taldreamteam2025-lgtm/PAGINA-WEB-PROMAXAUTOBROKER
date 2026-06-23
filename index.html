@@ -106,6 +106,27 @@
 .pmx-orbit__badgein img{max-width:100%;max-height:100%;object-fit:contain;}
 .pmx-orbit__badgein span{font:800 12px/1 var(--font-head);color:var(--ink);text-align:center;letter-spacing:.3px;}
 @media(max-width:560px){.pmx-orbit__badgein{border-radius:14px;padding:14%;}.pmx-orbit__badgein span{font-size:10px;}}
+/* RESEÑAS EN MOVIMIENTO (carrusel continuo estilo Specter) */
+.pmx-revmar{position:relative;overflow:hidden;}
+.pmx-revmar::before,.pmx-revmar::after{content:"";position:absolute;top:0;bottom:0;width:90px;z-index:2;pointer-events:none;}
+.pmx-revmar::before{left:0;background:linear-gradient(90deg,#fff,rgba(255,255,255,0));}
+.pmx-revmar::after{right:0;background:linear-gradient(270deg,#fff,rgba(255,255,255,0));}
+.pmx-revmar__row{display:flex;width:max-content;}
+.pmx-revmar__row+.pmx-revmar__row{margin-top:20px;}
+.pmx-revmar__row--a{animation:pmxRevScroll 58s linear infinite;}
+.pmx-revmar__row--b{animation:pmxRevScroll 72s linear infinite reverse;}
+.pmx-revmar:hover .pmx-revmar__row{animation-play-state:paused;}
+@keyframes pmxRevScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.pmx-rev{flex:0 0 366px;width:366px;margin-right:20px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 12px 30px rgba(0,0,0,.07);padding:24px 24px 20px;display:flex;flex-direction:column;gap:13px;}
+.pmx-rev__stars{color:var(--brand);font-size:16px;letter-spacing:2px;line-height:1;}
+.pmx-rev__text{margin:0;font-size:15px;line-height:1.62;color:var(--text);}
+.pmx-rev__by{display:flex;align-items:center;gap:12px;margin-top:auto;}
+.pmx-rev__av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font:800 17px/1 var(--font-head);flex:0 0 auto;}
+.pmx-rev__meta{display:flex;flex-direction:column;line-height:1.3;min-width:0;}
+.pmx-rev__meta strong{font-size:14.5px;color:var(--ink);}
+.pmx-rev__meta small{font-size:12px;color:var(--text-faint);}
+@media(max-width:560px){.pmx-rev{flex-basis:300px;width:300px;padding:20px;}.pmx-revmar::before,.pmx-revmar::after{width:46px;}}
+@media (prefers-reduced-motion: reduce){.pmx-revmar{overflow-x:auto;}.pmx-revmar__row{animation:none;}}
 </style>
 </head>
 <body>
@@ -261,11 +282,7 @@
       <h2 data-i18n="rev_title">Lo que dicen nuestros clientes</h2>
       <p style="display:inline-flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:center"><img src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782140867/png-transparent-google-logo-google-text-trademark-logo-thumbnail_kblunh.png" alt="Google" style="height:22px;width:auto"><span style="color:var(--brand);font-size:20px">★★★★★</span> <strong>4.9 / 5</strong> <span data-i18n="rev_count">basado en reseñas de Google</span></p>
     </div>
-    <div class="pmx-reviews__grid">
-      <div class="pmx-review"><div class="pmx-review__stars">★★★★★</div><p data-i18n="rev1">"Me explicaron todo el financiamiento con paciencia, sin presión. Salí con mi carro el mismo día y entendiendo cada pago."</p><div class="pmx-review__author"><strong>Maricela I.</strong><span data-i18n="rev_verified">· Cliente verificado</span></div></div>
-      <div class="pmx-review"><div class="pmx-review__stars">★★★★★</div><p data-i18n="rev2">"Tenía miedo por mi crédito pero me ayudaron a calificar. Todo transparente, sin cargos escondidos. Recomendados."</p><div class="pmx-review__author"><strong>Carlos R.</strong><span data-i18n="rev_verified">· Cliente verificado</span></div></div>
-      <div class="pmx-review"><div class="pmx-review__stars">★★★★★</div><p data-i18n="rev3">"Atención de primera en español. Me consiguieron justo el carro que buscaba a buen precio. Volvería sin dudarlo."</p><div class="pmx-review__author"><strong>Ana L.</strong><span data-i18n="rev_verified">· Cliente verificado</span></div></div>
-    </div>
+    <div class="pmx-revmar" id="pmxRevMar" aria-label="Reseñas de clientes en Google"></div>
   </div>
 </section>
 
@@ -585,6 +602,44 @@ PMX.addTranslations({
     new IntersectionObserver(function(es){ es.forEach(function(e){ e.isIntersecting ? start() : stop(); }); }, { threshold: 0.04 }).observe(stage);
   } else { start(); }
   document.addEventListener('visibilitychange', function(){ if (document.hidden) stop(); else if (inView()) start(); });
+})();
+
+/* Reseñas en movimiento: dos filas de tarjetas que se deslizan sin parar (estilo Specter) */
+(function(){
+  var host = document.getElementById('pmxRevMar');
+  if (!host) return;
+  function lang(){ return (window.PMX && PMX.lang && PMX.lang()) || 'es'; }
+  var VERIF = { es:'Cliente verificado', en:'Verified customer' };
+  var R = [
+    {n:'Maricela I.', c:'#A70200', city:'Miami, FL', es:'Me explicaron todo el financiamiento con paciencia y sin presión. Salí con mi carro el mismo día entendiendo cada pago.', en:'They explained all the financing patiently and with no pressure. I drove home the same day understanding every payment.'},
+    {n:'Carlos R.', c:'#15803d', city:'Doral, FL', es:'Tenía miedo por mi crédito, pero me ayudaron a calificar. Todo transparente, sin cargos escondidos.', en:'I was worried about my credit, but they helped me qualify. Everything transparent, no hidden fees.'},
+    {n:'Ana L.', c:'#2563eb', city:'Hialeah, FL', es:'Atención de primera en español. Me consiguieron justo el carro que buscaba a buen precio.', en:'First-class service in Spanish. They found the exact car I wanted at a great price.'},
+    {n:'José M.', c:'#b45309', city:'Kendall, FL', es:'Apliqué con ITIN y me aprobaron rápido. El equipo siempre disponible para mis dudas.', en:'I applied with ITIN and got approved fast. The team was always available for my questions.'},
+    {n:'Gabriela S.', c:'#7c3aed', city:'Orlando, FL', es:'Me sentí acompañada en todo el proceso. Mi SUV quedó hermosa y al precio justo.', en:'I felt supported through the whole process. My SUV is beautiful and fairly priced.'},
+    {n:'Luis A.', c:'#0891b2', city:'Tampa, FL', es:'Pago inicial bajo y me llevé el carro el mismo día. Proceso clarísimo, sin letra chiquita.', en:'Low down payment and I took the car the same day. Crystal-clear process, no fine print.'},
+    {n:'Daniela P.', c:'#be185d', city:'Homestead, FL', es:'Buscaba una Toyota y me consiguieron una impecable. Honestos y muy profesionales.', en:'I wanted a Toyota and they found me a flawless one. Honest and very professional.'},
+    {n:'Roberto C.', c:'#c2410c', city:'Sweetwater, FL', es:'Me ayudaron a construir crédito con mi primer carro financiado. ¡Gracias Promax!', en:'They helped me build credit with my first financed car. Thank you Promax!'},
+    {n:'Yarisbeth G.', c:'#0f766e', city:'Miami Lakes, FL', es:'La mejor atención, en español y sin presión. Recomiendo Promax a toda mi familia.', en:'The best service, in Spanish and pressure-free. I recommend Promax to my whole family.'},
+    {n:'Andrés V.', c:'#4338ca', city:'Fort Myers, FL', es:'Me asesoraron paso a paso para llevar mi camioneta a Venezuela. Todo claro y cumplido.', en:'They guided me step by step to take my truck to Venezuela. Everything clear and on time.'}
+  ];
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]; }); }
+  function card(r){
+    var L = lang(), meta = (VERIF[L]||VERIF.es) + ' · ' + r.city;
+    return '<article class="pmx-rev">'+
+      '<div class="pmx-rev__stars">★★★★★</div>'+
+      '<p class="pmx-rev__text">' + esc(r[L]||r.es) + '</p>'+
+      '<div class="pmx-rev__by"><span class="pmx-rev__av" style="background:'+r.c+'">'+esc(r.n.charAt(0))+'</span>'+
+      '<span class="pmx-rev__meta"><strong>'+esc(r.n)+'</strong><small>'+esc(meta)+'</small></span></div>'+
+      '</article>';
+  }
+  function build(){
+    var a = R.slice(0,5).map(card).join(''), b = R.slice(5).map(card).join('');
+    host.innerHTML =
+      '<div class="pmx-revmar__row pmx-revmar__row--a">'+a+a+'</div>'+
+      '<div class="pmx-revmar__row pmx-revmar__row--b">'+b+b+'</div>';
+  }
+  build();
+  window.addEventListener('pmx-lang', build);
 })();
 </script>
 </body>
