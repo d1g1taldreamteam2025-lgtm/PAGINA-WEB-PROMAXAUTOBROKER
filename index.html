@@ -90,6 +90,28 @@
 /* Home: centrar los 3 videos del inventario */
 #pmxVideos .pmx-ig__grid{grid-template-columns:repeat(3,1fr);max-width:760px;margin-left:auto;margin-right:auto;}
 @media(max-width:680px){#pmxVideos .pmx-ig__grid{grid-template-columns:repeat(2,1fr);max-width:430px;}}
+/* ACTIVIDAD EN VIVO (señales que ciclan) */
+.pmx-live__head{text-align:center;max-width:620px;margin:0 auto 34px;}
+.pmx-live__pill{display:inline-flex;align-items:center;gap:7px;background:#0a0a0a;color:#fff;font-weight:800;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:6px 14px;border-radius:999px;margin-bottom:14px;}
+.pmx-live__dot{width:8px;height:8px;border-radius:50%;background:#22c55e;animation:pmxPulseDot 1.6s infinite;}
+.pmx-live__head h2{font-size:34px;font-weight:800;color:var(--ink);margin:0 0 8px;letter-spacing:-.5px;}
+.pmx-live__head p{font-size:16px;color:var(--text-muted);margin:0;}
+.pmx-live__stage{position:relative;max-width:430px;height:150px;margin:0 auto;overflow:hidden;}
+.pmx-live__card{position:absolute;left:6px;right:6px;bottom:8px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,.10);padding:15px 18px;display:flex;align-items:center;gap:13px;pointer-events:none;transition:transform .65s cubic-bezier(.2,.8,.3,1),opacity .65s;will-change:transform,opacity;}
+.pmx-live__card--enter{transform:translateY(48px) scale(.9);opacity:0;z-index:1;}
+.pmx-live__card--front{transform:translateY(0) scale(1);opacity:1;z-index:5;}
+.pmx-live__card--mid{transform:translateY(-15px) scale(.95);opacity:.5;z-index:4;}
+.pmx-live__card--back{transform:translateY(-29px) scale(.9);opacity:.22;z-index:3;}
+.pmx-live__card--exit{transform:translateY(-46px) scale(.86);opacity:0;z-index:2;}
+.pmx-live__ic{flex:0 0 auto;width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.pmx-live__body{flex:1;min-width:0;text-align:left;}
+.pmx-live__cat{margin:0 0 2px;font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;line-height:1.2;}
+.pmx-live__cat b{color:var(--ink);text-transform:none;font-size:14.5px;letter-spacing:0;font-weight:800;}
+.pmx-live__txt{margin:0;font-size:12.5px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pmx-live__right{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:5px;}
+.pmx-live__time{font-size:11px;color:var(--text-faint);white-space:nowrap;}
+.pmx-live__spark{width:52px;height:17px;display:block;}
+@media(max-width:560px){.pmx-live__head h2{font-size:26px;}.pmx-live__txt{max-width:120px;}}
 </style>
 </head>
 <body>
@@ -115,6 +137,18 @@
     <a href="/financing/apply/" class="pmx-btn pmx-btn--ghost-light" data-i18n="h_applycar">Aplicar para un auto</a>
   </div>
   <div class="pmx-hero2__dots" id="pmxHeroDots"></div>
+</section>
+
+<!-- ACTIVIDAD EN VIVO (señales que ciclan) -->
+<section class="pmx-section pmx-live">
+  <div class="pmx-container">
+    <div class="pmx-live__head">
+      <span class="pmx-live__pill"><span class="pmx-live__dot"></span> <span data-i18n="live_pill">En vivo</span></span>
+      <h2 data-i18n="live_title">Promax en movimiento</h2>
+      <p data-i18n="live_sub">Reservas, aprobaciones y nuevas llegadas — en tiempo real.</p>
+    </div>
+    <div class="pmx-live__stage" id="pmxLive" aria-hidden="true"></div>
+  </div>
 </section>
 
 <!-- CTA CARDS -->
@@ -305,6 +339,7 @@ PMX.addTranslations({
     home_vid_eyebrow:"Inventario en video", home_vid_title:"Videos de nuestro inventario", home_vid_all:"Ver todos los videos",
     home_brands_eyebrow:"Variedad de inventario", home_brands_title:"Marcas que manejamos",
     home_brands_sub:"Especialistas en Toyota — lo bueno y confiable. ¿Buscas otra marca? Pregúntanos y con gusto te ayudamos.",
+    live_pill:"En vivo", live_title:"Promax en movimiento", live_sub:"Reservas, aprobaciones y nuevas llegadas — en tiempo real.",
     home_vid_sub:"Mira nuestros vehículos en acción. Pasa el mouse para una vista previa y toca para verlo en pantalla completa con sonido.",
     vid_invite_q:"¿Te gustaría ver videos de nuestro inventario?", vid_invite_yes:"Ver videos", vid_invite_close:"Cerrar",
     btn_details:"Ver Detalles", btn_prequal:"Pre-Calificar",
@@ -339,6 +374,7 @@ PMX.addTranslations({
     home_vid_eyebrow:"Inventory in video", home_vid_title:"Our inventory videos", home_vid_all:"Watch all videos",
     home_brands_eyebrow:"Inventory variety", home_brands_title:"Brands we carry",
     home_brands_sub:"Toyota specialists — the good and reliable. Looking for another brand? Just ask and we'll gladly help.",
+    live_pill:"Live", live_title:"Promax in motion", live_sub:"Reservations, approvals and new arrivals — in real time.",
     home_vid_sub:"See our vehicles in action. Hover for a preview and tap to watch fullscreen with sound.",
     vid_invite_q:"Would you like to see videos of our inventory?", vid_invite_yes:"Watch videos", vid_invite_close:"Close",
     btn_details:"View Details", btn_prequal:"Pre-Qualify",
@@ -452,6 +488,63 @@ PMX.addTranslations({
   applyLang((window.PMX && PMX.lang && PMX.lang()) || 'es');
   window.addEventListener('pmx-lang', function(e){ applyLang(e.detail && e.detail.lang); });
   go(0); start();
+})();
+
+/* Actividad en vivo: tarjetas de señales que ciclan sin parar (estilo "live signals") */
+(function(){
+  var stage = document.getElementById('pmxLive');
+  if (!stage) return;
+  function lang(){ return (window.PMX && PMX.lang && PMX.lang()) || 'es'; }
+  function L(v){ return (v && typeof v === 'object') ? (v[lang()] || v.es) : v; }
+  var FEED = [
+    {ic:'🔒',c:'#16a34a',cat:{es:'Reservado',en:'Reserved'},title:'Toyota RAV4 2026',sub:{es:'Luis M. · Miami, FL',en:'Luis M. · Miami, FL'},time:{es:'ahora',en:'now'},spark:true},
+    {ic:'✅',c:'#15803d',cat:{es:'Aprobado',en:'Approved'},title:{es:'Financiamiento',en:'Financing'},sub:{es:'Aceptamos ITIN · sin SSN',en:'ITIN accepted · no SSN'},time:{es:'hace 3 min',en:'3 min ago'},spark:true},
+    {ic:'🚗',c:'#A70200',cat:{es:'Nueva llegada',en:'New arrival'},title:'Toyota 4Runner TRD 2025',sub:{es:'Disponible · 0 Down',en:'Available · 0 Down'},time:{es:'hace 6 min',en:'6 min ago'},spark:false},
+    {ic:'🏷️',c:'#b91c1c',cat:{es:'Vendido',en:'Sold'},title:'Honda CR-V 2024',sub:{es:'Entrega el mismo día',en:'Same-day delivery'},time:{es:'hace 12 min',en:'12 min ago'},spark:false},
+    {ic:'🚢',c:'#2563eb',cat:{es:'Importación',en:'Import'},title:'Van High Roof 3500',sub:{es:'Rumbo a Venezuela 🇻🇪',en:'Heading to Venezuela 🇻🇪'},time:{es:'hace 18 min',en:'18 min ago'},spark:true},
+    {ic:'⭐',c:'#7c3aed',cat:{es:'Pre-calificó',en:'Pre-qualified'},title:'Gabriela S.',sub:{es:'Lista para comprar',en:'Ready to buy'},time:{es:'hace 24 min',en:'24 min ago'},spark:false},
+    {ic:'⚡',c:'#0891b2',cat:{es:'Bajo pago inicial',en:'Low down payment'},title:'Toyota Crown 2026',sub:{es:'Desde $1,500 down',en:'From $1,500 down'},time:{es:'hace 31 min',en:'31 min ago'},spark:true}
+  ];
+  function spark(c){ return '<svg class="pmx-live__spark" viewBox="0 0 56 18" fill="none" stroke="'+c+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,15 11,11 22,13 32,6 42,9 55,2"/></svg>'; }
+  function render(el, it){
+    el.innerHTML =
+      '<span class="pmx-live__ic" style="background:'+it.c+'1f">'+it.ic+'</span>'+
+      '<div class="pmx-live__body">'+
+        '<p class="pmx-live__cat"><span style="color:'+it.c+'">'+L(it.cat)+'</span> <b>'+L(it.title)+'</b></p>'+
+        '<p class="pmx-live__txt">'+L(it.sub)+'</p>'+
+      '</div>'+
+      '<div class="pmx-live__right"><span class="pmx-live__time">'+L(it.time)+'</span>'+(it.spark?spark(it.c):'')+'</div>';
+  }
+  var STATES = ['enter','front','mid','back','exit'];
+  var cards = [], ptr = 0, initState = [1,2,3,4,0];
+  for (var i=0;i<5;i++){
+    var el = document.createElement('div'); el.className = 'pmx-live__card';
+    stage.appendChild(el); render(el, FEED[ptr % FEED.length]); ptr++;
+    cards.push({ el: el, state: initState[i] });
+  }
+  function apply(){ for (var i=0;i<cards.length;i++){ cards[i].el.className = 'pmx-live__card pmx-live__card--' + STATES[cards[i].state]; } }
+  apply();
+  function tick(){
+    for (var i=0;i<cards.length;i++){
+      var c = cards[i], prev = c.state;
+      c.state = (c.state + 1) % 5;
+      if (prev === 4 && c.state === 0){
+        c.el.style.transition = 'none';
+        render(c.el, FEED[ptr % FEED.length]); ptr++;
+        c.el.className = 'pmx-live__card pmx-live__card--enter';
+        void c.el.offsetWidth;
+        c.el.style.transition = '';
+      }
+    }
+    apply();
+  }
+  var iv = null;
+  function start(){ if (!iv) iv = setInterval(tick, 2600); }
+  function stop(){ if (iv){ clearInterval(iv); iv = null; } }
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(function(es){ es.forEach(function(e){ e.isIntersecting ? start() : stop(); }); }, { threshold: 0.2 }).observe(stage);
+  } else { start(); }
+  document.addEventListener('visibilitychange', function(){ if (document.hidden) stop(); else start(); });
 })();
 </script>
 </body>
