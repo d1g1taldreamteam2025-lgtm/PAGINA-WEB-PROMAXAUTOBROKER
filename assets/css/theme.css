@@ -320,7 +320,7 @@ body.pmx-open .pmx-mobilemenu{ display:block; }
 .pmx-promo__timerlbl{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--brand);text-transform:uppercase;margin-bottom:8px;}
 .pmx-promo__timer{display:flex;align-items:center;gap:6px;margin-bottom:20px;}
 .pmx-promo__seg{background:var(--ink);color:#fff;border-radius:10px;padding:8px 0;width:54px;text-align:center;}
-.pmx-promo__seg b{display:block;font-family:var(--font-head);font-size:22px;font-weight:800;line-height:1;}
+.pmx-promo__seg b{display:block;font-family:var(--font-head);font-size:22px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums;}
 .pmx-promo__seg span{font-size:9px;letter-spacing:.5px;color:rgba(255,255,255,.6);}
 .pmx-promo__seg--accent{background:var(--brand);}
 .pmx-promo__seg--accent span{color:rgba(255,255,255,.85);}

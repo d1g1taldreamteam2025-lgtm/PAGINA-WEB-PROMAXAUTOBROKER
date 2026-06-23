@@ -75,7 +75,7 @@
       proof_action: "acaba de reservar", proof_verified: "Reserva verificada",
       promo_badge: "Solo para ti", promo_title: "Reclama tu 15% OFF",
       promo_sub: "Aplica hoy a tu financiamiento y recibe <b>15% de descuento</b> en tu primera compra.",
-      promo_ends: "La promo termina en", promo_h: "Horas", promo_m: "Min", promo_s: "Seg",
+      promo_ends: "Tu descuento vence en", promo_h: "Horas", promo_m: "Min", promo_s: "Seg", promo_ms: "Ms",
       promo_yes: "Quiero mi descuento", promo_no: "No, gracias",
       promo_fine: "Aplica solo a nuevos clientes. No acumulable con otras promociones.",
     },
@@ -102,7 +102,7 @@
       proof_action: "just reserved", proof_verified: "Verified reservation",
       promo_badge: "Just for you", promo_title: "Claim your 15% OFF",
       promo_sub: "Apply for financing today and get <b>15% off</b> your first purchase.",
-      promo_ends: "Promo ends in", promo_h: "Hours", promo_m: "Min", promo_s: "Sec",
+      promo_ends: "Your discount expires in", promo_h: "Hours", promo_m: "Min", promo_s: "Sec", promo_ms: "Ms",
       promo_yes: "I want my discount", promo_no: "No, thanks",
       promo_fine: "New clients only. Not combinable with other promotions.",
     },
@@ -521,11 +521,11 @@
             '<p class="pmx-promo__sub" data-i18n="promo_sub">' + t("promo_sub") + '</p>' +
             '<div class="pmx-promo__timerlbl" data-i18n="promo_ends">' + t("promo_ends") + '</div>' +
             '<div class="pmx-promo__timer">' +
-              '<div class="pmx-promo__seg"><b id="ppH">00</b><span data-i18n="promo_h">' + t("promo_h") + '</span></div>' +
+              '<div class="pmx-promo__seg"><b id="ppM">10</b><span data-i18n="promo_m">' + t("promo_m") + '</span></div>' +
               '<div class="pmx-promo__colon">:</div>' +
-              '<div class="pmx-promo__seg"><b id="ppM">00</b><span data-i18n="promo_m">' + t("promo_m") + '</span></div>' +
+              '<div class="pmx-promo__seg"><b id="ppS">00</b><span data-i18n="promo_s">' + t("promo_s") + '</span></div>' +
               '<div class="pmx-promo__colon">:</div>' +
-              '<div class="pmx-promo__seg pmx-promo__seg--accent"><b id="ppS">00</b><span data-i18n="promo_s">' + t("promo_s") + '</span></div>' +
+              '<div class="pmx-promo__seg pmx-promo__seg--accent"><b id="ppMs">000</b><span data-i18n="promo_ms">' + t("promo_ms") + '</span></div>' +
             '</div>' +
             '<div class="pmx-promo__cta">' +
               '<button class="pmx-promo__yes" id="pmxPromoYes" type="button" data-i18n="promo_yes">' + t("promo_yes") + '</button>' +
@@ -539,27 +539,29 @@
   function wirePromo() {
     var modal = document.getElementById("pmxPromo"), fab = document.getElementById("pmxPromoFab");
     if (!modal || !fab) return;
-    function gd() {
-      var k = "pmx_promo_general", v = +(localStorage.getItem(k) || 0);
-      if (!v || v < Date.now()) { v = Date.now() + 24 * 3600 * 1000; try { localStorage.setItem(k, String(v)); } catch (e) {} }
-      return v;
+    var KEY = "pmx_promo_claim", DUR = 10 * 60 * 1000, tick = null, dl = 0;
+    // El temporizador de 10 min arranca al ABRIR el popup y se guarda, así el
+    // formulario de financiamiento continúa la MISMA cuenta (sincronizada).
+    function ensureDeadline() {
+      dl = +(localStorage.getItem(KEY) || 0);
+      if (!dl || dl < Date.now()) { dl = Date.now() + DUR; try { localStorage.setItem(KEY, String(dl)); } catch (e) {} }
+      return dl;
     }
-    var deadline = gd(), tick = null;
-    function pad(x) { return (x < 10 ? "0" : "") + x; }
+    function pad(x, n) { x = String(x); while (x.length < n) x = "0" + x; return x; }
     function render() {
-      var left = deadline - Date.now(); if (left < 0) left = 0;
-      var h = Math.floor(left / 3600000), m = Math.floor((left % 3600000) / 60000), s = Math.floor((left % 60000) / 1000);
-      var H = document.getElementById("ppH"), M = document.getElementById("ppM"), S = document.getElementById("ppS");
-      if (H) H.textContent = pad(h); if (M) M.textContent = pad(m); if (S) S.textContent = pad(s);
+      var left = dl - Date.now(); if (left < 0) left = 0;
+      var m = Math.floor(left / 60000), s = Math.floor((left % 60000) / 1000), ms = left % 1000;
+      var M = document.getElementById("ppM"), S = document.getElementById("ppS"), MS = document.getElementById("ppMs");
+      if (M) M.textContent = pad(m, 2); if (S) S.textContent = pad(s, 2); if (MS) MS.textContent = pad(ms, 3);
     }
-    function open() { modal.classList.add("is-open"); render(); if (tick) clearInterval(tick); tick = setInterval(render, 1000); }
+    function open() { ensureDeadline(); modal.classList.add("is-open"); render(); if (tick) clearInterval(tick); tick = setInterval(render, 43); }
     function close() { modal.classList.remove("is-open"); if (tick) clearInterval(tick); }
     fab.addEventListener("click", open);
     document.getElementById("pmxPromoX").addEventListener("click", close);
     document.getElementById("pmxPromoNo").addEventListener("click", close);
     modal.addEventListener("click", function (e) { if (e.target === modal) close(); });
     document.getElementById("pmxPromoYes").addEventListener("click", function () {
-      try { localStorage.setItem("pmx_promo_claim", String(Date.now() + 10 * 60 * 1000)); } catch (e) {}
+      ensureDeadline();
       location.href = "/financing/apply/?promo=15";
     });
   }
