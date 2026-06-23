@@ -127,6 +127,23 @@
 .pmx-rev__meta small{font-size:12px;color:var(--text-faint);}
 @media(max-width:560px){.pmx-rev{flex-basis:300px;width:300px;padding:20px;}.pmx-revmar::before,.pmx-revmar::after{width:46px;}}
 @media (prefers-reduced-motion: reduce){.pmx-revmar{overflow-x:auto;}.pmx-revmar__row{animation:none;}}
+/* CINTA DE CONFIANZA (logos + sellos en movimiento, estilo Specter) */
+.pmx-trust{padding-top:46px;padding-bottom:46px;}
+.pmx-trust__lead{text-align:center;color:var(--text-muted);font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin:0 0 22px;}
+.pmx-trustmar{position:relative;overflow:hidden;}
+.pmx-trustmar::before,.pmx-trustmar::after{content:"";position:absolute;top:0;bottom:0;width:90px;z-index:2;pointer-events:none;}
+.pmx-trustmar::before{left:0;background:linear-gradient(90deg,#EFEDEE,rgba(239,237,238,0));}
+.pmx-trustmar::after{right:0;background:linear-gradient(270deg,#EFEDEE,rgba(239,237,238,0));}
+.pmx-trustmar__row{display:flex;width:max-content;animation:pmxRevScroll 46s linear infinite;}
+.pmx-trustmar:hover .pmx-trustmar__row{animation-play-state:paused;}
+.pmx-tchip{flex:0 0 auto;margin-right:16px;height:60px;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:0 24px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.05);}
+.pmx-tchip img{max-height:26px;width:auto;object-fit:contain;filter:grayscale(1);opacity:.68;transition:filter .25s,opacity .25s;}
+.pmx-tchip:hover img{filter:grayscale(0);opacity:1;}
+.pmx-tchip__name{font:800 16px var(--font-head);color:var(--ink);white-space:nowrap;}
+.pmx-tchip__seal{font:700 14px var(--font-body);color:var(--ink);white-space:nowrap;display:inline-flex;align-items:center;gap:8px;}
+.pmx-tchip__seal svg{color:var(--brand);flex:0 0 auto;}
+@media(max-width:560px){.pmx-tchip{height:52px;padding:0 18px;margin-right:12px;}.pmx-tchip__seal{font-size:13px;}.pmx-trustmar::before,.pmx-trustmar::after{width:46px;}}
+@media (prefers-reduced-motion: reduce){.pmx-trustmar{overflow-x:auto;}.pmx-trustmar__row{animation:none;}}
 </style>
 </head>
 <body>
@@ -286,6 +303,14 @@
   </div>
 </section>
 
+<!-- RESPALDO / CONFIANZA (cinta de logos y sellos en movimiento) -->
+<section class="pmx-section pmx-section--soft pmx-trust">
+  <div class="pmx-container">
+    <p class="pmx-trust__lead" data-i18n="trust_lead">Respaldados por aliados de confianza y cientos de clientes felices</p>
+    <div class="pmx-trustmar" id="pmxTrustMar" aria-label="Aliados y sellos de confianza"></div>
+  </div>
+</section>
+
 <!-- SEO -->
 <section class="pmx-section pmx-seo">
   <div class="pmx-seo__inner">
@@ -333,6 +358,7 @@ PMX.addTranslations({
     why4_t:"Trato personal", why4_s:"Te asesoramos en español de principio a fin.",
     div2:"Únete a +500 clientes satisfechos",
     rev_title:"Lo que dicen nuestros clientes", rev_count:"basado en reseñas de Google", rev_verified:"· Cliente verificado",
+    trust_lead:"Respaldados por aliados de confianza y cientos de clientes felices",
     rev1:'"Me explicaron todo el financiamiento con paciencia, sin presión. Salí con mi carro el mismo día y entendiendo cada pago."',
     rev2:'"Tenía miedo por mi crédito pero me ayudaron a calificar. Todo transparente, sin cargos escondidos. Recomendados."',
     rev3:'"Atención de primera en español. Me consiguieron justo el carro que buscaba a buen precio. Volvería sin dudarlo."',
@@ -368,6 +394,7 @@ PMX.addTranslations({
     why4_t:"Personal service", why4_s:"We guide you in Spanish from start to finish.",
     div2:"Join +500 happy customers",
     rev_title:"What our customers say", rev_count:"based on Google reviews", rev_verified:"· Verified customer",
+    trust_lead:"Backed by trusted partners and hundreds of happy customers",
     rev1:'"They explained all the financing patiently, no pressure. I drove home the same day understanding every payment."',
     rev2:'"I was worried about my credit but they helped me qualify. All transparent, no hidden fees. Recommended."',
     rev3:'"First-class service in Spanish. They found the exact car I wanted at a great price. Would come back without hesitation."',
@@ -637,6 +664,41 @@ PMX.addTranslations({
     host.innerHTML =
       '<div class="pmx-revmar__row pmx-revmar__row--a">'+a+a+'</div>'+
       '<div class="pmx-revmar__row pmx-revmar__row--b">'+b+b+'</div>';
+  }
+  build();
+  window.addEventListener('pmx-lang', build);
+})();
+
+/* Cinta de confianza: logos de aliados + sellos, en movimiento continuo (estilo Specter) */
+(function(){
+  var host = document.getElementById('pmxTrustMar');
+  if (!host) return;
+  function lang(){ return (window.PMX && PMX.lang && PMX.lang()) || 'es'; }
+  var check = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+  var LOGOS = [
+    {s:'ally.com', n:'Ally'}, {s:'capitalone.com', n:'Capital One'}, {s:'chase.com', n:'Chase'},
+    {s:'wellsfargo.com', n:'Wells Fargo'}, {s:'santanderbank.com', n:'Santander'}, {s:'servicecu.org', n:'Service CU'}
+  ];
+  var SEALS = [
+    {es:'Google 4.9 ★', en:'Google 4.9 ★'},
+    {es:'Aceptamos ITIN', en:'ITIN accepted'},
+    {es:'Sin SSN', en:'No SSN required'},
+    {es:'Entrega el mismo día', en:'Same-day delivery'},
+    {es:'Vehículos inspeccionados', en:'Inspected vehicles'},
+    {es:'Atención en español', en:'Service in Spanish'}
+  ];
+  function esc(v){ return String(v).replace(/[&<>"]/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]; }); }
+  function logoChip(l){ return '<span class="pmx-tchip"><img src="https://logo.clearbit.com/'+l.s+'" alt="'+esc(l.n)+'" data-name="'+esc(l.n)+'" loading="lazy"></span>'; }
+  function sealChip(s){ var L = lang(); return '<span class="pmx-tchip"><span class="pmx-tchip__seal">'+check+'<span>'+esc(s[L]||s.es)+'</span></span></span>'; }
+  function build(){
+    var items = [], m = Math.max(LOGOS.length, SEALS.length), i;
+    for (i=0;i<m;i++){ if (LOGOS[i]) items.push(logoChip(LOGOS[i])); if (SEALS[i]) items.push(sealChip(SEALS[i])); }
+    var html = items.join('');
+    host.innerHTML = '<div class="pmx-trustmar__row">'+html+html+'</div>';
+    host.querySelectorAll('.pmx-tchip img').forEach(function(img){
+      img.onerror = function(){ var sp = document.createElement('span'); sp.className = 'pmx-tchip__name'; sp.textContent = img.getAttribute('data-name'); img.replaceWith(sp); };
+      if (img.complete && img.naturalWidth === 0) img.onerror();
+    });
   }
   build();
   window.addEventListener('pmx-lang', build);
