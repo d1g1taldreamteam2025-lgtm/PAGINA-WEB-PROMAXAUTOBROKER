@@ -427,7 +427,7 @@
     document.documentElement.classList.add("pmx-js");
     root = root || document;
     var els = Array.prototype.slice.call(root.querySelectorAll(REVEAL_SEL)).filter(function (el) {
-      return !el.classList.contains("pmx-reveal") && !el.closest("#pmxSticky") && !el.closest(".pmx-footer");
+      return !el.classList.contains("pmx-reveal") && !el.closest("#pmxSticky") && !el.closest(".pmx-footer") && !el.closest("[data-anim-root]");
     });
     if (!els.length) return;
     els.forEach(function (el) { el.classList.add("pmx-reveal"); });

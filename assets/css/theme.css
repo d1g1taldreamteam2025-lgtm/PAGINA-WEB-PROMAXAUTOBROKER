@@ -89,7 +89,7 @@ body.pmx-mounted{ padding-top:var(--header-h); }
   line-height:1;
 }
 .pmx-btn--primary{ background:var(--brand); color:#fff; box-shadow:0 6px 18px rgba(167,2,0,.28); }
-.pmx-btn--primary:hover{ background:var(--brand-dark); transform:translateY(-2px); }
+.pmx-btn--primary:hover{ background:var(--brand-dark); transform:translateY(-2px)!important; }
 .pmx-btn--dark{ background:var(--ink); color:#fff; }
 .pmx-btn--dark:hover{ background:#000; transform:translateY(-2px); }
 .pmx-btn--ghost{ background:transparent; color:var(--ink); border-color:var(--ink); }
@@ -472,7 +472,7 @@ body.pmx-open .pmx-mobilemenu{ display:block; }
 @media (max-width:980px){ .pmx-vgrid{ grid-template-columns:repeat(2,1fr); } }
 @media (max-width:640px){ .pmx-vgrid{ grid-template-columns:1fr; } }
 .pmx-vcard{ background:#fff; border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; transition:all .25s; display:flex; flex-direction:column; }
-.pmx-vcard:hover{ transform:translateY(-4px); box-shadow:var(--shadow); border-color:var(--brand); }
+.pmx-vcard:hover{ transform:translateY(-4px)!important; box-shadow:var(--shadow); border-color:var(--brand); }
 .pmx-vcard__img{ height:210px; background-size:cover; background-position:center; background-color:#e8edf2; position:relative; }
 .pmx-vcard__badge{ position:absolute; top:12px; left:12px; background:var(--brand); color:#fff; font-weight:800; font-size:10px; letter-spacing:1px; padding:6px 11px; border-radius:5px; text-transform:uppercase; }
 .pmx-vcard__type{ position:absolute; top:12px; right:12px; background:rgba(13,15,18,.82); color:#fff; font-weight:700; font-size:10px; letter-spacing:1px; padding:6px 11px; border-radius:5px; text-transform:uppercase; }
@@ -515,6 +515,30 @@ body.pmx-open .pmx-mobilemenu{ display:block; }
 html.pmx-js .pmx-reveal{ opacity:0; transform:translateY(30px); transition:opacity .75s cubic-bezier(.2,.7,.2,1), transform .75s cubic-bezier(.2,.7,.2,1); will-change:opacity,transform; }
 html.pmx-js .pmx-reveal.is-visible{ opacity:1; transform:none; }
 @media (prefers-reduced-motion: reduce){ html.pmx-js .pmx-reveal{ opacity:1!important; transform:none!important; transition:none!important; } }
+
+/* ===================== ANIMACIONES GSAP (scroll, entrada+salida) ===================== */
+/* Máscara para el revelado de titulares palabra por palabra */
+.pmx-aw{ display:inline-block; overflow:hidden; vertical-align:top; line-height:1.08; padding-bottom:.08em; }
+.pmx-aw__i{ display:inline-block; will-change:transform; }
+/* Anti-parpadeo: ocultamos lo que GSAP animará, SOLO mientras el guard esté activo.
+   El guard (clase .pmx-ganim en <html>) se añade por JS y se retira si GSAP no carga,
+   de modo que el contenido nunca queda atrapado oculto. */
+html.pmx-ganim [data-anim="text"],
+html.pmx-ganim [data-anim="up"],
+html.pmx-ganim [data-anim="stagger"]:not([data-anim-defer]) > *{ opacity:0; }
+@media (prefers-reduced-motion: reduce){
+  html.pmx-ganim [data-anim],
+  html.pmx-ganim [data-anim="stagger"] > *{ opacity:1!important; transform:none!important; }
+}
+/* Capa de parallax del hero (envuelve al carrusel; no toca su transform) */
+.pmx-hero2__media{ position:relative; will-change:transform; }
+/* Blob decorativo que flota con parallax detrás de los vehículos destacados */
+.pmx-featured{ position:relative; overflow:hidden; }
+.pmx-featured > .pmx-container{ position:relative; z-index:1; }
+.pmx-deco{ position:absolute; z-index:0; width:560px; height:560px; border-radius:50%; pointer-events:none;
+  background:radial-gradient(circle, rgba(167,2,0,.10), rgba(167,2,0,0) 70%); top:-160px; left:-140px; will-change:transform; }
+@media (max-width:768px){ .pmx-deco{ width:320px; height:320px; top:-90px; left:-90px; } }
+
 
 /* Brillo de barrido en botones primarios */
 .pmx-btn--primary{ position:relative; overflow:hidden; }

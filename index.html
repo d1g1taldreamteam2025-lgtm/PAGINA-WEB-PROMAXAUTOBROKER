@@ -14,6 +14,9 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/theme.css">
 <link rel="icon" type="image/png" href="https://res.cloudinary.com/drbc4wbvw/image/upload/e_trim,c_pad,w_256,h_256,b_transparent/v1781816671/Logos_wbzal9.png">
+<!-- Anti-parpadeo: marca <html> para ocultar lo que GSAP animará. anim.js lo
+     retira si el usuario pide menos movimiento o si GSAP no llega a cargar. -->
+<script>(function(){try{var m=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;if(!m)document.documentElement.className+=" pmx-ganim";}catch(e){}})();</script>
 <style>
 /* HERO */
 .pmx-hero{position:relative;min-height:580px;display:flex;align-items:center;color:#fff;overflow:hidden;background:#0a0a0a;}
@@ -149,22 +152,24 @@
 <body>
 
 <!-- HERO CARRUSEL -->
-<section class="pmx-hero2" id="pmxHero" aria-label="Promax Auto Broker">
-  <div class="pmx-hero2__track" id="pmxHeroTrack">
-    <div class="pmx-hero2__slide"><img alt="Promax Auto Broker" fetchpriority="high"
-       data-es="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164071/1_imagenen_baowx3.png"
-       data-en="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164184/Post_5_In_2_dfkx29.png"
-       src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164071/1_imagenen_baowx3.png"></div>
-    <div class="pmx-hero2__slide"><img alt="Promax Auto Broker"
-       data-es="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164072/2_imagen_bydqug.png"
-       data-en="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164184/Post_6_In_2_ypp9es.png"
-       src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164072/2_imagen_bydqug.png"></div>
-    <div class="pmx-hero2__slide"><img alt="Promax Auto Broker"
-       data-es="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164073/3_imagens_png_tssc95.png"
-       data-en="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164183/Post_4_In_siuzku.png"
-       src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164073/3_imagens_png_tssc95.png"></div>
+<section class="pmx-hero2" id="pmxHero" aria-label="Promax Auto Broker" data-anim-root data-parallax-root>
+  <div class="pmx-hero2__media" data-parallax-scale="1.07">
+    <div class="pmx-hero2__track" id="pmxHeroTrack">
+      <div class="pmx-hero2__slide"><img alt="Promax Auto Broker" fetchpriority="high"
+         data-es="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164071/1_imagenen_baowx3.png"
+         data-en="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164184/Post_5_In_2_dfkx29.png"
+         src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164071/1_imagenen_baowx3.png"></div>
+      <div class="pmx-hero2__slide"><img alt="Promax Auto Broker"
+         data-es="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164072/2_imagen_bydqug.png"
+         data-en="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164184/Post_6_In_2_ypp9es.png"
+         src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164072/2_imagen_bydqug.png"></div>
+      <div class="pmx-hero2__slide"><img alt="Promax Auto Broker"
+         data-es="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164073/3_imagens_png_tssc95.png"
+         data-en="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164183/Post_4_In_siuzku.png"
+         src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164073/3_imagens_png_tssc95.png"></div>
+    </div>
   </div>
-  <div class="pmx-hero2__cta">
+  <div class="pmx-hero2__cta" data-anim="stagger" data-anim-trigger-root>
     <a href="/inventory/" class="pmx-btn pmx-btn--primary" data-i18n="h_cta1">Ver Inventario</a>
     <a href="/financing/apply/" class="pmx-btn pmx-btn--ghost-light" data-i18n="h_applycar">Aplicar para un auto</a>
   </div>
@@ -220,15 +225,16 @@
 <section class="pmx-divider"><div class="pmx-divider__inner"><span class="pmx-divider__icon">★</span><span class="pmx-divider__text" data-i18n="div1">Vehículos nuevos y usados de calidad</span><span class="pmx-divider__icon">★</span></div></section>
 
 <!-- FEATURED -->
-<section class="pmx-section">
+<section class="pmx-section pmx-featured" data-anim-root data-parallax-root>
+  <div class="pmx-deco" data-parallax="-26" aria-hidden="true"></div>
   <div class="pmx-container">
     <div class="pmx-section__head">
-      <span class="pmx-eyebrow" data-i18n="feat_eyebrow">Selección</span>
-      <h2 data-i18n="feat_title">Vehículos Destacados</h2>
-      <p data-i18n="feat_sub">Seleccionados de nuestras últimas llegadas</p>
+      <span class="pmx-eyebrow" data-anim="up" data-i18n="feat_eyebrow">Selección</span>
+      <h2 data-anim="text" data-i18n="feat_title">Vehículos Destacados</h2>
+      <p data-anim="up" data-anim-delay="0.12" data-i18n="feat_sub">Seleccionados de nuestras últimas llegadas</p>
     </div>
-    <div class="pmx-vgrid" id="pmxFeatured"><p style="grid-column:1/-1;text-align:center;color:#888" data-i18n="loading">Cargando vehículos...</p></div>
-    <div style="text-align:center;margin-top:36px"><a href="/inventory/" class="pmx-btn pmx-btn--ghost" data-i18n="feat_all">Ver Todo el Inventario</a></div>
+    <div class="pmx-vgrid" id="pmxFeatured" data-anim="stagger" data-anim-defer><p style="grid-column:1/-1;text-align:center;color:#888" data-i18n="loading">Cargando vehículos...</p></div>
+    <div style="text-align:center;margin-top:36px" data-anim="up"><a href="/inventory/" class="pmx-btn pmx-btn--ghost" data-i18n="feat_all">Ver Todo el Inventario</a></div>
   </div>
 </section>
 
@@ -337,6 +343,10 @@
 <script src="/assets/js/site.js"></script>
 <script src="/assets/js/instagram.js"></script>
 <script src="/assets/js/data.js"></script>
+<!-- Motor de animaciones al scroll: GSAP + ScrollTrigger (debe ir antes de anim.js) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="/assets/js/anim.js"></script>
 <script>
 PMX.addTranslations({
   es: {
@@ -436,6 +446,8 @@ PMX.addTranslations({
     else feat = feat.slice(0, 6);
     var host = document.getElementById("pmxFeatured");
     host.innerHTML = feat.length ? feat.map(card).join("") : '<p style="grid-column:1/-1;text-align:center;color:#888">—</p>';
+    // Anima en cascada las tarjetas recién inyectadas (entra/sale con el scroll)
+    if (window.PMXAnim && feat.length) PMXAnim.cards("#pmxFeatured");
   });
 })();
 
