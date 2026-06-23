@@ -130,6 +130,7 @@
       : '<div class="pmx-empty"><h3>' + PMX.t("inv_empty_t") + '</h3><p>' + PMX.t("inv_empty_s") + '</p><button class="pmx-btn pmx-btn--primary" id="pmxReset">' + PMX.t("inv_reset") + '</button></div>';
     var rb = $("#pmxReset"); if (rb) rb.addEventListener("click", reset);
     renderChips(); renderPagination(total);
+    if (window.PMX && PMX.reveal) PMX.reveal(grid);
   }
 
   function checkboxGroup(hostId, type, values) {

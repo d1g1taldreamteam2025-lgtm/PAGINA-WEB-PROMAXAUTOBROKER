@@ -91,6 +91,21 @@
 #pmxVideos .pmx-ig__grid{grid-template-columns:repeat(3,1fr);max-width:760px;margin-left:auto;margin-right:auto;}
 @media(max-width:680px){#pmxVideos .pmx-ig__grid{grid-template-columns:repeat(2,1fr);max-width:430px;}}
 /* ACTIVIDAD EN VIVO (señales que ciclan): estilos compartidos en theme.css */
+/* ORBITA DE MARCAS (estilo Specter: logos que orbitan y reaccionan al scroll) */
+.pmx-orbit{position:relative;width:min(540px,92vw);margin:6px auto 0;}
+.pmx-orbit::before{content:"";display:block;padding-top:100%;}
+.pmx-orbit__glow{position:absolute;left:50%;top:50%;width:48%;height:48%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(167,2,0,.16),rgba(244,220,52,.07) 55%,transparent 72%);filter:blur(4px);pointer-events:none;}
+.pmx-orbit__circle{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:1.5px dashed rgba(13,15,18,.12);border-radius:50%;pointer-events:none;}
+.pmx-orbit__circle--out{width:80%;height:80%;}
+.pmx-orbit__circle--in{width:48%;height:48%;}
+.pmx-orbit__core{position:absolute;left:50%;top:50%;width:24%;height:24%;transform:translate(-50%,-50%);background:#fff;border:1px solid var(--line);border-radius:26px;box-shadow:0 20px 48px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:5%;z-index:4;}
+.pmx-orbit__core img{max-width:100%;max-height:100%;object-fit:contain;}
+.pmx-orbit__badge{position:absolute;left:50%;top:50%;width:clamp(48px,11.5%,66px);height:clamp(48px,11.5%,66px);z-index:3;will-change:transform;}
+.pmx-orbit__badgein{width:100%;height:100%;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 12px 28px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;padding:18%;transition:box-shadow .25s,transform .25s;}
+.pmx-orbit__badgein:hover{box-shadow:0 18px 38px rgba(0,0,0,.2);transform:scale(1.08);}
+.pmx-orbit__badgein img{max-width:100%;max-height:100%;object-fit:contain;}
+.pmx-orbit__badgein span{font:800 12px/1 var(--font-head);color:var(--ink);text-align:center;letter-spacing:.3px;}
+@media(max-width:560px){.pmx-orbit__badgein{border-radius:14px;padding:14%;}.pmx-orbit__badgein span{font-size:10px;}}
 </style>
 </head>
 <body>
@@ -211,17 +226,11 @@
       <h2 data-i18n="home_brands_title">Marcas que manejamos</h2>
       <p data-i18n="home_brands_sub">Especialistas en Toyota — lo bueno y confiable. ¿Buscas otra marca? Pregúntanos y con gusto te ayudamos.</p>
     </div>
-    <div class="pmx-logowall">
-      <div class="pmx-logowall__item"><img src="https://logo.clearbit.com/toyota.com" alt="Toyota" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'pmx-logowall__name',textContent:'Toyota'}))"></div>
-      <div class="pmx-logowall__item"><img src="https://logo.clearbit.com/honda.com" alt="Honda" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'pmx-logowall__name',textContent:'Honda'}))"></div>
-      <div class="pmx-logowall__item"><img src="https://logo.clearbit.com/ford.com" alt="Ford" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'pmx-logowall__name',textContent:'Ford'}))"></div>
-      <div class="pmx-logowall__item"><img src="https://logo.clearbit.com/chevrolet.com" alt="Chevrolet" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'pmx-logowall__name',textContent:'Chevrolet'}))"></div>
-      <div class="pmx-logowall__item"><img src="https://logo.clearbit.com/hyundaiusa.com" alt="Hyundai" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'pmx-logowall__name',textContent:'Hyundai'}))"></div>
-      <div class="pmx-logowall__item"><img src="https://logo.clearbit.com/kia.com" alt="Kia" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'pmx-logowall__name',textContent:'Kia'}))"></div>
-      <div class="pmx-logowall__item"><img src="https://logo.clearbit.com/nissanusa.com" alt="Nissan" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'pmx-logowall__name',textContent:'Nissan'}))"></div>
-      <div class="pmx-logowall__item"><img src="https://logo.clearbit.com/bmwusa.com" alt="BMW" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'pmx-logowall__name',textContent:'BMW'}))"></div>
-      <div class="pmx-logowall__item"><img src="https://logo.clearbit.com/mazdausa.com" alt="Mazda" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'pmx-logowall__name',textContent:'Mazda'}))"></div>
-      <div class="pmx-logowall__item"><img src="https://logo.clearbit.com/jeep.com" alt="Jeep" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'pmx-logowall__name',textContent:'Jeep'}))"></div>
+    <div class="pmx-orbit" id="pmxOrbit" aria-hidden="true">
+      <span class="pmx-orbit__glow"></span>
+      <span class="pmx-orbit__circle pmx-orbit__circle--out"></span>
+      <span class="pmx-orbit__circle pmx-orbit__circle--in"></span>
+      <div class="pmx-orbit__core"><img src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782163987/Logos-05_cqy7tj.png" alt="Promax Auto Broker" onerror="this.style.display='none'"></div>
     </div>
   </div>
 </section>
@@ -524,6 +533,58 @@ PMX.addTranslations({
     new IntersectionObserver(function(es){ es.forEach(function(e){ e.isIntersecting ? start() : stop(); }); }, { threshold: 0.2 }).observe(stage);
   } else { start(); }
   document.addEventListener('visibilitychange', function(){ if (document.hidden) stop(); else start(); });
+})();
+
+/* Órbita de marcas: logos que orbitan suavemente y reaccionan al scroll (estilo Specter) */
+(function(){
+  var stage = document.getElementById('pmxOrbit');
+  if (!stage) return;
+  var BRANDS = [
+    {d:'toyota.com',n:'Toyota'},{d:'honda.com',n:'Honda'},{d:'ford.com',n:'Ford'},
+    {d:'chevrolet.com',n:'Chevrolet'},{d:'hyundaiusa.com',n:'Hyundai'},{d:'kia.com',n:'Kia'},
+    {d:'nissanusa.com',n:'Nissan'},{d:'bmwusa.com',n:'BMW'},{d:'mazdausa.com',n:'Mazda'},
+    {d:'jeep.com',n:'Jeep'},{d:'lexus.com',n:'Lexus'},{d:'subaru.com',n:'Subaru'}
+  ];
+  var outer = BRANDS.slice(0,7), inner = BRANDS.slice(7);
+  var badges = [];
+  function add(b, ring, base){
+    var w = document.createElement('div'); w.className = 'pmx-orbit__badge';
+    var inr = document.createElement('div'); inr.className = 'pmx-orbit__badgein';
+    var img = document.createElement('img'); img.src = 'https://logo.clearbit.com/'+b.d; img.alt = b.n; img.loading = 'lazy';
+    img.onerror = function(){ inr.innerHTML = '<span>'+b.n+'</span>'; };
+    inr.appendChild(img); w.appendChild(inr); stage.appendChild(w);
+    badges.push({ w:w, inr:inr, ring:ring, base:base });
+  }
+  outer.forEach(function(b,i){ add(b, 'out', (360/outer.length)*i); });
+  inner.forEach(function(b,i){ add(b, 'in', (360/inner.length)*i + 30); });
+  var Aout = 0, Ain = 20;
+  function layout(){
+    var R = stage.offsetWidth/2, Ro = R*0.80, Ri = R*0.48;
+    for (var i=0;i<badges.length;i++){
+      var bd = badges[i], a = bd.base + (bd.ring==='out'?Aout:Ain), r = bd.ring==='out'?Ro:Ri;
+      bd.w.style.transform = 'translate(-50%,-50%) rotate('+a+'deg) translateY(-'+r+'px)';
+      bd.inr.style.transform = 'rotate('+(-a)+'deg)';
+    }
+  }
+  var RM = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  if (RM){ layout(); window.addEventListener('resize', layout); return; }
+  var lastY = window.pageYOffset||0, raf = null, running = false;
+  function frame(){
+    var y = window.pageYOffset||0, dv = y-lastY; lastY = y;
+    if (dv>40) dv=40; else if (dv<-40) dv=-40;
+    Aout += 0.05 + dv*0.05;
+    Ain  -= 0.07 + dv*0.06;
+    layout();
+    raf = requestAnimationFrame(frame);
+  }
+  function inView(){ var r = stage.getBoundingClientRect(); return r.bottom>0 && r.top<(window.innerHeight||0); }
+  function start(){ if (running) return; running = true; lastY = window.pageYOffset||0; raf = requestAnimationFrame(frame); }
+  function stop(){ running = false; if (raf) cancelAnimationFrame(raf); raf = null; }
+  layout();
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(function(es){ es.forEach(function(e){ e.isIntersecting ? start() : stop(); }); }, { threshold: 0.04 }).observe(stage);
+  } else { start(); }
+  document.addEventListener('visibilitychange', function(){ if (document.hidden) stop(); else if (inView()) start(); });
 })();
 </script>
 </body>

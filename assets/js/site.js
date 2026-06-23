@@ -409,18 +409,39 @@
     els.forEach(function (el) { io.observe(el); });
   }
 
-  function wireAnim() {
+  // Selectores que reciben la animación de entrada (fade-in-up) al hacer scroll
+  var REVEAL_SEL = ".pmx-reveal,.pmx-section__head,.pmx-ctacard,.pmx-why__item,.pmx-review,.pmx-step,.pmx-stats__item,.pmx-card,.pmx-lender-item,.pmx-vcard,.pmx-logowall__item,.fin-step";
+  var revealIO = null;
+  // Asigna un retraso en cadena a los hermanos del mismo padre (efecto escalonado)
+  function applyStagger(els) {
+    var byParent = (typeof Map !== "undefined") ? new Map() : null;
+    if (!byParent) return;
+    els.forEach(function (el) {
+      var p = el.parentNode, i = byParent.get(p) || 0;
+      byParent.set(p, i + 1);
+      if (i > 0) el.style.transitionDelay = (Math.min(i, 8) * 0.07).toFixed(2) + "s";
+    });
+  }
+  // Aplica reveals a un contenedor (sirve también para contenido inyectado luego, ej. inventario)
+  function revealScan(root) {
     document.documentElement.classList.add("pmx-js");
-    var sel = ".pmx-reveal,.pmx-section__head,.pmx-ctacard,.pmx-why__item,.pmx-review,.pmx-step,.pmx-stats__item,.pmx-card,.pmx-lender-item";
-    var els = Array.prototype.slice.call(document.querySelectorAll(sel)).filter(function (el) { return !el.closest("#pmxSticky") && !el.closest(".pmx-footer"); });
+    root = root || document;
+    var els = Array.prototype.slice.call(root.querySelectorAll(REVEAL_SEL)).filter(function (el) {
+      return !el.classList.contains("pmx-reveal") && !el.closest("#pmxSticky") && !el.closest(".pmx-footer");
+    });
+    if (!els.length) return;
     els.forEach(function (el) { el.classList.add("pmx-reveal"); });
-    if (!("IntersectionObserver" in window)) { els.forEach(function (el) { el.classList.add("is-visible"); }); }
-    else {
-      var io = new IntersectionObserver(function (ents) { ents.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("is-visible"); io.unobserve(en.target); } }); }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
-      els.forEach(function (el) { io.observe(el); });
-      requestAnimationFrame(function () { els.forEach(function (el) { var r = el.getBoundingClientRect(); if (r.top < window.innerHeight * 0.94) el.classList.add("is-visible"); }); });
-    }
-    setTimeout(function () { document.querySelectorAll(".pmx-reveal:not(.is-visible)").forEach(function (el) { el.classList.add("is-visible"); }); }, 2500);
+    applyStagger(els);
+    if (!("IntersectionObserver" in window)) { els.forEach(function (el) { el.classList.add("is-visible"); }); return; }
+    if (!revealIO) revealIO = new IntersectionObserver(function (ents) {
+      ents.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("is-visible"); revealIO.unobserve(en.target); } });
+    }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+    els.forEach(function (el) { revealIO.observe(el); });
+    requestAnimationFrame(function () { els.forEach(function (el) { var r = el.getBoundingClientRect(); if (r.top < window.innerHeight * 0.94 && r.bottom > 0) el.classList.add("is-visible"); }); });
+  }
+  function wireAnim() {
+    revealScan(document);
+    setTimeout(function () { document.querySelectorAll(".pmx-reveal:not(.is-visible)").forEach(function (el) { el.classList.add("is-visible"); }); }, 2600);
     wireCounters();
   }
 
@@ -614,6 +635,7 @@
     t: t,
     money: function (n) { return "$" + (Number(n) || 0).toLocaleString("en-US"); },
     num: function (n) { return (Number(n) || 0).toLocaleString("en-US"); },
+    reveal: revealScan,
   };
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount);
