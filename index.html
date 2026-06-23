@@ -104,11 +104,11 @@
 .pmx-orbit__core{position:absolute;left:50%;top:50%;width:24%;height:24%;transform:translate(-50%,-50%);background:#fff;border:1px solid var(--line);border-radius:26px;box-shadow:0 20px 48px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:5%;z-index:4;}
 .pmx-orbit__core img{max-width:100%;max-height:100%;object-fit:contain;}
 .pmx-orbit__badge{position:absolute;left:50%;top:50%;width:clamp(48px,11.5%,66px);height:clamp(48px,11.5%,66px);z-index:3;will-change:transform;}
-.pmx-orbit__badgein{width:100%;height:100%;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 12px 28px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;padding:18%;transition:box-shadow .25s,transform .25s;}
+.pmx-orbit__badgein{width:100%;height:100%;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 12px 28px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;padding:12%;transition:box-shadow .25s,transform .25s;}
 .pmx-orbit__badgein:hover{box-shadow:0 18px 38px rgba(0,0,0,.2);transform:scale(1.08);}
-.pmx-orbit__badgein img{max-width:100%;max-height:100%;object-fit:contain;}
+.pmx-orbit__badgein img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px;}
 .pmx-orbit__badgein span{font:800 12px/1 var(--font-head);color:var(--ink);text-align:center;letter-spacing:.3px;}
-@media(max-width:560px){.pmx-orbit__badgein{border-radius:14px;padding:14%;}.pmx-orbit__badgein span{font-size:10px;}}
+@media(max-width:560px){.pmx-orbit__badgein{border-radius:14px;padding:10%;}.pmx-orbit__badgein span{font-size:10px;}}
 /* RESEÑAS EN MOVIMIENTO (carrusel continuo estilo Specter) */
 .pmx-revmar{position:relative;overflow:hidden;}
 .pmx-revmar::before,.pmx-revmar::after{content:"";position:absolute;top:0;bottom:0;width:90px;z-index:2;pointer-events:none;}
@@ -274,7 +274,7 @@
       <span class="pmx-orbit__glow"></span>
       <span class="pmx-orbit__circle pmx-orbit__circle--out"></span>
       <span class="pmx-orbit__circle pmx-orbit__circle--in"></span>
-      <div class="pmx-orbit__core"><img src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782163987/Logos-05_cqy7tj.png" alt="Promax Auto Broker" onerror="this.style.display='none'"></div>
+      <div class="pmx-orbit__core"><img src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782222860/Logos-06_ojajis.png" alt="Promax Auto Broker" onerror="this.style.display='none'"></div>
     </div>
   </div>
 </section>
@@ -596,17 +596,25 @@ PMX.addTranslations({
   var stage = document.getElementById('pmxOrbit');
   if (!stage) return;
   var BRANDS = [
-    {d:'toyota.com',n:'Toyota'},{d:'honda.com',n:'Honda'},{d:'ford.com',n:'Ford'},
-    {d:'chevrolet.com',n:'Chevrolet'},{d:'hyundaiusa.com',n:'Hyundai'},{d:'kia.com',n:'Kia'},
-    {d:'nissanusa.com',n:'Nissan'},{d:'bmwusa.com',n:'BMW'},{d:'mazdausa.com',n:'Mazda'},
-    {d:'jeep.com',n:'Jeep'},{d:'lexus.com',n:'Lexus'},{d:'subaru.com',n:'Subaru'}
+    {img:'https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223147/c1ddd1ea562ffdd6ad87957ae931b8f8_hbxuut.jpg', n:'Toyota'},
+    {img:'https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223107/4fc41cd20e7c214003602eeaeb5e01f6_ch3cip.jpg', n:'Honda'},
+    {img:'https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223033/a76428e744bdc2422377dc23378c57c5_zckbye.jpg', n:'Ford'},
+    {img:'https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223219/72de3ded4b6b233716a76fa5e4061ed6_vjnrzw.jpg', n:'Chevrolet'},
+    {img:'https://res.cloudinary.com/drbc4wbvw/image/upload/v1782222942/images_jij23e.jpg', n:'Hyundai'},
+    {img:'https://res.cloudinary.com/drbc4wbvw/image/upload/v1782222897/50fa1e9ae66d7c0aa547b8f50918b258_wnvvvd.jpg', n:'Kia'},
+    {img:'https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223148/images_2_ni1wr6.jpg', n:'Nissan'},
+    {img:'https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223077/9b98fe7973d0cb009e68fee1a586417a_ll0s3d.jpg', n:'BMW'},
+    {img:'https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223075/c58353b0f56de7cf26b5ed3bbf69e7d0_mqkbju.jpg', n:'Mazda'},
+    {img:'https://res.cloudinary.com/drbc4wbvw/image/upload/v1782222919/11eeec868f528be972314d1f07ac212f_tbv11o.jpg', n:'Jeep'},
+    {img:'https://res.cloudinary.com/drbc4wbvw/image/upload/v1782222996/036a1b841a795befc0062028078927c1_z9b1na.jpg', n:'Lexus'},
+    {img:'https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223018/images_1_c6ixrw.jpg', n:'Subaru'}
   ];
   var outer = BRANDS.slice(0,7), inner = BRANDS.slice(7);
   var badges = [];
   function add(b, ring, base){
     var w = document.createElement('div'); w.className = 'pmx-orbit__badge';
     var inr = document.createElement('div'); inr.className = 'pmx-orbit__badgein';
-    var img = document.createElement('img'); img.src = 'https://logo.clearbit.com/'+b.d; img.alt = b.n; img.loading = 'lazy';
+    var img = document.createElement('img'); img.src = b.img; img.alt = b.n; img.loading = 'lazy';
     img.onerror = function(){ inr.innerHTML = '<span>'+b.n+'</span>'; };
     inr.appendChild(img); w.appendChild(inr); stage.appendChild(w);
     badges.push({ w:w, inr:inr, ring:ring, base:base });
