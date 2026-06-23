@@ -157,6 +157,18 @@
   </div>
 </section>
 
+<!-- APROBACIONES EN VIVO (tarjeta que se desvanece) -->
+<section class="pmx-section pmx-notesec">
+  <div class="pmx-container">
+    <div class="pmx-notesec__head">
+      <span class="pmx-live__pill"><span class="pmx-live__dot"></span> <span data-i18n="note_pill">En vivo</span></span>
+      <h2 data-i18n="note_title">Aprobaciones en tiempo real</h2>
+      <p data-i18n="note_sub">Clientes pre-calificando y llevándose su carro ahora mismo.</p>
+    </div>
+    <div class="pmx-note" id="pmxNote" aria-hidden="true"></div>
+  </div>
+</section>
+
 <!-- FAQ (dark) -->
 <section class="pmx-section fin-faq">
   <div class="pmx-container">
@@ -230,6 +242,7 @@ PMX.addTranslations({
     fin_q5:"¿Qué tan rápido es el proceso?",
     fin_a5:"La pre-calificación toma solo unos minutos en línea. Muchas decisiones se entregan el mismo día, y en varios casos puedes llevarte tu carro en la misma visita.",
     fin_faq_cta:"Pre-Calificar Ahora",
+    note_pill:"En vivo", note_title:"Aprobaciones en tiempo real", note_sub:"Clientes pre-calificando y llevándose su carro ahora mismo.",
   },
   en: {
     fin_eyebrow:"Fast · Secure · No impact",
@@ -266,8 +279,54 @@ PMX.addTranslations({
     fin_q5:"How fast is the process?",
     fin_a5:"Pre-qualification takes just a few minutes online. Many decisions are delivered the same day, and in many cases you can drive your car home on the same visit.",
     fin_faq_cta:"Get Pre-Qualified Now",
+    note_pill:"Live", note_title:"Real-time approvals", note_sub:"Customers pre-qualifying and driving home right now.",
   }
 });
+</script>
+<script>
+/* Aprobaciones en tiempo real: una sola tarjeta que se desvanece y aparece con la siguiente señal (estilo limpio) */
+(function(){
+  var card = document.getElementById('pmxNote');
+  if (!card) return;
+  function lang(){ return (window.PMX && PMX.lang && PMX.lang()) || 'es'; }
+  function L(v){ return (v && typeof v === 'object') ? (v[lang()] || v.es) : v; }
+  var FEED = [
+    {ic:'✅',c:'#15803d',cat:{es:'Aprobado',en:'Approved'},title:'María G.',sub:{es:'Financiamiento con ITIN',en:'Financing with ITIN'},time:{es:'ahora',en:'now'},spark:true},
+    {ic:'⚡',c:'#0891b2',cat:{es:'Pre-calificó',en:'Pre-qualified'},title:'Carlos R.',sub:{es:'En menos de 3 minutos',en:'In under 3 minutes'},time:{es:'hace 2 min',en:'2 min ago'},spark:true},
+    {ic:'🤝',c:'#A70200',cat:{es:'Bajo pago inicial',en:'Low down payment'},title:{es:'Desde $0 de enganche',en:'From $0 down'},sub:{es:'Según tu perfil',en:'Based on your profile'},time:{es:'hace 6 min',en:'6 min ago'},spark:false},
+    {ic:'🏦',c:'#2563eb',cat:{es:'Oferta lista',en:'Offer ready'},title:{es:'Tasa competitiva',en:'Competitive rate'},sub:{es:'De nuestra red de prestamistas',en:'From our lender network'},time:{es:'hace 11 min',en:'11 min ago'},spark:true},
+    {ic:'🔑',c:'#16a34a',cat:{es:'Llaves entregadas',en:'Keys handed over'},title:'Toyota RAV4 2026',sub:{es:'Mismo día · Doral, FL',en:'Same day · Doral, FL'},time:{es:'hace 17 min',en:'17 min ago'},spark:false},
+    {ic:'🟢',c:'#15803d',cat:{es:'Sin SSN',en:'No SSN'},title:{es:'Aceptamos ITIN',en:'ITIN accepted'},sub:{es:'Todos los perfiles bienvenidos',en:'All profiles welcome'},time:{es:'hace 23 min',en:'23 min ago'},spark:true}
+  ];
+  function spark(c){ return '<svg class="pmx-live__spark" viewBox="0 0 56 18" fill="none" stroke="'+c+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,15 11,11 22,13 32,6 42,9 55,2"/></svg>'; }
+  function render(it){
+    card.innerHTML =
+      '<span class="pmx-live__ic" style="background:'+it.c+'1f">'+it.ic+'</span>'+
+      '<div class="pmx-live__body">'+
+        '<p class="pmx-live__cat"><span style="color:'+it.c+'">'+L(it.cat)+'</span> <b>'+L(it.title)+'</b></p>'+
+        '<p class="pmx-live__txt">'+L(it.sub)+'</p>'+
+      '</div>'+
+      '<div class="pmx-live__right"><span class="pmx-live__time">'+L(it.time)+'</span>'+(it.spark?spark(it.c):'')+'</div>';
+  }
+  var i = 0;
+  render(FEED[0]);
+  function cycle(){
+    card.classList.add('is-out');
+    setTimeout(function(){
+      i = (i + 1) % FEED.length;
+      render(FEED[i]);
+      card.classList.remove('is-out');
+    }, 400);
+  }
+  var iv = null;
+  function start(){ if (!iv) iv = setInterval(cycle, 3200); }
+  function stop(){ if (iv){ clearInterval(iv); iv = null; } }
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(function(es){ es.forEach(function(e){ e.isIntersecting ? start() : stop(); }); }, { threshold: 0.3 }).observe(card);
+  } else { start(); }
+  document.addEventListener('visibilitychange', function(){ if (document.hidden) stop(); else start(); });
+  window.addEventListener('pmx-lang', function(){ render(FEED[i]); });
+})();
 </script>
 </body>
 </html>

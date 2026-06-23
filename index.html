@@ -90,35 +90,7 @@
 /* Home: centrar los 3 videos del inventario */
 #pmxVideos .pmx-ig__grid{grid-template-columns:repeat(3,1fr);max-width:760px;margin-left:auto;margin-right:auto;}
 @media(max-width:680px){#pmxVideos .pmx-ig__grid{grid-template-columns:repeat(2,1fr);max-width:430px;}}
-/* ACTIVIDAD EN VIVO (señales que ciclan) */
-.pmx-live__head{text-align:center;max-width:620px;margin:0 auto 34px;}
-.pmx-live__pill{display:inline-flex;align-items:center;gap:7px;background:#0a0a0a;color:#fff;font-weight:800;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:6px 14px;border-radius:999px;margin-bottom:14px;}
-.pmx-live__dot{width:8px;height:8px;border-radius:50%;background:#22c55e;animation:pmxPulseDot 1.6s infinite;}
-.pmx-live__head h2{font-size:34px;font-weight:800;color:var(--ink);margin:0 0 8px;letter-spacing:-.5px;}
-.pmx-live__head p{font-size:16px;color:var(--text-muted);margin:0;}
-.pmx-live__stage{position:relative;max-width:430px;height:150px;margin:0 auto;overflow:hidden;}
-.pmx-live__card{position:absolute;left:6px;right:6px;bottom:8px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,.10);padding:15px 18px;display:flex;align-items:center;gap:13px;pointer-events:none;transition:transform .65s cubic-bezier(.2,.8,.3,1),opacity .65s;will-change:transform,opacity;}
-.pmx-live__card--enter{transform:translateY(48px) scale(.9);opacity:0;z-index:1;}
-.pmx-live__card--front{transform:translateY(0) scale(1);opacity:1;z-index:5;}
-.pmx-live__card--mid{transform:translateY(-15px) scale(.95);opacity:.5;z-index:4;}
-.pmx-live__card--back{transform:translateY(-29px) scale(.9);opacity:.22;z-index:3;}
-.pmx-live__card--exit{transform:translateY(-46px) scale(.86);opacity:0;z-index:2;}
-.pmx-live__ic{flex:0 0 auto;width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;}
-.pmx-live__body{flex:1;min-width:0;text-align:left;}
-.pmx-live__cat{margin:0 0 2px;font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;line-height:1.2;}
-.pmx-live__cat b{color:var(--ink);text-transform:none;font-size:14.5px;letter-spacing:0;font-weight:800;}
-.pmx-live__txt{margin:0;font-size:12.5px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.pmx-live__right{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:5px;}
-.pmx-live__time{font-size:11px;color:var(--text-faint);white-space:nowrap;}
-.pmx-live__spark{width:52px;height:17px;display:block;}
-@media(max-width:560px){.pmx-live__head h2{font-size:26px;}.pmx-live__txt{max-width:120px;}}
-/* NOTIFICACIÓN QUE CAMBIA (fade) */
-.pmx-notesec__head{text-align:center;max-width:560px;margin:0 auto 26px;}
-.pmx-notesec__head h2{font-size:30px;font-weight:800;color:var(--ink);margin:0 0 6px;letter-spacing:-.5px;}
-.pmx-notesec__head p{font-size:15.5px;color:var(--text-muted);margin:0;}
-.pmx-note{max-width:430px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 16px 40px rgba(0,0,0,.10);padding:15px 18px;display:flex;align-items:center;gap:13px;transition:opacity .4s ease,transform .4s cubic-bezier(.2,.8,.3,1);}
-.pmx-note.is-out{opacity:0;transform:translateY(10px) scale(.97);}
-@media(max-width:560px){.pmx-notesec__head h2{font-size:24px;}}
+/* ACTIVIDAD EN VIVO (señales que ciclan): estilos compartidos en theme.css */
 </style>
 </head>
 <body>
@@ -273,17 +245,6 @@
 <!-- DIVIDER DARK -->
 <section class="pmx-divider pmx-divider--dark"><div class="pmx-divider__inner"><span class="pmx-divider__icon">★</span><span class="pmx-divider__text" data-i18n="div2">Únete a +500 clientes satisfechos</span><span class="pmx-divider__icon">★</span></div></section>
 
-<!-- ENTÉRATE (notificación que cambia con fade) -->
-<section class="pmx-section pmx-section--soft pmx-notesec">
-  <div class="pmx-container">
-    <div class="pmx-notesec__head">
-      <h2 data-i18n="note_title">Entérate al instante</h2>
-      <p data-i18n="note_sub">Ofertas, nuevas llegadas y unidades que vuelan.</p>
-    </div>
-    <div class="pmx-note" id="pmxNote" aria-hidden="true"></div>
-  </div>
-</section>
-
 <!-- REVIEWS -->
 <section class="pmx-section">
   <div class="pmx-container">
@@ -358,7 +319,6 @@ PMX.addTranslations({
     home_brands_eyebrow:"Variedad de inventario", home_brands_title:"Marcas que manejamos",
     home_brands_sub:"Especialistas en Toyota — lo bueno y confiable. ¿Buscas otra marca? Pregúntanos y con gusto te ayudamos.",
     live_pill:"En vivo", live_title:"Promax en movimiento", live_sub:"Reservas, aprobaciones y nuevas llegadas — en tiempo real.",
-    note_title:"Entérate al instante", note_sub:"Ofertas, nuevas llegadas y unidades que vuelan.",
     home_vid_sub:"Mira nuestros vehículos en acción. Pasa el mouse para una vista previa y toca para verlo en pantalla completa con sonido.",
     vid_invite_q:"¿Te gustaría ver videos de nuestro inventario?", vid_invite_yes:"Ver videos", vid_invite_close:"Cerrar",
     btn_details:"Ver Detalles", btn_prequal:"Pre-Calificar",
@@ -394,7 +354,6 @@ PMX.addTranslations({
     home_brands_eyebrow:"Inventory variety", home_brands_title:"Brands we carry",
     home_brands_sub:"Toyota specialists — the good and reliable. Looking for another brand? Just ask and we'll gladly help.",
     live_pill:"Live", live_title:"Promax in motion", live_sub:"Reservations, approvals and new arrivals — in real time.",
-    note_title:"Stay in the loop", note_sub:"Deals, new arrivals and units that fly off the lot.",
     home_vid_sub:"See our vehicles in action. Hover for a preview and tap to watch fullscreen with sound.",
     vid_invite_q:"Would you like to see videos of our inventory?", vid_invite_yes:"Watch videos", vid_invite_close:"Close",
     btn_details:"View Details", btn_prequal:"Pre-Qualify",
@@ -565,50 +524,6 @@ PMX.addTranslations({
     new IntersectionObserver(function(es){ es.forEach(function(e){ e.isIntersecting ? start() : stop(); }); }, { threshold: 0.2 }).observe(stage);
   } else { start(); }
   document.addEventListener('visibilitychange', function(){ if (document.hidden) stop(); else start(); });
-})();
-
-/* Entérate al instante: una sola tarjeta que se desvanece y aparece con la siguiente señal (estilo limpio) */
-(function(){
-  var card = document.getElementById('pmxNote');
-  if (!card) return;
-  function lang(){ return (window.PMX && PMX.lang && PMX.lang()) || 'es'; }
-  function L(v){ return (v && typeof v === 'object') ? (v[lang()] || v.es) : v; }
-  var FEED = [
-    {ic:'🔥',c:'#ea580c',cat:{es:'Oferta',en:'Deal'},title:'Toyota Crown 2026',sub:{es:'Precio especial esta semana',en:'Special price this week'},time:{es:'ahora',en:'now'},spark:true},
-    {ic:'🆕',c:'#A70200',cat:{es:'Nueva llegada',en:'New arrival'},title:'Suzuki Swift 2026',sub:{es:'Recién llegado al lote',en:'Just landed on the lot'},time:{es:'hace 2 min',en:'2 min ago'},spark:false},
-    {ic:'📉',c:'#0891b2',cat:{es:'Bajó de precio',en:'Price drop'},title:'Honda Civic 2023',sub:{es:'Ahorra más hoy',en:'Save more today'},time:{es:'hace 5 min',en:'5 min ago'},spark:true},
-    {ic:'🔒',c:'#16a34a',cat:{es:'Reservado',en:'Reserved'},title:'Toyota RAV4 2026',sub:{es:'Ana P. · Doral, FL',en:'Ana P. · Doral, FL'},time:{es:'hace 9 min',en:'9 min ago'},spark:false},
-    {ic:'⏳',c:'#b91c1c',cat:{es:'Última unidad',en:'Last unit'},title:'Toyota Sienna XLE 2026',sub:{es:'Queda 1 disponible',en:'Only 1 left'},time:{es:'hace 14 min',en:'14 min ago'},spark:true},
-    {ic:'✅',c:'#15803d',cat:{es:'Aprobado',en:'Approved'},title:{es:'Financiamiento',en:'Financing'},sub:{es:'Aceptamos ITIN · sin SSN',en:'ITIN accepted · no SSN'},time:{es:'hace 21 min',en:'21 min ago'},spark:true}
-  ];
-  function spark(c){ return '<svg class="pmx-live__spark" viewBox="0 0 56 18" fill="none" stroke="'+c+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1,15 11,11 22,13 32,6 42,9 55,2"/></svg>'; }
-  function render(it){
-    card.innerHTML =
-      '<span class="pmx-live__ic" style="background:'+it.c+'1f">'+it.ic+'</span>'+
-      '<div class="pmx-live__body">'+
-        '<p class="pmx-live__cat"><span style="color:'+it.c+'">'+L(it.cat)+'</span> <b>'+L(it.title)+'</b></p>'+
-        '<p class="pmx-live__txt">'+L(it.sub)+'</p>'+
-      '</div>'+
-      '<div class="pmx-live__right"><span class="pmx-live__time">'+L(it.time)+'</span>'+(it.spark?spark(it.c):'')+'</div>';
-  }
-  var i = 0;
-  render(FEED[0]);
-  function cycle(){
-    card.classList.add('is-out');
-    setTimeout(function(){
-      i = (i + 1) % FEED.length;
-      render(FEED[i]);
-      card.classList.remove('is-out');
-    }, 400);
-  }
-  var iv = null;
-  function start(){ if (!iv) iv = setInterval(cycle, 3200); }
-  function stop(){ if (iv){ clearInterval(iv); iv = null; } }
-  if ('IntersectionObserver' in window){
-    new IntersectionObserver(function(es){ es.forEach(function(e){ e.isIntersecting ? start() : stop(); }); }, { threshold: 0.3 }).observe(card);
-  } else { start(); }
-  document.addEventListener('visibilitychange', function(){ if (document.hidden) stop(); else start(); });
-  window.addEventListener('pmx-lang', function(){ render(FEED[i]); });
 })();
 </script>
 </body>
