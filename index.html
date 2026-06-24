@@ -451,8 +451,8 @@ PMX.addTranslations({
   }
   PMX.loadInventory().then(function(cars){
     var feat = cars.filter(function(c){return c.featured;});
-    if (feat.length < 3) feat = cars.slice(0, 6);
-    else feat = feat.slice(0, 6);
+    if (feat.length < 3) feat = cars.slice(0, 3);
+    else feat = feat.slice(0, 3);
     var host = document.getElementById("pmxFeatured");
     host.innerHTML = feat.length ? feat.map(card).join("") : '<p style="grid-column:1/-1;text-align:center;color:#888">—</p>';
     // Anima en cascada las tarjetas recién inyectadas (entra/sale con el scroll)

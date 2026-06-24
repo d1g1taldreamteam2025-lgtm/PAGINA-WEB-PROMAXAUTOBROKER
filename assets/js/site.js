@@ -40,6 +40,10 @@
       var k = el.getAttribute("data-i18n-ph");
       if (DICT[LANG] && DICT[LANG][k] != null) el.setAttribute("placeholder", DICT[LANG][k]);
     });
+    document.querySelectorAll("[data-i18n-src]").forEach(function (el) {
+      var k = el.getAttribute("data-i18n-src");
+      if (DICT[LANG] && DICT[LANG][k] != null) el.setAttribute("src", DICT[LANG][k]);
+    });
     document.querySelectorAll(".pmx-lang__btn").forEach(function (b) {
       b.classList.toggle("active", b.getAttribute("data-lang") === LANG);
     });
@@ -74,6 +78,7 @@
       open_now: "Abierto ahora", closed_now: "Cerrado",
       proof_action: "acaba de reservar", proof_verified: "Reserva verificada",
       promo_badge: "Solo para ti", promo_title: "Reclama tu 15% OFF",
+      promo_img: "https://res.cloudinary.com/drbc4wbvw/image/upload/v1782165811/post_1_6_wxp5cw.png",
       promo_sub: "Aplica hoy a tu financiamiento y recibe <b>15% de descuento</b> en tu primera compra.",
       promo_ends: "Tu descuento vence en", promo_h: "Horas", promo_m: "Min", promo_s: "Seg", promo_ms: "Ms",
       promo_yes: "Quiero mi descuento", promo_no: "No, gracias",
@@ -101,6 +106,7 @@
       open_now: "Open now", closed_now: "Closed",
       proof_action: "just reserved", proof_verified: "Verified reservation",
       promo_badge: "Just for you", promo_title: "Claim your 15% OFF",
+      promo_img: "https://res.cloudinary.com/drbc4wbvw/image/upload/v1782310226/post_2_4_uihcge.png",
       promo_sub: "Apply for financing today and get <b>15% off</b> your first purchase.",
       promo_ends: "Your discount expires in", promo_h: "Hours", promo_m: "Min", promo_s: "Sec", promo_ms: "Ms",
       promo_yes: "I want my discount", promo_no: "No, thanks",
@@ -535,7 +541,7 @@
       '<div class="pmx-promo" id="pmxPromo">' +
         '<div class="pmx-promo__box">' +
           '<button class="pmx-promo__x" id="pmxPromoX" type="button" aria-label="Cerrar">&times;</button>' +
-          '<div class="pmx-promo__img"><img src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782165811/post_1_6_wxp5cw.png" alt="15% OFF"></div>' +
+          '<div class="pmx-promo__img"><img id="pmxPromoImg" data-i18n-src="promo_img" src="' + t("promo_img") + '" alt="15% OFF"></div>' +
           '<div class="pmx-promo__body">' +
             '<span class="pmx-promo__badge" data-i18n="promo_badge">' + t("promo_badge") + '</span>' +
             '<h3 class="pmx-promo__title" data-i18n="promo_title">' + t("promo_title") + '</h3>' +
@@ -561,13 +567,9 @@
     var modal = document.getElementById("pmxPromo"), fab = document.getElementById("pmxPromoFab");
     if (!modal || !fab) return;
     var KEY = "pmx_promo_claim", DUR = 10 * 60 * 1000, tick = null, dl = 0;
-    // El temporizador de 10 min arranca al ABRIR el popup y se guarda, así el
-    // formulario de financiamiento continúa la MISMA cuenta (sincronizada).
-    function ensureDeadline() {
-      dl = +(localStorage.getItem(KEY) || 0);
-      if (!dl || dl < Date.now()) { dl = Date.now() + DUR; try { localStorage.setItem(KEY, String(dl)); } catch (e) {} }
-      return dl;
-    }
+    // El temporizador es solo VISUAL mientras el popup está abierto. El descuento se
+    // RESERVA (se guarda en localStorage) únicamente al pulsar "Quiero mi descuento",
+    // así el banner del formulario solo aparece si el cliente realmente lo reclamó.
     function pad(x, n) { x = String(x); while (x.length < n) x = "0" + x; return x; }
     function render() {
       var left = dl - Date.now(); if (left < 0) left = 0;
@@ -575,14 +577,16 @@
       var M = document.getElementById("ppM"), S = document.getElementById("ppS"), MS = document.getElementById("ppMs");
       if (M) M.textContent = pad(m, 2); if (S) S.textContent = pad(s, 2); if (MS) MS.textContent = pad(ms, 3);
     }
-    function open() { ensureDeadline(); modal.classList.add("is-open"); render(); if (tick) clearInterval(tick); tick = setInterval(render, 43); }
+    function open() { dl = Date.now() + DUR; modal.classList.add("is-open"); render(); if (tick) clearInterval(tick); tick = setInterval(render, 43); }
     function close() { modal.classList.remove("is-open"); if (tick) clearInterval(tick); }
     fab.addEventListener("click", open);
     document.getElementById("pmxPromoX").addEventListener("click", close);
     document.getElementById("pmxPromoNo").addEventListener("click", close);
     modal.addEventListener("click", function (e) { if (e.target === modal) close(); });
     document.getElementById("pmxPromoYes").addEventListener("click", function () {
-      ensureDeadline();
+      // Recién aquí se reserva: guardamos el deadline para sincronizar con el formulario.
+      if (!dl || dl < Date.now()) dl = Date.now() + DUR;
+      try { localStorage.setItem(KEY, String(dl)); } catch (e) {}
       location.href = "/financing/apply/?promo=15";
     });
   }

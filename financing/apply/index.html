@@ -208,8 +208,11 @@ PMX.addTranslations({
   // ===== Descuento 15% (viene del popup del inicio). Solo aplica si llegó por ahí. =====
   var promoBar = document.getElementById("pmxPromoBar");
   var promoState = "none", promoIv = null;
+  // El banner SOLO aparece si el cliente llegó reclamando el descuento (?promo=15).
+  // Si entra normal al formulario, no se muestra ningún cronómetro.
+  var cameFromPromo = new URLSearchParams(location.search).get("promo") === "15";
   var claim = 0; try { claim = +(localStorage.getItem("pmx_promo_claim") || 0); } catch(e){}
-  if (promoBar && claim && claim > Date.now()) {
+  if (promoBar && cameFromPromo && claim && claim > Date.now()) {
     promoState = "valid";
     promoBar.hidden = false;
     var timeEl = document.getElementById("pmxPromoBarTime");
@@ -235,7 +238,7 @@ PMX.addTranslations({
       timeEl.textContent = fmtClaim(left);
     };
     promoIv = setInterval(ptick, 43); ptick();
-  } else if (claim) {
+  } else if (cameFromPromo && claim) {
     promoState = "expired";
   }
 
