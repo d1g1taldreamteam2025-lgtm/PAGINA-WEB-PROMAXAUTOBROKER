@@ -219,6 +219,7 @@ tr:hover td{background:#222;}tr:last-child td{border-bottom:0;}
       <p>Llena los datos del comprador. Se guardan al instante y suman al contador del sorteo.</p>
       <form id="refForm">
         <div class="form-grid">
+          <div class="field"><label>N° de rifa <span style="color:#777;text-transform:none;letter-spacing:0;font-weight:500">(0001–1000)</span></label><input name="ticket" type="number" min="1" max="1000" inputmode="numeric" placeholder="Ej. 35"></div>
           <div class="field col-2"><label>Nombre y apellido <span class="req">*</span></label><input name="name" required placeholder="Ej. Juan Pérez"></div>
           <div class="field"><label>Teléfono</label><input name="phone" type="tel" placeholder="(305) 000-0000"></div>
           <div class="field col-2"><label>Correo electrónico</label><input name="email" type="email" placeholder="cliente@correo.com"></div>
@@ -233,7 +234,7 @@ tr:hover td{background:#222;}tr:last-child td{border-bottom:0;}
               <option value="Referido">Referido</option>
             </select>
           </div>
-          <div class="field col-3"><label>Notas</label><textarea name="notes" rows="2" placeholder="Opcional"></textarea></div>
+          <div class="field col-2"><label>Notas</label><textarea name="notes" rows="2" placeholder="Opcional"></textarea></div>
         </div>
         <button type="submit" class="form-save" id="formSave">Guardar registro</button>
       </form>
@@ -259,8 +260,8 @@ tr:hover td{background:#222;}tr:last-child td{border-bottom:0;}
     <div class="table-wrap">
       <div class="table-scroll">
         <table>
-          <thead><tr><th>Fecha</th><th>Nombre</th><th>Contacto</th><th>Vehículo / VIN</th><th>Ayudó</th><th>Estado</th><th>Acciones</th></tr></thead>
-          <tbody id="tbody"><tr><td colspan="7" class="empty"><div class="spinner"></div> Cargando…</td></tr></tbody>
+          <thead><tr><th>N°</th><th>Fecha</th><th>Nombre</th><th>Contacto</th><th>Vehículo / VIN</th><th>Ayudó</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="tbody"><tr><td colspan="8" class="empty"><div class="spinner"></div> Cargando…</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -334,6 +335,7 @@ function statusClass(s){ const n=norm(s); if(n==='vendido')return's-vendido'; if
 function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function currentRows(){ return allRows.filter(r => (r.round||1)===round); }
 function soldCount(){ return currentRows().filter(r => norm(r.status)===norm(SOLD_STATUS)).length; }
+function padTicket(n){ const v=parseInt(n,10); return isNaN(v)?'':String(v).padStart(4,'0'); }
 
 /* ---------- LOAD ---------- */
 async function loadAll(){
@@ -349,10 +351,10 @@ async function loadAll(){
   if (error){
     if ((error.message||'').match(/relation|does not exist|schema cache|find the table/i)){
       document.getElementById('setupNotice').style.display='block';
-      tbody.innerHTML='<tr><td colspan="7" class="empty"><b>Tabla no creada todavía</b>Corre el SQL del sorteo (ver aviso arriba).</td></tr>';
+      tbody.innerHTML='<tr><td colspan="8" class="empty"><b>Tabla no creada todavía</b>Corre el SQL del sorteo (ver aviso arriba).</td></tr>';
       render(); return;
     }
-    tbody.innerHTML=`<tr><td colspan="7" class="empty"><b>Error</b>${escapeHtml(error.message)}</td></tr>`; return;
+    tbody.innerHTML=`<tr><td colspan="8" class="empty"><b>Error</b>${escapeHtml(error.message)}</td></tr>`; return;
   }
   allRows = data || [];
   render();
@@ -390,11 +392,11 @@ function renderTable(){
   let rows = rf==='all' ? allRows.slice() : currentRows();
   rows = rows.filter(r=>{
     if (sf && norm(r.status)!==norm(sf)) return false;
-    if (search){ const blob=[r.name,r.phone,r.email,r.vehicle,r.vin,r.helper,r.address,r.notes].map(norm).join(' '); if(!blob.includes(search)) return false; }
+    if (search){ const blob=[r.name,r.phone,r.email,r.vehicle,r.vin,r.helper,r.address,r.notes,r.ticket,padTicket(r.ticket)].map(norm).join(' '); if(!blob.includes(search)) return false; }
     return true;
   });
   const tbody=document.getElementById('tbody');
-  if (!rows.length){ tbody.innerHTML='<tr><td colspan="7" class="empty"><b>Sin registros</b>Agrega el primero con el formulario de arriba.</td></tr>'; return; }
+  if (!rows.length){ tbody.innerHTML='<tr><td colspan="8" class="empty"><b>Sin registros</b>Agrega el primero con el formulario de arriba.</td></tr>'; return; }
   tbody.innerHTML = rows.map(r=>{
     const date=r.created_at? new Date(r.created_at).toLocaleDateString('es-ES',{day:'2-digit',month:'short'}) : '—';
     const st=r.status||'Vendido';
@@ -402,7 +404,9 @@ function renderTable(){
     const wa=phoneClean? `https://wa.me/${phoneClean.replace(/^\+/,'')}`:null;
     const mail=r.email? `mailto:${r.email}`:null;
     const roundTag = (r.round||1)!==round ? ` <span class="tag-round">R${r.round||1}</span>` : '';
+    const tnum = r.ticket ? `<span style="font-family:monospace;font-weight:800;color:#F4DC34">${padTicket(r.ticket)}</span>` : '<span style="color:#555">—</span>';
     return `<tr>
+      <td style="white-space:nowrap">${tnum}</td>
       <td style="white-space:nowrap;color:#888">${date}${roundTag}</td>
       <td><b style="color:#fff">${escapeHtml(r.name||'—')}</b></td>
       <td>${r.phone?`<div style="color:#aaa;font-size:12px">${escapeHtml(r.phone)}</div>`:''}${r.email?`<div style="color:#888;font-size:12px">${escapeHtml(r.email)}</div>`:''}${!r.phone&&!r.email?'<span style="color:#555">—</span>':''}</td>
@@ -430,6 +434,15 @@ document.getElementById('refForm').addEventListener('submit', async (e)=>{
   const row={ round };
   new FormData(f).forEach((v,k)=>{ row[k]=String(v).trim(); });
   if (!row.name){ toast('El nombre es obligatorio', true); return; }
+  // N° de rifa: opcional, debe ir de 1 a 1000 y no repetirse en la ronda actual
+  const rawTicket=(row.ticket||'').trim();
+  if (rawTicket){
+    const ticket=parseInt(rawTicket,10);
+    if (isNaN(ticket)||ticket<1||ticket>1000){ toast('El N° de rifa debe ir de 0001 a 1000', true); return; }
+    const taken=currentRows().find(r=>Number(r.ticket)===ticket);
+    if (taken){ toast('⚠️ El N° '+padTicket(ticket)+' ya lo tiene '+(taken.name||'otro registro'), true); return; }
+    row.ticket=ticket;
+  } else { delete row.ticket; }
   btn.disabled=true; const old=btn.textContent; btn.textContent='Guardando…';
   const { data, error } = await sb.from(REF_TABLE).insert(row).select().single();
   btn.disabled=false; btn.textContent=old;
@@ -480,6 +493,7 @@ document.getElementById('raffleBtn').addEventListener('click', ()=>{
   const w=elig[Math.floor(Math.random()*elig.length)];
   document.getElementById('winnerName').textContent = w.helper ? w.helper : (w.name||'—');
   const bits=[];
+  if (w.ticket) bits.push('🎟️ Número: <span>'+padTicket(w.ticket)+'</span>');
   if (w.helper) bits.push('Comprador: <span>'+escapeHtml(w.name||'—')+'</span>');
   if (w.vehicle) bits.push('Vehículo: <span>'+escapeHtml(w.vehicle)+'</span>');
   if (w.phone) bits.push('Tel: <span>'+escapeHtml(w.phone)+'</span>');
@@ -493,6 +507,7 @@ function viewRow(id){
   document.getElementById('modalTitle').textContent = r.name || 'Detalle';
   const date=r.created_at? new Date(r.created_at).toLocaleString('es-ES',{dateStyle:'medium',timeStyle:'short'}):'—';
   const rows=[
+    ['N° de rifa', r.ticket?`<span style="font-family:monospace;font-weight:800;color:#F4DC34;font-size:15px">${padTicket(r.ticket)}</span>`:'—'],
     ['Fecha',date],['Ronda','R'+(r.round||1)],['Estado',r.status||'—'],
     ['Nombre',escapeHtml(r.name||'—')],
     ['Teléfono', r.phone?`<a href="tel:${r.phone}" style="color:#F4DC34">${escapeHtml(r.phone)}</a>`:'—'],

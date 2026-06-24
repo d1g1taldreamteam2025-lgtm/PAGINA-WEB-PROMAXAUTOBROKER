@@ -163,9 +163,12 @@ create table if not exists public.promax_referrals (
   round int default 1,
   name text, address text, phone text, email text,
   vehicle text, vin text, helper text,
+  ticket int,                       -- número de rifa elegido por el comprador (0001–1000)
   status text default 'Vendido',
   notes text
 );
+-- Si ya habías creado la tabla antes, añade solo la columna del número:
+alter table public.promax_referrals add column if not exists ticket int;
 alter table public.promax_referrals enable row level security;
 create policy "promax_ref_admin_all" on public.promax_referrals
   for all to authenticated using (true) with check (true);
