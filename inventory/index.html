@@ -43,6 +43,10 @@
 .pmx-qf{display:inline-flex;align-items:center;gap:6px;padding:9px 15px;border:2px solid var(--line);background:#fff;border-radius:999px;font:600 13px var(--font-body);color:var(--ink);cursor:pointer;transition:all .2s;}
 .pmx-qf:hover{border-color:var(--brand);color:var(--brand);}
 .pmx-qf.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.pmx-condtabs{display:flex;gap:6px;justify-content:center;margin:0 auto 16px;max-width:560px;background:#fff;border:2px solid var(--line);border-radius:999px;padding:5px;}
+.pmx-condtab{flex:1;text-align:center;padding:11px 10px;border-radius:999px;font:800 13.5px var(--font-head);color:var(--text-muted);cursor:pointer;background:transparent;transition:all .2s;letter-spacing:.3px;}
+.pmx-condtab:hover{color:var(--ink);}
+.pmx-condtab.active{background:var(--brand);color:#fff;box-shadow:0 6px 16px rgba(167,2,0,.25);}
 .pmx-controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
 .pmx-search{flex:1;min-width:220px;display:inline-flex;align-items:center;gap:8px;padding:0 14px;border:2px solid var(--line);border-radius:10px;background:var(--bg-soft);}
 .pmx-search:focus-within{border-color:var(--brand);background:#fff;}
@@ -115,6 +119,11 @@
 
 <div class="pmx-toolbar">
   <div class="pmx-toolbar__in">
+    <div class="pmx-condtabs" id="pmxCondTabs">
+      <button class="pmx-condtab active" data-cond="all" data-i18n="cond_all">Todos</button>
+      <button class="pmx-condtab" data-cond="used" data-i18n="cond_used">Usados</button>
+      <button class="pmx-condtab" data-cond="new" data-i18n="cond_new">Nuevos</button>
+    </div>
     <div class="pmx-qfs">
       <button class="pmx-qf active" data-quick="all" data-i18n="qf_all">Todos</button>
       <button class="pmx-qf" data-quick="under-20k" data-i18n="qf_20">Bajo $20k</button>

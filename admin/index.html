@@ -167,7 +167,7 @@ tr:last-child td{border-bottom:0;}
 
 <div class="login" id="loginScreen">
   <div class="login__card">
-    <div class="login__brand"><h1>PROMAX AUTO BROKER</h1><p>Panel de Inventario</p></div>
+    <div class="login__brand"><img src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782163987/Logos-05_cqy7tj.png" alt="Promax Auto Broker" style="height:54px;width:auto;display:block;margin:0 auto 8px"><p>Panel de Inventario</p></div>
     <div id="loginAlert"></div>
     <form id="loginForm">
       <div class="field"><label>Email</label><input type="email" id="loginEmail" required autocomplete="username"></div>
@@ -180,7 +180,7 @@ tr:last-child td{border-bottom:0;}
 <div class="app" id="appScreen">
   <header class="topbar">
     <div class="topbar__brand">
-      <b>PROMAX</b>
+      <img src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782163987/Logos-05_cqy7tj.png" alt="Promax Auto Broker" style="height:30px;width:auto">
       <span class="badge">Inventario</span>
     </div>
     <nav class="topbar__nav">
@@ -211,7 +211,9 @@ tr:last-child td{border-bottom:0;}
         <option value="sold">Vendido</option>
       </select>
       <select id="filterBody"><option value="">Todos los tipos</option><option>Sedan</option><option>SUV</option><option>Truck</option><option>Coupe</option><option>Hatchback</option><option>Wagon</option><option>Van</option><option>Convertible</option></select>
+      <select id="filterCond"><option value="">Nuevos y usados</option><option value="used">Usados</option><option value="new">Nuevos</option></select>
       <button class="btn btn--ghost" onclick="openBookmarkletModal()"><span class="material-icons-outlined" style="font-size:16px">bookmark_add</span> Bookmarklet</button>
+      <button class="btn btn--ghost" onclick="bulkImportReal()" title="Carga/actualiza los carros del catálogo base en el panel"><span class="material-icons-outlined" style="font-size:16px">cloud_sync</span> Cargar catálogo</button>
       <button class="btn btn--primary" onclick="openAddModal()"><span class="material-icons-outlined" style="font-size:16px">add</span> Agregar Vehículo</button>
     </div>
 
@@ -236,6 +238,7 @@ tr:last-child td{border-bottom:0;}
         <button type="button" class="btn btn--primary btn--sm" onclick="importJson()"><span class="material-icons-outlined" style="font-size:14px">content_paste</span> Pegar JSON</button>
       </div>
       <form id="vehicleForm">
+        <div class="field"><label>¿Vehículo nuevo o usado? *</label><select id="fCondition" required><option value="used">Usado (Used)</option><option value="new">Nuevo (New)</option></select></div>
         <div class="grid-3">
           <div class="field"><label>Año *</label><input type="number" id="fYear" min="1990" max="2030" required></div>
           <div class="field"><label>Marca *</label><input type="text" id="fMake" required></div>
@@ -416,15 +419,18 @@ async function loadInventory(){
 
 function renderTable(){
   const q=($('searchBox').value||'').toLowerCase().trim();
-  const fs=$('filterStatus').value, fb=$('filterBody').value;
+  const fs=$('filterStatus').value, fb=$('filterBody').value, fc=$('filterCond').value;
   let rows=inventory.filter(c=>{
     if (fs === 'reserved') { if (!c.reserved_at) return false; }
     else if (fs && c.status!==fs) return false;
     if (fb && c.body_type!==fb) return false;
+    if (fc && (c.condition||'used')!==fc) return false;
     if (q) { const blob=(c.year+' '+c.make+' '+c.model+' '+(c.trim||'')+' '+(c.vin||'')+' '+(c.stock||'')).toLowerCase(); if(blob.indexOf(q)===-1) return false; }
     return true;
   });
-  if(!rows.length){$('tableBody').innerHTML='<tr><td colspan="7" class="empty"><span class="material-icons-outlined">inbox</span><p>Sin vehículos. Click "Agregar Vehículo" para empezar.</p></td></tr>';return;}
+  if(!rows.length){
+    var emptyExtra = !inventory.length ? '<div style="margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn btn--primary" onclick="bulkImportReal()"><span class="material-icons-outlined" style="font-size:16px">cloud_sync</span> Cargar catálogo (24 carros)</button><button class="btn btn--ghost" onclick="openAddModal()">Agregar uno nuevo</button></div>' : '';
+    $('tableBody').innerHTML='<tr><td colspan="7" class="empty"><span class="material-icons-outlined">inbox</span><p>'+(!inventory.length?'Aún no hay carros en el panel.':'Sin resultados con esos filtros.')+'</p>'+emptyExtra+'</td></tr>';return;}
   $('tableBody').innerHTML=rows.map(c=>{
     const img=c.cover_image||(Array.isArray(c.gallery)&&c.gallery[0])||'';
     const statusCls=c.status==='available'?'badge--ok':'badge--sold';
@@ -435,7 +441,7 @@ function renderTable(){
       '<td><div class="veh"><div class="veh-img" style="background-image:url(&quot;'+img.replace(/"/g,'%22')+'&quot;)"></div><div class="veh-info"><strong>'+c.year+' '+c.make+' '+c.model+'</strong><span>'+(c.trim||'')+' · '+(c.exterior_color||'—')+' · '+(c.fuel||'—')+'</span></div></div></td>'+
       '<td class="price">'+fmt(c.price)+'</td>'+
       '<td>'+fmtNum(c.mileage)+' mi</td>'+
-      '<td>'+(c.body_type||'—')+'</td>'+
+      '<td>'+(c.body_type||'—')+'<br><span style="font-size:11px;font-weight:700;color:'+(c.condition==='new'?'#4ade80':'#888')+'">'+(c.condition==='new'?'NUEVO':'Usado')+'</span></td>'+
       '<td><div class="badge-stack"><span class="badge '+statusCls+'">'+statusTxt+'</span>'+reservedBadge+'</div></td>'+
       '<td>'+(c.stock||'—')+'</td>'+
       '<td><div class="actions">'+
@@ -481,6 +487,7 @@ async function importJson(){
     if(d.trim!==undefined)$('fTrim').value=d.trim||'';
     if(d.body_type)$('fBody').value=d.body_type;
     if(d.status)$('fStatus').value=d.status;
+    if(d.condition)$('fCondition').value=d.condition;
     if(d.price)$('fPrice').value=d.price;
     if(d.msrp)$('fMsrp').value=d.msrp;
     if(d.mileage!==undefined)$('fMileage').value=d.mileage;
@@ -508,7 +515,7 @@ async function importJson(){
 function openAddModal(){
   editingId=null;$('modalTitle').textContent='Agregar Vehículo';$('vehicleForm').reset();photos=[];renderPhotos();
   $('vehicleAlert').innerHTML='';$('reservationBlock').style.display='none';
-  $('fYear').value=new Date().getFullYear();$('fStatus').value='available';
+  $('fYear').value=new Date().getFullYear();$('fStatus').value='available';$('fCondition').value='used';
   $('vehicleModal').classList.add('is-open');
 }
 
@@ -516,7 +523,7 @@ function openEditModal(id){
   const c=inventory.find(x=>x.id===id);if(!c)return;editingId=id;
   $('modalTitle').textContent='Editar Vehículo';$('vehicleAlert').innerHTML='';
   $('fYear').value=c.year||'';$('fMake').value=c.make||'';$('fModel').value=c.model||'';
-  $('fTrim').value=c.trim||'';$('fBody').value=c.body_type||'';$('fStatus').value=c.status||'available';
+  $('fTrim').value=c.trim||'';$('fBody').value=c.body_type||'';$('fStatus').value=c.status||'available';$('fCondition').value=c.condition||'used';
   $('fPrice').value=c.price||'';$('fMsrp').value=c.msrp||'';$('fMileage').value=c.mileage||'';
   $('fFuel').value=c.fuel||'';$('fTrans').value=c.transmission||'';$('fDrive').value=c.drivetrain||'';
   $('fEngine').value=c.engine||'';$('fBadge').value=c.badge||'';
@@ -593,7 +600,7 @@ async function saveVehicle(){
   const allPhotos=photos.concat(pasted);
   const body={
     year:parseInt($('fYear').value,10),make:$('fMake').value.trim(),model:$('fModel').value.trim(),
-    trim:$('fTrim').value.trim()||null,body_type:$('fBody').value,status:$('fStatus').value,
+    trim:$('fTrim').value.trim()||null,body_type:$('fBody').value,status:$('fStatus').value,condition:$('fCondition').value,
     price:Number($('fPrice').value),msrp:$('fMsrp').value?Number($('fMsrp').value):null,
     mileage:parseInt($('fMileage').value,10),
     fuel:$('fFuel').value||null,transmission:$('fTrans').value.trim()||null,drivetrain:$('fDrive').value||null,
@@ -639,6 +646,47 @@ async function confirmDelete(){
   }
 }
 
+// ============ IMPORTAR CATÁLOGO BASE (carros reales del JSON -> Supabase) ============
+function bodyCap(b){
+  var m={sedan:'Sedan',suv:'SUV',truck:'Truck',coupe:'Coupe',hatchback:'Hatchback',wagon:'Wagon',van:'Van',convertible:'Convertible'};
+  var k=String(b||'').toLowerCase().trim(); return m[k]||(k?k.charAt(0).toUpperCase()+k.slice(1):'Sedan');
+}
+function mapJsonToDb(r){
+  var gallery=Array.isArray(r.gallery)?r.gallery:[];
+  var cond=r.condition||(/\b(nuevo|new)\b/i.test(r.badge||'')?'new':'used');
+  return {
+    id:String(r.id||r.stock||(r.year+'-'+r.make+'-'+r.model)).toLowerCase().replace(/\s+/g,'-'),
+    year:parseInt(r.year,10)||null,make:r.make||'',model:r.model||'',trim:r.trim||null,
+    body_type:bodyCap(r.body_type),status:'available',condition:cond,
+    price:Number(r.price)||0,msrp:(r.msrp!=null?Number(r.msrp):null),mileage:parseInt(r.mileage,10)||0,
+    fuel:r.fuel||null,transmission:r.transmission||null,drivetrain:r.drivetrain||null,engine:null,
+    exterior_color:r.exterior_color||null,interior_color:r.interior_color||null,
+    vin:r.vin||null,stock:r.stock||null,badge:r.badge||null,mpg_city:null,mpg_highway:null,
+    featured:!!r.featured,features:Array.isArray(r.features)?r.features:[],
+    description:r.description||null,gallery:gallery,cover_image:r.cover_image||gallery[0]||null
+  };
+}
+async function bulkImportReal(){
+  if(!confirm('Cargar los carros del catálogo base al panel.\n\nNo borra nada: actualiza por id (los que ya existan se refrescan, los nuevos se agregan). ¿Continuar?'))return;
+  try{
+    var res=await fetch('/assets/data/inventory.json',{cache:'no-store'});
+    if(!res.ok)throw new Error('No pude leer el catálogo base.');
+    var rows=await res.json();
+    if(!Array.isArray(rows)||!rows.length)throw new Error('El catálogo base está vacío.');
+    var mapped=rows.map(mapJsonToDb);
+    var {error}=await sb.from(TABLE).upsert(mapped,{onConflict:'id'});
+    if(error)throw error;
+    alert('✅ '+mapped.length+' carros cargados/actualizados en el panel.');
+    loadInventory();
+  }catch(e){
+    var m=e.message||String(e);
+    if(/condition/i.test(m)&&/column|does not exist|schema|find/i.test(m)){
+      m='Falta crear la columna "condition" en Supabase. Corre esta línea en el SQL Editor y vuelve a intentar:\n\nalter table public.promax_inventory add column if not exists condition text default \'used\';';
+    }
+    alert('Error: '+m);
+  }
+}
+
 // ============ BOOKMARKLET ============
 function openBookmarkletModal(){
   if (localStorage.getItem('promax_bm_unlocked') === '1') {
@@ -666,7 +714,7 @@ function unlockBookmarklet(){
 }
 $('bmPass').addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); unlockBookmarklet(); } });
 
-['searchBox','filterStatus','filterBody'].forEach(id=>{$(id).addEventListener('input',renderTable);$(id).addEventListener('change',renderTable);});
+['searchBox','filterStatus','filterBody','filterCond'].forEach(id=>{$(id).addEventListener('input',renderTable);$(id).addEventListener('change',renderTable);});
 
 $('tableBody').addEventListener('click', function(e){
   const btn = e.target.closest('[data-action]');

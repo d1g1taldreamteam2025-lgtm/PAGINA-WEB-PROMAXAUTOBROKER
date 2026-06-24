@@ -22,6 +22,7 @@
       featured: !!r.featured, photos: gallery.length || 1, image: cover, gallery: gallery,
       features: Array.isArray(r.features) ? r.features : [],
       description: r.description || "",
+      condition: r.condition || (/\b(nuevo|new)\b/i.test(r.badge || "") ? "new" : "used"),
     };
   }
 

@@ -10,6 +10,7 @@
       inv_sub: "Vehículos seleccionados, precios honestos, financiamiento flexible",
       inv_available: "Disponibles", inv_rating: "Calificación", inv_sold: "Vendidos",
       qf_all: "Todos", qf_20: "Bajo $20k", qf_10: "Bajo $10k", qf_suv: "SUVs", qf_sedan: "Sedanes", qf_truck: "Camionetas",
+      cond_all: "Todos", cond_used: "Carros Usados", cond_new: "Vehículos Nuevos",
       inv_search_ph: "Buscar por marca, modelo, año...",
       sort_new: "Más recientes", sort_pa: "Precio: menor a mayor", sort_pd: "Precio: mayor a menor",
       sort_ma: "Millaje: menor a mayor", sort_yd: "Año: nuevo a viejo",
@@ -27,6 +28,7 @@
       inv_sub: "Hand-picked vehicles, honest pricing, flexible financing",
       inv_available: "Available", inv_rating: "Rating", inv_sold: "Sold",
       qf_all: "All", qf_20: "Under $20k", qf_10: "Under $10k", qf_suv: "SUVs", qf_sedan: "Sedans", qf_truck: "Trucks",
+      cond_all: "All", cond_used: "Used Cars", cond_new: "New Vehicles",
       inv_search_ph: "Search by make, model, year...",
       sort_new: "Newest", sort_pa: "Price: low to high", sort_pd: "Price: high to low",
       sort_ma: "Mileage: low to high", sort_yd: "Year: new to old",
@@ -42,13 +44,15 @@
   });
 
   var PER = 9, CARS = [], $ = function (s, r) { return (r || document).querySelector(s); };
-  var state = { quick: "all", search: "", sort: "new", page: 1,
+  var state = { quick: "all", condition: "all", search: "", sort: "new", page: 1,
     filters: { make: [], body: [], priceMin: null, priceMax: null, yearMin: null, yearMax: null, mileageMax: null } };
 
   function bodyLabel(b) { return PMX.t("body_" + b) || b.toUpperCase(); }
 
   function applyAll() {
     var r = CARS.slice();
+    if (state.condition === "new") r = r.filter(function (c) { return c.condition === "new"; });
+    else if (state.condition === "used") r = r.filter(function (c) { return c.condition !== "new"; });
     if (state.quick === "under-20k") r = r.filter(function (c) { return c.price < 20000 && c.price > 0; });
     else if (state.quick === "under-10k") r = r.filter(function (c) { return c.price < 10000 && c.price > 0; });
     else if (["suv", "sedan", "truck"].indexOf(state.quick) > -1) r = r.filter(function (c) { return c.bodyType === state.quick; });
@@ -157,6 +161,7 @@
   function reset() {
     state = { quick: "all", search: "", sort: "new", page: 1, filters: { make: [], body: [], priceMin: null, priceMax: null, yearMin: null, yearMax: null, mileageMax: null } };
     document.querySelectorAll(".pmx-qf").forEach(function (b) { b.classList.toggle("active", b.dataset.quick === "all"); });
+    document.querySelectorAll(".pmx-condtab").forEach(function (b) { b.classList.toggle("active", b.dataset.cond === "all"); });
     document.querySelectorAll('.pmx-sidebar input[type=checkbox]').forEach(function (i) { i.checked = false; });
     document.querySelectorAll('.pmx-sidebar input[type=number]').forEach(function (i) { i.value = ""; });
     $("#pmxSearch").value = ""; $("#pmxSort").value = "new";
@@ -164,6 +169,12 @@
   }
 
   function wire() {
+    document.querySelectorAll(".pmx-condtab").forEach(function (b) {
+      b.addEventListener("click", function () {
+        document.querySelectorAll(".pmx-condtab").forEach(function (x) { x.classList.remove("active"); });
+        b.classList.add("active"); state.condition = b.dataset.cond; state.page = 1; render();
+      });
+    });
     document.querySelectorAll(".pmx-qf").forEach(function (b) {
       b.addEventListener("click", function () {
         document.querySelectorAll(".pmx-qf").forEach(function (x) { x.classList.remove("active"); });
@@ -207,6 +218,10 @@
     if (url.get("filter")) {
       state.quick = url.get("filter");
       document.querySelectorAll(".pmx-qf").forEach(function (b) { b.classList.toggle("active", b.dataset.quick === state.quick); });
+    }
+    if (url.get("cond")) {
+      state.condition = url.get("cond");
+      document.querySelectorAll(".pmx-condtab").forEach(function (b) { b.classList.toggle("active", b.dataset.cond === state.condition); });
     }
     wire(); render();
   });

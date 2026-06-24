@@ -37,7 +37,7 @@ create table if not exists public.promax_inventory (
   id text primary key,
   created_at timestamptz default now(),
   year int, make text, model text, trim text,
-  body_type text, status text default 'available',
+  body_type text, status text default 'available', condition text default 'used',
   price numeric, msrp numeric, mileage int,
   fuel text, transmission text, drivetrain text, engine text,
   exterior_color text, interior_color text,
@@ -51,6 +51,8 @@ create table if not exists public.promax_inventory (
   reserved_at timestamptz, reserved_by_name text, reserved_by_email text, reserved_by_phone text,
   sold_at timestamptz
 );
+-- Si ya habías creado la tabla antes, añade la columna Nuevo/Usado (Used/New):
+alter table public.promax_inventory add column if not exists condition text default 'used';
 alter table public.promax_inventory enable row level security;
 create policy "promax_inv_public_read" on public.promax_inventory for select to anon using (true);
 create policy "promax_inv_admin_all"  on public.promax_inventory for all to authenticated using (true) with check (true);

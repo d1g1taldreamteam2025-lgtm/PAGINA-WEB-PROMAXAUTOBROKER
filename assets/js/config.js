@@ -65,7 +65,7 @@ window.PROMAX = {
 
     // Inventario EN VIVO desde Supabase (lo controla el panel admin). Si la tabla
     // está vacía o falla, la web usa /assets/data/inventory.json como respaldo.
-    inventorySource: "static",
+    inventorySource: "api",
     inventoryApiUrl: "https://db.ucallnow.fun/rest/v1/promax_inventory?select=*&status=eq.available&order=created_at.desc",
     inventoryApiKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0",
 
