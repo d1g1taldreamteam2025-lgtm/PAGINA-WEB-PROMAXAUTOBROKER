@@ -69,7 +69,7 @@ URLs completas:
 
 | Banco / Entidad | URL (limpia) |
 |---|---|
-| Ally | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223498/images_4_vcehja.jpg` |
+| Ally | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782333607/Sin-t%C3%ADtulo-1_0000_580b585b2edbce24c47b2c67d_rlbmda.png` |
 | Capital One | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782226041/images_1_1_kjzeck.png` |
 | Chase | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782237733/Chase-logo_pggeio.jpg` |
 | Wells Fargo | `https://res.cloudinary.com/drbc4wbvw/image/upload/v1782223586/png-clipart-wells-fargo-logo-banner-bank-logos_gmemml.png` |
