@@ -442,7 +442,7 @@ PMX.addTranslations({
       '<div class="pmx-vcard__body">'+
         '<h3 class="pmx-vcard__title">'+c.year+' '+c.make+' '+c.model+(c.trim?' '+c.trim:'')+'</h3>'+
         '<div class="pmx-vcard__specs"><span>'+num(c.mileage)+' mi</span><span>'+c.fuel+'</span><span>'+c.drivetrain+'</span></div>'+
-        '<div class="pmx-vcard__price">'+money(c.price)+'</div>'+
+        '<div class="pmx-vcard__price">'+(c.price>0?money(c.price):'Consultar precio')+'</div>'+
         '<div class="pmx-vcard__actions">'+
           '<a href="/vehicle/?id='+c.id+'" class="pmx-btn pmx-btn--primary">'+PMX.t("btn_details")+'</a>'+
           '<a href="/financing/apply/?vin='+c.id+'" class="pmx-btn pmx-btn--ghost">'+PMX.t("btn_prequal")+'</a>'+

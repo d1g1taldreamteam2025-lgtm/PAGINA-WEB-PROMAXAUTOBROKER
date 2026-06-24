@@ -114,7 +114,7 @@ PMX.addTranslations({
           (c.badge?'<span class="pmx-vd__badge">'+c.badge+'</span>':'')+
           '<h1>'+c.year+' '+c.make+' '+c.model+'</h1>'+
           '<div class="pmx-vd__stock">'+(c.trim?c.trim+' • ':'')+PMX.t("vd_stock")+' '+(c.stock||c.id)+'</div>'+
-          '<div class="pmx-vd__price">'+PMX.money(c.price)+'</div>'+
+          '<div class="pmx-vd__price">'+(c.price>0?PMX.money(c.price):'Consultar precio')+'</div>'+
           (save?'<div class="pmx-vd__msrp">'+PMX.money(c.msrp)+'</div>':'')+
           '<div class="pmx-vd__cta">'+
             '<a href="/financing/apply/?vin='+c.id+'" class="pmx-btn pmx-btn--primary pmx-btn--block">'+PMX.t("vd_prequal")+'</a>'+
@@ -151,7 +151,7 @@ PMX.addTranslations({
     return '<article class="pmx-vcard"><a href="/vehicle/?id='+c.id+'" style="text-decoration:none;color:inherit;display:contents">'+
       '<div class="pmx-vcard__img" style="background-image:url(\''+c.image+'\')"></div></a>'+
       '<div class="pmx-vcard__body"><h3 class="pmx-vcard__title">'+c.year+' '+c.make+' '+c.model+'</h3>'+
-      '<div class="pmx-vcard__price">'+PMX.money(c.price)+'</div>'+
+      '<div class="pmx-vcard__price">'+(c.price>0?PMX.money(c.price):'Consultar precio')+'</div>'+
       '<a href="/vehicle/?id='+c.id+'" class="pmx-btn pmx-btn--primary" style="margin-top:auto">'+PMX.t("btn_details")+'</a></div></article>';
   }
   PMX.addTranslations({es:{btn_details:"Ver Detalles"},en:{btn_details:"View Details"}});

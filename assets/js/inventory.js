@@ -49,8 +49,8 @@
 
   function applyAll() {
     var r = CARS.slice();
-    if (state.quick === "under-20k") r = r.filter(function (c) { return c.price < 20000; });
-    else if (state.quick === "under-10k") r = r.filter(function (c) { return c.price < 10000; });
+    if (state.quick === "under-20k") r = r.filter(function (c) { return c.price < 20000 && c.price > 0; });
+    else if (state.quick === "under-10k") r = r.filter(function (c) { return c.price < 10000 && c.price > 0; });
     else if (["suv", "sedan", "truck"].indexOf(state.quick) > -1) r = r.filter(function (c) { return c.bodyType === state.quick; });
     if (state.search) { var q = state.search.toLowerCase(); r = r.filter(function (c) { return (c.year + " " + c.make + " " + c.model + " " + c.trim).toLowerCase().indexOf(q) > -1; }); }
     var f = state.filters;
@@ -82,7 +82,7 @@
       '<div class="pmx-vcard__body">' +
         '<h3 class="pmx-vcard__title">' + c.year + ' ' + c.make + ' ' + c.model + (c.trim ? ' ' + c.trim : '') + '</h3>' +
         '<div class="pmx-vcard__specs"><span>' + PMX.num(c.mileage) + ' mi</span><span>' + c.fuel + '</span><span>' + c.drivetrain + '</span></div>' +
-        '<div class="pmx-vcard__price">' + PMX.money(c.price) + (save ? '<small>' + PMX.money(c.msrp) + '</small>' : '') + '</div>' +
+        '<div class="pmx-vcard__price">' + (c.price > 0 ? PMX.money(c.price) : 'Consultar precio') + (save ? '<small>' + PMX.money(c.msrp) + '</small>' : '') + '</div>' +
         '<div class="pmx-vcard__actions">' +
           '<a href="/vehicle/?id=' + c.id + '" class="pmx-btn pmx-btn--primary">' + PMX.t("btn_details") + '</a>' +
           '<a href="/financing/apply/?vin=' + c.id + '" class="pmx-btn pmx-btn--ghost">' + PMX.t("btn_prequal") + '</a>' +
