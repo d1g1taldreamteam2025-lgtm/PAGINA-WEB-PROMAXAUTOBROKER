@@ -112,9 +112,9 @@
 .pmx-orbit::before{content:"";display:block;padding-top:100%;}
 .pmx-orbit__glow{position:absolute;left:50%;top:50%;width:48%;height:48%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(167,2,0,.16),rgba(244,220,52,.07) 55%,transparent 72%);filter:blur(4px);pointer-events:none;}
 .pmx-orbit__circle{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:1.5px dashed rgba(13,15,18,.12);border-radius:50%;pointer-events:none;}
-.pmx-orbit__circle--out{width:80%;height:80%;}
-.pmx-orbit__circle--in{width:48%;height:48%;}
-.pmx-orbit__core{position:absolute;left:50%;top:50%;width:33%;height:26%;transform:translate(-50%,-50%);background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 20px 48px rgba(0,0,0,.14);display:flex;align-items:center;justify-content:center;padding:6%;z-index:4;}
+.pmx-orbit__circle--out{width:92%;height:92%;}
+.pmx-orbit__circle--in{width:64%;height:64%;}
+.pmx-orbit__core{position:absolute;left:50%;top:50%;width:48%;height:32%;transform:translate(-50%,-50%);background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 24px 56px rgba(0,0,0,.16);display:flex;align-items:center;justify-content:center;padding:4%;z-index:4;}
 .pmx-orbit__core img{max-width:100%;max-height:100%;object-fit:contain;}
 .pmx-orbit__badge{position:absolute;left:50%;top:50%;width:clamp(52px,12.8%,74px);height:clamp(52px,12.8%,74px);z-index:3;will-change:transform;}
 .pmx-orbit__badgein{width:100%;height:100%;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 12px 28px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;padding:7%;transition:box-shadow .25s,transform .25s;}
@@ -632,7 +632,7 @@ PMX.addTranslations({
   inner.forEach(function(b,i){ add(b, 'in', (360/inner.length)*i + 30); });
   var Aout = 0, Ain = 20;
   function layout(){
-    var R = stage.offsetWidth/2, Ro = R*0.80, Ri = R*0.48;
+    var R = stage.offsetWidth/2, Ro = R*0.92, Ri = R*0.64;
     for (var i=0;i<badges.length;i++){
       var bd = badges[i], a = bd.base + (bd.ring==='out'?Aout:Ain), r = bd.ring==='out'?Ro:Ri;
       bd.w.style.transform = 'translate(-50%,-50%) rotate('+a+'deg) translateY(-'+r+'px)';
