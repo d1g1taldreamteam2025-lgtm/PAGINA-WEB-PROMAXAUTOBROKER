@@ -1,7 +1,7 @@
 /* =====================================================================
-   PROMAX — DEMO Toyota: cargador de inventario de EJEMPLO.
-   Sobrescribe PMX.loadInventory para leer /demo/toyota.json (datos de
-   muestra) en lugar de Supabase. Reutiliza PMX.normalizeVehicle (data.js).
+   PROMAX — Cargador de inventario para la página /demo/.
+   Lee demo/toyota.json (inventario REAL exportado del listado del dealer)
+   en lugar de Supabase. Reutiliza PMX.normalizeVehicle (data.js).
    IMPORTANTE: cargar DESPUÉS de data.js y ANTES de inventory.js / del detalle.
    ===================================================================== */
 (function () {

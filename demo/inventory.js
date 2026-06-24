@@ -6,8 +6,8 @@
 
   PMX.addTranslations({
     es: {
-      inv_eyebrow: "Demo · Toyota", inv_title: "Inventario Toyota (demo)",
-      inv_sub: "Ejemplo de inventario en el diseño de Promax Auto Broker",
+      inv_eyebrow: "Vehículos disponibles", inv_title: "Encuentra tu vehículo ideal",
+      inv_sub: "Vehículos seleccionados, precios honestos, financiamiento flexible",
       inv_available: "Disponibles", inv_rating: "Calificación", inv_sold: "Vendidos",
       qf_all: "Todos", qf_20: "Bajo $20k", qf_10: "Bajo $10k", qf_suv: "SUVs", qf_sedan: "Sedanes", qf_truck: "Camionetas",
       inv_search_ph: "Buscar por marca, modelo, año...",
@@ -23,8 +23,8 @@
       body_suv: "SUV", body_sedan: "SEDÁN", body_truck: "CAMIONETA", body_coupe: "COUPÉ",
     },
     en: {
-      inv_eyebrow: "Demo · Toyota", inv_title: "Toyota inventory (demo)",
-      inv_sub: "Sample inventory shown in the Promax Auto Broker design",
+      inv_eyebrow: "Available vehicles", inv_title: "Find your perfect ride",
+      inv_sub: "Hand-picked vehicles, honest pricing, flexible financing",
       inv_available: "Available", inv_rating: "Rating", inv_sold: "Sold",
       qf_all: "All", qf_20: "Under $20k", qf_10: "Under $10k", qf_suv: "SUVs", qf_sedan: "Sedans", qf_truck: "Trucks",
       inv_search_ph: "Search by make, model, year...",
@@ -49,8 +49,8 @@
 
   function applyAll() {
     var r = CARS.slice();
-    if (state.quick === "under-20k") r = r.filter(function (c) { return c.price < 20000; });
-    else if (state.quick === "under-10k") r = r.filter(function (c) { return c.price < 10000; });
+    if (state.quick === "under-20k") r = r.filter(function (c) { return c.price < 20000 && c.price > 0; });
+    else if (state.quick === "under-10k") r = r.filter(function (c) { return c.price < 10000 && c.price > 0; });
     else if (["suv", "sedan", "truck"].indexOf(state.quick) > -1) r = r.filter(function (c) { return c.bodyType === state.quick; });
     if (state.search) { var q = state.search.toLowerCase(); r = r.filter(function (c) { return (c.year + " " + c.make + " " + c.model + " " + c.trim).toLowerCase().indexOf(q) > -1; }); }
     var f = state.filters;
@@ -82,7 +82,7 @@
       '<div class="pmx-vcard__body">' +
         '<h3 class="pmx-vcard__title">' + c.year + ' ' + c.make + ' ' + c.model + (c.trim ? ' ' + c.trim : '') + '</h3>' +
         '<div class="pmx-vcard__specs"><span>' + PMX.num(c.mileage) + ' mi</span><span>' + c.fuel + '</span><span>' + c.drivetrain + '</span></div>' +
-        '<div class="pmx-vcard__price">' + PMX.money(c.price) + (save ? '<small>' + PMX.money(c.msrp) + '</small>' : '') + '</div>' +
+        '<div class="pmx-vcard__price">' + (c.price > 0 ? PMX.money(c.price) : 'Consultar precio') + (save ? '<small>' + PMX.money(c.msrp) + '</small>' : '') + '</div>' +
         '<div class="pmx-vcard__actions">' +
           '<a href="/demo/vehicle/?id=' + c.id + '" class="pmx-btn pmx-btn--primary">' + PMX.t("btn_details") + '</a>' +
           '<a href="/financing/apply/?vin=' + c.id + '" class="pmx-btn pmx-btn--ghost">' + PMX.t("btn_prequal") + '</a>' +
