@@ -469,7 +469,7 @@ function openCloudinary(){
 }
 
 function renderPhotos(){
-  $('photosThumbs').innerHTML=photos.map((url,i)=>'<div class="photo-thumb" style="background-image:url('+JSON.stringify(url)+')">'+(i===0?'<span class="photo-cover">Portada</span>':'')+'<button type="button" class="photo-thumb-x" onclick="removePhoto('+i+')">×</button></div>').join('');
+  $('photosThumbs').innerHTML=photos.map((url,i)=>'<div class="photo-thumb" style="background-image:url(&quot;'+String(url).replace(/"/g,'%22')+'&quot;)">'+(i===0?'<span class="photo-cover">Portada</span>':'')+'<button type="button" class="photo-thumb-x" onclick="removePhoto('+i+')">×</button></div>').join('');
 }
 function removePhoto(i){photos.splice(i,1);renderPhotos();}
 
