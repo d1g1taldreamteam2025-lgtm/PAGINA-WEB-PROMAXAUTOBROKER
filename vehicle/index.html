@@ -34,8 +34,14 @@
 .pmx-vd__top{display:grid;grid-template-columns:1.3fr 1fr;gap:36px;}
 @media(max-width:900px){.pmx-vd__top{grid-template-columns:1fr;gap:24px;}}
 .pmx-vd__main{border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:#fff;}
-.pmx-vd__hero{height:380px;background-size:cover;background-position:center;background-color:#e8edf2;}
-@media(max-width:600px){.pmx-vd__hero{height:240px;}}
+.pmx-vd__herowrap{position:relative;}
+.pmx-vd__hero{height:420px;background-size:contain;background-repeat:no-repeat;background-position:center;background-color:#eef2f6;}
+@media(max-width:600px){.pmx-vd__hero{height:260px;}}
+.pmx-vd__nav{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;border:none;background:rgba(17,24,39,.5);color:#fff;font:700 30px/1 system-ui,Arial;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3;padding-bottom:4px;transition:background .15s;}
+.pmx-vd__nav:hover{background:rgba(17,24,39,.8);}
+.pmx-vd__nav--prev{left:12px;}
+.pmx-vd__nav--next{right:12px;}
+@media(max-width:600px){.pmx-vd__nav{width:38px;height:38px;font-size:24px;}}
 .pmx-vd__thumbs{display:flex;gap:8px;padding:12px;flex-wrap:wrap;}
 .pmx-vd__thumb{width:84px;height:60px;border-radius:6px;background-size:cover;background-position:center;cursor:pointer;border:2px solid transparent;}
 .pmx-vd__thumb.active{border-color:var(--brand);}
@@ -106,7 +112,10 @@ PMX.addTranslations({
       '<div class="pmx-vd__top">'+
         '<div>'+
           '<div class="pmx-vd__main">'+
-            '<div class="pmx-vd__hero" id="pmxHero" style="background-image:url(\''+gallery[0]+'\')"></div>'+
+            '<div class="pmx-vd__herowrap">'+
+              '<div class="pmx-vd__hero" id="pmxHero" style="background-image:url(\''+gallery[0]+'\')"></div>'+
+              (gallery.length>1?'<button class="pmx-vd__nav pmx-vd__nav--prev" id="pmxPrev" type="button" aria-label="Foto anterior">‹</button><button class="pmx-vd__nav pmx-vd__nav--next" id="pmxNext" type="button" aria-label="Foto siguiente">›</button>':'')+
+            '</div>'+
             (gallery.length>1?'<div class="pmx-vd__thumbs">'+gallery.map(function(g,i){return '<div class="pmx-vd__thumb '+(i===0?'active':'')+'" data-img="'+g+'" style="background-image:url(\''+g+'\')"></div>';}).join("")+'</div>':'')+
           '</div>'+
         '</div>'+
@@ -139,13 +148,13 @@ PMX.addTranslations({
       '</div>'+
       (similar.length?'<div style="margin-top:56px"><h2 style="font-size:24px;margin-bottom:20px">'+PMX.t("vd_similar")+'</h2><div class="pmx-vgrid">'+similar.map(simCard).join("")+'</div></div>':'');
 
-    document.querySelectorAll(".pmx-vd__thumb").forEach(function(t){
-      t.addEventListener("click",function(){
-        document.getElementById("pmxHero").style.backgroundImage="url('"+t.dataset.img+"')";
-        document.querySelectorAll(".pmx-vd__thumb").forEach(function(x){x.classList.remove("active");});
-        t.classList.add("active");
-      });
-    });
+    var pmxIdx=0, pmxHero=document.getElementById("pmxHero"), pmxThumbs=document.querySelectorAll(".pmx-vd__thumb");
+    function pmxShow(i){ pmxIdx=(i+gallery.length)%gallery.length; pmxHero.style.backgroundImage="url('"+gallery[pmxIdx]+"')"; pmxThumbs.forEach(function(x,k){x.classList.toggle("active",k===pmxIdx);}); }
+    pmxThumbs.forEach(function(t,k){ t.addEventListener("click",function(){pmxShow(k);}); });
+    var pmxPrev=document.getElementById("pmxPrev"), pmxNext=document.getElementById("pmxNext");
+    if(pmxPrev) pmxPrev.addEventListener("click",function(){pmxShow(pmxIdx-1);});
+    if(pmxNext) pmxNext.addEventListener("click",function(){pmxShow(pmxIdx+1);});
+    document.addEventListener("keydown",function(e){ if(e.key==="ArrowLeft"){pmxShow(pmxIdx-1);} else if(e.key==="ArrowRight"){pmxShow(pmxIdx+1);} });
   }
   function simCard(c){
     return '<article class="pmx-vcard"><a href="/vehicle/?id='+c.id+'" style="text-decoration:none;color:inherit;display:contents">'+
