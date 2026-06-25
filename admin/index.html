@@ -324,6 +324,18 @@ tbody tr.is-sel{background:rgba(239,68,68,.10);}
   </div>
 </div>
 
+<div class="modal" id="batchModal">
+  <div class="modal-box" style="max-width:600px">
+    <div class="modal-head"><h2>📦 Importar lote</h2><button class="modal-close" onclick="closeBatchModal()">×</button></div>
+    <div class="modal-body">
+      <p style="color:var(--subtle);line-height:1.6;margin-bottom:10px">Pega aquí (Ctrl+V) el JSON que copiaste con <b>📦 LOTE</b> (una página) o <b>🚀 LOTE TODO</b> (todo el inventario). Aguanta listas grandes.</p>
+      <textarea id="batchText" rows="8" placeholder="Pega el JSON aquí..." style="width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font-family:monospace;font-size:12px;resize:vertical;box-sizing:border-box"></textarea>
+      <div id="batchInfo" style="margin-top:10px;font-weight:600;color:var(--subtle)">Pega el JSON copiado con 📦 LOTE o 🚀 LOTE TODO.</div>
+    </div>
+    <div class="modal-foot"><button class="btn btn--ghost" onclick="closeBatchModal()">Cancelar</button><button class="btn btn--primary" id="batchImportBtn" onclick="doImportBatch()" disabled>Importar</button></div>
+  </div>
+</div>
+
 <!-- BOOKMARKLET MODAL -->
 <div class="modal" id="bookmarkletModal">
   <div class="modal-box">
@@ -758,26 +770,51 @@ async function bulkImportReal(){
   }
 }
 
+function batchCount(text){
+  try{ var a=JSON.parse(text); if(!Array.isArray(a))a=[a]; return a.filter(function(x){return x&&(x.make||x.model||x.vin);}).length; }catch(e){ return -1; }
+}
+function updateBatchInfo(){
+  var t=($('batchText').value||'').trim(), info=$('batchInfo'), btn=$('batchImportBtn');
+  if(!t){ info.textContent='Pega el JSON copiado con 📦 LOTE o 🚀 LOTE TODO.'; info.style.color='var(--subtle)'; btn.disabled=true; btn.textContent='Importar'; return; }
+  var n=batchCount(t);
+  if(n<0){ info.textContent='⏳ El texto aún no es un JSON completo (revisa que copiaste todo).'; info.style.color='#f59e0b'; btn.disabled=true; btn.textContent='Importar'; return; }
+  if(n===0){ info.textContent='No encontré carros en ese texto.'; info.style.color='#ef4444'; btn.disabled=true; btn.textContent='Importar'; return; }
+  info.textContent='✅ '+n+' carro'+(n===1?'':'s')+' detectado'+(n===1?'':'s')+'.'; info.style.color='var(--green)'; btn.disabled=false; btn.textContent='Importar '+n;
+}
 async function importBatch(){
+  $('batchText').value=''; updateBatchInfo();
+  $('batchModal').classList.add('is-open');
+  setTimeout(function(){ try{$('batchText').focus();}catch(e){} },50);
+  if(navigator.clipboard&&navigator.clipboard.readText){
+    try{ var t=await navigator.clipboard.readText(); if(t&&t.trim().charAt(0)==='['){ $('batchText').value=t; updateBatchInfo(); } }catch(e){}
+  }
+}
+function closeBatchModal(){ $('batchModal').classList.remove('is-open'); }
+async function doImportBatch(){
+  var btn=$('batchImportBtn');
   try{
-    var text='';
-    if(navigator.clipboard&&navigator.clipboard.readText){try{text=await navigator.clipboard.readText();}catch(e){text=prompt('Pega aquí el JSON del lote:')||'';}}
-    else{text=prompt('Pega aquí el JSON del lote:')||'';}
+    var text=($('batchText').value||'').trim();
     if(!text)return;
     var arr=JSON.parse(text);
     if(!Array.isArray(arr))arr=[arr];
     arr=arr.filter(function(x){return x&&(x.make||x.model||x.vin);});
-    if(!arr.length){alert('No encontré carros en ese JSON. Copia primero con el bookmarklet "📦 Extract LOTE Promax".');return;}
-    if(!confirm('Vas a importar/actualizar '+arr.length+' carros en el panel.\n\nNo se borra nada (actualiza por id). ¿Continuar?'))return;
+    if(!arr.length){alert('No encontré carros en ese JSON. Copia primero con 📦 LOTE o 🚀 LOTE TODO.');return;}
+    btn.disabled=true;
     var mapped=arr.map(mapJsonToDb);
-    var {error}=await sb.from(TABLE).upsert(mapped,{onConflict:'id'});
-    if(error)throw error;
+    for(var i=0;i<mapped.length;i+=100){
+      var chunk=mapped.slice(i,i+100);
+      var { error }=await sb.from(TABLE).upsert(chunk,{onConflict:'id'});
+      if(error)throw error;
+      btn.textContent='Importando... '+Math.min(i+100,mapped.length)+'/'+mapped.length;
+    }
+    closeBatchModal();
     alert('✅ '+mapped.length+' carros importados/actualizados en el panel.');
     loadInventory();
   }catch(e){
     var m=e.message||String(e);
     if(/condition/i.test(m)&&/column|does not exist|schema|find/i.test(m)){m='Falta crear la columna "condition" en Supabase. Corre esta línea en el SQL Editor y reintenta:\n\nalter table public.promax_inventory add column if not exists condition text default \'used\';';}
     alert('Error: '+m);
+    if(btn){btn.disabled=false;btn.textContent='Importar';}
   }
 }
 
@@ -817,6 +854,7 @@ $('bmPass').addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.pre
 ['searchBox','filterStatus','filterBody','filterCond'].forEach(id=>{$(id).addEventListener('input',renderTable);$(id).addEventListener('change',renderTable);});
 if($('checkAll'))$('checkAll').addEventListener('change',toggleSelectAll);
 $('tableBody').addEventListener('change',onRowCheck);
+if($('batchText'))$('batchText').addEventListener('input',updateBatchInfo);
 
 $('tableBody').addEventListener('click', function(e){
   const btn = e.target.closest('[data-action]');
