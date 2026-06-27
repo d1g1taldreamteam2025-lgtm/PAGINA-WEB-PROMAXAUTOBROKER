@@ -454,9 +454,10 @@ PMX.addTranslations({
     if (feat.length < 3) feat = cars.slice(0, 3);
     else feat = feat.slice(0, 3);
     var host = document.getElementById("pmxFeatured");
-    host.innerHTML = feat.length ? feat.map(card).join("") : '<p style="grid-column:1/-1;text-align:center;color:#888">—</p>';
+    if (!feat.length) { var sec = document.querySelector(".pmx-featured"); if (sec) sec.style.display = "none"; return; }
+    host.innerHTML = feat.map(card).join("");
     // Anima en cascada las tarjetas recién inyectadas (entra/sale con el scroll)
-    if (window.PMXAnim && feat.length) PMXAnim.cards("#pmxFeatured");
+    if (window.PMXAnim) PMXAnim.cards("#pmxFeatured");
   });
 })();
 

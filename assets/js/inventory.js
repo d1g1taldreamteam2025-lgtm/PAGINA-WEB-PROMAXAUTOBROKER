@@ -20,6 +20,7 @@
       ph_min: "Mín", ph_max: "Máx", ph_from: "Desde", ph_to: "Hasta", ph_maxmi: "Millas máx",
       inv_match: "vehículos", inv_help: "¿Necesitas ayuda? Escríbenos",
       inv_empty_t: "Sin resultados", inv_empty_s: "Ajusta los filtros o explora todo el inventario", inv_reset: "Reiniciar",
+      inv_none_t: "Inventario en actualización", inv_none_s: "Estamos cargando nuevos vehículos. Vuelve pronto o escríbenos y te ayudamos a encontrar tu carro.", inv_none_cta: "Contáctanos",
       inv_err_t: "No se pudo cargar el inventario", inv_err_s: "Recarga la página o intenta más tarde.",
       btn_details: "Ver Detalles", btn_prequal: "Pre-Calificar", prev: "Anterior", next: "Siguiente",
       body_suv: "SUV", body_sedan: "SEDÁN", body_truck: "CAMIONETA", body_coupe: "COUPÉ",
@@ -39,6 +40,7 @@
       ph_min: "Min", ph_max: "Max", ph_from: "From", ph_to: "To", ph_maxmi: "Max miles",
       inv_match: "vehicles", inv_help: "Need help? Contact us",
       inv_empty_t: "No results", inv_empty_s: "Adjust filters or browse all inventory", inv_reset: "Reset",
+      inv_none_t: "Inventory updating", inv_none_s: "We're loading new vehicles. Check back soon or contact us and we'll help you find your car.", inv_none_cta: "Contact Us",
       inv_err_t: "Unable to load inventory", inv_err_s: "Refresh the page or try later.",
       btn_details: "View Details", btn_prequal: "Pre-Qualify", prev: "Prev", next: "Next",
       body_suv: "SUV", body_sedan: "SEDAN", body_truck: "TRUCK", body_coupe: "COUPE",
@@ -214,7 +216,13 @@
 
   PMX.loadInventory().then(function (cars) {
     CARS = cars;
-    if (!CARS.length) { $("#pmxGrid").innerHTML = '<div class="pmx-empty"><h3>' + PMX.t("inv_err_t") + '</h3><p>' + PMX.t("inv_err_s") + '</p></div>'; return; }
+    if (!CARS.length) {
+      $("#pmxGrid").innerHTML = '<div class="pmx-empty"><h3>' + PMX.t("inv_none_t") + '</h3><p>' + PMX.t("inv_none_s") + '</p><a class="pmx-btn pmx-btn--primary" href="/contact/">' + PMX.t("inv_none_cta") + '</a></div>';
+      [".pmx-toolbar", ".pmx-results__bar", "#pmxSidebar"].forEach(function (s) { var el = document.querySelector(s); if (el) el.style.display = "none"; });
+      var main = document.querySelector(".pmx-invmain"); if (main) main.style.display = "block";
+      var stat = $("#pmxStatCount"); if (stat) stat.textContent = "0";
+      return;
+    }
     buildFilters();
     var url = new URLSearchParams(location.search);
     if (url.get("filter")) {
