@@ -306,7 +306,7 @@
       var email = (input.value || "").trim();
       if (!email) return;
       btn.textContent = t("foot_subscribing");
-      submitLead({ form_type: "newsletter", email: email }).finally(function () {
+      submitLead({ form_type: "newsletter", email: email, message: "📧 Nueva suscripción al boletín (ofertas y nuevas llegadas)" }).finally(function () {
         btn.textContent = t("foot_subscribed");
         input.value = "";
       });
