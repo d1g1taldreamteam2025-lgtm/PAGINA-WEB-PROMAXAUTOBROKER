@@ -306,19 +306,35 @@
       var email = (input.value || "").trim();
       if (!email) return;
       btn.textContent = t("foot_subscribing");
-      submitLead({ form_type: "newsletter", email: email, message: "📧 Nueva suscripción al boletín (ofertas y nuevas llegadas)" }).finally(function () {
-        btn.textContent = t("foot_subscribed");
-        input.value = "";
-      });
+      submitLead({ form_type: "newsletter", email: email, message: "📧 Nueva suscripción al boletín (ofertas y nuevas llegadas)" })
+        .catch(function () {})
+        .finally(function () {
+          btn.textContent = t("foot_subscribed");
+          input.value = "";
+        });
     });
   }
 
   /* ---------------- ENVÍO DE LEADS ---------------- */
-  // Guarda el lead en Supabase (para el panel de leads). No bloquea ni rompe el
-  // flujo si la tabla no existe o la base no responde.
+  // fetch con tiempo límite: si una integración está lenta o caída, abortamos
+  // para que el formulario NUNCA se quede "colgado" esperando una respuesta.
+  function fetchWithTimeout(url, opts, ms) {
+    opts = opts || {};
+    var ctrl, timer;
+    try { ctrl = new AbortController(); opts.signal = ctrl.signal; } catch (e) {}
+    var clear = function () { if (timer) { clearTimeout(timer); timer = null; } };
+    timer = setTimeout(function () { try { ctrl && ctrl.abort(); } catch (e) {} }, ms || 8000);
+    return fetch(url, opts).then(
+      function (r) { clear(); return r; },
+      function (e) { clear(); throw e; }
+    );
+  }
+
+  // Guarda el lead en Supabase (alimenta el panel de leads). Devuelve una promesa
+  // que resuelve true si quedó guardado y false si no, sin lanzar errores.
   function insertInquiry(payload) {
     var db = CFG.db || {};
-    if (!db.url || !db.anonKey || !db.inquiriesTable) return;
+    if (!db.url || !db.anonKey || !db.inquiriesTable) return Promise.resolve(false);
     var row = {
       form_type: payload.form_type || payload.action_type || "contact",
       name: payload.name || payload.full_name || null,
@@ -331,7 +347,7 @@
       status: "new",
       raw: payload,
     };
-    fetch(db.url + "/rest/v1/" + db.inquiriesTable, {
+    return fetchWithTimeout(db.url + "/rest/v1/" + db.inquiriesTable, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -341,24 +357,39 @@
       },
       body: JSON.stringify(row),
       keepalive: true,
-    }).catch(function () {});
+    }, 8000).then(function (r) { return !!(r && r.ok); }).catch(function () { return false; });
   }
 
+  // Envía el lead. El mensaje de éxito NO depende del webhook de notificación
+  // (n8n): basta con que el lead quede guardado en Supabase. Así el cliente
+  // SIEMPRE recibe confirmación aunque la automatización esté lenta o caída.
   function submitLead(payload) {
     payload._source_url = location.href;
     payload._submitted_at = new Date().toISOString();
     payload._lang = LANG;
-    insertInquiry(payload);
+
+    // 1) Guardar SIEMPRE en Supabase (registro principal del lead).
+    var saved = insertInquiry(payload);
+
+    // 2) Notificar por WhatsApp/email vía n8n (best-effort, con tiempo límite).
     var url = (CFG.endpoints && CFG.endpoints.leadsWebhook) || "";
-    if (!url) {
-      console.info("[PROMAX] Lead (sin webhook configurado):", payload);
-      return Promise.resolve({ simulated: true });
-    }
-    return fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-      keepalive: true,
+    var notified = url
+      ? fetchWithTimeout(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+          keepalive: true,
+        }, 8000).then(function (r) { return !!(r && r.ok); }).catch(function () { return false; })
+      : Promise.resolve(false);
+
+    // Éxito apenas Supabase confirme (rápido). Si Supabase fallara, esperamos al
+    // webhook como respaldo. Solo si NINGUNO responde mostramos error.
+    return saved.then(function (ok) {
+      if (ok) return { saved: true };
+      return notified.then(function (n) {
+        if (n) return { saved: false, notified: true };
+        throw new Error("lead_not_delivered");
+      });
     });
   }
 

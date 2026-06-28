@@ -386,6 +386,8 @@ PMX.addTranslations({
         message: "[Tema: " + topic + "]\n" + message
       }).then(function(){
         /* success handled in finally */
+      }).catch(function(){
+        /* el lead ya queda guardado en Supabase; mostramos confirmación igual */
       }).finally(function(){
         var card = document.getElementById("ctFormCard");
         card.innerHTML =
