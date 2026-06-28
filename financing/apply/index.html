@@ -240,6 +240,11 @@ PMX.addTranslations({
     promoIv = setInterval(ptick, 43); ptick();
   } else if (cameFromPromo && claim) {
     promoState = "expired";
+  } else {
+    // Entrada normal (sin clic en el botón 15% OFF): nunca mostrar el banner y
+    // olvidar cualquier reclamo viejo que haya quedado guardado en el navegador.
+    try { localStorage.removeItem("pmx_promo_claim"); } catch (e) {}
+    if (promoBar) promoBar.hidden = true;
   }
 
   var form = document.getElementById("pmxApply");
