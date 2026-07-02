@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inventario | Promax Auto Broker</title>
-<meta name="description" content="Explora el inventario de Promax Auto Broker. Filtra por marca, precio, año y más. Vehículos inspeccionados con financiamiento flexible.">
+<title>Catálogo | Promax Auto Broker</title>
+<meta name="description" content="Explora el catálogo de Promax Auto Broker: carros, camiones y maquinaria, vanes, motos, UTV y motos de agua. Filtra por categoría, marca, precio y año. Financiamiento flexible.">
 <!-- Open Graph / Twitter (vista previa al compartir en WhatsApp, redes) -->
 <link rel="canonical" href="https://promaxautobroker.com/inventory/">
 <meta property="og:type" content="website">
@@ -23,7 +23,7 @@
 <meta name="twitter:image" content="https://res.cloudinary.com/drbc4wbvw/image/upload/c_pad,w_1200,h_630,b_rgb:0a0a0a,f_auto,q_auto/v1782163987/Logos-05_cqy7tj.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/theme.css">
 <link rel="icon" type="image/png" href="https://res.cloudinary.com/drbc4wbvw/image/upload/e_trim,c_pad,w_256,h_256,b_transparent/v1781816671/Logos_wbzal9.png">
@@ -62,8 +62,13 @@
 .pmx-sidebar__head h3{margin:0;font-size:17px;display:inline-flex;gap:8px;align-items:center;}
 .pmx-sidebar__close{display:none;background:none;border:0;cursor:pointer;}
 .pmx-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
-.pmx-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:var(--brand-soft);color:var(--brand-dark);border:1px solid rgba(167,2,0,.3);border-radius:999px;font-size:12px;font-weight:600;cursor:pointer;}
-.pmx-chip:hover{background:var(--brand);color:#fff;}
+/* Chips de filtros ACTIVOS del sidebar (con ✕) — no confundir con los chips de categoría */
+#pmxChips .pmx-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:var(--brand-soft);color:var(--brand-dark);border:1px solid rgba(194,26,18,.3);border-radius:999px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-body);}
+#pmxChips .pmx-chip:hover{background:var(--brand);color:#fff;}
+/* Barra de categorías (Todo + Carros, Camiones, Vanes, Motos, UTV, Motos de agua) */
+.pmx-catbar{display:flex;gap:9px;flex-wrap:nowrap;overflow-x:auto;padding:2px 2px 8px;margin-bottom:14px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.pmx-catbar::-webkit-scrollbar{display:none;}
+@media(min-width:981px){.pmx-catbar{flex-wrap:wrap;overflow:visible;justify-content:center;}}
 .pmx-clear{display:none;align-items:center;justify-content:center;gap:6px;width:100%;background:none;border:1px solid var(--line);color:var(--ink);padding:8px;border-radius:8px;font:600 13px var(--font-body);cursor:pointer;margin-bottom:14px;}
 .pmx-clear:hover{background:var(--ink);color:#fff;}
 .pmx-fg{border-bottom:1px solid var(--line-soft);padding:14px 0;}
@@ -119,6 +124,7 @@
 
 <div class="pmx-toolbar">
   <div class="pmx-toolbar__in">
+    <div class="pmx-catbar" id="pmxCats" role="tablist" aria-label="Categorías"></div>
     <div class="pmx-condtabs" id="pmxCondTabs">
       <button class="pmx-condtab active" data-cond="all" data-i18n="cond_all">Todos</button>
       <button class="pmx-condtab" data-cond="used" data-i18n="cond_used">Usados</button>

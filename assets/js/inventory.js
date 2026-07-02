@@ -24,6 +24,9 @@
       inv_err_t: "No se pudo cargar el inventario", inv_err_s: "Recarga la página o intenta más tarde.",
       btn_details: "Ver Detalles", btn_prequal: "Pre-Calificar", prev: "Anterior", next: "Siguiente",
       body_suv: "SUV", body_sedan: "SEDÁN", body_truck: "CAMIONETA", body_coupe: "COUPÉ",
+      cats_all: "Todo", inv_empty_cat_t: "Próximamente",
+      inv_empty_cat_s: "Aún no hay {cat} publicados. Escríbenos y te conseguimos el tuyo.",
+      inv_ask_cta: "Pregúntanos por WhatsApp",
     },
     en: {
       inv_eyebrow: "Available vehicles", inv_title: "Find your perfect ride",
@@ -44,17 +47,21 @@
       inv_err_t: "Unable to load inventory", inv_err_s: "Refresh the page or try later.",
       btn_details: "View Details", btn_prequal: "Pre-Qualify", prev: "Prev", next: "Next",
       body_suv: "SUV", body_sedan: "SEDAN", body_truck: "TRUCK", body_coupe: "COUPE",
+      cats_all: "All", inv_empty_cat_t: "Coming soon",
+      inv_empty_cat_s: "No {cat} published yet. Message us and we'll find yours.",
+      inv_ask_cta: "Ask us on WhatsApp",
     },
   });
 
   var PER = 9, CARS = [], $ = function (s, r) { return (r || document).querySelector(s); };
-  var state = { quick: "all", condition: "all", search: "", sort: "new", page: 1,
+  var state = { category: "all", quick: "all", condition: "all", search: "", sort: "new", page: 1,
     filters: { make: [], body: [], priceMin: null, priceMax: null, yearMin: null, yearMax: null, mileageMax: null } };
 
   function bodyLabel(b) { return PMX.t("body_" + b) || b.toUpperCase(); }
 
   function applyAll() {
     var r = CARS.slice();
+    if (state.category !== "all") r = r.filter(function (c) { return c.category === state.category; });
     if (state.condition === "new") r = r.filter(function (c) { return c.condition === "new"; });
     else if (state.condition === "used") r = r.filter(function (c) { return c.condition !== "new"; });
     if (state.quick === "under-20k") r = r.filter(function (c) { return c.price < 20000 && c.price > 0; });
@@ -81,21 +88,55 @@
 
   function card(c) {
     var save = c.msrp && c.msrp > c.price ? c.msrp - c.price : 0;
+    // Etiqueta superior: para carros la carrocería; para otras categorías, la categoría.
+    var typeLabel = (c.category && c.category !== "cars") ? PMX.catLabel(c.category) : bodyLabel(c.bodyType);
+    // Specs: solo los datos que existan (motos de agua no llevan millaje/tracción).
+    var specs = [];
+    if (c.mileage > 0) specs.push(PMX.num(c.mileage) + " mi");
+    if (c.fuel) specs.push(c.fuel);
+    if (c.drivetrain) specs.push(c.drivetrain);
     return '<article class="pmx-vcard">' +
       '<a href="/vehicle/?id=' + c.id + '" style="text-decoration:none;color:inherit;display:contents">' +
       '<div class="pmx-vcard__img" style="background-image:url(\'' + c.image + '\')">' +
         (c.badge ? '<span class="pmx-vcard__badge">' + c.badge + '</span>' : '') +
-        '<span class="pmx-vcard__type">' + bodyLabel(c.bodyType) + '</span>' +
+        '<span class="pmx-vcard__type">' + typeLabel + '</span>' +
+        '<button class="pmx-vcard__share" type="button" data-share-id="' + c.id + '" aria-label="' + PMX.t("act_share") + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>' +
       '</div></a>' +
       '<div class="pmx-vcard__body">' +
         '<h3 class="pmx-vcard__title">' + c.year + ' ' + c.make + ' ' + c.model + (c.trim ? ' ' + c.trim : '') + '</h3>' +
-        '<div class="pmx-vcard__specs"><span>' + PMX.num(c.mileage) + ' mi</span><span>' + c.fuel + '</span><span>' + c.drivetrain + '</span></div>' +
+        (specs.length ? '<div class="pmx-vcard__specs">' + specs.map(function (s) { return "<span>" + s + "</span>"; }).join("") + '</div>' : '') +
         '<div class="pmx-vcard__price">' + (c.price > 0 ? PMX.money(c.price) : 'Consultar precio') + (save ? '<small>' + PMX.money(c.msrp) + '</small>' : '') + '</div>' +
         '<div class="pmx-vcard__actions">' +
           '<a href="/vehicle/?id=' + c.id + '" class="pmx-btn pmx-btn--primary">' + PMX.t("btn_details") + '</a>' +
           '<a href="/financing/apply/?vin=' + c.id + '" class="pmx-btn pmx-btn--ghost">' + PMX.t("btn_prequal") + '</a>' +
         '</div>' +
       '</div></article>';
+  }
+
+  /* ----- Chips de categoría (Todo + las 6 de config.js) ----- */
+  function renderCats() {
+    var host = $("#pmxCats"); if (!host) return;
+    var counts = {};
+    CARS.forEach(function (c) { counts[c.category] = (counts[c.category] || 0) + 1; });
+    var chips = [{ slug: "all", icon: "", label: PMX.t("cats_all"), n: CARS.length }].concat(
+      (PMX.categories ? PMX.categories() : []).map(function (c) {
+        return { slug: c.slug, icon: c.icon + " ", label: PMX.catLabel(c.slug), n: counts[c.slug] || 0 };
+      })
+    );
+    host.innerHTML = chips.map(function (c) {
+      return '<button type="button" class="pmx-chip' + (state.category === c.slug ? " active" : "") + '" data-cat="' + c.slug + '">' +
+        c.icon + c.label + ' <span class="pmx-chip__n">' + c.n + '</span></button>';
+    }).join("");
+  }
+  function setCategory(slug) {
+    state.category = slug; state.page = 1;
+    renderCats(); render();
+    // Refleja la categoría en la URL (para compartir el filtro)
+    try {
+      var u = new URL(location.href);
+      if (slug === "all") u.searchParams.delete("cat"); else u.searchParams.set("cat", slug);
+      history.replaceState(null, "", u.pathname + (u.search || ""));
+    } catch (e) {}
   }
 
   function renderChips() {
@@ -128,14 +169,25 @@
     host.innerHTML = h;
   }
 
+  function emptyBlock() {
+    // Vacío por categoría: mensaje amigable + CTA de WhatsApp; vacío por filtros: reset.
+    if (state.category !== "all") {
+      var wa = (PMX.cfg && PMX.cfg.contact && PMX.cfg.contact.whatsapp) || "";
+      var label = PMX.catLabel(state.category).toLowerCase();
+      return '<div class="pmx-empty"><h3>' + PMX.t("inv_empty_cat_t") + '</h3>' +
+        '<p>' + PMX.t("inv_empty_cat_s").replace("{cat}", label) + '</p>' +
+        '<a class="pmx-btn pmx-btn--wa" target="_blank" rel="noopener" href="https://wa.me/' + wa + '?text=' + encodeURIComponent(PMX.t("inv_empty_cat_s").replace("{cat}", label)) + '">' + PMX.t("inv_ask_cta") + '</a></div>';
+    }
+    return '<div class="pmx-empty"><h3>' + PMX.t("inv_empty_t") + '</h3><p>' + PMX.t("inv_empty_s") + '</p><button class="pmx-btn pmx-btn--primary" id="pmxReset">' + PMX.t("inv_reset") + '</button></div>';
+  }
+
   function render() {
     var filtered = applyAll(), total = filtered.length;
     var start = (state.page - 1) * PER, paged = filtered.slice(start, start + PER);
     $("#pmxCount").textContent = total;
     $("#pmxStatCount").textContent = CARS.length;
     var grid = $("#pmxGrid");
-    grid.innerHTML = total ? paged.map(card).join("")
-      : '<div class="pmx-empty"><h3>' + PMX.t("inv_empty_t") + '</h3><p>' + PMX.t("inv_empty_s") + '</p><button class="pmx-btn pmx-btn--primary" id="pmxReset">' + PMX.t("inv_reset") + '</button></div>';
+    grid.innerHTML = total ? paged.map(card).join("") : emptyBlock();
     var rb = $("#pmxReset"); if (rb) rb.addEventListener("click", reset);
     renderChips(); renderPagination(total);
     if (window.PMX && PMX.reveal) PMX.reveal(grid);
@@ -212,6 +264,28 @@
     $("#pmxFilterBtn").addEventListener("click", function () { sb.classList.add("open"); ov.classList.add("open"); document.body.style.overflow = "hidden"; });
     function close() { sb.classList.remove("open"); ov.classList.remove("open"); document.body.style.overflow = ""; }
     $("#pmxSidebarClose").addEventListener("click", close); ov.addEventListener("click", close);
+
+    // Chips de categoría
+    var cats = $("#pmxCats");
+    if (cats) cats.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-cat]"); if (!b) return;
+      setCategory(b.dataset.cat);
+    });
+
+    // Compartir desde la tarjeta (el botón vive dentro del enlace: frenamos la navegación)
+    $("#pmxGrid").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-share-id]"); if (!b) return;
+      e.preventDefault(); e.stopPropagation();
+      var id = b.getAttribute("data-share-id");
+      var c = CARS.filter(function (x) { return String(x.id) === String(id); })[0];
+      if (!c || !PMX.share) return;
+      var title = [c.year, c.make, c.model, c.trim].filter(Boolean).join(" ") + (c.price > 0 ? " · " + PMX.money(c.price) : "");
+      var base = (PMX.cfg && PMX.cfg.siteUrl) || location.origin;
+      PMX.share({ title: title, url: base + "/vehicle/?id=" + encodeURIComponent(c.id) });
+    });
+
+    // Al cambiar idioma, re-pinta chips y tarjetas con las etiquetas traducidas
+    window.addEventListener("pmx-lang", function () { renderCats(); render(); });
   }
 
   PMX.loadInventory().then(function (cars) {
@@ -225,6 +299,11 @@
     }
     buildFilters();
     var url = new URLSearchParams(location.search);
+    // Categoría desde la URL (?cat=cars|trucks_machinery|vans|motorcycles|utv|watercraft)
+    var cat = url.get("cat");
+    if (cat && (PMX.categories ? PMX.categories() : []).some(function (c) { return c.slug === cat; })) {
+      state.category = cat;
+    }
     if (url.get("filter")) {
       state.quick = url.get("filter");
       document.querySelectorAll(".pmx-qf").forEach(function (b) { b.classList.toggle("active", b.dataset.quick === state.quick); });
@@ -233,6 +312,6 @@
       state.condition = url.get("cond");
       document.querySelectorAll(".pmx-condtab").forEach(function (b) { b.classList.toggle("active", b.dataset.cond === state.condition); });
     }
-    wire(); render();
+    wire(); renderCats(); render();
   });
 })();

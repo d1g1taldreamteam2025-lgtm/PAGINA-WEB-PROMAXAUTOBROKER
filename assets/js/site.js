@@ -114,6 +114,33 @@
     },
   });
 
+  /* ---------------- CATEGORÍAS DEL CATÁLOGO ---------------- */
+  function catList() { return CFG.categories || []; }
+  function catBy(slug) { return catList().filter(function (c) { return c.slug === slug; })[0] || null; }
+  function catLabel(slug) { var c = catBy(slug); return c ? (LANG === "en" ? c.en : c.es) : slug; }
+  function catIcon(slug) { var c = catBy(slug); return c ? c.icon : "🚗"; }
+
+  // Claves i18n dinámicas (cat_<slug>) + textos de acciones/compartir/sorteo
+  (function () {
+    var es = { cat_all: "Ver todo el catálogo" }, en = { cat_all: "View full catalog" };
+    catList().forEach(function (c) { es["cat_" + c.slug] = c.es; en["cat_" + c.slug] = c.en; });
+    var rf = CFG.referrals || {};
+    es.raffle_txt = "<b>¡Participa en nuestro sorteo!</b> " + (rf.prizeES || "");
+    en.raffle_txt = "<b>Join our giveaway!</b> " + (rf.prizeEN || rf.prizeES || "");
+    es.raffle_cta = "Participar"; en.raffle_cta = "Enter now";
+    es.act_buy = "Comprar"; en.act_buy = "Buy now";
+    es.act_share = "Compartir"; en.act_share = "Share";
+    es.act_finance = "Financiar"; en.act_finance = "Finance";
+    es.act_moreinfo = "Más info"; en.act_moreinfo = "More info";
+    es.share_title = "Compartir este vehículo"; en.share_title = "Share this vehicle";
+    es.share_wa = "WhatsApp"; en.share_wa = "WhatsApp";
+    es.share_fb = "Facebook"; en.share_fb = "Facebook";
+    es.share_copy = "Copiar enlace"; en.share_copy = "Copy link";
+    es.share_copied = "¡Enlace copiado!"; en.share_copied = "Link copied!";
+    es.share_close = "Cerrar"; en.share_close = "Close";
+    addTranslations({ es: es, en: en });
+  })();
+
   /* ---------------- ICONOS SVG ---------------- */
   var IC = {
     instagram: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c3.2 0 3.6 0 4.9.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.86s0 3.6-.07 4.86c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.86.07s-3.6 0-4.86-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23C2.21 15.6 2.2 15.2 2.2 12s0-3.6.07-4.86c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.46 2.21 8.84 2.2 12 2.2m0 1.62c-3.14 0-3.51.01-4.75.07-.9.04-1.39.19-1.71.32-.43.17-.74.37-1.06.69-.32.32-.52.63-.69 1.06-.13.32-.28.81-.32 1.71-.06 1.24-.07 1.61-.07 4.75s.01 3.51.07 4.75c.04.9.19 1.39.32 1.71.17.43.37.74.69 1.06.32.32.63.52 1.06.69.32.13.81.28 1.71.32 1.24.06 1.61.07 4.75.07s3.51-.01 4.75-.07c.9-.04 1.39-.19 1.71-.32.43-.17.74-.37 1.06-.69.32-.32.52-.63.69-1.06.13-.32.28-.81.32-1.71.06-1.24.07-1.61.07-4.75s-.01-3.51-.07-4.75c-.04-.9-.19-1.39-.32-1.71a2.07 2.07 0 0 0-.69-1.06 2.07 2.07 0 0 0-1.06-.69c-.32-.13-.81-.28-1.71-.32-1.24-.06-1.61-.07-4.75-.07m0 2.76a5.42 5.42 0 1 1 0 10.84 5.42 5.42 0 0 1 0-10.84m0 8.94a3.52 3.52 0 1 0 0-7.04 3.52 3.52 0 0 0 0 7.04m6.9-9.15a1.27 1.27 0 1 1-2.54 0 1.27 1.27 0 0 1 2.54 0"/></svg>',
@@ -169,6 +196,18 @@
   function buildHeader() {
     var c = CFG.contact || {};
     var navDesktop = NAV.map(function (n) {
+      if (n.key === "nav_inventory" && catList().length) {
+        // Dropdown de categorías (Carros, Camiones, Vanes, Motos, UTV, Motos de agua)
+        var catLinks = catList().map(function (cc) {
+          return '<a href="/inventory/?cat=' + cc.slug + '">' + cc.icon + ' <span data-i18n="cat_' + cc.slug + '">' + t("cat_" + cc.slug) + '</span></a>';
+        }).join("");
+        return '<div class="pmx-nav__dd-wrap" data-dd>' +
+          '<a href="' + n.href + '" class="pmx-nav__item" data-dd-trigger><span data-i18n="' + n.key + '">' + t(n.key) + '</span> <span class="pmx-caret">▾</span></a>' +
+          '<div class="pmx-nav__dd">' + catLinks +
+            '<a href="/inventory/" class="pmx-nav__dd-cta"><span data-i18n="cat_all">' + t("cat_all") + '</span></a>' +
+          '</div>' +
+        '</div>';
+      }
       if (n.dropdown) {
         return '<div class="pmx-nav__dd-wrap" data-dd>' +
           '<a href="' + n.href + '" class="pmx-nav__item" data-dd-trigger><span data-i18n="' + n.key + '">' + t(n.key) + '</span> <span class="pmx-caret">▾</span></a>' +
@@ -182,7 +221,13 @@
     }).join("");
 
     var navMobile = NAV.map(function (n) {
-      return '<a href="' + n.href + '"><span data-i18n="' + n.key + '">' + t(n.key) + "</span></a>";
+      var out = '<a href="' + n.href + '"><span data-i18n="' + n.key + '">' + t(n.key) + "</span></a>";
+      if (n.key === "nav_inventory" && catList().length) {
+        out += catList().map(function (cc) {
+          return '<a href="/inventory/?cat=' + cc.slug + '" style="padding-left:26px;font-weight:500;font-size:14px">' + cc.icon + ' <span data-i18n="cat_' + cc.slug + '">' + t("cat_" + cc.slug) + '</span></a>';
+        }).join("");
+      }
+      return out;
     }).join("") +
       '<a href="/financing/apply/" class="pmx-mobilemenu__cta"><span data-i18n="cta_prequalify">' + t("cta_prequalify") + "</span></a>";
 
@@ -190,6 +235,7 @@
 
     return '' +
       '<div id="pmxSticky">' +
+        buildRaffle() +
         // Top bar
         '<div class="pmx-topbar"><div class="pmx-topbar__inner">' +
           '<div class="pmx-topbar__info">' +
@@ -636,6 +682,148 @@
     });
   }
 
+  /* ---------------- FRANJA DE SORTEO (¡Participa!) ---------------- */
+  function buildRaffle() {
+    var r = CFG.referrals || {};
+    if (!r.raffleEnabled) return "";
+    var off = false; try { off = sessionStorage.getItem("pmx_raffle_off") === "1"; } catch (e) {}
+    if (off) return "";
+    return '<div class="pmx-raffle" id="pmxRaffle">' +
+      '<div class="pmx-raffle__inner">' +
+        '<span class="pmx-raffle__ic">🎁</span>' +
+        '<span class="pmx-raffle__txt" data-i18n="raffle_txt">' + t("raffle_txt") + '</span>' +
+        '<a class="pmx-raffle__cta" href="/referrals/"><span data-i18n="raffle_cta">' + t("raffle_cta") + '</span></a>' +
+      '</div>' +
+      '<button class="pmx-raffle__x" id="pmxRaffleX" type="button" aria-label="Cerrar aviso">&times;</button>' +
+    '</div>';
+  }
+  function wireRaffle() {
+    var x = document.getElementById("pmxRaffleX");
+    if (!x) return;
+    x.addEventListener("click", function () {
+      var bar = document.getElementById("pmxRaffle");
+      if (bar && bar.parentNode) bar.parentNode.removeChild(bar);
+      try { sessionStorage.setItem("pmx_raffle_off", "1"); } catch (e) {}
+      syncHeaderPad();
+    });
+  }
+
+  /* ---------------- ALTO REAL DEL HEADER (padding dinámico) ---------------- */
+  // El header fijo puede crecer (franja de sorteo) o encoger (al cerrarla);
+  // medimos su alto real para que el contenido nunca quede tapado.
+  function syncHeaderPad() {
+    var s = document.getElementById("pmxSticky");
+    if (!s) return;
+    var h = s.offsetHeight;
+    if (h > 0) {
+      // Actualiza las variables para que el padding del body Y los elementos
+      // sticky (toolbar del catálogo, sidebar) sigan el alto real del header.
+      document.documentElement.style.setProperty("--header-h", h + "px");
+      document.documentElement.style.setProperty("--header-h-mobile", h + "px");
+    }
+  }
+
+  /* ---------------- TOAST ---------------- */
+  var toastTimer = null;
+  function toast(msg) {
+    var el = document.getElementById("pmxToast");
+    if (!el) { el = document.createElement("div"); el.id = "pmxToast"; el.className = "pmx-toast"; document.body.appendChild(el); }
+    el.textContent = msg;
+    el.classList.add("is-on");
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove("is-on"); }, 2200);
+  }
+
+  /* ---------------- COMPARTIR (Web Share + hoja propia) ---------------- */
+  var SHARE = { title: "", url: "" };
+  function buildShareSheet() {
+    if (document.getElementById("pmxShare")) return;
+    var box = document.createElement("div");
+    box.innerHTML = '' +
+      '<div class="pmx-share" id="pmxShare">' +
+        '<div class="pmx-share__box">' +
+          '<h3 class="pmx-share__title" data-i18n="share_title">' + t("share_title") + '</h3>' +
+          '<p class="pmx-share__sub" id="pmxShareSub"></p>' +
+          '<div class="pmx-share__grid">' +
+            '<a class="pmx-share__opt pmx-share__opt--wa" id="pmxShareWa" target="_blank" rel="noopener"><span class="pmx-share__opt-ic">' + IC.whatsapp + '</span><span data-i18n="share_wa">' + t("share_wa") + '</span></a>' +
+            '<a class="pmx-share__opt pmx-share__opt--fb" id="pmxShareFb" target="_blank" rel="noopener"><span class="pmx-share__opt-ic">' + IC.facebook + '</span><span data-i18n="share_fb">' + t("share_fb") + '</span></a>' +
+            '<button class="pmx-share__opt pmx-share__opt--copy" id="pmxShareCopy" type="button"><span class="pmx-share__opt-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span><span data-i18n="share_copy">' + t("share_copy") + '</span></button>' +
+          '</div>' +
+          '<button class="pmx-share__close" id="pmxShareClose" type="button" data-i18n="share_close">' + t("share_close") + '</button>' +
+        '</div>' +
+      '</div>';
+    while (box.firstChild) document.body.appendChild(box.firstChild);
+    var sh = document.getElementById("pmxShare");
+    function close() { sh.classList.remove("is-open"); }
+    sh.addEventListener("click", function (e) { if (e.target === sh) close(); });
+    document.getElementById("pmxShareClose").addEventListener("click", close);
+    document.getElementById("pmxShareWa").addEventListener("click", close);
+    document.getElementById("pmxShareFb").addEventListener("click", close);
+    document.getElementById("pmxShareCopy").addEventListener("click", function () {
+      var done = function () { toast(t("share_copied")); close(); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(SHARE.url).then(done).catch(function () { fallbackCopy(SHARE.url); done(); });
+      } else { fallbackCopy(SHARE.url); done(); }
+    });
+  }
+  function fallbackCopy(text) {
+    try {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
+    } catch (e) {}
+  }
+  // Compartir un enlace: nativo (móvil: WhatsApp/grupos/redes) o hoja propia.
+  function openShare(data) {
+    SHARE.title = data.title || (CFG.brand ? CFG.brand.name : "");
+    SHARE.url = data.url || location.href;
+    if (navigator.share) {
+      navigator.share({ title: SHARE.title, text: SHARE.title, url: SHARE.url }).catch(function () {});
+      return;
+    }
+    buildShareSheet();
+    var sub = document.getElementById("pmxShareSub");
+    if (sub) sub.textContent = SHARE.title;
+    var wa = document.getElementById("pmxShareWa");
+    if (wa) wa.setAttribute("href", "https://wa.me/?text=" + encodeURIComponent(SHARE.title + "\n" + SHARE.url));
+    var fb = document.getElementById("pmxShareFb");
+    if (fb) fb.setAttribute("href", "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(SHARE.url));
+    document.getElementById("pmxShare").classList.add("is-open");
+  }
+
+  /* ---------------- COMPRAR / MÁS INFO (WhatsApp + lead) ---------------- */
+  function money(n) { return "$" + (Number(n) || 0).toLocaleString("en-US"); }
+  function vehicleTitle(v) { return [v.year, v.make, v.model, v.trim].filter(Boolean).join(" "); }
+  function vehicleUrl(v) { return (CFG.siteUrl || location.origin) + "/vehicle/?id=" + encodeURIComponent(v.id); }
+
+  // COMPRAR: abre WhatsApp con el producto y registra el lead de compra.
+  function buyVehicle(v) {
+    if (!v) return;
+    var title = vehicleTitle(v), price = money(v.price), url = vehicleUrl(v);
+    var msg = (LANG === "en")
+      ? "Hi Promax, I want to BUY this " + title + " (ID " + v.id + ", " + price + "). How do I proceed?\n" + url
+      : "Hola Promax, quiero COMPRAR este " + title + " (ID " + v.id + ", " + price + "). ¿Cómo continúo?\n" + url;
+    submitLead({
+      form_type: "purchase", vehicle_id: v.id, vehicle_title: title,
+      message: "🛒 INTENCIÓN DE COMPRA\n" + title + " · " + price + "\n" + url,
+    }).catch(function () {});
+    window.open("https://wa.me/" + (CFG.contact ? CFG.contact.whatsapp : "") + "?text=" + encodeURIComponent(msg), "_blank", "noopener");
+  }
+
+  // MÁS INFORMACIÓN: WhatsApp pre-llenado con el producto + lead tipo "quote".
+  function moreInfoVehicle(v) {
+    if (!v) return;
+    var title = vehicleTitle(v), price = money(v.price), url = vehicleUrl(v);
+    var msg = (LANG === "en")
+      ? "Hi Promax, I'd like MORE INFORMATION about this " + title + " (" + price + ").\n" + url
+      : "Hola Promax, quiero MÁS INFORMACIÓN sobre este " + title + " (" + price + ").\n" + url;
+    submitLead({
+      form_type: "quote", vehicle_id: v.id, vehicle_title: title,
+      message: "ℹ️ SOLICITUD DE INFORMACIÓN\n" + title + " · " + price + "\n" + url,
+    }).catch(function () {});
+    window.open("https://wa.me/" + (CFG.contact ? CFG.contact.whatsapp : "") + "?text=" + encodeURIComponent(msg), "_blank", "noopener");
+  }
+
   /* ---------------- INIT ---------------- */
   function mount() {
     // Header al inicio del body
@@ -664,6 +852,7 @@
     wireLangButtons();
     wireNewsletter();
     wireDropdown();
+    wireRaffle();
     applyI18n(LANG);
     wireAnim();
     wireFooterFab();
@@ -671,6 +860,13 @@
     setInterval(updateOpenStatus, 60000);
     wireSocialProof();
     wirePromo();
+
+    // Alto real del header (franja de sorteo incluida): al montar, al cargar
+    // fuentes/recursos y al cambiar el tamaño de la ventana.
+    syncHeaderPad();
+    window.addEventListener("resize", syncHeaderPad);
+    window.addEventListener("load", syncHeaderPad);
+    setTimeout(syncHeaderPad, 350);
   }
 
   // API pública
@@ -682,9 +878,18 @@
     setLang: setLang,
     submitLead: submitLead,
     t: t,
-    money: function (n) { return "$" + (Number(n) || 0).toLocaleString("en-US"); },
+    money: money,
     num: function (n) { return (Number(n) || 0).toLocaleString("en-US"); },
     reveal: revealScan,
+    // Catálogo multi-categoría + acciones de producto
+    categories: catList,
+    catLabel: catLabel,
+    catIcon: catIcon,
+    share: openShare,
+    buy: buyVehicle,
+    moreInfo: moreInfoVehicle,
+    toast: toast,
+    syncHeader: syncHeaderPad,
   };
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount);

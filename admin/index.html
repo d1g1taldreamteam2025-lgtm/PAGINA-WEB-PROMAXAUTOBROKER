@@ -213,6 +213,15 @@ tbody tr.is-sel{background:rgba(239,68,68,.10);}
 
     <div class="toolbar">
       <div class="toolbar-search"><span class="material-icons-outlined">search</span><input type="search" id="searchBox" placeholder="Buscar marca, modelo, VIN, stock..."></div>
+      <select id="filterCat">
+        <option value="">Todas las categorías</option>
+        <option value="cars">🚗 Carros</option>
+        <option value="trucks_machinery">🚛 Camiones y maquinaria</option>
+        <option value="vans">🚐 Vanes</option>
+        <option value="motorcycles">🏍️ Motos</option>
+        <option value="utv">🛻 UTV</option>
+        <option value="watercraft">🚤 Motos de agua</option>
+      </select>
       <select id="filterStatus">
         <option value="">Todos los estados</option>
         <option value="available">Disponible</option>
@@ -255,7 +264,17 @@ tbody tr.is-sel{background:rgba(239,68,68,.10);}
         <button type="button" class="btn btn--primary btn--sm" onclick="importJson()"><span class="material-icons-outlined" style="font-size:14px">content_paste</span> Pegar JSON</button>
       </div>
       <form id="vehicleForm">
-        <div class="field"><label>¿Vehículo nuevo o usado? *</label><select id="fCondition" required><option value="used">Usado (Used)</option><option value="new">Nuevo (New)</option></select></div>
+        <div class="grid-2">
+          <div class="field"><label>Categoría *</label><select id="fCategory" required>
+            <option value="cars">🚗 Carros</option>
+            <option value="trucks_machinery">🚛 Camiones y maquinaria</option>
+            <option value="vans">🚐 Vanes</option>
+            <option value="motorcycles">🏍️ Motos</option>
+            <option value="utv">🛻 UTV</option>
+            <option value="watercraft">🚤 Motos de agua</option>
+          </select></div>
+          <div class="field"><label>¿Nuevo o usado? *</label><select id="fCondition" required><option value="used">Usado (Used)</option><option value="new">Nuevo (New)</option></select></div>
+        </div>
         <div class="grid-3">
           <div class="field"><label>Año *</label><input type="number" id="fYear" min="1990" max="2030" required></div>
           <div class="field"><label>Marca *</label><input type="text" id="fMake" required></div>
@@ -296,14 +315,14 @@ tbody tr.is-sel{background:rgba(239,68,68,.10);}
         <div class="field"><label>Características (separadas por coma)</label><input type="text" id="fFeats" placeholder="Bluetooth, Cámara de reversa, Sunroof"></div>
         <div class="field"><label>Descripción</label><textarea id="fDesc" rows="3" placeholder="Se genera automáticamente si la dejas vacía..."></textarea></div>
         <div>
-          <label class="section-label">Fotos (la 1ra = portada)</label>
+          <label class="section-label">Fotos — máximo 5 por producto (la 1ra = portada) <span id="photoCount" style="float:right;font-weight:800;color:var(--gold)">0/5</span></label>
           <div class="photos-thumbs" id="photosThumbs"></div>
           <div class="upload-row">
             <button type="button" class="btn btn--ghost" onclick="openCloudinary()"><span class="material-icons-outlined" style="font-size:16px">cloud_upload</span> Subir Fotos</button>
             <button type="button" class="btn btn--ghost" onclick="document.getElementById('pasteUrls').focus()"><span class="material-icons-outlined" style="font-size:16px">link</span> Pegar URLs Abajo</button>
           </div>
           <div class="field">
-            <label>O pega URLs de imágenes (una por línea)</label>
+            <label>O pega URLs de imágenes (una por línea · máx. 5 en total)</label>
             <textarea id="pasteUrls" rows="5" placeholder="https://.../foto1.jpg" style="font-family:monospace;font-size:11px"></textarea>
           </div>
         </div>
@@ -466,10 +485,12 @@ async function loadInventory(){
   }
 }
 
+const CAT_LABELS={cars:'🚗 Carros',trucks_machinery:'🚛 Camiones y maq.',vans:'🚐 Vanes',motorcycles:'🏍️ Motos',utv:'🛻 UTV',watercraft:'🚤 Motos de agua'};
 function filteredInventory(){
   const q=($('searchBox').value||'').toLowerCase().trim();
-  const fs=$('filterStatus').value, fb=$('filterBody').value, fc=$('filterCond').value;
+  const fs=$('filterStatus').value, fb=$('filterBody').value, fc=$('filterCond').value, fcat=$('filterCat').value;
   return inventory.filter(c=>{
+    if (fcat && (c.category||'cars')!==fcat) return false;
     if (fs === 'reserved') { if (!c.reserved_at) return false; }
     else if (fs && c.status!==fs) return false;
     if (fb && c.body_type!==fb) return false;
@@ -495,7 +516,7 @@ function renderTable(){
       '<td><div class="veh"><div class="veh-img" style="background-image:url(&quot;'+img.replace(/"/g,'%22')+'&quot;)"></div><div class="veh-info"><strong>'+c.year+' '+c.make+' '+c.model+'</strong><span>'+(c.trim||'')+' · '+(c.exterior_color||'—')+' · '+(c.fuel||'—')+'</span></div></div></td>'+
       '<td class="price">'+fmt(c.price)+'</td>'+
       '<td>'+fmtNum(c.mileage)+' mi</td>'+
-      '<td>'+(c.body_type||'—')+'<br><span style="font-size:11px;font-weight:700;color:'+(c.condition==='new'?'#4ade80':'#888')+'">'+(c.condition==='new'?'NUEVO':'Usado')+'</span></td>'+
+      '<td><span style="font-size:11px;font-weight:700;color:var(--gold)">'+(CAT_LABELS[c.category||'cars']||c.category)+'</span><br>'+(c.body_type||'—')+' · <span style="font-size:11px;font-weight:700;color:'+(c.condition==='new'?'#4ade80':'#888')+'">'+(c.condition==='new'?'NUEVO':'Usado')+'</span></td>'+
       '<td><div class="badge-stack"><span class="badge '+statusCls+'">'+statusTxt+'</span>'+reservedBadge+'</div></td>'+
       '<td>'+(c.stock||'—')+'</td>'+
       '<td><div class="actions">'+
@@ -514,10 +535,16 @@ function updateStats(){
   $('statSold').textContent=inventory.filter(c=>c.status==='sold').length;
 }
 
+const MAX_PHOTOS = 5; // Regla de negocio: máximo 5 fotos por producto
+
 function openCloudinary(){
+  if(photos.length>=MAX_PHOTOS){showAlert('vehicleAlert','err','Máximo '+MAX_PHOTOS+' fotos por producto. Elimina alguna para subir otra.');return;}
   if(!cldWidget){
-    cldWidget=cloudinary.createUploadWidget({cloudName:CLOUDINARY_CLOUD_NAME,uploadPreset:CLOUDINARY_PRESET,multiple:true,maxFiles:30,folder:'promax/inventory',sources:['local','url','camera'],clientAllowedFormats:['png','jpg','jpeg','webp']},(err,result)=>{
-      if(!err&&result&&result.event==='success'){photos.push(result.info.secure_url);renderPhotos();}
+    cldWidget=cloudinary.createUploadWidget({cloudName:CLOUDINARY_CLOUD_NAME,uploadPreset:CLOUDINARY_PRESET,multiple:true,maxFiles:MAX_PHOTOS,folder:'promax/inventory',sources:['local','url','camera'],clientAllowedFormats:['png','jpg','jpeg','webp']},(err,result)=>{
+      if(!err&&result&&result.event==='success'){
+        if(photos.length>=MAX_PHOTOS){showAlert('vehicleAlert','err','Máximo '+MAX_PHOTOS+' fotos: se ignoró la foto extra.');return;}
+        photos.push(result.info.secure_url);renderPhotos();
+      }
     });
   }
   cldWidget.open();
@@ -525,6 +552,8 @@ function openCloudinary(){
 
 function renderPhotos(){
   $('photosThumbs').innerHTML=photos.map((url,i)=>'<div class="photo-thumb" style="background-image:url(&quot;'+String(url).replace(/"/g,'%22')+'&quot;)">'+(i===0?'<span class="photo-cover">Portada</span>':'')+'<button type="button" class="photo-thumb-x" onclick="removePhoto('+i+')">×</button></div>').join('');
+  const pc=$('photoCount');
+  if(pc){pc.textContent=photos.length+'/'+MAX_PHOTOS;pc.style.color=photos.length>=MAX_PHOTOS?'#f87171':'var(--gold)';}
 }
 function removePhoto(i){photos.splice(i,1);renderPhotos();}
 
@@ -537,6 +566,7 @@ async function importJson(){
     if(!text)return;
     var d=JSON.parse(text);
     if(Array.isArray(d)){showAlert('vehicleAlert','info','Pegaste un LOTE de '+d.length+' carros. Cierra esta ventana y usa el botón "Importar lote" del panel.');return;}
+    if(d.category)$('fCategory').value=d.category;
     if(d.year)$('fYear').value=d.year;
     if(d.make)$('fMake').value=d.make;
     if(d.model)$('fModel').value=d.model;
@@ -569,7 +599,7 @@ async function importJson(){
 }
 
 function openAddModal(){
-  editingId=null;$('modalTitle').textContent='Agregar Vehículo';$('vehicleForm').reset();photos=[];renderPhotos();
+  editingId=null;$('modalTitle').textContent='Agregar Vehículo';$('vehicleForm').reset();$('fCategory').value='cars';photos=[];renderPhotos();
   $('vehicleAlert').innerHTML='';$('reservationBlock').style.display='none';
   $('fYear').value=new Date().getFullYear();$('fStatus').value='available';$('fCondition').value='used';
   $('vehicleModal').classList.add('is-open');
@@ -578,6 +608,7 @@ function openAddModal(){
 function openEditModal(id){
   const c=inventory.find(x=>x.id===id);if(!c)return;editingId=id;
   $('modalTitle').textContent='Editar Vehículo';$('vehicleAlert').innerHTML='';
+  $('fCategory').value=c.category||'cars';
   $('fYear').value=c.year||'';$('fMake').value=c.make||'';$('fModel').value=c.model||'';
   $('fTrim').value=c.trim||'';$('fBody').value=c.body_type||'';$('fStatus').value=c.status||'available';$('fCondition').value=c.condition||'used';
   $('fPrice').value=c.price||'';$('fMsrp').value=c.msrp||'';$('fMileage').value=c.mileage||'';
@@ -654,7 +685,13 @@ async function saveVehicle(){
   const form=$('vehicleForm');if(!form.checkValidity()){form.reportValidity();return;}
   const pasted=($('pasteUrls').value||'').split('\n').map(u=>u.trim()).filter(u=>u.indexOf('http')===0);
   const allPhotos=photos.concat(pasted);
+  // Validación dura: máximo 5 fotos por producto
+  if(allPhotos.length>MAX_PHOTOS){
+    showAlert('vehicleAlert','err','Máximo '+MAX_PHOTOS+' fotos por producto (tienes '+allPhotos.length+'). Elimina '+(allPhotos.length-MAX_PHOTOS)+' antes de guardar.');
+    return;
+  }
   const body={
+    category:$('fCategory').value||'cars',
     year:parseInt($('fYear').value,10),make:$('fMake').value.trim(),model:$('fModel').value.trim(),
     trim:$('fTrim').value.trim()||null,body_type:$('fBody').value,status:$('fStatus').value,condition:$('fCondition').value,
     price:Number($('fPrice').value),msrp:$('fMsrp').value?Number($('fMsrp').value):null,
@@ -851,7 +888,7 @@ function unlockBookmarklet(){
 }
 $('bmPass').addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); unlockBookmarklet(); } });
 
-['searchBox','filterStatus','filterBody','filterCond'].forEach(id=>{$(id).addEventListener('input',renderTable);$(id).addEventListener('change',renderTable);});
+['searchBox','filterStatus','filterBody','filterCond','filterCat'].forEach(id=>{$(id).addEventListener('input',renderTable);$(id).addEventListener('change',renderTable);});
 if($('checkAll'))$('checkAll').addEventListener('change',toggleSelectAll);
 $('tableBody').addEventListener('change',onRowCheck);
 if($('batchText'))$('batchText').addEventListener('input',updateBatchInfo);

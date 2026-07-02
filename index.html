@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Promax Auto Broker | Tu Broker de Autos de Confianza</title>
-<meta name="description" content="Promax Auto Broker: vehículos de calidad, precios honestos y financiamiento flexible. Encuentra tu próximo carro y pre-califica en minutos.">
+<meta name="description" content="Promax Auto Broker: carros, camiones y maquinaria, vanes, motos, UTV y motos de agua. Precios honestos y financiamiento flexible. Pre-califica en minutos.">
 <!-- Open Graph / Twitter (vista previa al compartir en WhatsApp, redes) -->
 <link rel="canonical" href="https://promaxautobroker.com/">
 <meta property="og:type" content="website">
@@ -23,7 +23,7 @@
 <meta name="twitter:image" content="https://res.cloudinary.com/drbc4wbvw/image/upload/c_pad,w_1200,h_630,b_rgb:0a0a0a,f_auto,q_auto/v1782163987/Logos-05_cqy7tj.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/theme.css">
 <link rel="icon" type="image/png" href="https://res.cloudinary.com/drbc4wbvw/image/upload/e_trim,c_pad,w_256,h_256,b_transparent/v1781816671/Logos_wbzal9.png">
@@ -160,6 +160,8 @@
 .pmx-tchip__seal svg{color:var(--brand);flex:0 0 auto;}
 @media(max-width:560px){.pmx-tchip{height:52px;padding:0 18px;margin-right:12px;}.pmx-tchip__seal{font-size:13px;}.pmx-trustmar::before,.pmx-trustmar::after{width:46px;}}
 @media (prefers-reduced-motion: reduce){.pmx-trustmar{overflow-x:auto;}.pmx-trustmar__row{animation:none;}}
+/* CATEGORÍAS (sección oscura bajo el hero) */
+.pmx-homecats .pmx-eyebrow{color:var(--brand-2);}
 </style>
 </head>
 <body>
@@ -182,7 +184,23 @@
          src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782164073/3_imagens_png_tssc95.png"></div>
     </div>
   </div>
+  <div class="pmx-hero2__cta">
+    <a href="/inventory/" class="pmx-btn pmx-btn--primary pmx-pulse" data-i18n="h_cta1">Ver Inventario</a>
+    <a href="/financing/apply/" class="pmx-btn pmx-btn--ghost-light" data-i18n="h_cta2">Pre-Calificar</a>
+  </div>
   <div class="pmx-hero2__dots" id="pmxHeroDots"></div>
+</section>
+
+<!-- CATEGORÍAS (todo el catálogo en un solo lugar) -->
+<section class="pmx-section pmx-section--dark pmx-homecats">
+  <div class="pmx-container">
+    <div class="pmx-section__head">
+      <span class="pmx-eyebrow" data-i18n="home_cats_eyebrow">Todo en un solo lugar</span>
+      <h2 data-i18n="home_cats_title">Explora por categoría</h2>
+      <p data-i18n="home_cats_sub">Carros, camiones y maquinaria, vanes, motos, UTV y motos de agua — todo con financiamiento flexible.</p>
+    </div>
+    <div class="pmx-cats" id="pmxCatTiles"></div>
+  </div>
 </section>
 
 <!-- ACTIVIDAD EN VIVO (señales que ciclan) -->
@@ -393,6 +411,9 @@ PMX.addTranslations({
     home_vid_sub:"Mira nuestros vehículos en acción. Pasa el mouse para una vista previa y toca para verlo en pantalla completa con sonido.",
     vid_invite_q:"¿Te gustaría ver videos de nuestro inventario?", vid_invite_yes:"Ver videos", vid_invite_close:"Cerrar",
     btn_details:"Ver Detalles", btn_prequal:"Pre-Calificar",
+    home_cats_eyebrow:"Todo en un solo lugar", home_cats_title:"Explora por categoría",
+    home_cats_sub:"Carros, camiones y maquinaria, vanes, motos, UTV y motos de agua — todo con financiamiento flexible.",
+    home_cats_n:"disponibles", home_cats_soon:"Próximamente",
   },
   en: {
     foot_email_ph:"your@email.com", loading:"Loading vehicles...",
@@ -429,19 +450,31 @@ PMX.addTranslations({
     home_vid_sub:"See our vehicles in action. Hover for a preview and tap to watch fullscreen with sound.",
     vid_invite_q:"Would you like to see videos of our inventory?", vid_invite_yes:"Watch videos", vid_invite_close:"Close",
     btn_details:"View Details", btn_prequal:"Pre-Qualify",
+    home_cats_eyebrow:"Everything in one place", home_cats_title:"Browse by category",
+    home_cats_sub:"Cars, trucks & machinery, vans, motorcycles, UTV and watercraft — all with flexible financing.",
+    home_cats_n:"available", home_cats_soon:"Coming soon",
   }
 });
 
 (function(){
   function money(n){return "$"+(Number(n)||0).toLocaleString("en-US");}
   function num(n){return (Number(n)||0).toLocaleString("en-US");}
+  var CARS = [];
   function card(c){
+    var typeLabel = (c.category && c.category!=="cars") ? PMX.catLabel(c.category) : "";
+    var specs = [];
+    if (c.mileage>0) specs.push(num(c.mileage)+' mi');
+    if (c.fuel) specs.push(c.fuel);
+    if (c.drivetrain) specs.push(c.drivetrain);
     return '<article class="pmx-vcard">'+
       '<a href="/vehicle/?id='+c.id+'" style="text-decoration:none;color:inherit;display:contents">'+
-      '<div class="pmx-vcard__img" style="background-image:url(\''+c.image+'\')">'+(c.badge?'<span class="pmx-vcard__badge">'+c.badge+'</span>':'')+'</div></a>'+
+      '<div class="pmx-vcard__img" style="background-image:url(\''+c.image+'\')">'+
+        (c.badge?'<span class="pmx-vcard__badge">'+c.badge+'</span>':'')+
+        (typeLabel?'<span class="pmx-vcard__type">'+typeLabel+'</span>':'')+
+      '</div></a>'+
       '<div class="pmx-vcard__body">'+
         '<h3 class="pmx-vcard__title">'+c.year+' '+c.make+' '+c.model+(c.trim?' '+c.trim:'')+'</h3>'+
-        '<div class="pmx-vcard__specs"><span>'+num(c.mileage)+' mi</span><span>'+c.fuel+'</span><span>'+c.drivetrain+'</span></div>'+
+        (specs.length?'<div class="pmx-vcard__specs">'+specs.map(function(s){return '<span>'+s+'</span>';}).join("")+'</div>':'')+
         '<div class="pmx-vcard__price">'+(c.price>0?money(c.price):'Consultar precio')+'</div>'+
         '<div class="pmx-vcard__actions">'+
           '<a href="/vehicle/?id='+c.id+'" class="pmx-btn pmx-btn--primary">'+PMX.t("btn_details")+'</a>'+
@@ -449,7 +482,28 @@ PMX.addTranslations({
         '</div>'+
       '</div></article>';
   }
+  // Tiles de categoría con conteo real del inventario
+  function catTiles(cars){
+    var host = document.getElementById("pmxCatTiles");
+    if (!host || !PMX.categories) return;
+    var counts = {};
+    (cars||[]).forEach(function(c){ counts[c.category]=(counts[c.category]||0)+1; });
+    host.innerHTML = PMX.categories().map(function(c){
+      var n = counts[c.slug]||0;
+      return '<a class="pmx-cattile" href="/inventory/?cat='+c.slug+'">'+
+        '<span class="pmx-cattile__ic" aria-hidden="true">'+c.icon+'</span>'+
+        '<span class="pmx-cattile__name">'+PMX.catLabel(c.slug)+'</span>'+
+        '<span class="pmx-cattile__meta">'+
+          '<span class="pmx-cattile__count">'+(n>0 ? n+' '+PMX.t("home_cats_n") : PMX.t("home_cats_soon"))+'</span>'+
+          '<span class="pmx-cattile__go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>'+
+        '</span>'+
+      '</a>';
+    }).join("");
+  }
+  window.addEventListener("pmx-lang", function(){ catTiles(CARS); });
   PMX.loadInventory().then(function(cars){
+    CARS = cars;
+    catTiles(cars);
     var feat = cars.filter(function(c){return c.featured;});
     if (feat.length < 3) feat = cars.slice(0, 3);
     else feat = feat.slice(0, 3);

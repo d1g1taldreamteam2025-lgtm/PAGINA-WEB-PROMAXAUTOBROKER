@@ -7,11 +7,17 @@
   var CFG = window.PROMAX || {};
   var cache = null;
 
+  var CATEGORY_SLUGS = (CFG.categories || []).map(function (c) { return c.slug; });
+
   function normalize(r) {
-    var gallery = Array.isArray(r.gallery) ? r.gallery : [];
+    // Máximo 5 fotos por producto (regla de negocio; el admin también lo valida).
+    var gallery = (Array.isArray(r.gallery) ? r.gallery : []).slice(0, 5);
     var cover = r.cover_image || gallery[0] || "https://via.placeholder.com/800x500?text=Sin+Foto";
+    var cat = (r.category || "cars").toLowerCase();
+    if (CATEGORY_SLUGS.length && CATEGORY_SLUGS.indexOf(cat) === -1) cat = "cars";
     return {
       id: r.id || r.stock || ((r.year || "") + "-" + (r.make || "") + "-" + (r.model || "")).toLowerCase().replace(/\s+/g, "-"),
+      category: cat,
       year: r.year, make: r.make, model: r.model, trim: r.trim || "",
       bodyType: (r.body_type || "sedan").toLowerCase(),
       price: Number(r.price) || 0, msrp: r.msrp ? Number(r.msrp) : null,

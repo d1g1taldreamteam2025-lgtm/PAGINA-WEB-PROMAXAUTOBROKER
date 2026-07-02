@@ -50,6 +50,26 @@ window.PROMAX = {
     geo: { lat: 25.8245, lng: -80.3663 },            // 7875 NW 107 Ave, Doral/Miami
   },
 
+  /* ---------- SITIO ---------- */
+  siteUrl: "https://www.promaxautobroker.com",       // para compartir enlaces absolutos
+
+  /* ---------- CATEGORÍAS DEL CATÁLOGO ---------- */
+  // El catálogo es multi-categoría. El slug se guarda en la columna `category`
+  // de Supabase (ver sql/add-category.sql). Máximo 5 fotos por producto.
+  categories: [
+    { slug: "cars",             es: "Carros",                en: "Cars",               icon: "🚗" },
+    { slug: "trucks_machinery", es: "Camiones y maquinaria", en: "Trucks & Machinery", icon: "🚛" },
+    { slug: "vans",             es: "Vanes",                 en: "Vans",               icon: "🚐" },
+    { slug: "motorcycles",      es: "Motos",                 en: "Motorcycles",        icon: "🏍️" },
+    { slug: "utv",              es: "UTV",                   en: "UTV",                icon: "🛻" },
+    { slug: "watercraft",       es: "Motos de agua",         en: "Watercraft",         icon: "🚤" },
+  ],
+
+  /* ---------- COMPRA ---------- */
+  // "whatsapp": el botón COMPRAR abre WhatsApp con el producto + registra el lead.
+  // "reserve" queda preparado para reservas con depósito (futuro).
+  purchaseMode: "whatsapp",
+
   /* ---------- REDES SOCIALES ---------- */
   social: {
     instagram: "https://www.instagram.com/promaxautobroker/",
@@ -91,7 +111,9 @@ window.PROMAX = {
   referrals: {
     goal: 100,
     soldStatus: "Vendido",
-    raffleEnabled: true,
+    raffleEnabled: true,                             // muestra la franja "¡Participa!" en todo el sitio
+    prizeES: "Refiere y gana premios exclusivos",    // <-- TODO: premio exacto (lo define el cliente)
+    prizeEN: "Refer & win exclusive prizes",         // <-- TODO: premio exacto (lo define el cliente)
     passcode: "promax",                              // <-- CONFIRMAR
   },
 
