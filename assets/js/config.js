@@ -114,8 +114,8 @@ window.PROMAX = {
     goal: 100,
     soldStatus: "Vendido",
     raffleEnabled: true,                             // muestra la franja "¡Participa!" en todo el sitio
-    prizeES: "Refiere y gana premios exclusivos",    // <-- TODO: premio exacto (lo define el cliente)
-    prizeEN: "Refer & win exclusive prizes",         // <-- TODO: premio exacto (lo define el cliente)
+    prizeES: "¡Gana $500 por referir! Y participa por un Toyota Corolla 2026",
+    prizeEN: "Earn $500 per referral! And enter to win a 2026 Toyota Corolla",
     passcode: "promax",                              // <-- CONFIRMAR
   },
 
@@ -127,7 +127,7 @@ window.PROMAX = {
 
   /* ---------- BARRA SUPERIOR (marquee) ---------- */
   marquee: {
-    es: ["+500 Clientes Satisfechos", "Bajo Pago Inicial", "Aprobación Rápida", "Aceptamos ITIN", "Atención Personalizada", "Importamos a Venezuela 🇻🇪"],
-    en: ["+500 Happy Clients", "Low Down Payment", "Fast Approval", "ITIN Accepted", "Personalized Service", "We Import to Venezuela 🇻🇪"],
+    es: ["Vehículos y Maquinaria en toda USA", "Exportamos a Venezuela 🇻🇪", "Bajo Pago Inicial", "Aprobación Rápida", "Aceptamos ITIN", "+500 Clientes Satisfechos", "Atención Personalizada"],
+    en: ["Vehicles & Machinery across the USA", "We Export to Venezuela 🇻🇪", "Low Down Payment", "Fast Approval", "ITIN Accepted", "+500 Happy Clients", "Personalized Service"],
   },
 };

@@ -52,8 +52,8 @@
   <img class="pmx-sorteo__logo" id="logo" src="https://res.cloudinary.com/drbc4wbvw/image/upload/e_trim/v1782222860/Logos-06_ojajis.png" alt="Promax Auto Broker">
   <div class="pmx-sorteo__card">
     <span class="pmx-sorteo__tag">🎉 Sorteo Promax</span>
-    <h1 class="pmx-sorteo__title">¡Ayúdanos a vender y participa!</h1>
-    <p class="pmx-sorteo__sub">Por cada meta de ventas alcanzada, sorteamos un auto entre quienes nos ayudan a vender.</p>
+    <h1 class="pmx-sorteo__title">¡Gana $500 por referir!</h1>
+    <p class="pmx-sorteo__sub">Y por cada meta de ventas alcanzada, participas por un <strong>Toyota Corolla 2026</strong>. Refiere clientes y gana con Promax.</p>
 
     <div class="pmx-sorteo__num"><span id="sold">0</span> / <span id="goal">100</span></div>
     <div class="pmx-sorteo__goal">ventas para el próximo sorteo</div>
@@ -79,7 +79,7 @@
   try{ var lg = (CFG.brand && (CFG.brand.logoDark || CFG.brand.logo)); if(lg) document.getElementById('logo').src = lg; }catch(e){}
   // CTA WhatsApp desde config
   try{ if(CFG.contact && CFG.contact.whatsapp){
-    document.getElementById('waCta').href = 'https://wa.me/'+CFG.contact.whatsapp+'?text='+encodeURIComponent('Hola, quiero ayudar a vender y participar en el sorteo Promax.');
+    document.getElementById('waCta').href = 'https://wa.me/'+CFG.contact.whatsapp+'?text='+encodeURIComponent('Promax, quiero referirte un cliente y participar por el Toyota Corolla 2026. Vengo de tu página web \u{1F310}');
   } }catch(e){}
 
   var sb = (DB.url && DB.anonKey && window.supabase) ? supabase.createClient(DB.url, DB.anonKey) : null;

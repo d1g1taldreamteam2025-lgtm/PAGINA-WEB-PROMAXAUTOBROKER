@@ -173,11 +173,13 @@
   function emptyBlock() {
     // Vacío por categoría: mensaje amigable + CTA de WhatsApp; vacío por filtros: reset.
     if (state.category !== "all") {
-      var wa = (PMX.cfg && PMX.cfg.contact && PMX.cfg.contact.whatsapp) || "";
       var label = PMX.catLabel(state.category).toLowerCase();
+      var ask = (PMX.lang && PMX.lang() === "en")
+        ? "Hi Promax, I'm looking for " + label + ". Can you help me find one?"
+        : "Hola Promax, estoy buscando " + label + ". ¿Me ayudan a conseguirlo?";
       return '<div class="pmx-empty"><h3>' + PMX.t("inv_empty_cat_t") + '</h3>' +
         '<p>' + PMX.t("inv_empty_cat_s").replace("{cat}", label) + '</p>' +
-        '<a class="pmx-btn pmx-btn--wa" target="_blank" rel="noopener" href="https://wa.me/' + wa + '?text=' + encodeURIComponent(PMX.t("inv_empty_cat_s").replace("{cat}", label)) + '">' + PMX.t("inv_ask_cta") + '</a></div>';
+        '<a class="pmx-btn pmx-btn--wa" target="_blank" rel="noopener" href="' + (PMX.waUrl ? PMX.waUrl(ask) : "#") + '">' + PMX.t("inv_ask_cta") + '</a></div>';
     }
     return '<div class="pmx-empty"><h3>' + PMX.t("inv_empty_t") + '</h3><p>' + PMX.t("inv_empty_s") + '</p><button class="pmx-btn pmx-btn--primary" id="pmxReset">' + PMX.t("inv_reset") + '</button></div>';
   }

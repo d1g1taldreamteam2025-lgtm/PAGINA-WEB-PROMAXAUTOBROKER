@@ -62,18 +62,18 @@
       cta_prequalify: "Pre-Calificar",
       nav_home: "Inicio", nav_inventory: "Inventario", nav_financing: "Financiamiento",
       nav_fin_overview: "Resumen de Financiamiento", nav_fin_overview_sub: "Tasas, pasos y aliados", nav_fin_apply: "Aplicar a Financiamiento",
-      nav_about: "Nosotros", nav_contact: "Contacto", nav_faqs: "Preguntas",
-      foot_tag: "Tu broker de autos de confianza: vehículos de calidad, precios honestos y financiamiento flexible.",
+      nav_about: "Nosotros", nav_contact: "Contacto", nav_faqs: "Preguntas", nav_import: "Importación 🇻🇪",
+      foot_tag: "Tu broker de confianza en toda USA: vehículos, maquinaria y financiamiento flexible — y exportación a Venezuela 🇻🇪.",
       foot_inventory: "Inventario", foot_view_all: "Ver Todo el Inventario",
       foot_under_20k: "Menos de $20k", foot_under_10k: "Menos de $10k",
-      foot_resources: "Recursos", foot_apply: "Aplicar a Financiamiento",
+      foot_resources: "Recursos", foot_apply: "Aplicar a Financiamiento", foot_import: "Importar a Venezuela",
       foot_about: "Nosotros", foot_contact: "Contacto", foot_faqs: "Preguntas Frecuentes",
       foot_newsletter: "Mantente en Contacto", foot_newsletter_sub: "Recibe ofertas y nuevas llegadas.",
       foot_subscribe: "Suscribirme", foot_subscribing: "Enviando...", foot_subscribed: "¡Suscrito!",
       foot_rights: "Todos los derechos reservados.",
       foot_privacy: "Política de Privacidad", foot_terms: "Términos de Uso",
       foot_sitemap: "Mapa del Sitio", foot_accessibility: "Accesibilidad",
-      wa_msg: "Hola, quiero información para comprar un carro",
+      wa_msg: "Hola, quiero información para comprar un vehículo",
       chat_label: "Chat con Nosotros",
       open_now: "Abierto ahora", closed_now: "Cerrado",
       proof_action: "acaba de reservar", proof_verified: "Reserva verificada",
@@ -90,18 +90,18 @@
       cta_prequalify: "Get Pre-Qualified",
       nav_home: "Home", nav_inventory: "Inventory", nav_financing: "Financing",
       nav_fin_overview: "Financing Overview", nav_fin_overview_sub: "Rates, steps & lenders", nav_fin_apply: "Apply for Financing",
-      nav_about: "About", nav_contact: "Contact Us", nav_faqs: "FAQs",
-      foot_tag: "Your trusted auto broker: quality vehicles, honest pricing, and flexible financing.",
+      nav_about: "About", nav_contact: "Contact Us", nav_faqs: "FAQs", nav_import: "Import 🇻🇪",
+      foot_tag: "Your trusted broker across the USA: vehicles, machinery and flexible financing — plus export to Venezuela 🇻🇪.",
       foot_inventory: "Inventory", foot_view_all: "View All Inventory",
       foot_under_20k: "Under $20k", foot_under_10k: "Under $10k",
-      foot_resources: "Resources", foot_apply: "Apply for Financing",
+      foot_resources: "Resources", foot_apply: "Apply for Financing", foot_import: "Import to Venezuela",
       foot_about: "About Us", foot_contact: "Contact Us", foot_faqs: "FAQs",
       foot_newsletter: "Stay in Touch", foot_newsletter_sub: "Get specials and new arrivals.",
       foot_subscribe: "Subscribe", foot_subscribing: "Sending...", foot_subscribed: "Subscribed!",
       foot_rights: "All rights reserved.",
       foot_privacy: "Privacy Policy", foot_terms: "Terms of Use",
       foot_sitemap: "Sitemap", foot_accessibility: "Accessibility",
-      wa_msg: "Hi, I want information about buying a car",
+      wa_msg: "Hi, I want information about buying a vehicle",
       chat_label: "Chat with Us",
       open_now: "Open now", closed_now: "Closed",
       proof_action: "just reserved", proof_verified: "Verified reservation",
@@ -126,7 +126,7 @@
     cars: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.3 16.3H3a1 1 0 0 1-1-1v-2.2a1.6 1.6 0 0 1 1.2-1.55L5.4 11l1.9-3.1A2 2 0 0 1 9 7h4.6a2 2 0 0 1 1.6.8L17.4 11l3.4.85A1.6 1.6 0 0 1 22 13.4v1.9a1 1 0 0 1-1 1h-1.3"/><path d="M9.3 16.3h5.4"/><path d="M5.4 11h12"/><path d="M11.8 7v4"/><circle cx="6.9" cy="16.3" r="2.1"/><circle cx="17.1" cy="16.3" r="2.1"/></svg>',
     trucks_machinery: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 15.8V7a1.4 1.4 0 0 1 1.4-1.4h8.4A1.4 1.4 0 0 1 13.2 7v8.8"/><path d="M13.2 9h3.9c.4 0 .8.17 1.06.47l2.44 2.83c.26.3.4.67.4 1.06v1.44a1 1 0 0 1-1 1h-.9"/><path d="M11.1 15.8h2.1M2 15.8h1.8"/><path d="M8.2 15.8h.7"/><path d="M17 9v3.5h3.8"/><circle cx="6" cy="16.6" r="2.1"/><circle cx="16.9" cy="16.6" r="2.1"/></svg>',
     vans: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 15.8V8a2 2 0 0 1 2-2h9c.62 0 1.2.29 1.58.78l3.1 4.02 2.05.7a1.6 1.6 0 0 1 1.27 1.56v1.74a1 1 0 0 1-1 1h-1.2"/><path d="M13.9 6l.1 4.9h4.2"/><path d="M2.5 10.9h11.5"/><path d="M2.5 15.8h1.9m4.3 0h6.1"/><circle cx="6.6" cy="16.5" r="2.1"/><circle cx="17" cy="16.5" r="2.1"/></svg>',
-    motorcycles: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.4" cy="16.4" r="3.1"/><circle cx="18.6" cy="16.4" r="3.1"/><path d="M5.4 16.4l2.7-5h4.4l2 3.4h2.3"/><path d="M12.5 11.4 10.6 8.2H7.9"/><path d="M13.6 8.2h2.5l2.5 8.2"/><path d="M15 8.2c.9-.9 2.1-1.2 3.2-1"/><path d="M8.1 11.4 6.7 13.8"/></svg>',
+    motorcycles: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.4" cy="16.8" r="2.9"/><circle cx="18.6" cy="16.8" r="2.9"/><path d="M8.3 16.8h6l2.2-4.9 2.1 4.9"/><path d="M16.5 11.9 14.6 7.8h-2.4l-1 1.6"/><path d="M8.3 16.8 5.9 11l-2.5-.6"/><path d="M5.9 11l3.5-.8 4 1.7h3.1"/></svg>',
     utv: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="6.2" cy="16.6" r="2.6"/><circle cx="17.8" cy="16.6" r="2.6"/><path d="M8.8 16.6h6.4"/><path d="M2.6 13.4 4.4 10h6.4l1.9 3.4h8.7"/><path d="M6.4 10V6.4h7.2l2.2 3.6"/><path d="M9.8 6.4V10"/><path d="M2.6 13.4v1.6M21.4 13.4v1.3"/></svg>',
     watercraft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 15.6 6.6 12h4.9l2.4 2.2h4.6c.66 0 1 .8.53 1.26l-1.63 1.64H4.6z"/><path d="M9.6 12 8.2 8.6h2.8l2.1 3.4"/><path d="M8.2 8.6 10.7 6.8"/><path d="M2 19.8c1.9 1.3 3.9 1.3 5.8 0s3.9-1.3 5.8 0 3.9 1.3 5.8 0"/></svg>',
   };
@@ -169,6 +169,7 @@
   var NAV = [
     { href: "/", key: "nav_home" },
     { href: "/inventory/", key: "nav_inventory" },
+    { href: "/import/", key: "nav_import" },
     { href: "/financing/", key: "nav_financing", dropdown: true },
     { href: "/about/", key: "nav_about" },
     { href: "/contact/", key: "nav_contact" },
@@ -303,6 +304,7 @@
           '<div class="pmx-footer__col">' +
             '<h4 data-i18n="foot_resources">' + t("foot_resources") + '</h4><ul>' +
               '<li><a href="/financing/apply/" data-i18n="foot_apply">' + t("foot_apply") + '</a></li>' +
+              '<li><a href="/import/" data-i18n="foot_import">' + t("foot_import") + '</a></li>' +
               '<li><a href="/about/" data-i18n="foot_about">' + t("foot_about") + '</a></li>' +
               '<li><a href="/contact/" data-i18n="foot_contact">' + t("foot_contact") + '</a></li>' +
               '<li><a href="/faqs/" data-i18n="foot_faqs">' + t("foot_faqs") + '</a></li>' +
@@ -344,9 +346,18 @@
       '</div>';
   }
 
+  // Enlace de WhatsApp con firma de origen: el dueño SIEMPRE sabe que el
+  // mensaje llegó desde la página web (pedido expreso del cliente).
+  function waOriginLine() {
+    return LANG === "en" ? "— I'm coming from your website 🌐" : "— Vengo de su página web 🌐";
+  }
+  function waUrl(msg) {
+    var m = (msg || t("wa_msg")) + "\n" + waOriginLine();
+    return "https://wa.me/" + (CFG.contact ? CFG.contact.whatsapp : "") + "?text=" + encodeURIComponent(m);
+  }
+
   function updateWidgets() {
-    var wa = CFG.contact ? CFG.contact.whatsapp : "";
-    var url = "https://wa.me/" + wa + "?text=" + encodeURIComponent(t("wa_msg"));
+    var url = waUrl();
     var chat = document.getElementById("pmxChat"), waBtn = document.getElementById("pmxWa"),
         label = document.getElementById("pmxChatLabel");
     if (chat) chat.setAttribute("href", url);
@@ -636,16 +647,11 @@
 
   /* ---------------- PROMO 15% OFF (botón flotante + popup, solo al hacer clic) ---------------- */
   function buildPromo() {
-    // En la solicitud de financiamiento NO se muestra: su función es traer al
-    // cliente hasta aquí; dentro del formulario solo tapa los campos.
-    if (/^\/financing\/apply\//.test(location.pathname)) return "";
+    // Ya NO hay botón flotante: el popup aparece SOLO a los 2 minutos de
+    // navegación acumulada (una vez por sesión). En financiamiento nunca se
+    // muestra: ahí el cliente ya está aplicando.
+    if (/^\/financing\//.test(location.pathname)) return "";
     return '' +
-      '<div class="pmx-promo-fabwrap" id="pmxPromoFabWrap">' +
-        '<button class="pmx-promo-fab__x" id="pmxPromoFabX" type="button" aria-label="Cerrar oferta">&times;</button>' +
-        '<button class="pmx-promo-fab" id="pmxPromoFab" type="button" aria-label="15% OFF">' +
-          '<span class="pmx-promo-fab__big">15%</span><span class="pmx-promo-fab__small">OFF</span>' +
-        '</button>' +
-      '</div>' +
       '<div class="pmx-promo" id="pmxPromo">' +
         '<div class="pmx-promo__box">' +
           '<button class="pmx-promo__x" id="pmxPromoX" type="button" aria-label="Cerrar">&times;</button>' +
@@ -672,8 +678,8 @@
       '</div>';
   }
   function wirePromo() {
-    var modal = document.getElementById("pmxPromo"), fab = document.getElementById("pmxPromoFab");
-    if (!modal || !fab) return;
+    var modal = document.getElementById("pmxPromo");
+    if (!modal) return;
     var KEY = "pmx_promo_claim", DUR = 10 * 60 * 1000, tick = null, dl = 0;
     // El temporizador es solo VISUAL mientras el popup está abierto. El descuento se
     // RESERVA (se guarda en localStorage) únicamente al pulsar "Quiero mi descuento",
@@ -688,17 +694,6 @@
     function open() { dl = Date.now() + DUR; modal.classList.add("is-open"); render(); if (tick) clearInterval(tick); tick = setInterval(render, 43); }
     function close() { modal.classList.remove("is-open"); if (tick) clearInterval(tick); }
 
-    // El botón flotante DEBE poder cerrarse para que no estorbe ni tape contenido.
-    var fabWrap = document.getElementById("pmxPromoFabWrap");
-    var fabX = document.getElementById("pmxPromoFabX");
-    try { if (sessionStorage.getItem("pmx_promo_fab_off") === "1" && fabWrap) fabWrap.style.display = "none"; } catch (e) {}
-    if (fabX) fabX.addEventListener("click", function (e) {
-      e.stopPropagation();
-      if (fabWrap) fabWrap.style.display = "none";
-      try { sessionStorage.setItem("pmx_promo_fab_off", "1"); } catch (_) {}
-    });
-
-    fab.addEventListener("click", open);
     document.getElementById("pmxPromoX").addEventListener("click", close);
     document.getElementById("pmxPromoNo").addEventListener("click", close);
     modal.addEventListener("click", function (e) { if (e.target === modal) close(); });
@@ -708,6 +703,22 @@
       try { localStorage.setItem(KEY, String(dl)); } catch (e) {}
       location.href = "/financing/apply/?promo=15";
     });
+
+    // APERTURA AUTOMÁTICA: a los 2 minutos de navegación acumulada en el
+    // sitio (el contador sobrevive entre páginas), UNA sola vez por sesión.
+    var SHOWN = "pmx_promo_shown", TKEY = "pmx_time_s";
+    try { if (sessionStorage.getItem(SHOWN) === "1") return; } catch (e) { return; }
+    var acc = 0; try { acc = +(sessionStorage.getItem(TKEY) || 0); } catch (e) {}
+    var iv = setInterval(function () {
+      if (document.hidden) return;             // no cuenta si la pestaña está oculta
+      acc++;
+      try { sessionStorage.setItem(TKEY, String(acc)); } catch (e) {}
+      if (acc >= 120) {
+        clearInterval(iv);
+        try { sessionStorage.setItem(SHOWN, "1"); } catch (e) {}
+        open();
+      }
+    }, 1000);
   }
 
   /* ---------------- FRANJA DE SORTEO (¡Participa!) ---------------- */
@@ -856,7 +867,7 @@
       form_type: "purchase", vehicle_id: v.id, vehicle_title: title,
       message: "🛒 INTENCIÓN DE COMPRA\n" + title + " · " + price + "\n" + url,
     }).catch(function () {});
-    window.open("https://wa.me/" + (CFG.contact ? CFG.contact.whatsapp : "") + "?text=" + encodeURIComponent(msg), "_blank", "noopener");
+    window.open(waUrl(msg), "_blank", "noopener");
   }
 
   // MÁS INFORMACIÓN: WhatsApp pre-llenado con el producto + lead tipo "quote".
@@ -870,7 +881,7 @@
       form_type: "quote", vehicle_id: v.id, vehicle_title: title,
       message: "ℹ️ SOLICITUD DE INFORMACIÓN\n" + title + " · " + price + "\n" + url,
     }).catch(function () {});
-    window.open("https://wa.me/" + (CFG.contact ? CFG.contact.whatsapp : "") + "?text=" + encodeURIComponent(msg), "_blank", "noopener");
+    window.open(waUrl(msg), "_blank", "noopener");
   }
 
   /* ---------------- INIT ---------------- */
@@ -907,7 +918,6 @@
     wireFooterFab();
     updateOpenStatus();
     setInterval(updateOpenStatus, 60000);
-    wireSocialProof();
     wirePromo();
 
     // Alto real del header (franja de sorteo incluida): al montar, al cargar
@@ -937,6 +947,7 @@
     catIcon: catIcon,
     catSvg: catSvg,
     share: openShare,
+    waUrl: waUrl,
     buy: buyVehicle,
     moreInfo: moreInfoVehicle,
     toast: toast,
