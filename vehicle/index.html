@@ -31,8 +31,8 @@
 .pmx-vd{max-width:var(--maxw);margin:0 auto;padding:30px 24px 70px;}
 .pmx-crumb{font-size:13px;color:var(--text-muted);margin-bottom:18px;}
 .pmx-crumb a{color:var(--brand);text-decoration:none;}
-.pmx-vd__top{display:grid;grid-template-columns:1.3fr 1fr;gap:36px;}
-@media(max-width:900px){.pmx-vd__top{grid-template-columns:1fr;gap:24px;}}
+.pmx-vd__top{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:36px;}
+@media(max-width:900px){.pmx-vd__top{grid-template-columns:minmax(0,1fr);gap:24px;}}
 .pmx-vd__main{border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:#fff;}
 .pmx-vd__herowrap{position:relative;}
 .pmx-vd__hero{height:440px;background-size:contain;background-repeat:no-repeat;background-position:center;background-color:#101216;cursor:zoom-in;}
@@ -56,9 +56,9 @@
 .pmx-vd__price{font-family:var(--font-head);font-size:40px;font-weight:800;color:var(--ink);line-height:1;margin-bottom:4px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;}
 .pmx-vd__msrp{color:var(--text-faint);text-decoration:line-through;font-size:15px;margin-bottom:18px;}
 .pmx-vd__cta{display:flex;flex-direction:column;gap:10px;margin:18px 0;}
-.pmx-vd__cta-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.pmx-vd__keyspecs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px;padding-top:18px;border-top:1px dashed var(--line);}
-.pmx-vd__ks{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text-muted);}
+.pmx-vd__cta-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+.pmx-vd__keyspecs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px;padding-top:18px;border-top:1px dashed var(--line);}
+.pmx-vd__ks{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text-muted);min-width:0;}
 .pmx-vd__ks .material-icons-outlined{color:var(--brand);font-size:18px;}
 .pmx-vd__sections{margin-top:48px;display:grid;grid-template-columns:1fr 1fr;gap:40px;}
 @media(max-width:780px){.pmx-vd__sections{grid-template-columns:1fr;gap:28px;}}
@@ -159,7 +159,7 @@ PMX.addTranslations({
         '</div>'+
         '<div class="pmx-vd__panel">'+
           '<div class="pmx-vd__badges">'+
-            '<span class="pmx-vd__badge">'+PMX.catIcon(c.category)+' '+PMX.catLabel(c.category)+'</span>'+
+            '<span class="pmx-vd__badge"><span class="pmx-cati pmx-cati--xs" style="vertical-align:-2px">'+(PMX.catSvg?PMX.catSvg(c.category):'')+'</span> '+PMX.catLabel(c.category)+'</span>'+
             (c.badge?'<span class="pmx-vd__badge pmx-vd__badge--soft">'+c.badge+'</span>':'')+
           '</div>'+
           '<h1>'+c.year+' '+c.make+' '+c.model+'</h1>'+

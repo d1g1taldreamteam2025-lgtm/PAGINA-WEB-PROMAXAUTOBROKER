@@ -142,7 +142,9 @@ body.pmx-mounted{ padding-top:var(--header-h); }
 .pmx-topbar__info{ display:flex; gap:18px; align-items:center; flex-wrap:wrap; color:var(--dk-muted); }
 .pmx-topbar__info span{ display:inline-flex; align-items:center; gap:6px; }
 .pmx-topbar__actions{ display:flex; gap:14px; align-items:center; }
-.material-icons-outlined{ font-size:16px; vertical-align:middle; }
+/* Si la fuente de íconos aún no cargó, el texto del ícono (p.ej.
+   "local_gas_station") NO debe reventar el layout: lo contenemos. */
+.material-icons-outlined{ font-size:16px; vertical-align:middle; display:inline-block; max-width:1.5em; max-height:1.5em; overflow:hidden; white-space:nowrap; }
 
 /* Selector de idioma */
 .pmx-lang{ display:inline-flex; gap:6px; align-items:center; }
@@ -216,8 +218,14 @@ body.pmx-open .pmx-mobilemenu{ display:block; }
   .pmx-mobilebar{ display:block; }
 }
 
+/* ===================== ÍCONOS DE CATEGORÍA (SVG propios) ===================== */
+.pmx-cati{ display:inline-flex; align-items:center; justify-content:center; vertical-align:-3px; width:18px; height:18px; flex:0 0 auto; }
+.pmx-cati svg{ width:100%; height:100%; display:block; }
+.pmx-cati--sm{ width:17px; height:17px; }
+.pmx-cati--xs{ width:14px; height:14px; vertical-align:-2px; }
+
 /* ===================== BARRA DE SORTEO (¡Participa!) ===================== */
-.pmx-raffle{ background:linear-gradient(92deg,var(--brand-deep),var(--brand) 55%,var(--brand-2)); color:#fff; position:relative; }
+.pmx-raffle{ background:linear-gradient(92deg,var(--brand-deep),var(--brand) 55%,var(--brand-2)); color:#fff; position:relative; max-height:120px; overflow:hidden; transition:max-height .28s ease; }
 .pmx-raffle__inner{
   max-width:var(--maxw); margin:0 auto; padding:9px 52px 9px 24px;
   display:flex; align-items:center; justify-content:center; gap:12px; flex-wrap:wrap;
@@ -239,10 +247,28 @@ body.pmx-open .pmx-mobilemenu{ display:block; }
   transition:background .18s;
 }
 .pmx-raffle__x:hover{ background:rgba(255,255,255,.3); }
-@media (max-width:640px){ .pmx-raffle__inner{ font-size:12.5px; gap:8px; padding:8px 46px 8px 14px; } }
+/* Móvil: franja de sorteo COMPACTA en una sola línea (no invasiva) */
+@media (max-width:640px){
+  .pmx-raffle__inner{ font-size:11.5px; gap:7px; padding:7px 40px 7px 12px; flex-wrap:nowrap; justify-content:flex-start; text-align:left; }
+  .pmx-raffle__ic{ display:none; }
+  .pmx-raffle__txt{ flex:1; min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+  .pmx-raffle__cta{ flex:0 0 auto; padding:4px 11px; font-size:10px; }
+  .pmx-raffle__x{ right:8px; width:24px; height:24px; }
+}
+
+/* ===================== HEADER QUE SE ENCOGE AL HACER SCROLL ===================== */
+/* Al bajar: se pliegan sorteo y marquee (y el topbar en desktop). El padding
+   del body lo re-mide el JS (syncHeaderPad) tras la transición. */
+body.pmx-mounted{ transition:padding-top .28s ease; }
+body.pmx-scrolled .pmx-raffle{ max-height:0; }
+body.pmx-scrolled .pmx-marquee{ max-height:0; padding-top:0; padding-bottom:0; border-bottom:0; }
+@media (min-width:1025px){
+  .pmx-topbar{ max-height:60px; overflow:hidden; transition:max-height .28s ease; }
+  body.pmx-scrolled .pmx-topbar{ max-height:0; }
+}
 
 /* ===================== MARQUEE ===================== */
-.pmx-marquee{ background:var(--dk-bg); color:#fff; overflow:hidden; padding:12px 0; position:relative; z-index:1; border-bottom:1px solid rgba(255,255,255,.05); }
+.pmx-marquee{ background:var(--dk-bg); color:#fff; overflow:hidden; padding:12px 0; position:relative; z-index:1; border-bottom:1px solid rgba(255,255,255,.05); max-height:60px; transition:max-height .28s ease, padding .28s ease; }
 .pmx-marquee__track{ display:flex; width:max-content; animation:pmxM 26s linear infinite; }
 .pmx-marquee__group{ display:flex; align-items:center; flex-shrink:0; }
 .pmx-marquee__item{
@@ -333,9 +359,11 @@ body.pmx-open .pmx-mobilemenu{ display:block; }
 .pmx-fab__wa img{ width:100%; height:100%; object-fit:cover; display:block; }
 .pmx-fab__wa:hover{ transform:scale(1.07); box-shadow:0 10px 28px rgba(30,190,93,.55); }
 @media (max-width:768px){
-  .pmx-fab__chat{ padding:10px 14px; font-size:11px; }
   .pmx-fab__wa{ right:16px; bottom:16px; width:54px; height:54px; }
 }
+/* La pestaña lateral "Chat con Nosotros" es SOLO para PC (en móvil estorba;
+   ahí queda el botón redondo de WhatsApp). */
+@media (max-width:1024px){ .pmx-fab__chat{ display:none !important; } }
 @media print{ .pmx-fab{ display:none; } }
 
 /* ===== ESTADO ABIERTO (luz) + PRUEBA SOCIAL (FOMO) ===== */
@@ -582,7 +610,9 @@ body.pmx-open .pmx-mobilemenu{ display:block; }
 .pmx-cattile::before{ content:''; position:absolute; inset:0; background:radial-gradient(circle at 82% 18%, rgba(194,26,18,.28), transparent 55%); z-index:-1; opacity:0; transition:opacity .3s; }
 .pmx-cattile:hover{ transform:translateY(-5px); box-shadow:0 22px 50px rgba(0,0,0,.45); border-color:rgba(226,59,46,.5); }
 .pmx-cattile:hover::before{ opacity:1; }
-.pmx-cattile__ic{ font-size:38px; line-height:1; margin-bottom:auto; filter:drop-shadow(0 6px 14px rgba(0,0,0,.4)); }
+.pmx-cattile__ic{ width:44px; height:44px; color:#EDEFF2; margin-bottom:auto; filter:drop-shadow(0 6px 14px rgba(0,0,0,.4)); transition:color .2s; }
+.pmx-cattile__ic svg{ width:100%; height:100%; display:block; }
+.pmx-cattile:hover .pmx-cattile__ic{ color:var(--brand-2); }
 .pmx-cattile__name{ font-family:var(--font-head); font-weight:800; font-size:19px; letter-spacing:-.01em; }
 .pmx-cattile__meta{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
 .pmx-cattile__count{ font-size:12.5px; color:var(--dk-muted); font-weight:600; }
@@ -590,10 +620,10 @@ body.pmx-open .pmx-mobilemenu{ display:block; }
 .pmx-cattile:hover .pmx-cattile__go{ background:var(--brand); border-color:var(--brand); transform:translateX(3px); }
 .pmx-cattile__go svg{ width:15px; height:15px; }
 @media (max-width:900px){ .pmx-cats{ grid-template-columns:repeat(2,1fr); gap:12px; } .pmx-cattile{ min-height:140px; padding:18px; } }
-@media (max-width:480px){ .pmx-cattile__ic{ font-size:30px; } .pmx-cattile__name{ font-size:16px; } }
+@media (max-width:480px){ .pmx-cattile__ic{ width:34px; height:34px; } .pmx-cattile__name{ font-size:16px; } }
 
 /* ===================== BARRA DE ACCIONES (ficha de producto) ===================== */
-.pmx-actbar{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+.pmx-actbar{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
 .pmx-actbar .pmx-btn{ padding:14px 10px; font-size:13px; }
 @media (max-width:1024px){
   .pmx-actbar{ grid-template-columns:repeat(2,1fr); }

@@ -120,6 +120,18 @@
   function catLabel(slug) { var c = catBy(slug); return c ? (LANG === "en" ? c.en : c.es) : slug; }
   function catIcon(slug) { var c = catBy(slug); return c ? c.icon : "🚗"; }
 
+  // Íconos SVG propios por categoría: se ven IGUAL en todos los equipos
+  // (los emojis fallan según el sistema — p. ej. cuadritos en Windows).
+  var CAT_SVG = {
+    cars: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 16H9m10 0h3v-3.15a1 1 0 0 0-.84-.99L16 11l-2.7-3.6a1 1 0 0 0-.8-.4H5.24a2 2 0 0 0-1.8 1.1l-.8 1.63A6 6 0 0 0 2 12.42V16h2"/><circle cx="6.5" cy="16.5" r="2.5"/><circle cx="16.5" cy="16.5" r="2.5"/></svg>',
+    trucks_machinery: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 17V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a1 1 0 0 0 1 1h1"/><path d="M14 9h4l4 4v3a1 1 0 0 1-1 1h-1"/><path d="M9 17h6"/><circle cx="6.5" cy="17.5" r="2.2"/><circle cx="17.5" cy="17.5" r="2.2"/></svg>',
+    vans: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h9.6a2 2 0 0 1 1.6.8L21 11v5a1 1 0 0 1-1 1h-1"/><path d="M3 17V7"/><path d="M3 17h1.5"/><path d="M9.5 17h5"/><path d="M13 5v6h8"/><circle cx="7" cy="17.5" r="2.2"/><circle cx="17" cy="17.5" r="2.2"/></svg>',
+    motorcycles: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="5.5" cy="16.5" r="3.2"/><circle cx="18.5" cy="16.5" r="3.2"/><path d="M7.5 13.5 10 9h3.5l2 4"/><path d="M10 9 8.5 6.5H6"/><path d="M13.5 9h3L18 6h2"/><path d="M9 16.5h6l2-3.5"/></svg>',
+    utv: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="17" r="2.8"/><circle cx="18" cy="17" r="2.8"/><path d="M8.8 17h6.4"/><path d="M3 12.5h4.5L10 9h4l2 3.5H21"/><path d="M12 9V6.5h3"/><path d="M6 6.5 7.5 9"/></svg>',
+    watercraft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 15.5 7 11h5l3 3h5l-2.5 3.5H4z"/><path d="M9.5 11 8 7.5h3.5"/><path d="M2 19.5c2 1.4 4 1.4 6 0s4-1.4 6 0 4 1.4 6 0"/></svg>',
+  };
+  function catSvg(slug) { return CAT_SVG[slug] || CAT_SVG.cars; }
+
   // Claves i18n dinámicas (cat_<slug>) + textos de acciones/compartir/sorteo
   (function () {
     var es = { cat_all: "Ver todo el catálogo" }, en = { cat_all: "View full catalog" };
@@ -199,7 +211,7 @@
       if (n.key === "nav_inventory" && catList().length) {
         // Dropdown de categorías (Carros, Camiones, Vanes, Motos, UTV, Motos de agua)
         var catLinks = catList().map(function (cc) {
-          return '<a href="/inventory/?cat=' + cc.slug + '">' + cc.icon + ' <span data-i18n="cat_' + cc.slug + '">' + t("cat_" + cc.slug) + '</span></a>';
+          return '<a href="/inventory/?cat=' + cc.slug + '"><span class="pmx-cati pmx-cati--sm">' + catSvg(cc.slug) + '</span> <span data-i18n="cat_' + cc.slug + '">' + t("cat_" + cc.slug) + '</span></a>';
         }).join("");
         return '<div class="pmx-nav__dd-wrap" data-dd>' +
           '<a href="' + n.href + '" class="pmx-nav__item" data-dd-trigger><span data-i18n="' + n.key + '">' + t(n.key) + '</span> <span class="pmx-caret">▾</span></a>' +
@@ -224,7 +236,7 @@
       var out = '<a href="' + n.href + '"><span data-i18n="' + n.key + '">' + t(n.key) + "</span></a>";
       if (n.key === "nav_inventory" && catList().length) {
         out += catList().map(function (cc) {
-          return '<a href="/inventory/?cat=' + cc.slug + '" style="padding-left:26px;font-weight:500;font-size:14px">' + cc.icon + ' <span data-i18n="cat_' + cc.slug + '">' + t("cat_" + cc.slug) + '</span></a>';
+          return '<a href="/inventory/?cat=' + cc.slug + '" style="padding-left:26px;font-weight:500;font-size:14px"><span class="pmx-cati pmx-cati--sm">' + catSvg(cc.slug) + '</span> <span data-i18n="cat_' + cc.slug + '">' + t("cat_" + cc.slug) + '</span></a>';
         }).join("");
       }
       return out;
@@ -736,6 +748,27 @@
     }
   }
 
+  /* ---------------- HEADER QUE SE ENCOGE AL HACER SCROLL ---------------- */
+  // Al bajar, la franja del sorteo y el marquee se pliegan (el header fijo no
+  // se come la pantalla, clave en móvil). Al volver arriba, reaparecen.
+  function wireHeaderShrink() {
+    var shrunk = false, t = null;
+    function apply(s) {
+      if (s === shrunk) return;
+      shrunk = s;
+      document.body.classList.toggle("pmx-scrolled", s);
+      if (t) clearTimeout(t);
+      t = setTimeout(syncHeaderPad, 300); // tras la transición de plegado
+    }
+    function onScroll() {
+      var y = window.scrollY || 0;
+      if (y > 130) apply(true);
+      else if (y < 40) apply(false); // histéresis: sin parpadeo en el borde
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
+
   /* ---------------- TOAST ---------------- */
   var toastTimer = null;
   function toast(msg) {
@@ -880,6 +913,7 @@
     window.addEventListener("resize", syncHeaderPad);
     window.addEventListener("load", syncHeaderPad);
     setTimeout(syncHeaderPad, 350);
+    wireHeaderShrink();
   }
 
   // API pública
@@ -898,6 +932,7 @@
     categories: catList,
     catLabel: catLabel,
     catIcon: catIcon,
+    catSvg: catSvg,
     share: openShare,
     buy: buyVehicle,
     moreInfo: moreInfoVehicle,

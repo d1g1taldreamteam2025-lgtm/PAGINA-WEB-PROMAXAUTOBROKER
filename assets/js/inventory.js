@@ -120,7 +120,8 @@
     CARS.forEach(function (c) { counts[c.category] = (counts[c.category] || 0) + 1; });
     var chips = [{ slug: "all", icon: "", label: PMX.t("cats_all"), n: CARS.length }].concat(
       (PMX.categories ? PMX.categories() : []).map(function (c) {
-        return { slug: c.slug, icon: c.icon + " ", label: PMX.catLabel(c.slug), n: counts[c.slug] || 0 };
+        var ic = PMX.catSvg ? '<span class="pmx-cati pmx-cati--sm">' + PMX.catSvg(c.slug) + '</span> ' : "";
+        return { slug: c.slug, icon: ic, label: PMX.catLabel(c.slug), n: counts[c.slug] || 0 };
       })
     );
     host.innerHTML = chips.map(function (c) {

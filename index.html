@@ -491,7 +491,7 @@ PMX.addTranslations({
     host.innerHTML = PMX.categories().map(function(c){
       var n = counts[c.slug]||0;
       return '<a class="pmx-cattile" href="/inventory/?cat='+c.slug+'">'+
-        '<span class="pmx-cattile__ic" aria-hidden="true">'+c.icon+'</span>'+
+        '<span class="pmx-cattile__ic" aria-hidden="true">'+(PMX.catSvg?PMX.catSvg(c.slug):'')+'</span>'+
         '<span class="pmx-cattile__name">'+PMX.catLabel(c.slug)+'</span>'+
         '<span class="pmx-cattile__meta">'+
           '<span class="pmx-cattile__count">'+(n>0 ? n+' '+PMX.t("home_cats_n") : PMX.t("home_cats_soon"))+'</span>'+
