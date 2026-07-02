@@ -198,8 +198,13 @@ body.pmx-mounted{ padding-top:var(--header-h); }
   width:42px; height:42px; background:transparent; border:1.5px solid rgba(255,255,255,.4);
   border-radius:12px; cursor:pointer; display:inline-flex; align-items:center;
   justify-content:center; padding:0; color:#fff; transition:border-color .18s, color .18s;
+  -webkit-tap-highlight-color:transparent;
 }
-.pmx-burger:hover{ border-color:var(--brand-2); color:var(--brand-2); }
+/* Solo en dispositivos con mouse real: en táctiles el :hover se "pega" tras
+   el toque y el botón quedaba rojo aunque el menú estuviera cerrado. */
+@media (hover:hover){ .pmx-burger:hover{ border-color:var(--brand-2); color:var(--brand-2); } }
+/* Estado real: rojo SOLO mientras el menú está abierto */
+body.pmx-open .pmx-burger{ border-color:var(--brand-2); color:var(--brand-2); }
 .pmx-mobilemenu{ background:#fff; box-shadow:0 8px 24px rgba(0,0,0,.12); padding:12px 16px; display:none; max-height:calc(100vh - 80px); overflow:auto; }
 .pmx-mobilemenu a{
   display:block; padding:14px 8px; border-bottom:1px solid var(--line);

@@ -49,7 +49,7 @@
 <body>
 
 <div class="pmx-sorteo">
-  <img class="pmx-sorteo__logo" id="logo" src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782163987/Logos-05_cqy7tj.png" alt="Promax Auto Broker">
+  <img class="pmx-sorteo__logo" id="logo" src="https://res.cloudinary.com/drbc4wbvw/image/upload/e_trim/v1782222860/Logos-06_ojajis.png" alt="Promax Auto Broker">
   <div class="pmx-sorteo__card">
     <span class="pmx-sorteo__tag">🎉 Sorteo Promax</span>
     <h1 class="pmx-sorteo__title">¡Ayúdanos a vender y participa!</h1>
@@ -74,8 +74,9 @@
   var CFG = window.PROMAX || {};
   var DB  = CFG.db || {};
   var REF = CFG.referrals || {};
-  // Logo desde config
-  try{ if(CFG.brand && CFG.brand.logo) document.getElementById('logo').src = CFG.brand.logo; }catch(e){}
+  // Logo desde config: en esta página el fondo es BLANCO, así que se usa la
+  // versión de letras oscuras (logoDark) para que no se pierda el "MAX".
+  try{ var lg = (CFG.brand && (CFG.brand.logoDark || CFG.brand.logo)); if(lg) document.getElementById('logo').src = lg; }catch(e){}
   // CTA WhatsApp desde config
   try{ if(CFG.contact && CFG.contact.whatsapp){
     document.getElementById('waCta').href = 'https://wa.me/'+CFG.contact.whatsapp+'?text='+encodeURIComponent('Hola, quiero ayudar a vender y participar en el sorteo Promax.');

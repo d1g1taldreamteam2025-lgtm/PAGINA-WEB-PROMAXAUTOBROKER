@@ -14,6 +14,8 @@ window.PROMAX = {
     // Logo oficial (Cloudinary). El header/footer es oscuro, por eso usamos el mismo en ambos.
     logo: "https://res.cloudinary.com/drbc4wbvw/image/upload/v1782163987/Logos-05_cqy7tj.png",
     logoLight: "https://res.cloudinary.com/drbc4wbvw/image/upload/v1782163987/Logos-05_cqy7tj.png",
+    // Versión para FONDOS CLAROS (letras negras): no se pierde sobre blanco.
+    logoDark: "https://res.cloudinary.com/drbc4wbvw/image/upload/e_trim/v1782222860/Logos-06_ojajis.png",
     logoText: "PROMAX",
     // Ícono de WhatsApp del botón flotante. Vacío ("") = ícono integrado nítido
     // (teléfono BLANCO sobre círculo verde). Si quieres una imagen propia, pega su
