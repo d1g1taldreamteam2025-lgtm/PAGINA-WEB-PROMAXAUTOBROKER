@@ -566,9 +566,12 @@
   /* ---------------- PROMO 15% OFF (botón flotante + popup, solo al hacer clic) ---------------- */
   function buildPromo() {
     return '' +
-      '<button class="pmx-promo-fab" id="pmxPromoFab" type="button" aria-label="15% OFF">' +
-        '<span class="pmx-promo-fab__big">15%</span><span class="pmx-promo-fab__small">OFF</span>' +
-      '</button>' +
+      '<div class="pmx-promo-fabwrap" id="pmxPromoFabWrap">' +
+        '<button class="pmx-promo-fab__x" id="pmxPromoFabX" type="button" aria-label="Cerrar oferta">&times;</button>' +
+        '<button class="pmx-promo-fab" id="pmxPromoFab" type="button" aria-label="15% OFF">' +
+          '<span class="pmx-promo-fab__big">15%</span><span class="pmx-promo-fab__small">OFF</span>' +
+        '</button>' +
+      '</div>' +
       '<div class="pmx-promo" id="pmxPromo">' +
         '<div class="pmx-promo__box">' +
           '<button class="pmx-promo__x" id="pmxPromoX" type="button" aria-label="Cerrar">&times;</button>' +
@@ -610,6 +613,17 @@
     }
     function open() { dl = Date.now() + DUR; modal.classList.add("is-open"); render(); if (tick) clearInterval(tick); tick = setInterval(render, 43); }
     function close() { modal.classList.remove("is-open"); if (tick) clearInterval(tick); }
+
+    // El botón flotante DEBE poder cerrarse para que no estorbe ni tape contenido.
+    var fabWrap = document.getElementById("pmxPromoFabWrap");
+    var fabX = document.getElementById("pmxPromoFabX");
+    try { if (sessionStorage.getItem("pmx_promo_fab_off") === "1" && fabWrap) fabWrap.style.display = "none"; } catch (e) {}
+    if (fabX) fabX.addEventListener("click", function (e) {
+      e.stopPropagation();
+      if (fabWrap) fabWrap.style.display = "none";
+      try { sessionStorage.setItem("pmx_promo_fab_off", "1"); } catch (_) {}
+    });
+
     fab.addEventListener("click", open);
     document.getElementById("pmxPromoX").addEventListener("click", close);
     document.getElementById("pmxPromoNo").addEventListener("click", close);
