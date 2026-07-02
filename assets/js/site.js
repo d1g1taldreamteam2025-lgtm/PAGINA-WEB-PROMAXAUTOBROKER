@@ -636,6 +636,9 @@
 
   /* ---------------- PROMO 15% OFF (botón flotante + popup, solo al hacer clic) ---------------- */
   function buildPromo() {
+    // En la solicitud de financiamiento NO se muestra: su función es traer al
+    // cliente hasta aquí; dentro del formulario solo tapa los campos.
+    if (/^\/financing\/apply\//.test(location.pathname)) return "";
     return '' +
       '<div class="pmx-promo-fabwrap" id="pmxPromoFabWrap">' +
         '<button class="pmx-promo-fab__x" id="pmxPromoFabX" type="button" aria-label="Cerrar oferta">&times;</button>' +

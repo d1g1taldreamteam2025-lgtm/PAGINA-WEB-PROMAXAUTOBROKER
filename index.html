@@ -49,9 +49,13 @@
 .pmx-hero2__slide{flex:0 0 100%;display:block;line-height:0;}
 .pmx-hero2__slide img{width:100%;height:auto;display:block;}
 .pmx-hero2__cta{position:absolute;left:0;right:0;bottom:62px;z-index:3;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:0 16px;}
-@media(max-width:768px){.pmx-hero2__cta{bottom:46px;gap:10px;}}
-@media(max-width:480px){.pmx-hero2__cta{flex-direction:column;align-items:center;bottom:44px;}}
+/* Móvil: los botones NO tapan el póster — van DEBAJO de la imagen, en franja propia */
+@media(max-width:768px){
+  .pmx-hero2__cta{position:static;background:#0a0a0a;padding:14px 14px 4px;gap:10px;flex-wrap:nowrap;}
+  .pmx-hero2__cta .pmx-btn{flex:1;min-width:0;padding:14px 10px;font-size:12.5px;white-space:nowrap;}
+}
 .pmx-hero2__dots{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);display:flex;gap:10px;z-index:3;}
+@media(max-width:768px){.pmx-hero2__dots{position:static;transform:none;justify-content:center;padding:12px 0 16px;background:#0a0a0a;}}
 .pmx-hero2__dots button{width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.7);background:rgba(0,0,0,.4);color:#fff;font-weight:700;font-size:14px;cursor:pointer;transition:all .2s;font-family:var(--font-head);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px);}
 .pmx-hero2__dots button:hover{border-color:#fff;}
 .pmx-hero2__dots button.is-on{background:var(--brand);border-color:var(--brand);transform:scale(1.12);}
@@ -113,7 +117,9 @@
 }
 /* ACTIVIDAD EN VIVO (señales que ciclan): estilos compartidos en theme.css */
 /* ORBITA DE MARCAS (estilo Specter: logos que orbitan y reaccionan al scroll) */
+.pmx-brands{overflow:hidden;} /* los logos que orbitan jamás ensanchan la página */
 .pmx-orbit{position:relative;width:min(540px,92vw);margin:6px auto 0;}
+@media(max-width:480px){.pmx-orbit{width:min(540px,80vw);}}
 .pmx-orbit::before{content:"";display:block;padding-top:100%;}
 .pmx-orbit__glow{position:absolute;left:50%;top:50%;width:48%;height:48%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(167,2,0,.16),rgba(244,220,52,.07) 55%,transparent 72%);filter:blur(4px);pointer-events:none;}
 .pmx-orbit__circle{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:1.5px dashed rgba(13,15,18,.12);border-radius:50%;pointer-events:none;}

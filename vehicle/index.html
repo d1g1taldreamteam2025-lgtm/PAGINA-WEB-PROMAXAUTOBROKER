@@ -137,12 +137,18 @@ PMX.addTranslations({
     // Similares: primero misma categoría, luego lo que haya
     var similar = all.filter(function(x){return x.id!==c.id && x.category===c.category;}).slice(0,3);
     if(similar.length<3) similar = similar.concat(all.filter(function(x){return x.id!==c.id && x.category!==c.category;}).slice(0,3-similar.length));
-    // Specs clave: solo las que existan (una moto de agua no lleva millaje/tracción)
+    // Specs clave: solo las que existan. Íconos SVG inline (no dependen de fuentes).
+    var ICO = {
+      speed: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 13.5 16 9"/><path d="M3.6 16.5a8.8 8.8 0 1 1 16.8 0"/></svg>',
+      fuel: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5v-13a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v13"/><path d="M3 19.5h11"/><path d="M12.5 10h2a1.5 1.5 0 0 1 1.5 1.5v5a1.4 1.4 0 0 0 2.8 0v-6l-2.3-2.3"/><path d="M6.7 8h3.6"/></svg>',
+      gear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.2M12 18.3v2.2M3.5 12h2.2M18.3 12h2.2M6 6l1.6 1.6M16.4 16.4 18 18M18 6l-1.6 1.6M7.6 16.4 6 18"/></svg>',
+      drive: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="2.4"/><circle cx="17" cy="7" r="2.4"/><circle cx="7" cy="17" r="2.4"/><circle cx="17" cy="17" r="2.4"/><path d="M7 9.4v5.2M17 9.4v5.2M9.4 12h5.2"/></svg>',
+    };
     var ks = [];
-    if(c.mileage>0) ks.push(['speed', PMX.num(c.mileage)+' mi']);
-    if(c.fuel) ks.push(['local_gas_station', c.fuel]);
-    if(c.transmission) ks.push(['settings', c.transmission]);
-    if(c.drivetrain) ks.push(['trending_up', c.drivetrain]);
+    if(c.mileage>0) ks.push([ICO.speed, PMX.num(c.mileage)+' mi']);
+    if(c.fuel) ks.push([ICO.fuel, c.fuel]);
+    if(c.transmission) ks.push([ICO.gear, c.transmission]);
+    if(c.drivetrain) ks.push([ICO.drive, c.drivetrain]);
 
     document.getElementById("pmxVD").innerHTML =
       '<div class="pmx-crumb"><a href="/inventory/">'+PMX.t("vd_back")+'</a> / <a href="/inventory/?cat='+c.category+'">'+PMX.catLabel(c.category)+'</a> / '+c.year+' '+c.make+' '+c.model+'</div>'+
@@ -174,7 +180,7 @@ PMX.addTranslations({
               '<button class="pmx-btn pmx-btn--ghost" type="button" data-act="info">'+PMX.t("act_moreinfo")+'</button>'+
             '</div>'+
           '</div>'+
-          (ks.length?'<div class="pmx-vd__keyspecs">'+ks.map(function(k){return '<span class="pmx-vd__ks"><span class="material-icons-outlined">'+k[0]+'</span>'+k[1]+'</span>';}).join("")+'</div>':'')+
+          (ks.length?'<div class="pmx-vd__keyspecs">'+ks.map(function(k){return '<span class="pmx-vd__ks"><span class="pmx-cati pmx-cati--sm" style="color:var(--brand)">'+k[0]+'</span>'+k[1]+'</span>';}).join("")+'</div>':'')+
         '</div>'+
       '</div>'+
       '<div class="pmx-vd__sections">'+

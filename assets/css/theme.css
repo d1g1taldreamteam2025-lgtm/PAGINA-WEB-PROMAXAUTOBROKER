@@ -643,6 +643,9 @@ body.pmx-scrolled .pmx-marquee{ max-height:0; padding-top:0; padding-bottom:0; b
   }
   .pmx-actbar--sticky .pmx-btn{ padding:12px 6px; font-size:11px; gap:5px; }
   body.pmx-has-actbar{ padding-bottom:84px; }
+  /* Los botones flotantes suben para no chocar con la barra de acciones */
+  body.pmx-has-actbar .pmx-fab__wa{ bottom:92px; }
+  body.pmx-has-actbar .pmx-promo-fabwrap{ bottom:92px; }
 }
 
 /* ===================== MENÚ COMPARTIR ===================== */
