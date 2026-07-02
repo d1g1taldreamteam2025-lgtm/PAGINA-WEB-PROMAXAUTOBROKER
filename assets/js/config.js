@@ -61,7 +61,7 @@ window.PROMAX = {
     { slug: "trucks_machinery", es: "Camiones y maquinaria", en: "Trucks & Machinery", icon: "🚛" },
     { slug: "vans",             es: "Vanes",                 en: "Vans",               icon: "🚐" },
     { slug: "motorcycles",      es: "Motos",                 en: "Motorcycles",        icon: "🏍️" },
-    { slug: "utv",              es: "UTV",                   en: "UTV",                icon: "🛻" },
+    { slug: "utv",              es: "UTV",                   en: "UTV",                icon: "🚜" },
     { slug: "watercraft",       es: "Motos de agua",         en: "Watercraft",         icon: "🚤" },
   ],
 

@@ -163,8 +163,10 @@ body.pmx-mounted{ padding-top:var(--header-h); }
 }
 .pmx-topbar__cta:hover{ background:var(--brand-dark); transform:translateY(-1px); }
 
-/* Barra principal (desktop) — translúcida con blur (premium) */
-.pmx-nav{ background:rgba(10,11,13,.86); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); box-shadow:0 10px 34px rgba(0,0,0,.35); border-bottom:1px solid rgba(255,255,255,.05); }
+/* Barra principal (desktop) — translúcida con blur (premium).
+   OJO: el blur crea un stacking context; el z-index alto mantiene el
+   dropdown de categorías POR ENCIMA del marquee y del contenido. */
+.pmx-nav{ position:relative; z-index:60; background:rgba(10,11,13,.86); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); box-shadow:0 10px 34px rgba(0,0,0,.35); border-bottom:1px solid rgba(255,255,255,.05); }
 .pmx-nav__inner{
   display:flex; align-items:center; gap:12px; max-width:var(--maxw);
   margin:0 auto; padding:13px 24px;
@@ -240,7 +242,7 @@ body.pmx-open .pmx-mobilemenu{ display:block; }
 @media (max-width:640px){ .pmx-raffle__inner{ font-size:12.5px; gap:8px; padding:8px 46px 8px 14px; } }
 
 /* ===================== MARQUEE ===================== */
-.pmx-marquee{ background:var(--dk-bg); color:#fff; overflow:hidden; padding:12px 0; position:relative; border-bottom:1px solid rgba(255,255,255,.05); }
+.pmx-marquee{ background:var(--dk-bg); color:#fff; overflow:hidden; padding:12px 0; position:relative; z-index:1; border-bottom:1px solid rgba(255,255,255,.05); }
 .pmx-marquee__track{ display:flex; width:max-content; animation:pmxM 26s linear infinite; }
 .pmx-marquee__group{ display:flex; align-items:center; flex-shrink:0; }
 .pmx-marquee__item{

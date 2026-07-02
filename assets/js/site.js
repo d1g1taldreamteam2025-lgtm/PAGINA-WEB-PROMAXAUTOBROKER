@@ -450,18 +450,31 @@
     });
   }
 
-  /* ---------------- MENÚ DESPLEGABLE (Financiamiento) ---------------- */
+  /* ---------------- MENÚS DESPLEGABLES (Inventario / Financiamiento) ---------------- */
+  // Desktop: se abren al PASAR el mouse y se cierran solos al quitarlo — nunca
+  // quedan "pegados" tapando el contenido. El clic en el enlace navega normal.
   var ddDocWired = false;
   function wireDropdown() {
     document.querySelectorAll("[data-dd]").forEach(function (wrap) {
       var trigger = wrap.querySelector("[data-dd-trigger]");
       if (!trigger || trigger.__dd) return; trigger.__dd = true;
+      var closeT = null;
+      function openDD() {
+        if (closeT) { clearTimeout(closeT); closeT = null; }
+        document.querySelectorAll("[data-dd].open").forEach(function (w) { if (w !== wrap) w.classList.remove("open"); });
+        wrap.classList.add("open");
+      }
+      function closeDD() {
+        closeT = setTimeout(function () { wrap.classList.remove("open"); }, 160);
+      }
+      wrap.addEventListener("mouseenter", function () {
+        if (window.matchMedia("(min-width:1025px)").matches) openDD();
+      });
+      wrap.addEventListener("mouseleave", closeDD);
       trigger.addEventListener("click", function (e) {
         if (window.matchMedia("(max-width:1024px)").matches) return; // en móvil usa el menú hamburguesa
-        e.preventDefault();
-        var isOpen = wrap.classList.contains("open");
-        document.querySelectorAll("[data-dd].open").forEach(function (w) { w.classList.remove("open"); });
-        if (!isOpen) wrap.classList.add("open");
+        // Pantallas táctiles grandes: el primer toque abre, el segundo navega.
+        if (!wrap.classList.contains("open")) { e.preventDefault(); openDD(); }
       });
     });
     if (!ddDocWired) {

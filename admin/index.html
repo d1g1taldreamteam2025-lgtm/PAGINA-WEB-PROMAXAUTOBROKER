@@ -219,7 +219,7 @@ tbody tr.is-sel{background:rgba(239,68,68,.10);}
         <option value="trucks_machinery">🚛 Camiones y maquinaria</option>
         <option value="vans">🚐 Vanes</option>
         <option value="motorcycles">🏍️ Motos</option>
-        <option value="utv">🛻 UTV</option>
+        <option value="utv">🚜 UTV</option>
         <option value="watercraft">🚤 Motos de agua</option>
       </select>
       <select id="filterStatus">
@@ -270,7 +270,7 @@ tbody tr.is-sel{background:rgba(239,68,68,.10);}
             <option value="trucks_machinery">🚛 Camiones y maquinaria</option>
             <option value="vans">🚐 Vanes</option>
             <option value="motorcycles">🏍️ Motos</option>
-            <option value="utv">🛻 UTV</option>
+            <option value="utv">🚜 UTV</option>
             <option value="watercraft">🚤 Motos de agua</option>
           </select></div>
           <div class="field"><label>¿Nuevo o usado? *</label><select id="fCondition" required><option value="used">Usado (Used)</option><option value="new">Nuevo (New)</option></select></div>
@@ -485,7 +485,7 @@ async function loadInventory(){
   }
 }
 
-const CAT_LABELS={cars:'🚗 Carros',trucks_machinery:'🚛 Camiones y maq.',vans:'🚐 Vanes',motorcycles:'🏍️ Motos',utv:'🛻 UTV',watercraft:'🚤 Motos de agua'};
+const CAT_LABELS={cars:'🚗 Carros',trucks_machinery:'🚛 Camiones y maq.',vans:'🚐 Vanes',motorcycles:'🏍️ Motos',utv:'🚜 UTV',watercraft:'🚤 Motos de agua'};
 function filteredInventory(){
   const q=($('searchBox').value||'').toLowerCase().trim();
   const fs=$('filterStatus').value, fb=$('filterBody').value, fc=$('filterCond').value, fcat=$('filterCat').value;
