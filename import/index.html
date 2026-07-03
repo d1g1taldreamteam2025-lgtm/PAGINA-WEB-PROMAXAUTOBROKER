@@ -40,6 +40,12 @@
 .imp-hero h1 em{font-style:normal;color:var(--brand-2);}
 .imp-hero p{font-size:clamp(15px,1.8vw,18px);color:#C9CED6;margin:0 0 28px;}
 .imp-hero__cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+/* Con el póster IA presente el título va DENTRO de la imagen: ocultamos el
+   texto duplicado (eyebrow + h1 + subtítulo) y dejamos solo los botones. */
+.imp-hero.has-img .imp-hero__inner{padding:22px 24px 42px;}
+.imp-hero.has-img .imp-hero__inner .pmx-eyebrow,
+.imp-hero.has-img .imp-hero__inner h1,
+.imp-hero.has-img .imp-hero__inner p{display:none;}
 /* Pasos */
 .imp-steps{counter-reset:paso;max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:14px;}
 .imp-step{display:flex;gap:18px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;transition:transform .2s,box-shadow .2s,border-color .2s;}

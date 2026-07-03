@@ -149,7 +149,8 @@ body.pmx-mounted{ padding-top:var(--header-h); }
 /* Selector de idioma */
 .pmx-lang{ display:inline-flex; gap:6px; align-items:center; }
 .pmx-lang__btn{
-  display:inline-flex; align-items:center; gap:6px; padding:4px 10px;
+  display:inline-flex; align-items:center; justify-content:center; gap:6px; padding:6px 11px;
+  min-height:36px; box-sizing:border-box; /* área táctil cómoda para el dedo en móvil */
   background:rgba(255,255,255,.07); border:1.5px solid rgba(255,255,255,.16);
   border-radius:var(--radius-pill); color:#fff; font-size:12px; font-weight:700; cursor:pointer;
   transition:all .18s;
@@ -259,7 +260,7 @@ body.pmx-open .pmx-mobilemenu{ display:block; }
   .pmx-raffle__ic{ display:none; } /* en móvil se oculta para dar todo el ancho al texto */
   .pmx-raffle__txt--full{ display:none; }
   .pmx-raffle__txt--short{ display:inline; flex:0 1 auto; min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
-  .pmx-raffle__cta{ flex:0 0 auto; padding:4px 11px; font-size:10px; }
+  .pmx-raffle__cta{ flex:0 0 auto; padding:6px 12px; font-size:10px; }
   .pmx-raffle__x{ right:8px; width:24px; height:24px; }
 }
 

@@ -558,9 +558,12 @@
       var target = parseFloat(raw) || 0;
       var dec = raw.indexOf(".") > -1 ? 1 : 0;
       var pre = el.getAttribute("data-pre") || "", suf = el.getAttribute("data-suf") || "";
-      var dur = 1600, start = null;
+      var dur = 1400, start = null;
+      // Los decimales (ej. calificación 4.9) arrancan cerca del final para NO
+      // mostrar por un instante un número alarmante como "2.2★".
+      var base = dec ? target * 0.85 : 0;
       function fmt(v) { return pre + (dec ? v.toFixed(1) : Math.floor(v).toLocaleString("en-US")) + suf; }
-      function step(ts) { if (!start) start = ts; var p = Math.min((ts - start) / dur, 1); var e = 1 - Math.pow(1 - p, 3); el.textContent = fmt(target * e); if (p < 1) requestAnimationFrame(step); else el.textContent = fmt(target); }
+      function step(ts) { if (!start) start = ts; var p = Math.min((ts - start) / dur, 1); var e = 1 - Math.pow(1 - p, 3); el.textContent = fmt(base + (target - base) * e); if (p < 1) requestAnimationFrame(step); else el.textContent = fmt(target); }
       requestAnimationFrame(step);
     }
     if (!("IntersectionObserver" in window)) { els.forEach(run); return; }
