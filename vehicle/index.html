@@ -259,18 +259,21 @@ PMX.addTranslations({
       '<a href="/vehicle/?id='+c.id+'" class="pmx-btn pmx-btn--primary" style="margin-top:auto">'+PMX.t("btn_details")+'</a></div></article>';
   }
 
-  PMX.loadInventory().then(function(cars){
-    var c = cars.filter(function(x){return String(x.id)===String(id);})[0];
+  // Escala: pide SOLO este vehículo (ficha completa) + unos similares livianos,
+  // en vez de descargar todo el inventario para mostrar uno.
+  PMX.loadVehicle(id).then(function(c){
     if(!c){
       document.getElementById("pmxVD").innerHTML='<div class="pmx-vd__missing"><h2>'+PMX.t("vd_missing_t")+'</h2><p style="color:var(--text-faint);margin:8px 0 22px">'+PMX.t("vd_missing_s")+'</p><a href="/inventory/" class="pmx-btn pmx-btn--primary">'+PMX.t("vd_see_all")+'</a></div>';
       return;
     }
     CAR = c;
     document.title = c.year+" "+c.make+" "+c.model+" | Promax Auto Broker";
-    render(c, cars);
-    PMX.apply();
-    // Al cambiar idioma, re-pintar toda la ficha con las etiquetas traducidas
-    window.addEventListener("pmx-lang", function(){ render(c, cars); PMX.apply(); });
+    PMX.loadSimilar(c.category, c.id, 6).then(function(sims){
+      render(c, sims || []);
+      PMX.apply();
+      // Al cambiar idioma, re-pintar toda la ficha con las etiquetas traducidas
+      window.addEventListener("pmx-lang", function(){ render(c, sims || []); PMX.apply(); });
+    });
   });
 })();
 </script>

@@ -474,9 +474,18 @@ $('loginForm').addEventListener('submit', async (e) => {
 
 async function loadInventory(){
   try {
-    const { data, error } = await sb.from(TABLE).select('*').order('created_at',{ascending:false});
-    if (error) throw error;
-    inventory = data || [];
+    // Supabase entrega máx. 1000 filas por consulta: recorremos por páginas
+    // para que el admin muestre TODO el inventario aunque sean miles.
+    const PAGE = 1000;
+    let all = [], from = 0;
+    for(;;){
+      const { data, error } = await sb.from(TABLE).select('*').order('created_at',{ascending:false}).range(from, from + PAGE - 1);
+      if (error) throw error;
+      all = all.concat(data || []);
+      if (!data || data.length < PAGE) break;
+      from += PAGE;
+    }
+    inventory = all;
     renderTable();
     updateStats();
   } catch (e) {

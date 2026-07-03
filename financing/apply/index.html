@@ -199,8 +199,8 @@ PMX.addTranslations({
   // Vehículo de interés via ?vin=
   var vin = new URLSearchParams(location.search).get("vin");
   if(vin){
-    PMX.loadInventory().then(function(cars){
-      var c = cars.filter(function(x){return String(x.id)===String(vin);})[0];
+    // Pide solo ESE vehículo (no todo el inventario) — clave con catálogos grandes
+    PMX.loadVehicle(vin).then(function(c){
       var box = document.getElementById("pmxVehBox");
       if(c){ box.style.display="block"; box.innerHTML = PMX.t("ap_veh")+' <strong>'+c.year+' '+c.make+' '+c.model+'</strong> · '+PMX.money(c.price); }
     });
