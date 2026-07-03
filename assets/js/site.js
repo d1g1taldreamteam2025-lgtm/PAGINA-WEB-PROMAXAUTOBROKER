@@ -24,6 +24,35 @@
   var MOBILE_MQ = window.matchMedia ? window.matchMedia("(max-width:768px)") : null;
   if (MOBILE_MQ && MOBILE_MQ.addEventListener) MOBILE_MQ.addEventListener("change", function () { applyI18n(LANG); });
 
+  /* ---------------- PRECARGA DEL OTRO IDIOMA (cambio ES/EN instantáneo) ----------------
+     Sin esto, al pulsar ES/EN el navegador recién descargaba las imágenes del
+     otro idioma (pesadas) y el cambio se sentía trabado. Cuando la página ya
+     terminó de cargar, calentamos la caché con esas imágenes en segundo plano. */
+  function preloadLangImages() {
+    try {
+      var urls = [];
+      var mob = MOBILE_MQ && MOBILE_MQ.matches;
+      var other = (LANG === "en") ? "es" : "en";
+      // 1) Imágenes por clave i18n (héroes de inventario/financiamiento, etc.)
+      document.querySelectorAll("[data-i18n-src]").forEach(function (el) {
+        var k = (mob && el.getAttribute("data-i18n-src-m")) || el.getAttribute("data-i18n-src");
+        if (k && DICT[other] && DICT[other][k]) urls.push(DICT[other][k]);
+      });
+      // 2) Slides del carrusel del home (data-es/data-en y variantes -m de celular)
+      document.querySelectorAll("[data-es],[data-en]").forEach(function (el) {
+        var u = (mob && el.getAttribute("data-" + other + "-m")) || el.getAttribute("data-" + other);
+        if (u) urls.push(u);
+      });
+      // 3) Imagen del popup 15% (ambos idiomas, para que abra ya lista)
+      if (DICT.es && DICT.es.promo_img) urls.push(DICT.es.promo_img);
+      if (DICT.en && DICT.en.promo_img) urls.push(DICT.en.promo_img);
+      urls.forEach(function (u) { var im = new Image(); im.decoding = "async"; im.src = u; });
+    } catch (e) {}
+  }
+  function schedulePreload() { setTimeout(preloadLangImages, 1200); }
+  if (document.readyState === "complete") schedulePreload();
+  else window.addEventListener("load", schedulePreload);
+
   // Diccionario global (las páginas pueden extenderlo con PMX.addTranslations)
   var DICT = { es: {}, en: {} };
   function addTranslations(obj) {

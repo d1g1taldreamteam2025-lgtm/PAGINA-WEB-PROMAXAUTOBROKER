@@ -31,7 +31,7 @@
 /* HERO importación: oscuro dramático (aquí va el póster IA cuando esté listo) */
 .imp-hero{position:relative;background:radial-gradient(120% 150% at 80% 10%,rgba(194,26,18,.35),transparent 55%),linear-gradient(115deg,#0A0B0D 40%,#14060a 75%,#2b0906);color:#fff;text-align:center;overflow:hidden;}
 .imp-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--brand),var(--brand-2),var(--brand));}
-.imp-hero__poster{display:none;width:100%;height:auto;max-height:66vh;object-fit:contain;background:#0a0b0d;}
+.imp-hero__poster{display:none;width:100%;height:auto;max-height:76vh;object-fit:cover;object-position:center;}
 @media(max-width:768px){.imp-hero__poster{max-height:none;}} /* póster vertical completo, sin recortes */
 .imp-hero.has-img .imp-hero__poster{display:block;}
 .imp-hero__inner{max-width:820px;margin:0 auto;padding:clamp(64px,9vw,110px) 24px;}
