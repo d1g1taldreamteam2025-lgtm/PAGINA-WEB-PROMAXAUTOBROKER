@@ -62,8 +62,8 @@
       cta_prequalify: "Pre-Calificar",
       nav_home: "Inicio", nav_inventory: "Inventario", nav_financing: "Financiamiento",
       nav_fin_overview: "Resumen de Financiamiento", nav_fin_overview_sub: "Tasas, pasos y aliados", nav_fin_apply: "Aplicar a Financiamiento",
-      nav_about: "Nosotros", nav_contact: "Contacto", nav_faqs: "Preguntas", nav_import: "Importación 🇻🇪",
-      foot_tag: "Tu broker de confianza en toda USA: vehículos, maquinaria y financiamiento flexible — y exportación a Venezuela 🇻🇪.",
+      nav_about: "Nosotros", nav_contact: "Contacto", nav_faqs: "Preguntas", nav_import: "Importación",
+      foot_tag: "Tu broker de confianza en toda USA: vehículos, maquinaria y financiamiento flexible — y exportación a Venezuela.",
       foot_inventory: "Inventario", foot_view_all: "Ver Todo el Inventario",
       foot_under_20k: "Menos de $20k", foot_under_10k: "Menos de $10k",
       foot_resources: "Recursos", foot_apply: "Aplicar a Financiamiento", foot_import: "Importar a Venezuela",
@@ -90,8 +90,8 @@
       cta_prequalify: "Get Pre-Qualified",
       nav_home: "Home", nav_inventory: "Inventory", nav_financing: "Financing",
       nav_fin_overview: "Financing Overview", nav_fin_overview_sub: "Rates, steps & lenders", nav_fin_apply: "Apply for Financing",
-      nav_about: "About", nav_contact: "Contact Us", nav_faqs: "FAQs", nav_import: "Import 🇻🇪",
-      foot_tag: "Your trusted broker across the USA: vehicles, machinery and flexible financing — plus export to Venezuela 🇻🇪.",
+      nav_about: "About", nav_contact: "Contact Us", nav_faqs: "FAQs", nav_import: "Import",
+      foot_tag: "Your trusted broker across the USA: vehicles, machinery and flexible financing — plus export to Venezuela.",
       foot_inventory: "Inventory", foot_view_all: "View All Inventory",
       foot_under_20k: "Under $20k", foot_under_10k: "Under $10k",
       foot_resources: "Resources", foot_apply: "Apply for Financing", foot_import: "Import to Venezuela",
@@ -139,6 +139,9 @@
     var rf = CFG.referrals || {};
     es.raffle_txt = "<b>¡Participa en nuestro sorteo!</b> " + (rf.prizeES || "");
     en.raffle_txt = "<b>Join our giveaway!</b> " + (rf.prizeEN || rf.prizeES || "");
+    // Versión CORTA para móvil (cabe en una sola línea, sin recortes)
+    es.raffle_short = "<b>¡Gana $500 por referir!</b>";
+    en.raffle_short = "<b>Earn $500 per referral!</b>";
     es.raffle_cta = "Participar"; en.raffle_cta = "Enter now";
     es.act_buy = "Comprar"; en.act_buy = "Buy now";
     es.act_share = "Compartir"; en.act_share = "Share";
@@ -730,7 +733,8 @@
     return '<div class="pmx-raffle" id="pmxRaffle">' +
       '<div class="pmx-raffle__inner">' +
         '<span class="pmx-raffle__ic">🎁</span>' +
-        '<span class="pmx-raffle__txt" data-i18n="raffle_txt">' + t("raffle_txt") + '</span>' +
+        '<span class="pmx-raffle__txt pmx-raffle__txt--full" data-i18n="raffle_txt">' + t("raffle_txt") + '</span>' +
+        '<span class="pmx-raffle__txt pmx-raffle__txt--short" data-i18n="raffle_short">' + t("raffle_short") + '</span>' +
         '<a class="pmx-raffle__cta" href="/referrals/"><span data-i18n="raffle_cta">' + t("raffle_cta") + '</span></a>' +
       '</div>' +
       '<button class="pmx-raffle__x" id="pmxRaffleX" type="button" aria-label="Cerrar aviso">&times;</button>' +

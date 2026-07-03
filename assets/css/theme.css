@@ -238,6 +238,7 @@ body.pmx-open .pmx-mobilemenu{ display:block; }
 }
 .pmx-raffle__ic{ font-size:16px; }
 .pmx-raffle__txt b{ font-weight:800; }
+.pmx-raffle__txt--short{ display:none; } /* solo se muestra en móvil */
 .pmx-raffle__cta{
   display:inline-flex; align-items:center; gap:5px; background:#fff; color:var(--brand);
   font-family:var(--font-head); font-weight:800; font-size:12px; letter-spacing:.4px;
@@ -254,9 +255,10 @@ body.pmx-open .pmx-mobilemenu{ display:block; }
 .pmx-raffle__x:hover{ background:rgba(255,255,255,.3); }
 /* Móvil: franja de sorteo COMPACTA en una sola línea (no invasiva) */
 @media (max-width:640px){
-  .pmx-raffle__inner{ font-size:11.5px; gap:7px; padding:7px 40px 7px 12px; flex-wrap:nowrap; justify-content:flex-start; text-align:left; }
-  .pmx-raffle__ic{ display:none; }
-  .pmx-raffle__txt{ flex:1; min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+  .pmx-raffle__inner{ font-size:11.5px; gap:8px; padding:7px 34px 7px 12px; flex-wrap:nowrap; justify-content:center; text-align:center; }
+  .pmx-raffle__ic{ display:none; } /* en móvil se oculta para dar todo el ancho al texto */
+  .pmx-raffle__txt--full{ display:none; }
+  .pmx-raffle__txt--short{ display:inline; flex:0 1 auto; min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
   .pmx-raffle__cta{ flex:0 0 auto; padding:4px 11px; font-size:10px; }
   .pmx-raffle__x{ right:8px; width:24px; height:24px; }
 }

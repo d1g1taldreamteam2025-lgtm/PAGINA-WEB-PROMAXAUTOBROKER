@@ -127,7 +127,7 @@ window.PROMAX = {
 
   /* ---------- BARRA SUPERIOR (marquee) ---------- */
   marquee: {
-    es: ["Vehículos y Maquinaria en toda USA", "Exportamos a Venezuela 🇻🇪", "Bajo Pago Inicial", "Aprobación Rápida", "Aceptamos ITIN", "+500 Clientes Satisfechos", "Atención Personalizada"],
-    en: ["Vehicles & Machinery across the USA", "We Export to Venezuela 🇻🇪", "Low Down Payment", "Fast Approval", "ITIN Accepted", "+500 Happy Clients", "Personalized Service"],
+    es: ["Vehículos y Maquinaria en toda USA", "Exportamos a Venezuela", "Bajo Pago Inicial", "Aprobación Rápida", "Aceptamos ITIN", "+500 Clientes Satisfechos", "Atención Personalizada"],
+    en: ["Vehicles & Machinery across the USA", "We Export to Venezuela", "Low Down Payment", "Fast Approval", "ITIN Accepted", "+500 Happy Clients", "Personalized Service"],
   },
 };
