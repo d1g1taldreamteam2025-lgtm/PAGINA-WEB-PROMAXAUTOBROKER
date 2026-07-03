@@ -19,6 +19,11 @@
   }
   var LANG = getLang();
 
+  // Media query móvil compartida: las imágenes con data-i18n-src-m usan su
+  // variante VERTICAL en celular y vuelven a la horizontal en pantalla grande.
+  var MOBILE_MQ = window.matchMedia ? window.matchMedia("(max-width:768px)") : null;
+  if (MOBILE_MQ && MOBILE_MQ.addEventListener) MOBILE_MQ.addEventListener("change", function () { applyI18n(LANG); });
+
   // Diccionario global (las páginas pueden extenderlo con PMX.addTranslations)
   var DICT = { es: {}, en: {} };
   function addTranslations(obj) {
@@ -42,6 +47,9 @@
     });
     document.querySelectorAll("[data-i18n-src]").forEach(function (el) {
       var k = el.getAttribute("data-i18n-src");
+      // Variante vertical para celular (data-i18n-src-m), si la página la define
+      var km = el.getAttribute("data-i18n-src-m");
+      if (km && MOBILE_MQ && MOBILE_MQ.matches && DICT[LANG] && DICT[LANG][km] != null) k = km;
       if (DICT[LANG] && DICT[LANG][k] != null) el.setAttribute("src", DICT[LANG][k]);
     });
     document.querySelectorAll(".pmx-lang__btn").forEach(function (b) {
@@ -78,7 +86,7 @@
       open_now: "Abierto ahora", closed_now: "Cerrado",
       proof_action: "acaba de reservar", proof_verified: "Reserva verificada",
       promo_badge: "Solo para ti", promo_title: "Reclama tu 15% OFF",
-      promo_img: "https://res.cloudinary.com/drbc4wbvw/image/upload/v1782165811/post_1_6_wxp5cw.png",
+      promo_img: "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_900/v1783050699/15_OFF_ESPA_OL_mupupy.png",
       promo_sub: "Aplica hoy a tu financiamiento y recibe <b>15% de descuento</b> en tu primera compra.",
       promo_ends: "Tu descuento vence en", promo_h: "Horas", promo_m: "Min", promo_s: "Seg", promo_ms: "Ms",
       promo_yes: "Quiero mi descuento", promo_no: "No, gracias",
@@ -106,7 +114,7 @@
       open_now: "Open now", closed_now: "Closed",
       proof_action: "just reserved", proof_verified: "Verified reservation",
       promo_badge: "Just for you", promo_title: "Claim your 15% OFF",
-      promo_img: "https://res.cloudinary.com/drbc4wbvw/image/upload/v1782310226/post_2_4_uihcge.png",
+      promo_img: "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_900/v1783050716/15_OFF_ENGLHISH_boybwo.png",
       promo_sub: "Apply for financing today and get <b>15% off</b> your first purchase.",
       promo_ends: "Your discount expires in", promo_h: "Hours", promo_m: "Min", promo_s: "Sec", promo_ms: "Ms",
       promo_yes: "I want my discount", promo_no: "No, thanks",

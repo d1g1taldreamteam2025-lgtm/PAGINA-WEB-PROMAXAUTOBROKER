@@ -39,7 +39,8 @@
 .fin-hero__list li svg{flex-shrink:0;color:var(--brand-2);margin-top:2px;}
 .fin-hero__card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:var(--radius-lg);padding:30px 28px;backdrop-filter:blur(4px);}
 .fin-hero__card h3{font-family:var(--font-head);font-size:18px;color:#fff;margin:0 0 20px;}
-.fin-hero__poster{display:block;width:100%;height:clamp(260px,32vw,420px);object-fit:cover;object-position:center top;}
+.fin-hero__poster{display:block;width:100%;height:auto;max-height:66vh;object-fit:contain;background:#0d0f12;}
+@media(max-width:768px){.fin-hero__poster{max-height:none;}} /* póster vertical completo, sin recortes */
 .fin-hero__poster-link{display:block;}
 .fin-hero__cta{text-align:center;padding:18px 16px 24px;}
 .fin-trust{display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.1);}
@@ -85,7 +86,7 @@
 <section class="fin-hero">
   <h1 data-i18n="fin_h1" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Pre-califica en minutos</h1>
   <a href="/financing/apply/" class="fin-hero__poster-link" aria-label="Pre-calificar ahora">
-    <img class="fin-hero__poster" data-i18n-src="fin_hero_img" src="https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1782423558/Post_1_7_g6scm9.png" alt="Promax Auto Broker — Pre-califica en minutos: consulta suave sin impacto a tu credito, ITIN aceptado, varios prestamistas y decision rapida.">
+    <img class="fin-hero__poster" data-i18n-src="fin_hero_img" data-i18n-src-m="fin_hero_img_m" src="https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051028/precalifica_espa_ol_bi4ttf.png" alt="Promax Auto Broker — Pre-califica en minutos: consulta suave sin impacto a tu credito, ITIN aceptado, varios prestamistas y decision rapida.">
   </a>
   <div class="fin-hero__cta"><a href="/financing/apply/" class="pmx-btn pmx-btn--primary" data-i18n="fin_cta">Pre-Calificar Ahora</a></div>
 </section>
@@ -208,7 +209,8 @@ PMX.addTranslations({
     fin_b3:"Trabajamos con varios prestamistas para ti.",
     fin_b4:"Decisión rápida y atención personalizada.",
     fin_cta:"Pre-Calificar Ahora",
-    fin_hero_img:"https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1782423558/Post_1_7_g6scm9.png",
+    fin_hero_img:"https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051028/precalifica_espa_ol_bi4ttf.png",
+    fin_hero_img_m:"https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051028/precalifica_telf_espa_o_bel8ag.png",
     fin_card_t:"Por qué confiar en nosotros",
     fin_tr1_t:"Consulta segura", fin_tr1_s:"Sin afectar tu puntaje de crédito",
     fin_tr2_t:"Respuesta rápida", fin_tr2_s:"Conoce tus opciones en minutos",
@@ -246,7 +248,8 @@ PMX.addTranslations({
     fin_b3:"We work with multiple lenders for you.",
     fin_b4:"Fast decision and personalized service.",
     fin_cta:"Get Pre-Qualified Now",
-    fin_hero_img:"https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1782423592/Post_5_In_3_gcdkw5.png",
+    fin_hero_img:"https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051029/precalifica_ingles_qaahwk.png",
+    fin_hero_img_m:"https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051028/get_precualifed_telf_ingles_mcdlsh.png",
     fin_card_t:"Why trust us",
     fin_tr1_t:"Secure inquiry", fin_tr1_s:"Without affecting your credit score",
     fin_tr2_t:"Fast response", fin_tr2_s:"Know your options in minutes",

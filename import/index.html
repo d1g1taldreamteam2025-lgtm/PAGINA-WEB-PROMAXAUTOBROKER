@@ -31,7 +31,8 @@
 /* HERO importación: oscuro dramático (aquí va el póster IA cuando esté listo) */
 .imp-hero{position:relative;background:radial-gradient(120% 150% at 80% 10%,rgba(194,26,18,.35),transparent 55%),linear-gradient(115deg,#0A0B0D 40%,#14060a 75%,#2b0906);color:#fff;text-align:center;overflow:hidden;}
 .imp-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--brand),var(--brand-2),var(--brand));}
-.imp-hero__poster{display:none;width:100%;height:clamp(260px,32vw,430px);object-fit:cover;object-position:center top;}
+.imp-hero__poster{display:none;width:100%;height:auto;max-height:66vh;object-fit:contain;background:#0a0b0d;}
+@media(max-width:768px){.imp-hero__poster{max-height:none;}} /* póster vertical completo, sin recortes */
 .imp-hero.has-img .imp-hero__poster{display:block;}
 .imp-hero__inner{max-width:820px;margin:0 auto;padding:clamp(64px,9vw,110px) 24px;}
 .imp-hero .pmx-eyebrow{color:#fff;background:rgba(194,26,18,.85);padding:7px 16px;border-radius:999px;}
@@ -181,7 +182,12 @@ PMX.addTranslations({
 
   // Póster del hero (cuando el cliente entregue las imágenes IA):
   // data-es / data-en / data-es-m / data-en-m — se activa solo al definirlas.
-  var POSTERS = { es:"", en:"", esM:"", enM:"" }; // <- pegar URLs de Cloudinary aquí
+  var POSTERS = {
+    es:  "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051270/importacion_jqenay.png",
+    en:  "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051270/importacion_ingles_yket1x.png",
+    esM: "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051267/importa_telefono_es_cqo2xy.png",
+    enM: "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051269/importa_ingles_tel_mb8wg1.png"
+  };
   function poster(){
     var en = PMX.lang && PMX.lang()==='en';
     var m = window.matchMedia('(max-width:768px)').matches;
@@ -192,6 +198,8 @@ PMX.addTranslations({
   }
   poster();
   window.addEventListener('pmx-lang', poster);
+  var _pmq = window.matchMedia('(max-width:768px)');
+  if (_pmq.addEventListener) _pmq.addEventListener('change', poster);
 })();
 </script>
 </body>

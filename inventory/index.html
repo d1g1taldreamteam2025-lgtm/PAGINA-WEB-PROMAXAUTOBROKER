@@ -29,7 +29,8 @@
 <link rel="icon" type="image/png" href="https://res.cloudinary.com/drbc4wbvw/image/upload/e_trim,c_pad,w_256,h_256,b_transparent/v1781816671/Logos_wbzal9.png">
 <style>
 .pmx-invhero{background:#0d0f12;color:#fff;padding:0 0 22px;text-align:center;position:relative;}
-.pmx-invhero__poster{display:block;width:100%;height:clamp(260px,32vw,420px);object-fit:cover;object-position:center top;}
+.pmx-invhero__poster{display:block;width:100%;height:auto;max-height:66vh;object-fit:contain;background:#0d0f12;}
+@media(max-width:768px){.pmx-invhero__poster{max-height:none;}} /* póster vertical completo, sin recortes */
 .pmx-invhero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--brand),var(--brand-2),var(--brand));}
 .pmx-invhero h1{font-size:46px;margin:14px 0 12px;letter-spacing:-1px;}
 .pmx-invhero p{font-size:17px;color:rgba(255,255,255,.85);margin:0 0 26px;}
@@ -114,7 +115,7 @@
 
 <section class="pmx-invhero">
   <h1 data-i18n="inv_title" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Encuentra tu vehículo ideal</h1>
-  <img class="pmx-invhero__poster" data-i18n-src="inv_hero_img" src="https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1782422953/Post_2_5_g7wzwf.png" alt="Promax Auto Broker" loading="eager" fetchpriority="high">
+  <img class="pmx-invhero__poster" data-i18n-src="inv_hero_img" data-i18n-src-m="inv_hero_img_m" src="https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051159/INventario_espa_ol_zrqvtz.png" alt="Promax Auto Broker" loading="eager" fetchpriority="high">
   <div class="pmx-invstats">
     <span class="pmx-invstat"><strong id="pmxStatCount">0</strong> <span data-i18n="inv_available">Disponibles</span></span>
     <span class="pmx-invstat"><strong>4.9★</strong> <span data-i18n="inv_rating">Calificación</span></span>
