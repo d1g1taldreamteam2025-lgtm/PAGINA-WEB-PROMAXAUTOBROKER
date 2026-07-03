@@ -213,7 +213,7 @@
     var c = CFG.contact || {};
     var navDesktop = NAV.map(function (n) {
       if (n.key === "nav_inventory" && catList().length) {
-        // Dropdown de categorías (Carros, Camiones, Vanes, Motos, UTV, Motos de agua)
+        // Dropdown de categorías (Carros, Camiones, Vans, Motos, UTV, Motos de agua)
         var catLinks = catList().map(function (cc) {
           return '<a href="/inventory/?cat=' + cc.slug + '"><span class="pmx-cati pmx-cati--sm">' + catSvg(cc.slug) + '</span> <span data-i18n="cat_' + cc.slug + '">' + t("cat_" + cc.slug) + '</span></a>';
         }).join("");
