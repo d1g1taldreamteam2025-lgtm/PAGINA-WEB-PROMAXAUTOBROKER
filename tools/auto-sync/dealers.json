@@ -1,0 +1,34 @@
+[
+  {
+    "name": "AutoDeal Miami",
+    "url": "https://www.autodealmiami.net/inventory/",
+    "source": "autodealmiami.net",
+    "minYear": 2020
+  },
+  {
+    "name": "International Cars USA",
+    "url": "https://www.internationalcarsusa.com/inventory/",
+    "source": "internationalcarsusa.com",
+    "minYear": 2020
+  },
+  {
+    "name": "HGreg",
+    "url": "https://www.hgreg.com/used-car",
+    "source": "hgreg.com",
+    "minYear": 2020
+  },
+  {
+    "name": "HGreg Trucks",
+    "url": "https://www.hgregtrucks.com/used-truck",
+    "source": "hgregtrucks.com",
+    "minYear": 2022,
+    "isTrucks": true
+  },
+  {
+    "name": "Motoport USA",
+    "url": "https://www.motoportusa.com/Inventory/All-Inventory-In-Stock",
+    "source": "motoportusa.com",
+    "minYear": 2020,
+    "isPower": true
+  }
+]

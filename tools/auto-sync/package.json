@@ -1,0 +1,12 @@
+{
+  "name": "promax-auto-sync",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Robot semanal que sincroniza el inventario de varios dealers a Supabase",
+  "scripts": {
+    "sync": "node sync.js"
+  },
+  "dependencies": {
+    "playwright": "1.47.2"
+  }
+}

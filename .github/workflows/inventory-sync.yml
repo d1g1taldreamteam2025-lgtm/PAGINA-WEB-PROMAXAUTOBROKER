@@ -1,0 +1,40 @@
+name: Sincronizar inventario (semanal)
+
+# Corre solo cada LUNES a las 10:00 UTC (~6:00 a.m. en Miami en horario de
+# verano / 5:00 a.m. en invierno). También se puede lanzar a mano desde la
+# pestaña "Actions" con el botón "Run workflow".
+on:
+  schedule:
+    - cron: "0 10 * * 1"
+  workflow_dispatch: {}
+
+# Evita que dos corridas se pisen
+concurrency:
+  group: inventory-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Descargar el repo
+        uses: actions/checkout@v4
+
+      - name: Preparar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Instalar Playwright + Chromium
+        working-directory: tools/auto-sync
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: Ejecutar la sincronización
+        working-directory: tools/auto-sync
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: node sync.js
