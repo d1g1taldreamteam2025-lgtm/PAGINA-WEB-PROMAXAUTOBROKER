@@ -109,6 +109,19 @@ window.PROMAX = {
     inquiriesTable: "promax_inquiries",
   },
 
+  /* ---------- MEDICIÓN / ANALYTICS ---------- */
+  // Analytics PROPIO: siempre activo (guarda visitas, clics, WhatsApp, calor…
+  // en tu Supabase; se ve en /admin/analytics.html). Además, si pegas aquí tus
+  // IDs, se activan solos Google Analytics 4 y/o Microsoft Clarity (gratis):
+  //   ga4:     analytics.google.com → Administrar → Flujos de datos → "G-XXXXXXXXXX"
+  //   clarity: clarity.microsoft.com → tu proyecto → Settings → el código corto
+  analytics: {
+    enabled: true,
+    table: "promax_analytics",
+    ga4: "",
+    clarity: "",
+  },
+
   /* ---------- REFERIDOS / SORTEO ---------- */
   referrals: {
     goal: 100,

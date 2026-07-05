@@ -1000,4 +1000,14 @@
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mount);
   else mount();
+
+  // Medición de tráfico (analytics propio + GA4/Clarity si hay IDs en config).
+  // Se carga aparte para no frenar el render; corre en TODAS las páginas que
+  // usan site.js. Ver assets/js/analytics.js y /admin/analytics.html.
+  try {
+    var anScript = document.createElement("script");
+    anScript.src = "/assets/js/analytics.js";
+    anScript.async = true;
+    document.body.appendChild(anScript);
+  } catch (e) {}
 })();
