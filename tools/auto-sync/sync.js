@@ -26,6 +26,8 @@ const DEALERS = JSON.parse(fs.readFileSync(DEALERS_FILE, 'utf8'));
 
 const SUPABASE_URL = (process.env.SUPABASE_URL || '').replace(/\/$/, '');
 const SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY || '';
+const ADMIN_EMAIL = process.env.PROMAX_ADMIN_EMAIL || '';
+const ADMIN_PASS = process.env.PROMAX_ADMIN_PASSWORD || '';
 const TABLE_NAME = process.env.PROMAX_TABLE || 'promax_inventory';
 const TABLE = SUPABASE_URL + '/rest/v1/' + TABLE_NAME;
 const CONC = parseInt(process.env.PROMAX_CONCURRENCY || '4', 10);
@@ -33,10 +35,45 @@ const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML,
 
 function log(m) { console.log('[' + new Date().toISOString() + '] ' + m); }
 
+// La anon key es PÚBLICA (va en el navegador). La leemos del propio repo para
+// no tener que configurarla como secret cuando se usa el login de admin.
+function readAnonKey() {
+  if (process.env.SUPABASE_ANON_KEY) return process.env.SUPABASE_ANON_KEY;
+  try {
+    const cfg = fs.readFileSync(path.join(__dirname, '..', '..', 'assets', 'js', 'config.js'), 'utf8');
+    const m = cfg.match(/anonKey:\s*["']([^"']+)["']/);
+    if (m) return m[1];
+  } catch (e) {}
+  return '';
+}
+
+// Dos formas de tener permiso de escritura:
+//   1) SUPABASE_SERVICE_KEY (service_role) — pasa RLS directo.
+//   2) PROMAX_ADMIN_EMAIL + PROMAX_ADMIN_PASSWORD — inicia sesión como el
+//      usuario del panel (rol authenticated), igual que /admin/. Más fácil
+//      porque son las credenciales que ya usas para entrar.
+let AUTH = null;
+async function resolveAuth() {
+  if (SERVICE_KEY) { AUTH = { apikey: SERVICE_KEY, bearer: SERVICE_KEY }; log('Auth: service_role key.'); return; }
+  if (ADMIN_EMAIL && ADMIN_PASS) {
+    const anon = readAnonKey();
+    if (!anon) throw new Error('No encontré la anon key. Define SUPABASE_ANON_KEY.');
+    const res = await fetch(SUPABASE_URL + '/auth/v1/token?grant_type=password', {
+      method: 'POST', headers: { apikey: anon, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: ADMIN_EMAIL, password: ADMIN_PASS }),
+    });
+    if (!res.ok) throw new Error('Login de admin falló (' + res.status + '): ' + (await res.text()).slice(0, 160));
+    const j = await res.json();
+    if (!j.access_token) throw new Error('Login de admin sin access_token.');
+    AUTH = { apikey: anon, bearer: j.access_token }; log('Auth: sesión de admin (' + ADMIN_EMAIL + ').'); return;
+  }
+  throw new Error('FALTAN credenciales. Define SUPABASE_SERVICE_KEY, o PROMAX_ADMIN_EMAIL + PROMAX_ADMIN_PASSWORD.');
+}
+
 async function supa(method, urlSuffix, body, extraPrefer) {
   const headers = {
-    apikey: SERVICE_KEY,
-    Authorization: 'Bearer ' + SERVICE_KEY,
+    apikey: AUTH.apikey,
+    Authorization: 'Bearer ' + AUTH.bearer,
     'Content-Type': 'application/json',
     Prefer: extraPrefer || 'return=minimal',
   };
@@ -90,10 +127,11 @@ async function scrapeDealer(browser, d, stamp) {
 }
 
 async function main() {
-  if (!SUPABASE_URL || !SERVICE_KEY) {
-    console.error('FALTAN secrets: SUPABASE_URL y/o SUPABASE_SERVICE_KEY.');
+  if (!SUPABASE_URL) {
+    console.error('FALTA el secret SUPABASE_URL (ej. https://db.ucallnow.fun).');
     process.exit(1);
   }
+  await resolveAuth(); // valida credenciales antes de arrancar
   const stamp = new Date().toISOString();
   log('Sincronización semanal — sello ' + stamp);
   const launchOpts = { args: ['--no-sandbox', '--disable-blink-features=AutomationControlled'], headless: process.env.PROMAX_HEADFUL ? false : true };

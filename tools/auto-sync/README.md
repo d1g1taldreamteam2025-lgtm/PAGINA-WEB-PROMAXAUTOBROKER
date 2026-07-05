@@ -22,12 +22,28 @@ create index if not exists idx_pmx_inv_source_status on promax_inventory (source
 ```
 
 ### 2) Secrets en GitHub
-Repo → **Settings → Secrets and variables → Actions → New repository secret**:
+Repo → **Settings → Secrets and variables → Actions → New repository secret**.
 
+**Siempre:**
 | Secret | Valor |
 |---|---|
-| `SUPABASE_URL` | `https://db.ucallnow.fun` |
-| `SUPABASE_SERVICE_KEY` | la **service_role** key de Supabase (Settings → API → `service_role`). Tiene permiso de escritura; por eso va como secret, nunca en el código. |
+| `SUPABASE_URL` | `https://db.ucallnow.fun` — la URL **pública** (NO `http://supabase-kong:8000`, que es interna y GitHub no alcanza). |
+
+**Y para el permiso de escritura, elige UNA de estas dos opciones:**
+
+**Opción A — service_role key** (lo más directo):
+| Secret | Valor |
+|---|---|
+| `SUPABASE_SERVICE_KEY` | la **service_role** de Supabase (Supabase Studio → Settings → API → `service_role`, o el `SERVICE_ROLE_KEY` del stack de Supabase). ⚠️ NO es la API key de n8n. |
+
+**Opción B — login de admin** (más fácil: son las credenciales que ya usas para entrar a `/admin/`):
+| Secret | Valor |
+|---|---|
+| `PROMAX_ADMIN_EMAIL` | tu correo de admin (ej. `promax@promaxautobroker.com`) |
+| `PROMAX_ADMIN_PASSWORD` | tu contraseña de admin |
+
+La anon key (pública) el robot la lee sola de `assets/js/config.js`; no hace
+falta configurarla. Si defines las dos opciones, usa la A.
 
 ### 3) Activar Actions
 Pestaña **Actions** del repo → habilitar workflows si están apagados.

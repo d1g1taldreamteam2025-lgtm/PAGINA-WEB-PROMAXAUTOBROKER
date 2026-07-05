@@ -36,5 +36,9 @@ jobs:
         working-directory: tools/auto-sync
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          # Opción A: service_role key (pasa RLS directo)
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          # Opción B (más fácil): las credenciales de tu panel /admin/
+          PROMAX_ADMIN_EMAIL: ${{ secrets.PROMAX_ADMIN_EMAIL }}
+          PROMAX_ADMIN_PASSWORD: ${{ secrets.PROMAX_ADMIN_PASSWORD }}
         run: node sync.js
