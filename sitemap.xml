@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Reemplaza https://promaxautobroker.com por el dominio real cuando esté listo. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://promaxautobroker.com/</loc><priority>1.0</priority></url>
-  <url><loc>https://promaxautobroker.com/inventory/</loc><priority>0.9</priority></url>
-  <url><loc>https://promaxautobroker.com/import/</loc><priority>0.9</priority></url>
-  <url><loc>https://promaxautobroker.com/inventory/?cat=cars</loc><priority>0.7</priority></url>
-  <url><loc>https://promaxautobroker.com/inventory/?cat=trucks_machinery</loc><priority>0.7</priority></url>
-  <url><loc>https://promaxautobroker.com/inventory/?cat=vans</loc><priority>0.7</priority></url>
-  <url><loc>https://promaxautobroker.com/inventory/?cat=motorcycles</loc><priority>0.7</priority></url>
-  <url><loc>https://promaxautobroker.com/inventory/?cat=utv</loc><priority>0.7</priority></url>
-  <url><loc>https://promaxautobroker.com/inventory/?cat=watercraft</loc><priority>0.7</priority></url>
-  <url><loc>https://promaxautobroker.com/financing/</loc><priority>0.8</priority></url>
-  <url><loc>https://promaxautobroker.com/financing/apply/</loc><priority>0.8</priority></url>
-  <url><loc>https://promaxautobroker.com/about/</loc><priority>0.6</priority></url>
-  <url><loc>https://promaxautobroker.com/contact/</loc><priority>0.7</priority></url>
-  <url><loc>https://promaxautobroker.com/faqs/</loc><priority>0.6</priority></url>
-  <url><loc>https://promaxautobroker.com/privacy/</loc><priority>0.3</priority></url>
-  <url><loc>https://promaxautobroker.com/terms/</loc><priority>0.3</priority></url>
-  <url><loc>https://promaxautobroker.com/accessibility/</loc><priority>0.3</priority></url>
+  <url><loc>https://www.promaxautobroker.com/</loc><priority>1.0</priority></url>
+  <url><loc>https://www.promaxautobroker.com/inventory/</loc><priority>0.9</priority></url>
+  <url><loc>https://www.promaxautobroker.com/import/</loc><priority>0.9</priority></url>
+  <url><loc>https://www.promaxautobroker.com/inventory/?cat=cars</loc><priority>0.7</priority></url>
+  <url><loc>https://www.promaxautobroker.com/inventory/?cat=trucks_machinery</loc><priority>0.7</priority></url>
+  <url><loc>https://www.promaxautobroker.com/inventory/?cat=vans</loc><priority>0.7</priority></url>
+  <url><loc>https://www.promaxautobroker.com/inventory/?cat=motorcycles</loc><priority>0.7</priority></url>
+  <url><loc>https://www.promaxautobroker.com/inventory/?cat=utv</loc><priority>0.7</priority></url>
+  <url><loc>https://www.promaxautobroker.com/inventory/?cat=watercraft</loc><priority>0.7</priority></url>
+  <url><loc>https://www.promaxautobroker.com/financing/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.promaxautobroker.com/financing/apply/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.promaxautobroker.com/about/</loc><priority>0.6</priority></url>
+  <url><loc>https://www.promaxautobroker.com/contact/</loc><priority>0.7</priority></url>
+  <url><loc>https://www.promaxautobroker.com/faqs/</loc><priority>0.6</priority></url>
+  <url><loc>https://www.promaxautobroker.com/privacy/</loc><priority>0.3</priority></url>
+  <url><loc>https://www.promaxautobroker.com/terms/</loc><priority>0.3</priority></url>
+  <url><loc>https://www.promaxautobroker.com/accessibility/</loc><priority>0.3</priority></url>
 </urlset>

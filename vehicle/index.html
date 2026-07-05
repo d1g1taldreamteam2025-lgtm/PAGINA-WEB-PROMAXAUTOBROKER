@@ -6,13 +6,13 @@
 <title>Detalle del Vehículo | Promax Auto Broker</title>
 <meta name="description" content="Detalles del vehículo en Promax Auto Broker. Fotos, specs, compra directa y opciones de financiamiento.">
 <!-- Open Graph / Twitter (vista previa al compartir en WhatsApp, redes) -->
-<link rel="canonical" href="https://promaxautobroker.com/vehicle/">
+<link rel="canonical" href="https://www.promaxautobroker.com/vehicle/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Promax Auto Broker">
-<meta property="og:locale" content="es_ES">
+<meta property="og:locale" content="es_US">
 <meta property="og:title" content="Detalle del Vehículo | Promax Auto Broker">
 <meta property="og:description" content="Detalles del vehículo en Promax Auto Broker. Fotos, specs, compra directa y opciones de financiamiento.">
-<meta property="og:url" content="https://promaxautobroker.com/vehicle/">
+<meta property="og:url" content="https://www.promaxautobroker.com/vehicle/">
 <meta property="og:image" content="https://res.cloudinary.com/drbc4wbvw/image/upload/c_pad,w_1200,h_630,b_rgb:0a0a0a,f_auto,q_auto/v1782163987/Logos-05_cqy7tj.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -21,10 +21,12 @@
 <meta name="twitter:title" content="Detalle del Vehículo | Promax Auto Broker">
 <meta name="twitter:description" content="Detalles del vehículo en Promax Auto Broker. Fotos, specs, compra directa y opciones de financiamiento.">
 <meta name="twitter:image" content="https://res.cloudinary.com/drbc4wbvw/image/upload/c_pad,w_1200,h_630,b_rgb:0a0a0a,f_auto,q_auto/v1782163987/Logos-05_cqy7tj.png">
+<link rel="preconnect" href="https://res.cloudinary.com">
+<link rel="preconnect" href="https://db.ucallnow.fun" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/theme.css">
 <link rel="icon" type="image/png" href="https://res.cloudinary.com/drbc4wbvw/image/upload/e_trim,c_pad,w_256,h_256,b_transparent/v1781816671/Logos_wbzal9.png">
 <style>
@@ -268,6 +270,32 @@ PMX.addTranslations({
     }
     CAR = c;
     document.title = c.year+" "+c.make+" "+c.model+" | Promax Auto Broker";
+    // ===== SEO por vehículo (Google renderiza JS): título ya puesto arriba;
+    // aquí meta description, canonical con ?id= (cada ficha es SU propia URL,
+    // ya no colapsan todas en /vehicle/) y JSON-LD Vehicle con precio y fotos.
+    try{
+      var vurl="https://www.promaxautobroker.com/vehicle/?id="+encodeURIComponent(c.id);
+      var desc=c.year+" "+c.make+" "+c.model+(c.trim?" "+c.trim:"")+" en Miami"+(c.price?" por $"+Number(c.price).toLocaleString("en-US"):"")+(c.mileage?", "+Number(c.mileage).toLocaleString("en-US")+" millas":"")+". Financiamiento flexible e importación a Venezuela con Promax Auto Broker.";
+      var md=document.querySelector('meta[name="description"]'); if(md) md.setAttribute("content",desc);
+      var cn=document.querySelector('link[rel="canonical"]'); if(cn) cn.setAttribute("href",vurl);
+      var ogt=document.querySelector('meta[property="og:title"]'); if(ogt) ogt.setAttribute("content",document.title);
+      var ogd=document.querySelector('meta[property="og:description"]'); if(ogd) ogd.setAttribute("content",desc);
+      var ogu=document.querySelector('meta[property="og:url"]'); if(ogu) ogu.setAttribute("content",vurl);
+      var cover=(c.gallery&&c.gallery[0])||c.cover_image;
+      if(cover){ var ogi=document.querySelector('meta[property="og:image"]'); if(ogi) ogi.setAttribute("content",cover); }
+      var ld={"@context":"https://schema.org","@type":"Vehicle","name":c.year+" "+c.make+" "+c.model+(c.trim?" "+c.trim:""),
+        "brand":{"@type":"Brand","name":c.make},"model":c.model,"vehicleModelDate":String(c.year),"url":vurl,
+        "image":(c.gallery&&c.gallery.length?c.gallery:(cover?[cover]:[])),
+        "offers":{"@type":"Offer","price":Number(c.price)||0,"priceCurrency":"USD",
+          "availability":"https://schema.org/"+(c.status==="sold"?"SoldOut":"InStock"),
+          "seller":{"@type":"AutoDealer","name":"Promax Auto Broker","telephone":"+1-305-676-1259"}}};
+      if(c.mileage) ld.mileageFromOdometer={"@type":"QuantitativeValue","value":Number(c.mileage),"unitCode":"SMI"};
+      if(c.vin&&String(c.vin).length===17) ld.vehicleIdentificationNumber=String(c.vin).toUpperCase();
+      if(c.fuel) ld.fuelType=c.fuel;
+      if(c.transmission) ld.vehicleTransmission=c.transmission;
+      var ls=document.createElement("script"); ls.type="application/ld+json"; ls.textContent=JSON.stringify(ld);
+      document.head.appendChild(ls);
+    }catch(e){}
     PMX.loadSimilar(c.category, c.id, 6).then(function(sims){
       render(c, sims || []);
       PMX.apply();

@@ -3,5 +3,5 @@ Allow: /
 Disallow: /referrals/
 Disallow: /admin/
 
-# Reemplaza el dominio por el real cuando esté listo:
-Sitemap: https://promaxautobroker.com/sitemap.xml
+Sitemap: https://www.promaxautobroker.com/sitemap.xml
+Sitemap: https://www.promaxautobroker.com/sitemap-vehicles.xml
