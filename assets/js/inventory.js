@@ -25,6 +25,7 @@
       inv_err_t: "No se pudo cargar el inventario", inv_err_s: "Recarga la página o intenta más tarde.",
       btn_details: "Ver Detalles", btn_prequal: "Pre-Calificar", prev: "Anterior", next: "Siguiente",
       body_suv: "SUV", body_sedan: "SEDÁN", body_truck: "CAMIONETA", body_coupe: "COUPÉ",
+      body_hatchback: "HATCHBACK", body_van: "VAN", body_wagon: "FAMILIAR", body_convertible: "CONVERTIBLE", body_minivan: "MINIVAN",
       cats_all: "Todo", inv_empty_cat_t: "Próximamente",
       inv_empty_cat_s: "Aún no hay {cat} publicados. Escríbenos y te conseguimos el tuyo.",
       inv_ask_cta: "Pregúntanos por WhatsApp",
@@ -49,6 +50,7 @@
       inv_err_t: "Unable to load inventory", inv_err_s: "Refresh the page or try later.",
       btn_details: "View Details", btn_prequal: "Pre-Qualify", prev: "Prev", next: "Next",
       body_suv: "SUV", body_sedan: "SEDAN", body_truck: "TRUCK", body_coupe: "COUPE",
+      body_hatchback: "HATCHBACK", body_van: "VAN", body_wagon: "WAGON", body_convertible: "CONVERTIBLE", body_minivan: "MINIVAN",
       cats_all: "All", inv_empty_cat_t: "Coming soon",
       inv_empty_cat_s: "No {cat} published yet. Message us and we'll find yours.",
       inv_ask_cta: "Ask us on WhatsApp",
@@ -59,7 +61,13 @@
   var state = { category: "all", quick: "all", condition: "all", search: "", sort: "new", page: 1,
     filters: { make: [], body: [], priceMin: null, priceMax: null, yearMin: null, yearMax: null, mileageMax: null } };
 
-  function bodyLabel(b) { return PMX.t("body_" + b) || b.toUpperCase(); }
+  function bodyLabel(b) {
+    if (!b) return "";
+    var t = PMX.t("body_" + b);
+    // Si no hay traducción, PMX.t devuelve la misma clave ("body_van"): en ese
+    // caso mostramos la palabra en mayúscula, nunca el slug crudo.
+    return (t && t !== "body_" + b) ? t : String(b).replace(/_/g, " ").toUpperCase();
+  }
 
   function applyAll() {
     var r = CARS.slice();

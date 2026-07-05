@@ -15,6 +15,18 @@
 
   var CATEGORY_SLUGS = (CFG.categories || []).map(function (c) { return c.slug; });
 
+  // Los dealers guardan la marca en cualquier casing ("CADILLAC", "ford",
+  // "Chevrolet"). La unificamos a un formato consistente para que el filtro y
+  // las tarjetas no mezclen mayúsculas/minúsculas (y no salgan facetas dobles).
+  var MAKE_UP = { GMC: 1, BMW: 1, RAM: 1, GTI: 1, SRT: 1, AMG: 1, "MINI": 0 };
+  function canonMake(m) {
+    m = String(m == null ? "" : m).trim();
+    if (!m) return "";
+    var t = m.toLowerCase().replace(/(^|[\s\-\/])([a-záéíóúñ])/g, function (_, sep, c) { return sep + c.toUpperCase(); });
+    ["GMC", "BMW", "RAM", "GTI", "SRT", "AMG"].forEach(function (a) { t = t.replace(new RegExp("\\b" + a + "\\b", "ig"), a); });
+    return t;
+  }
+
   // Campos livianos para listados (todo lo que usan tarjetas, filtros y buscador)
   var SLIM = "id,stock,category,year,make,model,trim,body_type,price,msrp,mileage,fuel,transmission,drivetrain,badge,featured,cover_image,created_at";
   var PAGE = 1000; // máximo de filas por respuesta en Supabase/PostgREST
@@ -28,7 +40,7 @@
     return {
       id: r.id || r.stock || ((r.year || "") + "-" + (r.make || "") + "-" + (r.model || "")).toLowerCase().replace(/\s+/g, "-"),
       category: cat,
-      year: r.year, make: r.make, model: r.model, trim: r.trim || "",
+      year: r.year, make: canonMake(r.make), model: r.model, trim: r.trim || "",
       bodyType: (r.body_type || "sedan").toLowerCase(),
       price: Number(r.price) || 0, msrp: r.msrp ? Number(r.msrp) : null,
       mileage: Number(r.mileage) || 0,
