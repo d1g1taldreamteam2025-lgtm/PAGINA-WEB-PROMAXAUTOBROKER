@@ -100,24 +100,50 @@ async function markSold(source, stamp) {
     { status: 'sold' });
 }
 
+// Da tiempo a que los antibots que redirigen (Imperva/Cloudflare) resuelvan su
+// challenge y aterricen en la página real ANTES de inyectar el motor.
+async function settle(page, ms) {
+  await page.waitForTimeout(ms);
+  await page.waitForLoadState('domcontentloaded').catch(function () {});
+}
+
+// Inyectamos el motor con page.evaluate (canal DevTools/CDP), NO con
+// addScriptTag: muchos dealers tienen CSP que bloquea <script> inline
+// ("Refused to execute inline script…") y evaluate NO pasa por CSP. Las
+// funciones quedan en el window de la página. El motor corre DENTRO del
+// navegador (mismo origen que el dealer => pasa antibot y fetchea las fichas).
+async function injectAndExtract(page, d, stamp) {
+  await page.evaluate('(function(){' + ENGINE + ';window.__PMX_RUN=promaxRunAll;window.__PMX_TODB=promaxToDb;})()');
+  return await page.evaluate(async (opts) => {
+    const list = await window.__PMX_RUN(opts, function () {});
+    return list.map(function (r) { return window.__PMX_TODB(r, opts.source, opts.stamp); });
+  }, {
+    pages: 'all', details: true, concurrency: CONC,
+    host: d.source, source: d.source, stamp,
+    isTrucks: !!d.isTrucks, isPower: !!d.isPower, minYear: d.minYear,
+  });
+}
+
+// "Execution context was destroyed / navigation" = la página se redirigió justo
+// al inyectar (típico de Imperva). No es un fallo real: reintentamos una vez
+// tras dejar que la redirección termine.
+function isNavRace(msg) { return /context was destroyed|execution context|because of a navigation/i.test(msg || ''); }
+
 async function scrapeDealer(browser, d, stamp) {
   const ctx = await browser.newContext({ userAgent: UA, viewport: { width: 1366, height: 900 }, locale: 'en-US' });
   const page = await ctx.newPage();
   let rows = [];
   try {
     await page.goto(d.url, { waitUntil: 'domcontentloaded', timeout: 60000 });
-    await page.waitForTimeout(3000);
-    await page.addScriptTag({ content: ENGINE });
-    // El motor corre DENTRO del navegador (mismo origen que el dealer => pasa
-    // antibot y puede fetchear las fichas). Devuelve filas ya en formato DB.
-    rows = await page.evaluate(async (opts) => {
-      const list = await window.promaxRunAll(opts, function () {});
-      return list.map(function (r) { return window.promaxToDb(r, opts.source, opts.stamp); });
-    }, {
-      pages: 'all', details: true, concurrency: CONC,
-      host: d.source, source: d.source, stamp,
-      isTrucks: !!d.isTrucks, isPower: !!d.isPower, minYear: d.minYear,
-    });
+    await settle(page, 4000);
+    try {
+      rows = await injectAndExtract(page, d, stamp);
+    } catch (e) {
+      if (!isNavRace(e.message)) throw e;
+      log('  · ' + d.name + ': la página se redirigió (antibot); reintento tras asentar…');
+      await settle(page, 5000);
+      rows = await injectAndExtract(page, d, stamp);
+    }
   } catch (e) {
     log('  ✗ ' + d.name + ' ERROR de scraping: ' + e.message);
   } finally {
