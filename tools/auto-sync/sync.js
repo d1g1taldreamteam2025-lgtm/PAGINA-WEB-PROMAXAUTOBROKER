@@ -107,6 +107,35 @@ async function settle(page, ms) {
   await page.waitForLoadState('domcontentloaded').catch(function () {});
 }
 
+// Algunos inventarios (DealerCenter/Carsforsale) montan las tarjetas por JS
+// DESPUÉS de cargar la página. Esperamos a que aparezcan señales de tarjeta
+// (hasta ~12s) con un empujón de scroll para disparar el lazy-load. Además
+// dejamos un diagnóstico en el log: si un dealer sale 0, ahí se ve qué recibió
+// el servidor (p.ej. una página de bloqueo antibot con el body casi vacío, o
+// contenido real que el selector no reconoció).
+async function waitForInventory(page, d) {
+  async function signals() {
+    return await page.evaluate(function () {
+      return document.querySelectorAll('[data-vin]').length +
+        document.querySelectorAll('[class*="vehicle"],[class*="listing"],[class*="inventory"]').length;
+    }).catch(function () { return 0; });
+  }
+  let n = await signals();
+  for (let i = 0; i < 6 && n === 0; i++) {
+    await page.evaluate(function () { window.scrollTo(0, document.body.scrollHeight); }).catch(function () {});
+    await page.waitForTimeout(2000);
+    n = await signals();
+  }
+  const diag = await page.evaluate(function () {
+    return {
+      t: (document.title || '').slice(0, 70),
+      b: ((document.body && document.body.innerText) || '').length,
+      v: document.querySelectorAll('[data-vin]').length,
+    };
+  }).catch(function () { return { t: '?', b: 0, v: 0 }; });
+  log('  · ' + d.name + ' [diag] señales=' + n + ' vin=' + diag.v + ' body=' + diag.b + ' title="' + diag.t + '"');
+}
+
 // Inyectamos el motor con page.evaluate (canal DevTools/CDP), NO con
 // addScriptTag: muchos dealers tienen CSP que bloquea <script> inline
 // ("Refused to execute inline script…") y evaluate NO pasa por CSP. Las
@@ -136,6 +165,7 @@ async function scrapeDealer(browser, d, stamp) {
   try {
     await page.goto(d.url, { waitUntil: 'domcontentloaded', timeout: 60000 });
     await settle(page, 4000);
+    await waitForInventory(page, d);
     try {
       rows = await injectAndExtract(page, d, stamp);
     } catch (e) {
