@@ -93,11 +93,13 @@ async function upsert(rows) {
   }
 }
 
-async function markSold(source, stamp) {
-  // Los de esta fuente que ya no se vieron en esta corrida -> vendidos
-  await supa('PATCH',
-    '?source=eq.' + encodeURIComponent(source) + '&status=eq.available&last_sync=lt.' + encodeURIComponent(stamp),
-    { status: 'sold' });
+async function cleanupStale(source, stamp) {
+  // BORRA de esta fuente todo lo que NO se vio en esta corrida (el dealer ya
+  // no lo tiene = vendido/retirado). Asi el catalogo queda 100% fresco cada
+  // semana y cualquier dato malo de corridas anteriores se elimina solo.
+  // Los carros cargados A MANO (source null) nunca se tocan.
+  await supa('DELETE',
+    '?source=eq.' + encodeURIComponent(source) + '&last_sync=lt.' + encodeURIComponent(stamp));
 }
 
 // Da tiempo a que los antibots que redirigen (Imperva/Cloudflare) resuelvan su
@@ -105,6 +107,32 @@ async function markSold(source, stamp) {
 async function settle(page, ms) {
   await page.waitForTimeout(ms);
   await page.waitForLoadState('domcontentloaded').catch(function () {});
+}
+
+// Cloudflare en modo estricto sirve "Just a moment..." y el navegador lo
+// resuelve solo en unos segundos (por eso HGreg pasa). Esperamos a que el
+// título deje de ser el del challenge (hasta ~45s) y, si sigue trancado,
+// recargamos UNA vez: para entonces la cookie cf_clearance suele existir y
+// la recarga aterriza directo en el inventario.
+const CHALLENGE_RE = /just a moment|attention required|access denied|un momento|checking your browser|verify you are/i;
+async function isChallenged(page) {
+  const t = await page.title().catch(function () { return ''; });
+  return CHALLENGE_RE.test(t || '');
+}
+async function waitForChallenge(page, d) {
+  if (!(await isChallenged(page))) return;
+  log('  · ' + d.name + ': challenge antibot detectado; esperando a que se resuelva…');
+  for (let i = 0; i < 30; i++) { // hasta 45s
+    await page.waitForTimeout(1500);
+    if (!(await isChallenged(page))) { await settle(page, 2500); log('  · ' + d.name + ': challenge superado.'); return; }
+  }
+  log('  · ' + d.name + ': challenge sigue; recargando con la cookie obtenida…');
+  await page.reload({ waitUntil: 'domcontentloaded', timeout: 60000 }).catch(function () {});
+  for (let i = 0; i < 20; i++) { // hasta 30s más
+    if (!(await isChallenged(page))) { await settle(page, 2500); log('  · ' + d.name + ': challenge superado tras recargar.'); return; }
+    await page.waitForTimeout(1500);
+  }
+  log('  · ' + d.name + ': el antibot no soltó la página (seguirá saliendo 0).');
 }
 
 // Algunos inventarios (DealerCenter/Carsforsale) montan las tarjetas por JS
@@ -159,12 +187,18 @@ async function injectAndExtract(page, d, stamp) {
 function isNavRace(msg) { return /context was destroyed|execution context|because of a navigation/i.test(msg || ''); }
 
 async function scrapeDealer(browser, d, stamp) {
-  const ctx = await browser.newContext({ userAgent: UA, viewport: { width: 1366, height: 900 }, locale: 'en-US' });
+  // En modo headed (CI con xvfb) NO tocamos el user-agent: el UA real del
+  // Chromium con ventana es consistente con su huella TLS/JS y Cloudflare lo
+  // acepta mejor. En headless (pruebas locales) sí lo maquillamos.
+  const ctxOpts = { viewport: { width: 1366, height: 900 }, locale: 'en-US' };
+  if (!process.env.PROMAX_HEADFUL) ctxOpts.userAgent = UA;
+  const ctx = await browser.newContext(ctxOpts);
   const page = await ctx.newPage();
   let rows = [];
   try {
     await page.goto(d.url, { waitUntil: 'domcontentloaded', timeout: 60000 });
     await settle(page, 4000);
+    await waitForChallenge(page, d);
     await waitForInventory(page, d);
     try {
       rows = await injectAndExtract(page, d, stamp);
@@ -180,6 +214,28 @@ async function scrapeDealer(browser, d, stamp) {
     await ctx.close();
   }
   return rows;
+}
+
+// SEO: regenera sitemap-vehicles.xml con TODOS los vehículos disponibles para
+// que Google indexe cada ficha. El workflow lo commitea si cambió.
+const SITE_URL = process.env.PROMAX_SITE_URL || 'https://www.promaxautobroker.com';
+function xmlEsc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+async function generateSitemap() {
+  const rows = [];
+  for (let off = 0; off < 45000; off += 1000) {
+    const res = await supa('GET', '?status=eq.available&select=id,last_sync&order=id.asc&limit=1000&offset=' + off, null, 'count=exact');
+    const page = await res.json();
+    rows.push.apply(rows, page);
+    if (page.length < 1000) break;
+  }
+  const items = rows.map(function (r) {
+    const lm = (r.last_sync || new Date().toISOString()).slice(0, 10);
+    return '  <url><loc>' + xmlEsc(SITE_URL + '/vehicle/?id=' + encodeURIComponent(r.id)) + '</loc><lastmod>' + lm + '</lastmod><changefreq>weekly</changefreq></url>';
+  });
+  const xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + items.join('\n') + '\n</urlset>\n';
+  const out = path.join(__dirname, '..', '..', 'sitemap-vehicles.xml');
+  fs.writeFileSync(out, xml);
+  log('SEO: sitemap-vehicles.xml regenerado con ' + rows.length + ' vehículos.');
 }
 
 async function main() {
@@ -202,7 +258,7 @@ async function main() {
     if (rows.length) {
       try {
         await upsert(rows);
-        await markSold(d.source, stamp);
+        await cleanupStale(d.source, stamp);
         grand += rows.length;
         summary.push(d.name + ': ' + rows.length + ' ✓');
       } catch (e) {
@@ -214,6 +270,7 @@ async function main() {
     }
   }
   await browser.close();
+  try { await generateSitemap(); } catch (e) { log('SEO: no se pudo regenerar el sitemap (' + e.message.slice(0, 80) + ') — no afecta la sincronización.'); }
   log('===== RESUMEN =====');
   summary.forEach((s) => log('  ' + s));
   log('TOTAL sincronizado: ' + grand + ' vehículos');

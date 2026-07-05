@@ -22,6 +22,10 @@
   function canonMake(m) {
     m = String(m == null ? "" : m).trim();
     if (!m) return "";
+    // Variantes del mismo fabricante -> UNA sola faceta (con y sin guion)
+    var low = m.toLowerCase().replace(/[\s\-]+/g, " ");
+    var MAP = { "mercedes benz": "Mercedes-Benz", "rolls royce": "Rolls-Royce", "mclaren": "McLaren" };
+    if (MAP[low]) return MAP[low];
     var t = m.toLowerCase().replace(/(^|[\s\-\/])([a-záéíóúñ])/g, function (_, sep, c) { return sep + c.toUpperCase(); });
     ["GMC", "BMW", "RAM", "GTI", "SRT", "AMG"].forEach(function (a) { t = t.replace(new RegExp("\\b" + a + "\\b", "ig"), a); });
     return t;

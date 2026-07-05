@@ -110,7 +110,7 @@ function promaxExtract(opts, root){
       return 'motorcycles';
     }
     if(isTrucks) return 'trucks_machinery';
-    if(body==='Van') return 'vans';
+    if(body==='Van'||body==='Minivan') return 'vans';
     if(/PETERBILT|KENWORTH|FREIGHTLINER|\bMACK\b|\bHINO\b|WESTERN STAR/.test(U)) return 'trucks_machinery';
     return 'cars';
   }
@@ -144,12 +144,34 @@ function promaxExtract(opts, root){
     if(price<1000){ var pl=T.match(/(?:price|precio)[:\s]*\$?\s*([\d,]{4,})/i); if(pl) price=N(pl[1]); }
     if(price<1000){ var a$=(T.match(/\$\s*[\d,]{4,}/g)||[]).map(N).filter(function(n){return n>1000&&n<600000;}); if(a$.length) price=Math.max.apply(null,a$); }
     var mileage=0; var mm=T.match(/([\d,]{1,7})\s*(?:mi\b|miles|millas)/i)||T.match(/(?:mileage|millaje|odometer)[:\s]*([\d,]{1,7})/i); if(mm) mileage=N(mm[1]);
-    var body=(has(U,'SUV')||has(U,'SPORT UTILITY')||has(U,'CROSSOVER'))?'SUV':(has(U,'PICKUP')||has(U,'CREW CAB')||has(U,'REG CAB')||has(U,'EXT CAB')||/\bTRUCK\b/.test(U))?'Truck':(has(U,'MINIVAN')||has(U,'CARGO VAN')||has(U,'PASSENGER VAN')||/\bVAN\b/.test(U))?'Van':has(U,'COUPE')?'Coupe':(has(U,'HATCHBACK')||has(U,'HATCH'))?'Hatchback':has(U,'WAGON')?'Wagon':(has(U,'CONVERTIBLE')||has(U,'CABRIO')||has(U,'ROADSTER'))?'Convertible':has(U,'SEDAN')?'Sedan':'';
-    var ib=ip(el,'bodyType'); if(!body&&ib) body=ib.charAt(0).toUpperCase()+ib.slice(1).toLowerCase();
+    // Carroceria: 1) itemprop, 2) el TITULO del carro, 3) etiquetas EXPLICITAS
+    // ("Body: Van") en el texto. NUNCA un "VAN"/"TRUCK" suelto en toda la
+    // tarjeta: las paginas traidas por fetch incluyen texto OCULTO (filtros,
+    // selects) y clasificaba sedanes como vans (Challenger->Van).
+    function bodyFrom(S){
+      if(!S) return '';
+      S=String(S).toUpperCase();
+      if(has(S,'SUV')||has(S,'SPORT UTILITY')||has(S,'CROSSOVER')) return 'SUV';
+      if(has(S,'MINIVAN')) return 'Minivan';
+      if(has(S,'CARGO VAN')||has(S,'PASSENGER VAN')||/\bVAN\b/.test(S)) return 'Van';
+      if(has(S,'PICKUP')||has(S,'CREW CAB')||has(S,'REG CAB')||has(S,'EXT CAB')||/\bTRUCK\b/.test(S)) return 'Truck';
+      if(has(S,'COUPE')) return 'Coupe';
+      if(has(S,'HATCHBACK')||has(S,'HATCH')) return 'Hatchback';
+      if(has(S,'WAGON')) return 'Wagon';
+      if(has(S,'CONVERTIBLE')||has(S,'CABRIO')||has(S,'ROADSTER')) return 'Convertible';
+      if(has(S,'SEDAN')) return 'Sedan';
+      return '';
+    }
+    var ib=ip(el,'bodyType');
+    var body=ib?(ib.charAt(0).toUpperCase()+ib.slice(1).toLowerCase()):'';
+    if(!body) body=bodyFrom(name);
+    if(!body){ var bl=T.match(/body\s*(?:style|type)?[:\s]+([A-Za-z ]{3,18})/i); if(bl) body=bodyFrom(bl[1]); }
+    // Modelos que SON vans aunque el titulo no diga "van"
+    if(!body && /\b(TRANSIT|PROMASTER|SPRINTER|EXPRESS|SAVANA|SIENNA|ODYSSEY|PACIFICA|CARNIVAL|CARAVAN|QUEST|METRIS|NV[123]500)\b/.test(String(name).toUpperCase())) body='Van';
     var fuel=has(U,'ELECTRIC')?'Electric':has(U,'HYBRID')?'Hybrid':has(U,'DIESEL')?'Diesel':has(U,'FLEX')?'Flex':(has(U,'GASOLINE')||has(U,'GAS')||has(U,'PETROL'))?'Gasoline':'';
     var trans=has(U,'MANUAL')?'Manual':(has(U,'CVT')||has(U,'VARIABLE'))?'Automatica (CVT)':(has(U,'AUTOMATIC')||has(U,'AUTOMATICA')||has(U,'AUTO '))?'Automatica':'';
     var drive=(/\bAWD\b|ALL[- ]?WHEEL/.test(U))?'AWD':(/\b4WD\b|\b4X4\b|FOUR[- ]?WHEEL/.test(U))?'4WD':(/\bRWD\b|REAR[- ]?WHEEL/.test(U))?'RWD':(/\bFWD\b|FRONT[- ]?WHEEL/.test(U))?'FWD':'';
-    var ext=''; var cm=T.match(/ext(?:erior)?(?:\s*color)?[:\s]+([A-Za-z]+)/i); if(cm){var c=cm[1].toLowerCase(); ext=COL[c]||cm[1];}
+    var ext=''; var cm=T.match(/ext(?:erior)?(?:\s*color)?[:\s]+([A-Za-z]+)/i); if(cm){var c=cm[1].toLowerCase(); ext=COL[c]||'';} // solo colores reales (antes colaba "Parking")
     var g=images(el);
     var id=vin||((year&&make&&model)?(year+'-'+make+'-'+model+(trim?'-'+trim:'')):'');
     return { _year:year, id:id, year:year, make:make, model:model, trim:trim, body_type:body||'Sedan',
@@ -174,8 +196,16 @@ function promaxExtract(opts, root){
 /* ---- FOTOS de la ficha de un vehiculo (documento ya parseado) ---- */
 function promaxDetailMedia(doc, pageUrl){
   function abs(u){ if(!u) return ''; try{ return new URL(u, pageUrl).href; }catch(e){ return ''; } }
-  function bad(u){ return /(logo|placeholder|no[-_]?image|noimage|spacer|blank|coming[-_]?soon|icon|sprite|badge|carfax|autocheck|button|arrow|flag|banner|award|certif|warranty|dealer[-_]?logo|\.svg|\.gif)/i.test(u); }
-  function baseKey(u){ return u.split('?')[0].replace(/(-|_)?\d{2,4}x\d{2,4}(?=\.)/,'').replace(/(-|_)(thumb|tn|small|tiny|mini)(?=\.)/i,''); }
+  function bad(u){ return /(logo|placeholder|no[-_]?image|noimage|spacer|blank|coming[-_]?soon|icon|sprite|badge|carfax|autocheck|button|arrow|flag|banner|award|certif|warranty|dealer[-_]?logo|testimonial|review|avatar|headshot|profile|staff|team|customer|person|people|employee|agent|googleusercontent|gravatar|\.svg|\.gif)/i.test(u); }
+  // Clave base: quita el TAMANO aunque venga como carpeta (/1010x568/) o sufijo,
+  // para que la misma foto en 2 resoluciones cuente UNA vez.
+  function baseKey(u){ return u.split('?')[0].replace(/\/\d{2,4}x\d{2,4}\//g,'/').replace(/(-|_)?\d{2,4}x\d{2,4}(?=\.)/,'').replace(/(-|_)(thumb|tn|small|tiny|mini)(?=\.)/i,''); }
+  // Zonas de "gente" (resenas, equipo, testimonios): sus fotos NO son del carro
+  var PEOPLE=/(review|testimonial|team|staff|rating|comment|author|avatar|agent|salesperson|about|social|footer|header|nav)/i;
+  function inPeople(el){
+    var n=el; for(var d=0; n && d<8; d++){ var cid=((n.className||'')+' '+(n.id||'')); if(PEOPLE.test(cid)) return true; n=n.parentElement; }
+    return false;
+  }
   var out=[], seen={};
   function add(u){
     if(!u||/^data:/.test(u)) return;
@@ -201,20 +231,27 @@ function promaxDetailMedia(doc, pageUrl){
   var ogs=doc.querySelectorAll('meta[property="og:image"],meta[name="og:image"]');
   for(var g2=0;g2<ogs.length;g2++) add(ogs[g2].getAttribute('content'));
   // 3) galerias tipicas
-  var zones=doc.querySelectorAll('[class*="gallery"] img,[id*="gallery"] img,[class*="carousel"] img,[class*="slider"] img,[class*="slide"] img,figure img,[class*="photo"] img,[class*="media"] img');
+  // Si el JSON-LD del dealer ya dio fotos, ESAS son las oficiales del carro:
+  // no escaneamos el resto de la pagina (ahi viven testimonios y resenas).
+  var ldCount=out.length;
+  var zones = ldCount>=2 ? [] : doc.querySelectorAll('[class*="gallery"] img,[id*="gallery"] img,[class*="carousel"] img,[class*="slider"] img,[class*="slide"] img,figure img,[class*="photo"] img,[class*="media"] img');
   for(var z=0;z<zones.length;z++){
     var im2=zones[z];
+    if(inPeople(im2)) continue;
     // preferir la foto REAL (data-src) sobre la miniatura de placeholder (src)
     add(im2.getAttribute('data-src')||im2.getAttribute('data-original')||im2.getAttribute('data-lazy')||im2.getAttribute('data-echo')||((im2.getAttribute('srcset')||im2.getAttribute('data-srcset')||'').split(',').pop()||'').trim().split(' ')[0]||im2.getAttribute('src'));
   }
   // 4) enlaces directos a fotos y resto de <img> grandes
-  var links=doc.querySelectorAll('a[href*=".jpg"],a[href*=".jpeg"],a[href*=".png"],a[href*=".webp"]');
-  for(var l=0;l<links.length;l++) add(links[l].getAttribute('href'));
-  if(out.length<5){
-    var alls=doc.querySelectorAll('img');
-    for(var q=0;q<alls.length && out.length<12;q++){
-      var a3=alls[q];
-      add(a3.getAttribute('src')||a3.getAttribute('data-src'));
+  if(ldCount<2){
+    var links=doc.querySelectorAll('a[href*=".jpg"],a[href*=".jpeg"],a[href*=".png"],a[href*=".webp"]');
+    for(var l=0;l<links.length;l++){ if(!inPeople(links[l])) add(links[l].getAttribute('href')); }
+    if(out.length<5){
+      var alls=doc.querySelectorAll('img');
+      for(var q=0;q<alls.length && out.length<12;q++){
+        var a3=alls[q];
+        if(inPeople(a3)) continue;
+        add(a3.getAttribute('src')||a3.getAttribute('data-src'));
+      }
     }
   }
   if(!desc){ var md=doc.querySelector('meta[name="description"],meta[property="og:description"]'); if(md) desc=md.getAttribute('content')||''; }
@@ -308,16 +345,36 @@ function promaxRunAll(opts, onP){
       return Promise.all(ws);
     });
   }
-  return p.then(function(){ return rows; });
+  return p.then(function(){
+    // Colapsa duplicados EXACTOS (tipico de carros NUEVOS: decenas de unidades
+    // identicas del mismo modelo/precio). Se deja UNA tarjeta por combinacion,
+    // preferiblemente la que tenga fotos reales.
+    var byKey={}, outRows=[];
+    rows.forEach(function(r){
+      var k=[r.year,r.make,r.model,r.trim||'',r.price||0,r.mileage||0].join('|').toLowerCase();
+      var prev=byKey[k];
+      if(!prev){ byKey[k]=r; outRows.push(r); return; }
+      var prevPics=(prev.gallery||[]).length, curPics=(r.gallery||[]).length;
+      if(curPics>prevPics){ outRows[outRows.indexOf(prev)]=r; byKey[k]=r; }
+    });
+    if(outRows.length<rows.length) onP('Duplicados exactos colapsados: '+rows.length+' -> '+outRows.length);
+    return outRows;
+  });
 }
 /* ---- FASE 3: sincroniza DIRECTO al panel (Supabase). No copia/pega. ----
    Sube (upsert por id) todos los vehiculos frescos y marca como VENDIDOS
    los de esa misma fuente que ya no aparecen (desaparecen del catalogo
    publico, que solo muestra status=available). Reversible. */
+function promaxCanonMake(m){
+  m=String(m||'').trim();
+  var low=m.toLowerCase().replace(/[\s\-]+/g,' ');
+  var MAP={'mercedes benz':'Mercedes-Benz','rolls royce':'Rolls-Royce','mclaren':'McLaren','land rover':'Land Rover','alfa romeo':'Alfa Romeo','aston martin':'Aston Martin'};
+  return MAP[low]||m;
+}
 function promaxToDb(r, source, stamp){
   var g=Array.isArray(r.gallery)?r.gallery.slice(0,5):[];
   return { id:String(r.id||r.vin||(r.year+'-'+r.make+'-'+r.model)).toLowerCase().replace(/\s+/g,'-'),
-    category:r.category||'cars', year:parseInt(r.year,10)||null, make:r.make||'', model:r.model||'', trim:r.trim||null,
+    category:r.category||'cars', year:parseInt(r.year,10)||null, make:promaxCanonMake(r.make)||'', model:r.model||'', trim:r.trim||null,
     body_type:r.body_type||'Sedan', status:'available', condition:r.condition||'used',
     price:Number(r.price)||0, msrp:null, mileage:parseInt(r.mileage,10)||0,
     fuel:r.fuel||null, transmission:r.transmission||null, drivetrain:r.drivetrain||null,
