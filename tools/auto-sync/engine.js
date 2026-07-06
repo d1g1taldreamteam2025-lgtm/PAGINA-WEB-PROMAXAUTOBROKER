@@ -277,6 +277,26 @@ function promaxDetailMedia(doc, pageUrl){
   }
   if(!desc){ var md=doc.querySelector('meta[name="description"],meta[property="og:description"]'); if(md) desc=md.getAttribute('content')||''; }
   desc=String(desc||'').replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim().slice(0,600);
+  // Nos quedamos SOLO con las fotos del vehiculo ACTUAL. Las fotos de un carro
+  // comparten su "llave" (stock en /by-size/STOCK/, id de homenet, o UUID del
+  // media). Las de "vehiculos similares" caen en otras llaves. Elegimos el
+  // grupo MAS grande (la galeria principal); si empatan, el que tenga la 1a
+  // foto (la oficial de JSON-LD/og, que va primero en out).
+  function vehKey(u){
+    var m=u.match(/\/by-size\/([^\/]+)\//i); if(m) return 'st:'+m[1];
+    m=u.match(/homenetiol\.com[_\/]+(\d+[_\/]+\d+)/i); if(m) return 'hn:'+m[1].replace(/[_\/]+/g,'_');
+    m=u.match(/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i); if(m) return 'uu:'+m[1];
+    return 'p:'+u.replace(/[^\/]+$/,'');
+  }
+  if(out.length>1){
+    var groups={}, order=[];
+    out.forEach(function(u){ var k=vehKey(u); if(!groups[k]){ groups[k]=[]; order.push(k); } groups[k].push(u); });
+    if(order.length>1){
+      var anchorKey=vehKey(out[0]);
+      order.sort(function(a,b){ var d=groups[b].length-groups[a].length; if(d) return d; if(a===anchorKey) return -1; if(b===anchorKey) return 1; return 0; });
+      out=groups[order[0]];
+    }
+  }
   return { gallery: out.slice(0,5), description: desc };
 }
 
@@ -394,7 +414,7 @@ function promaxCanonMake(m){
 }
 function promaxToDb(r, source, stamp){
   var g=Array.isArray(r.gallery)?r.gallery.slice(0,5):[];
-  return { id:String(r.id||r.vin||(r.year+'-'+r.make+'-'+r.model)).toLowerCase().replace(/\s+/g,'-'),
+  return { id:String(r.id||r.vin||(r.year+'-'+r.make+'-'+r.model)).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''),
     category:r.category||'cars', year:parseInt(r.year,10)||null, make:promaxCanonMake(r.make)||'', model:r.model||'', trim:r.trim||null,
     body_type:r.body_type||null, status:'available', condition:r.condition||'used',
     price:Number(r.price)||0, msrp:null, mileage:parseInt(r.mileage,10)||0,

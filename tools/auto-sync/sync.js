@@ -171,14 +171,59 @@ async function waitForInventory(page, d) {
 // navegador (mismo origen que el dealer => pasa antibot y fetchea las fichas).
 async function injectAndExtract(page, d, stamp) {
   await page.evaluate('(function(){' + ENGINE + ';window.__PMX_RUN=promaxRunAll;window.__PMX_TODB=promaxToDb;})()');
+  // details:false => solo la LISTA (rápida). Las FOTOS reales de cada ficha las
+  // sacamos aparte con enrichPhotos (navegador real), porque muchos dealers
+  // (HGreg) montan la galería por JavaScript y un fetch no la ve — traía 1 foto
+  // real + miniaturas de "vehículos similares" (fotos de OTROS carros).
   return await page.evaluate(async (opts) => {
     const list = await window.__PMX_RUN(opts, function () {});
     return list.map(function (r) { return window.__PMX_TODB(r, opts.source, opts.stamp); });
   }, {
-    pages: 'all', details: true, concurrency: CONC,
+    pages: 'all', details: false, concurrency: CONC,
     host: d.source, source: d.source, stamp,
     isTrucks: !!d.isTrucks, isPower: !!d.isPower, minYear: d.minYear,
   });
+}
+
+// Abre CADA ficha en el mismo contexto (que ya pasó el antibot: comparte la
+// cookie cf_clearance) para que su JavaScript monte la galería COMPLETA, y saca
+// las fotos con promaxDetailMedia (que ya se queda solo con las del carro
+// actual). Bloquea imágenes/medios/fuentes: no las necesitamos, solo el DOM, y
+// así cada ficha carga en ~1-2s. Concurrencia limitada.
+async function enrichPhotos(ctx, d, rows) {
+  const withUrl = rows.filter(function (r) { return r.source_url; });
+  if (!withUrl.length) return;
+  let idx = 0, done = 0, rich = 0;
+  const CN = Math.min(CONC + 2, 8);
+  async function worker() {
+    while (idx < withUrl.length) {
+      const r = withUrl[idx++];
+      let p = null;
+      try {
+        p = await ctx.newPage();
+        await p.route('**/*', function (route) {
+          const t = route.request().resourceType();
+          if (t === 'image' || t === 'media' || t === 'font') return route.abort();
+          return route.continue();
+        });
+        await p.goto(r.source_url, { waitUntil: 'domcontentloaded', timeout: 25000 });
+        await p.waitForTimeout(1800); // deja que el JS monte la galería
+        await p.evaluate('(function(){' + ENGINE + ';window.__PMX_MEDIA=promaxDetailMedia;})()');
+        const m = await p.evaluate(function () { return window.__PMX_MEDIA(document, location.href); });
+        if (m && m.gallery && m.gallery.length) { r.gallery = m.gallery.slice(0, 5); r.cover_image = m.gallery[0]; if (m.gallery.length >= 3) rich++; }
+        if (m && m.description && !r.description) r.description = m.description;
+      } catch (e) { /* ficha caída: se queda con la foto de la lista */ }
+      finally {
+        if (p) await p.close().catch(function () {});
+        done++;
+        if (done % 100 === 0) log('  · ' + d.name + ' fotos: ' + done + '/' + withUrl.length + ' fichas (' + rich + ' con 3+)');
+      }
+    }
+  }
+  const ws = [];
+  for (let i = 0; i < CN; i++) ws.push(worker());
+  await Promise.all(ws);
+  log('  · ' + d.name + ' fotos: ' + done + ' fichas leídas, ' + rich + ' con 3+ fotos reales.');
 }
 
 // "Execution context was destroyed / navigation" = la página se redirigió justo
@@ -221,6 +266,11 @@ async function scrapeDealer(browser, d, stamp) {
       log('  · ' + d.name + ': la página se redirigió (antibot); reintento tras asentar…');
       await settle(page, 5000);
       rows = await injectAndExtract(page, d, stamp);
+    }
+    // Fotos reales de cada ficha (navegador real, mismo contexto ya autorizado).
+    if (rows.length) {
+      try { await enrichPhotos(ctx, d, rows); }
+      catch (e) { log('  · ' + d.name + ': enriquecer fotos falló (' + e.message.slice(0, 60) + ') — se quedan las de la lista.'); }
     }
   } catch (e) {
     log('  ✗ ' + d.name + ' ERROR de scraping: ' + e.message);
