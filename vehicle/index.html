@@ -23,6 +23,13 @@
 <meta name="twitter:image" content="https://res.cloudinary.com/drbc4wbvw/image/upload/c_pad,w_1200,h_630,b_rgb:0a0a0a,f_auto,q_auto/v1782163987/Logos-05_cqy7tj.png">
 <link rel="preconnect" href="https://res.cloudinary.com">
 <link rel="preconnect" href="https://db.ucallnow.fun" crossorigin>
+<!-- CDNs de fotos de los dealers: calentar la conexión (DNS+TLS) para que la
+     galería cargue antes. Las fotos vienen del servidor del dealer, no del
+     nuestro; esto recorta el arranque de cada imagen. -->
+<link rel="preconnect" href="https://www.hgreg.com">
+<link rel="preconnect" href="https://cfwww.hgreg.com">
+<link rel="dns-prefetch" href="https://assets.cai-media-management.com">
+<link rel="dns-prefetch" href="https://content.homenetiol.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -36,6 +43,10 @@
 .pmx-vd__top{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:36px;}
 @media(max-width:900px){.pmx-vd__top{grid-template-columns:minmax(0,1fr);gap:24px;}}
 .pmx-vd__main{border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:#fff;}
+/* Placeholder gris mientras carga la foto del dealer (nunca un flash blanco):
+   el background-color se ve por debajo hasta que la foto inline termina de
+   cargar y la cubre. */
+.pmx-vd__hero,.pmx-vd__thumb{background-color:#e9ecef;}
 .pmx-vd__herowrap{position:relative;}
 .pmx-vd__hero{height:440px;background-size:contain;background-repeat:no-repeat;background-position:center;background-color:#101216;cursor:zoom-in;}
 @media(max-width:600px){.pmx-vd__hero{height:260px;}}
