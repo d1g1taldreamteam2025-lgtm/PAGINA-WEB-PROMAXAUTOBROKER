@@ -106,7 +106,7 @@
     if (c.fuel) specs.push(c.fuel);
     if (c.drivetrain) specs.push(c.drivetrain);
     return '<article class="pmx-vcard">' +
-      '<a href="/vehicle/?id=' + c.id + '" style="text-decoration:none;color:inherit;display:contents">' +
+      '<a href="/vehicle/?id=' + encodeURIComponent(c.id) + '" style="text-decoration:none;color:inherit;display:contents">' +
       '<div class="pmx-vcard__img" style="background-image:url(\'' + c.image + '\')">' +
         (c.badge ? '<span class="pmx-vcard__badge">' + c.badge + '</span>' : '') +
         (typeLabel ? '<span class="pmx-vcard__type">' + typeLabel + '</span>' : '') +
@@ -117,7 +117,7 @@
         (specs.length ? '<div class="pmx-vcard__specs">' + specs.map(function (s) { return "<span>" + s + "</span>"; }).join("") + '</div>' : '') +
         '<div class="pmx-vcard__price">' + (c.price > 0 ? PMX.money(c.price) : 'Consultar precio') + (save ? '<small>' + PMX.money(c.msrp) + '</small>' : '') + '</div>' +
         '<div class="pmx-vcard__actions">' +
-          '<a href="/vehicle/?id=' + c.id + '" class="pmx-btn pmx-btn--primary">' + PMX.t("btn_details") + '</a>' +
+          '<a href="/vehicle/?id=' + encodeURIComponent(c.id) + '" class="pmx-btn pmx-btn--primary">' + PMX.t("btn_details") + '</a>' +
           '<a href="/financing/apply/?vin=' + c.id + '" class="pmx-btn pmx-btn--ghost">' + PMX.t("btn_prequal") + '</a>' +
         '</div>' +
       '</div></article>';

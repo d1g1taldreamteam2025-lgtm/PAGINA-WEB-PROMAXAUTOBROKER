@@ -194,20 +194,27 @@ async function enrichPhotos(ctx, d, rows) {
   const withUrl = rows.filter(function (r) { return r.source_url; });
   if (!withUrl.length) return;
   let idx = 0, done = 0, rich = 0;
-  const CN = Math.min(CONC + 2, 8);
+  const CN = Math.min(parseInt(process.env.PROMAX_PHOTO_CONC || '10', 10), 14);
+  // Presupuesto de tiempo: enriquecemos cuanto podamos en este rato; lo que no
+  // dé tiempo se queda con la foto de la lista (correcta, del propio carro).
+  // Así el robot NUNCA se pasa del límite ni deja el token de sesión vencer.
+  const budgetMs = parseInt(process.env.PROMAX_PHOTO_BUDGET_MS || String(30 * 60 * 1000), 10);
+  const deadline = Date.now() + budgetMs;
   async function worker() {
-    while (idx < withUrl.length) {
+    while (idx < withUrl.length && Date.now() < deadline) {
       const r = withUrl[idx++];
       let p = null;
       try {
         p = await ctx.newPage();
         await p.route('**/*', function (route) {
           const t = route.request().resourceType();
-          if (t === 'image' || t === 'media' || t === 'font') return route.abort();
+          if (t === 'image' || t === 'media' || t === 'font' || t === 'stylesheet') return route.abort();
           return route.continue();
         });
-        await p.goto(r.source_url, { waitUntil: 'domcontentloaded', timeout: 25000 });
-        await p.waitForTimeout(1800); // deja que el JS monte la galería
+        // 'commit' devuelve apenas navega (rápido); la espera fija deja que el JS
+        // monte la galería. Mucho más veloz que esperar 'domcontentloaded'.
+        await p.goto(r.source_url, { waitUntil: 'commit', timeout: 20000 });
+        await p.waitForTimeout(1600);
         await p.evaluate('(function(){' + ENGINE + ';window.__PMX_MEDIA=promaxDetailMedia;})()');
         const m = await p.evaluate(function () { return window.__PMX_MEDIA(document, location.href); });
         if (m && m.gallery && m.gallery.length) { r.gallery = m.gallery.slice(0, 5); r.cover_image = m.gallery[0]; if (m.gallery.length >= 3) rich++; }
@@ -216,14 +223,15 @@ async function enrichPhotos(ctx, d, rows) {
       finally {
         if (p) await p.close().catch(function () {});
         done++;
-        if (done % 100 === 0) log('  · ' + d.name + ' fotos: ' + done + '/' + withUrl.length + ' fichas (' + rich + ' con 3+)');
+        if (done % 200 === 0) log('  · ' + d.name + ' fotos: ' + done + '/' + withUrl.length + ' fichas (' + rich + ' con 3+)');
       }
     }
   }
   const ws = [];
   for (let i = 0; i < CN; i++) ws.push(worker());
   await Promise.all(ws);
-  log('  · ' + d.name + ' fotos: ' + done + ' fichas leídas, ' + rich + ' con 3+ fotos reales.');
+  const skipped = withUrl.length - done;
+  log('  · ' + d.name + ' fotos: ' + done + ' fichas leídas, ' + rich + ' con 3+ fotos reales' + (skipped > 0 ? ' (' + skipped + ' sin tiempo, se quedan con su foto de lista)' : '') + '.');
 }
 
 // "Execution context was destroyed / navigation" = la página se redirigió justo
@@ -327,6 +335,11 @@ async function main() {
       rows.forEach(function (r) { h[Math.min(5, (r.gallery || []).length)]++; if (r.condition === 'new') nuevos++; });
       log('  · ' + d.name + ' [fotos] 5=' + h[5] + ' 4=' + h[4] + ' 3=' + h[3] + ' 2=' + h[2] + ' 1=' + h[1] + ' 0=' + h[0] + '  | nuevos=' + nuevos + ' usados=' + (rows.length - nuevos));
       try {
+        // Renovamos la sesión JUSTO antes de subir: sacar las fotos de miles de
+        // fichas puede tardar >1h y el token de admin vence en ~1h (antes daba
+        // "JWT expired" y no subía NADA). Con service_role no vence, pero
+        // re-pedirlo es inofensivo.
+        await resolveAuth();
         await upsert(rows);
         await cleanupStale(d.source, stamp);
         grand += rows.length;
@@ -340,7 +353,7 @@ async function main() {
     }
   }
   await browser.close();
-  try { await generateSitemap(); } catch (e) { log('SEO: no se pudo regenerar el sitemap (' + e.message.slice(0, 80) + ') — no afecta la sincronización.'); }
+  try { await resolveAuth(); await generateSitemap(); } catch (e) { log('SEO: no se pudo regenerar el sitemap (' + e.message.slice(0, 80) + ') — no afecta la sincronización.'); }
   log('===== RESUMEN =====');
   summary.forEach((s) => log('  ' + s));
   log('TOTAL sincronizado: ' + grand + ' vehículos');
