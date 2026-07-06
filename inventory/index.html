@@ -111,6 +111,13 @@
   .pmx-sidebar.open{transform:translateX(0);}
   .pmx-sidebar__close{display:inline-flex;}
 }
+/* Cliente: TODO el filtrado en MAYÚSCULAS (búsquedas, marcas, selecciones),
+   funciona igual en español e inglés porque es solo presentación. */
+#pmxCats button, #pmxCats a, .pmx-catbar button, .pmx-catbar a,
+.pmx-condtab, .pmx-qf, .pmx-sort, #pmxSearch,
+#pmxMake .pmx-check > span:first-of-type, #pmxBody .pmx-check > span:first-of-type,
+.pmx-fg > summary, #pmxChips .pmx-chip, .pmx-clear { text-transform: uppercase; }
+#pmxSearch::placeholder { text-transform: uppercase; }
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://www.promaxautobroker.com/"},{"@type":"ListItem","position":2,"name":"Catálogo de vehículos","item":"https://www.promaxautobroker.com/inventory/"}]}

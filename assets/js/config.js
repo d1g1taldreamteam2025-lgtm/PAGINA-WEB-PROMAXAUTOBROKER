@@ -64,7 +64,7 @@ window.PROMAX = {
     { slug: "vans",             es: "Vans",                  en: "Vans",               icon: "🚐" },
     { slug: "motorcycles",      es: "Motos",                 en: "Motorcycles",        icon: "🏍️" },
     { slug: "utv",              es: "UTV",                   en: "UTV",                icon: "🚜" },
-    { slug: "watercraft",       es: "Motos de agua",         en: "Watercraft",         icon: "🚤" },
+    { slug: "watercraft",       es: "Jet Ski",               en: "Jet Ski",            icon: "🌊" },
   ],
 
   /* ---------- COMPRA ---------- */
