@@ -109,7 +109,7 @@
       '<a href="/vehicle/?id=' + c.id + '" style="text-decoration:none;color:inherit;display:contents">' +
       '<div class="pmx-vcard__img" style="background-image:url(\'' + c.image + '\')">' +
         (c.badge ? '<span class="pmx-vcard__badge">' + c.badge + '</span>' : '') +
-        '<span class="pmx-vcard__type">' + typeLabel + '</span>' +
+        (typeLabel ? '<span class="pmx-vcard__type">' + typeLabel + '</span>' : '') +
         '<button class="pmx-vcard__share" type="button" data-share-id="' + c.id + '" aria-label="' + PMX.t("act_share") + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>' +
       '</div></a>' +
       '<div class="pmx-vcard__body">' +
@@ -214,7 +214,7 @@
   }
   function buildFilters() {
     var makes = {}, bodies = {};
-    CARS.forEach(function (c) { if (c.make) makes[c.make] = (makes[c.make] || 0) + 1; bodies[c.bodyType] = (bodies[c.bodyType] || 0) + 1; });
+    CARS.forEach(function (c) { if (c.make) makes[c.make] = (makes[c.make] || 0) + 1; if (c.bodyType) bodies[c.bodyType] = (bodies[c.bodyType] || 0) + 1; });
     checkboxGroup("#pmxMake", "make", Object.keys(makes).sort().map(function (k) { return { v: k, n: makes[k] }; }));
     checkboxGroup("#pmxBody", "body", Object.keys(bodies).sort().map(function (k) { return { v: k, n: bodies[k] }; }));
     document.querySelectorAll('#pmxMake input, #pmxBody input').forEach(function (inp) {

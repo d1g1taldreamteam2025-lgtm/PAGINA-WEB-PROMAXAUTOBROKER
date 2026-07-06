@@ -88,8 +88,11 @@ function promaxExtract(opts, root){
     var out=[], seen={};
     function add(u){ if(!u||/^data:/.test(u)) return; if(badImg(u)) return; u=u.split('?')[0]; u=abs(u); if(u && !seen[u]){ seen[u]=1; out.push(u); } }
     qsa('img',el).forEach(function(im){
-      var u=im.getAttribute('src')||im.getAttribute('data-src')||im.getAttribute('data-original')||im.getAttribute('data-lazy')||im.getAttribute('data-echo')||'';
-      if(!u){ var ss=im.getAttribute('srcset')||im.getAttribute('data-srcset'); if(ss) u=ss.split(',')[0].trim().split(' ')[0]; }
+      // la foto REAL suele estar en data-src (lazy); el src es un placeholder
+      // (en paginas traidas por fetch el lazy-load nunca corre -> foto negra)
+      var u=im.getAttribute('data-src')||im.getAttribute('data-original')||im.getAttribute('data-lazy')||im.getAttribute('data-echo')||'';
+      if(!u){ var ss=im.getAttribute('srcset')||im.getAttribute('data-srcset'); if(ss) u=ss.split(',').pop().trim().split(' ')[0]; }
+      if(!u) u=im.getAttribute('src')||'';
       add(u);
     });
     qsa('[style*="background-image"]',el).forEach(function(n){
@@ -167,14 +170,18 @@ function promaxExtract(opts, root){
     if(!body) body=bodyFrom(name);
     if(!body){ var bl=T.match(/body\s*(?:style|type)?[:\s]+([A-Za-z ]{3,18})/i); if(bl) body=bodyFrom(bl[1]); }
     // Modelos que SON vans aunque el titulo no diga "van"
-    if(!body && /\b(TRANSIT|PROMASTER|SPRINTER|EXPRESS|SAVANA|SIENNA|ODYSSEY|PACIFICA|CARNIVAL|CARAVAN|QUEST|METRIS|NV[123]500)\b/.test(String(name).toUpperCase())) body='Van';
+    var NAMEU=String(name).toUpperCase();
+    if(!body && /\b(TRANSIT|PROMASTER|SPRINTER|EXPRESS|SAVANA|SIENNA|ODYSSEY|PACIFICA|CARNIVAL|CARAVAN|QUEST|METRIS|NV[123]500)\b/.test(NAMEU)) body='Van';
+    // Carroceria por MODELO conocido (el titulo no siempre trae la palabra)
+    if(!body && /\b(FRONTIER|TITAN|TACOMA|TUNDRA|RIDGELINE|F[- ]?[123]50|SILVERADO|SIERRA|COLORADO|CANYON|RANGER|GLADIATOR)\b/.test(NAMEU)) body='Truck';
+    if(!body && /\b(MURANO|PATHFINDER|ROGUE|KICKS|ARMADA|CR-?V|HR-?V|PILOT|PASSPORT|RAV4|HIGHLANDER|4RUNNER|SEQUOIA|VENZA|CX-?[3459]0?|TUCSON|SANTA FE|PALISADE|KONA|VENUE|SPORTAGE|SORENTO|TELLURIDE|SELTOS|FORESTER|OUTBACK|CROSSTREK|ASCENT|WRANGLER|CHEROKEE|COMPASS|RENEGADE|ESCAPE|EXPLORER|EDGE|EXPEDITION|BRONCO|EQUINOX|TRAVERSE|TAHOE|SUBURBAN|BLAZER|TRAILBLAZER|ENCORE|ENCLAVE|ESCALADE|YUKON|ACADIA|TERRAIN|MDX|RDX|NX|RX|GX(?! )|X[1357]|GL[ABCES]|Q[3578]|MACAN|CAYENNE|XT[456])\b/.test(NAMEU)) body='SUV';
     var fuel=has(U,'ELECTRIC')?'Electric':has(U,'HYBRID')?'Hybrid':has(U,'DIESEL')?'Diesel':has(U,'FLEX')?'Flex':(has(U,'GASOLINE')||has(U,'GAS')||has(U,'PETROL'))?'Gasoline':'';
     var trans=has(U,'MANUAL')?'Manual':(has(U,'CVT')||has(U,'VARIABLE'))?'Automatica (CVT)':(has(U,'AUTOMATIC')||has(U,'AUTOMATICA')||has(U,'AUTO '))?'Automatica':'';
     var drive=(/\bAWD\b|ALL[- ]?WHEEL/.test(U))?'AWD':(/\b4WD\b|\b4X4\b|FOUR[- ]?WHEEL/.test(U))?'4WD':(/\bRWD\b|REAR[- ]?WHEEL/.test(U))?'RWD':(/\bFWD\b|FRONT[- ]?WHEEL/.test(U))?'FWD':'';
     var ext=''; var cm=T.match(/ext(?:erior)?(?:\s*color)?[:\s]+([A-Za-z]+)/i); if(cm){var c=cm[1].toLowerCase(); ext=COL[c]||'';} // solo colores reales (antes colaba "Parking")
     var g=images(el);
     var id=vin||((year&&make&&model)?(year+'-'+make+'-'+model+(trim?'-'+trim:'')):'');
-    return { _year:year, id:id, year:year, make:make, model:model, trim:trim, body_type:body||'Sedan',
+    return { _year:year, id:id, year:year, make:make, model:model, trim:trim, body_type:body||'',
       category:catFor(U,body), status:'available',
       condition:(has(U,'NEW ')&&!has(U,'PRE-OWNED')&&!has(U,'USED')&&!has(U,'CERTIFIED'))?'new':'used',
       price:price||0, msrp:null, mileage:mileage||0, fuel:fuel, transmission:trans, drivetrain:drive,
@@ -201,7 +208,7 @@ function promaxDetailMedia(doc, pageUrl){
   // para que la misma foto en 2 resoluciones cuente UNA vez.
   function baseKey(u){ return u.split('?')[0].replace(/\/\d{2,4}x\d{2,4}\//g,'/').replace(/(-|_)?\d{2,4}x\d{2,4}(?=\.)/,'').replace(/(-|_)(thumb|tn|small|tiny|mini)(?=\.)/i,''); }
   // Zonas de "gente" (resenas, equipo, testimonios): sus fotos NO son del carro
-  var PEOPLE=/(review|testimonial|team|staff|rating|comment|author|avatar|agent|salesperson|about|social|footer|header|nav)/i;
+  var PEOPLE=/(review|testimonial|team|staff|rating|comment|author|avatar|agent|salesperson)/i;
   function inPeople(el){
     var n=el; for(var d=0; n && d<8; d++){ var cid=((n.className||'')+' '+(n.id||'')); if(PEOPLE.test(cid)) return true; n=n.parentElement; }
     return false;
@@ -234,7 +241,7 @@ function promaxDetailMedia(doc, pageUrl){
   // Si el JSON-LD del dealer ya dio fotos, ESAS son las oficiales del carro:
   // no escaneamos el resto de la pagina (ahi viven testimonios y resenas).
   var ldCount=out.length;
-  var zones = ldCount>=2 ? [] : doc.querySelectorAll('[class*="gallery"] img,[id*="gallery"] img,[class*="carousel"] img,[class*="slider"] img,[class*="slide"] img,figure img,[class*="photo"] img,[class*="media"] img');
+  var zones = ldCount>=3 ? [] : doc.querySelectorAll('[class*="gallery"] img,[id*="gallery"] img,[class*="carousel"] img,[class*="slider"] img,[class*="slide"] img,figure img,[class*="photo"] img,[class*="media"] img');
   for(var z=0;z<zones.length;z++){
     var im2=zones[z];
     if(inPeople(im2)) continue;
@@ -242,7 +249,7 @@ function promaxDetailMedia(doc, pageUrl){
     add(im2.getAttribute('data-src')||im2.getAttribute('data-original')||im2.getAttribute('data-lazy')||im2.getAttribute('data-echo')||((im2.getAttribute('srcset')||im2.getAttribute('data-srcset')||'').split(',').pop()||'').trim().split(' ')[0]||im2.getAttribute('src'));
   }
   // 4) enlaces directos a fotos y resto de <img> grandes
-  if(ldCount<2){
+  if(ldCount<3){
     var links=doc.querySelectorAll('a[href*=".jpg"],a[href*=".jpeg"],a[href*=".png"],a[href*=".webp"]');
     for(var l=0;l<links.length;l++){ if(!inPeople(links[l])) add(links[l].getAttribute('href')); }
     if(out.length<5){
@@ -375,7 +382,7 @@ function promaxToDb(r, source, stamp){
   var g=Array.isArray(r.gallery)?r.gallery.slice(0,5):[];
   return { id:String(r.id||r.vin||(r.year+'-'+r.make+'-'+r.model)).toLowerCase().replace(/\s+/g,'-'),
     category:r.category||'cars', year:parseInt(r.year,10)||null, make:promaxCanonMake(r.make)||'', model:r.model||'', trim:r.trim||null,
-    body_type:r.body_type||'Sedan', status:'available', condition:r.condition||'used',
+    body_type:r.body_type||null, status:'available', condition:r.condition||'used',
     price:Number(r.price)||0, msrp:null, mileage:parseInt(r.mileage,10)||0,
     fuel:r.fuel||null, transmission:r.transmission||null, drivetrain:r.drivetrain||null,
     exterior_color:r.exterior_color||null, interior_color:null, vin:r.vin||null, stock:r.stock||null,

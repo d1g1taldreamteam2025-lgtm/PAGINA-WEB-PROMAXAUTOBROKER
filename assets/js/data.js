@@ -45,7 +45,7 @@
       id: r.id || r.stock || ((r.year || "") + "-" + (r.make || "") + "-" + (r.model || "")).toLowerCase().replace(/\s+/g, "-"),
       category: cat,
       year: r.year, make: canonMake(r.make), model: r.model, trim: r.trim || "",
-      bodyType: (r.body_type || "sedan").toLowerCase(),
+      bodyType: (r.body_type || "").toLowerCase(),
       price: Number(r.price) || 0, msrp: r.msrp ? Number(r.msrp) : null,
       mileage: Number(r.mileage) || 0,
       fuel: r.fuel || "Gasolina", transmission: r.transmission || "Automática", drivetrain: r.drivetrain || "FWD",
