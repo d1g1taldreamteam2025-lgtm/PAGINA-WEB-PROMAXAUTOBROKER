@@ -186,6 +186,19 @@ async function injectAndExtract(page, d, stamp) {
 // tras dejar que la redirección termine.
 function isNavRace(msg) { return /context was destroyed|execution context|because of a navigation/i.test(msg || ''); }
 
+// Evasión de huella de automatización: Cloudflare (challenge "Just a moment")
+// revisa señales típicas de un bot (navigator.webdriver, sin plugins, WebGL de
+// SwiftShader, etc.). Este script corre ANTES que el JS de la página y hace que
+// el navegador parezca uno normal. No garantiza pasar (la reputación de la IP de
+// datacenter pesa aparte), pero sube mucho la probabilidad y no daña a los que
+// ya entran (solo los hace ver "más humanos").
+const STEALTH = "(function(){try{Object.defineProperty(navigator,'webdriver',{get:function(){return undefined}});}catch(e){}" +
+  "try{window.chrome=window.chrome||{runtime:{},app:{isInstalled:false},csi:function(){},loadTimes:function(){}};}catch(e){}" +
+  "try{var q=navigator.permissions&&navigator.permissions.query;if(q)navigator.permissions.query=function(p){return p&&p.name==='notifications'?Promise.resolve({state:Notification.permission}):q.call(navigator.permissions,p)};}catch(e){}" +
+  "try{Object.defineProperty(navigator,'languages',{get:function(){return['en-US','en']}});}catch(e){}" +
+  "try{Object.defineProperty(navigator,'plugins',{get:function(){return[{name:'Chrome PDF Plugin'},{name:'Chrome PDF Viewer'},{name:'Native Client'}]}});}catch(e){}" +
+  "try{var gp=WebGLRenderingContext.prototype.getParameter;WebGLRenderingContext.prototype.getParameter=function(p){if(p===37445)return'Intel Inc.';if(p===37446)return'Intel Iris OpenGL Engine';return gp.call(this,p)};}catch(e){}})();";
+
 async function scrapeDealer(browser, d, stamp) {
   // En modo headed (CI con xvfb) NO tocamos el user-agent: el UA real del
   // Chromium con ventana es consistente con su huella TLS/JS y Cloudflare lo
@@ -193,6 +206,7 @@ async function scrapeDealer(browser, d, stamp) {
   const ctxOpts = { viewport: { width: 1366, height: 900 }, locale: 'en-US' };
   if (!process.env.PROMAX_HEADFUL) ctxOpts.userAgent = UA;
   const ctx = await browser.newContext(ctxOpts);
+  await ctx.addInitScript(STEALTH);
   const page = await ctx.newPage();
   let rows = [];
   try {
