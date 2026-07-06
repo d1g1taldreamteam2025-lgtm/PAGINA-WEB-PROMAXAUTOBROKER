@@ -2,11 +2,19 @@ name: Sincronizar inventario (semanal)
 
 # Corre solo cada LUNES a las 10:00 UTC (~6:00 a.m. en Miami en horario de
 # verano / 5:00 a.m. en invierno). También se puede lanzar a mano desde la
-# pestaña "Actions" con el botón "Run workflow".
+# pestaña "Actions" con el botón "Run workflow", y se dispara solo cuando se
+# actualiza el robot (cualquier push que toque tools/auto-sync/** o este
+# workflow) — así el equipo técnico puede correrlo con solo subir un cambio,
+# sin tener que entrar a la pestaña Actions.
 on:
   schedule:
     - cron: "0 10 * * 1"
   workflow_dispatch: {}
+  push:
+    branches: [claude/pensive-newton-3pumvq]
+    paths:
+      - "tools/auto-sync/**"
+      - ".github/workflows/inventory-sync.yml"
 
 # Evita que dos corridas se pisen
 concurrency:

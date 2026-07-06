@@ -270,6 +270,12 @@ async function main() {
     const rows = await scrapeDealer(browser, d, stamp);
     log('  ' + d.name + ': ' + rows.length + ' vehículos extraídos');
     if (rows.length) {
+      // Diagnóstico de FOTOS: cuántos autos quedaron con 5/4/3/2/1/0 fotos y
+      // cuántos nuevos vs usados. Así sabemos si la galería quedó completa.
+      const h = [0, 0, 0, 0, 0, 0];
+      let nuevos = 0;
+      rows.forEach(function (r) { h[Math.min(5, (r.gallery || []).length)]++; if (r.condition === 'new') nuevos++; });
+      log('  · ' + d.name + ' [fotos] 5=' + h[5] + ' 4=' + h[4] + ' 3=' + h[3] + ' 2=' + h[2] + ' 1=' + h[1] + ' 0=' + h[0] + '  | nuevos=' + nuevos + ' usados=' + (rows.length - nuevos));
       try {
         await upsert(rows);
         await cleanupStale(d.source, stamp);

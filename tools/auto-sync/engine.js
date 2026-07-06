@@ -146,7 +146,7 @@ function promaxExtract(opts, root){
     var price=N(ip(el,'price'));
     if(price<1000){ var pl=T.match(/(?:price|precio)[:\s]*\$?\s*([\d,]{4,})/i); if(pl) price=N(pl[1]); }
     if(price<1000){ var a$=(T.match(/\$\s*[\d,]{4,}/g)||[]).map(N).filter(function(n){return n>1000&&n<600000;}); if(a$.length) price=Math.max.apply(null,a$); }
-    var mileage=0; var mm=T.match(/([\d,]{1,7})\s*(?:mi\b|miles|millas)/i)||T.match(/(?:mileage|millaje|odometer)[:\s]*([\d,]{1,7})/i); if(mm) mileage=N(mm[1]);
+    var mileage=0, mileageKnown=false; var mm=T.match(/([\d,]{1,7})\s*(?:mi\b|miles|millas)/i)||T.match(/(?:mileage|millaje|odometer)[:\s]*([\d,]{1,7})/i); if(mm){ mileage=N(mm[1]); mileageKnown=true; }
     // Carroceria: 1) itemprop, 2) el TITULO del carro, 3) etiquetas EXPLICITAS
     // ("Body: Van") en el texto. NUNCA un "VAN"/"TRUCK" suelto en toda la
     // tarjeta: las paginas traidas por fetch incluyen texto OCULTO (filtros,
@@ -183,7 +183,7 @@ function promaxExtract(opts, root){
     var id=vin||((year&&make&&model)?(year+'-'+make+'-'+model+(trim?'-'+trim:'')):'');
     return { _year:year, id:id, year:year, make:make, model:model, trim:trim, body_type:body||'',
       category:catFor(U,body), status:'available',
-      condition:(has(U,'NEW ')&&!has(U,'PRE-OWNED')&&!has(U,'USED')&&!has(U,'CERTIFIED'))?'new':'used',
+      condition:(function(){var nt=(has(U,'NEW ')||has(U,'BRAND NEW'))&&!has(U,'PRE-OWNED')&&!has(U,'USED')&&!has(U,'CERTIFIED');if(nt)return'new';if(mileageKnown&&mileage<1000)return'new';return'used';})(),
       price:price||0, msrp:null, mileage:mileage||0, fuel:fuel, transmission:trans, drivetrain:drive,
       exterior_color:ext, interior_color:'', vin:vin, stock:'', badge:has(U,'CERTIFIED')?'Certificado':'',
       featured:false, features:[], description:'', gallery:g, cover_image:g[0]||'', source:source, source_url:detailUrl(el) };
@@ -252,13 +252,27 @@ function promaxDetailMedia(doc, pageUrl){
   if(ldCount<3){
     var links=doc.querySelectorAll('a[href*=".jpg"],a[href*=".jpeg"],a[href*=".png"],a[href*=".webp"]');
     for(var l=0;l<links.length;l++){ if(!inPeople(links[l])) add(links[l].getAttribute('href')); }
-    if(out.length<5){
-      var alls=doc.querySelectorAll('img');
-      for(var q=0;q<alls.length && out.length<12;q++){
-        var a3=alls[q];
-        if(inPeople(a3)) continue;
-        add(a3.getAttribute('src')||a3.getAttribute('data-src'));
+  }
+  // Barrido del HTML CRUDO: la galeria real suele venir en un JSON dentro de un
+  // <script> (que fetch NO ejecuta, pero su TEXTO si esta ahi). Sacamos URLs de
+  // foto de hosts/patrones tipicos de fotos de vehiculos (homenetiol, cdns de
+  // dealer, /photos/by-size, imagescdn...). Asi conseguimos las 5+ fotos.
+  if(out.length<5){
+    try{
+      var raw=(doc.documentElement&&doc.documentElement.outerHTML)||'';
+      var rx=/https?:(?:\\?\/){2}[^\s"'<>]+?\.(?:jpe?g|png|webp)/gi, mm2, guard=0;
+      while((mm2=rx.exec(raw))!==null && guard++<4000 && out.length<12){
+        var uu=mm2[0].replace(/\\\//g,'/').replace(/\\/g,'');
+        if(/(homenetiol|imagescdn|pictures|photos\/by-size|\/photos\/|\/vehicle|\/inventory|dealercarsearch|edgepilot|dealereprocess|carbaseweb|inventoryphotos|vehicleimages|cloudfront|akamai)/i.test(uu)) add(uu);
       }
+    }catch(e){}
+  }
+  // Ultimo recurso: cualquier <img> grande que no sea de gente
+  if(out.length<3){
+    var alls=doc.querySelectorAll('img');
+    for(var q=0;q<alls.length && out.length<12;q++){
+      var a3=alls[q]; if(inPeople(a3)) continue;
+      add(a3.getAttribute('data-src')||a3.getAttribute('data-original')||a3.getAttribute('data-lazy')||a3.getAttribute('src'));
     }
   }
   if(!desc){ var md=doc.querySelector('meta[name="description"],meta[property="og:description"]'); if(md) desc=md.getAttribute('content')||''; }
