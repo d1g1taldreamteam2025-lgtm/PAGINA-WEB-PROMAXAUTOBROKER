@@ -221,11 +221,25 @@ async function enrichPhotos(ctx, d, rows) {
         await p.waitForTimeout(800);
         await p.evaluate('(function(){' + ENGINE + ';window.__PMX_MEDIA=promaxDetailMedia;})()');
         let m = await p.evaluate(function () { return window.__PMX_MEDIA(document, location.href); });
-        // Red de seguridad: si aún salieron pocas, otra espera y reintento.
+        // Red 1: si salieron pocas, otra espera y reintento (galerías JS lentas).
         if (!m || !m.gallery || m.gallery.length < 3) {
           await p.waitForTimeout(2600);
           const m2 = await p.evaluate(function () { return window.__PMX_MEDIA(document, location.href); });
           if (m2 && m2.gallery && m2.gallery.length > ((m && m.gallery && m.gallery.length) || 0)) m = m2;
+        }
+        // Red 2 (la definitiva para Motoport/Sea-Doo): si AÚN salieron pocas, trae
+        // el HTML CRUDO por fetch y re-parsea. Las fotos vienen en el HTML estático
+        // (swiper) aunque el render del navegador a veces no las monte. fetch trae
+        // el 100% del HTML — así ningún jet ski se queda con 1 sola foto.
+        if (!m || !m.gallery || m.gallery.length < 3) {
+          try {
+            const m3 = await p.evaluate(async function () {
+              var html = await (await fetch(location.href, { credentials: 'same-origin' })).text();
+              var doc = new DOMParser().parseFromString(html, 'text/html');
+              return window.__PMX_MEDIA(doc, location.href);
+            });
+            if (m3 && m3.gallery && m3.gallery.length > ((m && m.gallery && m.gallery.length) || 0)) m = m3;
+          } catch (e) { /* si el fetch falla, se queda con lo que haya */ }
         }
         if (m && m.gallery && m.gallery.length) { r.gallery = m.gallery.slice(0, 5); r.cover_image = m.gallery[0]; if (m.gallery.length >= 3) rich++; }
         if (m && m.description && !r.description) r.description = m.description;
