@@ -184,7 +184,7 @@ function promaxExtract(opts, root){
     var id=vin||((year&&make&&model)?(year+'-'+make+'-'+model+(trim?'-'+trim:'')):'');
     return { _year:year, id:id, year:year, make:make, model:model, trim:trim, body_type:body||'',
       category:catFor(U,body), status:'available',
-      condition:(function(){var isUsed=has(U,'PRE-OWNED')||has(U,'CERTIFIED')||has(U,'USED');if(!isUsed&&(has(U,'NEW ')||has(U,'BRAND NEW')))return'new';if(!isUsed&&year&&year>=CURY&&(!mileageKnown||mileage<15000))return'new';if(!isUsed&&mileageKnown&&mileage<1000)return'new';return'used';})(),
+      condition:(function(){if(year&&year>=CURY&&(!mileageKnown||mileage<30000))return'new';var isUsed=has(U,'PRE-OWNED')||has(U,'CERTIFIED');if(!isUsed&&(has(U,'NEW ')||has(U,'BRAND NEW')))return'new';if(mileageKnown&&mileage<1000)return'new';return'used';})(),
       price:price||0, msrp:null, mileage:mileage||0, fuel:fuel, transmission:trans, drivetrain:drive,
       exterior_color:ext, interior_color:'', vin:vin, stock:'', badge:has(U,'CERTIFIED')?'Certificado':'',
       featured:false, features:[], description:'', gallery:g, cover_image:g[0]||'', source:source, source_url:detailUrl(el) };

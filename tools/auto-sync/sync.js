@@ -216,7 +216,15 @@ async function enrichPhotos(ctx, d, rows) {
         await p.goto(r.source_url, { waitUntil: 'commit', timeout: 20000 });
         await p.waitForTimeout(1600);
         await p.evaluate('(function(){' + ENGINE + ';window.__PMX_MEDIA=promaxDetailMedia;})()');
-        const m = await p.evaluate(function () { return window.__PMX_MEDIA(document, location.href); });
+        let m = await p.evaluate(function () { return window.__PMX_MEDIA(document, location.href); });
+        // Algunas galerías montan por JS en >1.6s (Sea-Doo/Motoport: los Jet Ski
+        // a veces salían con 1 sola foto). Si salieron pocas, damos otra espera y
+        // reintentamos ANTES de rendirnos con la foto de la lista.
+        if (!m || !m.gallery || m.gallery.length < 3) {
+          await p.waitForTimeout(2600);
+          const m2 = await p.evaluate(function () { return window.__PMX_MEDIA(document, location.href); });
+          if (m2 && m2.gallery && m2.gallery.length > ((m && m.gallery && m.gallery.length) || 0)) m = m2;
+        }
         if (m && m.gallery && m.gallery.length) { r.gallery = m.gallery.slice(0, 5); r.cover_image = m.gallery[0]; if (m.gallery.length >= 3) rich++; }
         if (m && m.description && !r.description) r.description = m.description;
       } catch (e) { /* ficha caída: se queda con la foto de la lista */ }

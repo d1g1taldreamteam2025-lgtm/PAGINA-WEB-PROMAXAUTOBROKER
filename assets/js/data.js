@@ -54,7 +54,14 @@
       featured: !!r.featured, photos: gallery.length || 1, image: cover, gallery: gallery,
       features: Array.isArray(r.features) ? r.features : [],
       description: r.description || "",
-      condition: r.condition || (/\b(nuevo|new)\b/i.test(r.badge || "") ? "new" : "used"),
+      condition: (function () {
+        // Regla del negocio (Jorge): un vehículo del AÑO EN CURSO o próximo se
+        // muestra como NUEVO aunque el dealer lo liste "usado/pre-owned", salvo
+        // que tenga millaje claramente alto. Años anteriores: lo que diga la base.
+        var y = Number(r.year) || 0, mi = Number(r.mileage) || 0, cy = new Date().getFullYear();
+        if (y >= cy && mi < 30000) return "new";
+        return r.condition || (/\b(nuevo|new)\b/i.test(r.badge || "") ? "new" : "used");
+      })(),
     };
   }
 
