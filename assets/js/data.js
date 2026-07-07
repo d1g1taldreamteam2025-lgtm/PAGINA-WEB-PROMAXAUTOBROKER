@@ -35,10 +35,21 @@
   var SLIM = "id,stock,category,year,make,model,trim,body_type,price,msrp,mileage,fuel,transmission,drivetrain,condition,badge,featured,cover_image,created_at";
   var PAGE = 1000; // máximo de filas por respuesta en Supabase/PostgREST
 
+  // Placeholder AUTOCONTENIDO (SVG data-URI): si un carro aún no tiene foto, se
+  // ve un recuadro gris "Foto próximamente" — NUNCA un recuadro negro/roto.
+  // (Antes se usaba via.placeholder.com, que la CSP del sitio bloqueaba -> negro.)
+  var NOPHOTO = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(
+    "<svg xmlns='http://www.w3.org/2000/svg' width='800' height='500'>" +
+    "<rect width='800' height='500' fill='#e9ecef'/>" +
+    "<g fill='none' stroke='#9aa4b2' stroke-width='9' stroke-linecap='round' stroke-linejoin='round'>" +
+    "<rect x='320' y='206' width='160' height='104' rx='14'/><circle cx='400' cy='258' r='27'/><path d='M356 206l13-23h62l13 23'/></g>" +
+    "<text x='400' y='372' font-family='Arial,Helvetica,sans-serif' font-size='25' fill='#7a828d' text-anchor='middle'>Foto próximamente</text></svg>"
+  );
+
   function normalize(r) {
     // Máximo 5 fotos por producto (regla de negocio; el admin también lo valida).
     var gallery = (Array.isArray(r.gallery) ? r.gallery : []).slice(0, 5);
-    var cover = r.cover_image || gallery[0] || "https://via.placeholder.com/800x500?text=Sin+Foto";
+    var cover = r.cover_image || gallery[0] || NOPHOTO;
     var cat = (r.category || "cars").toLowerCase();
     if (CATEGORY_SLUGS.length && CATEGORY_SLUGS.indexOf(cat) === -1) cat = "cars";
     return {
