@@ -206,8 +206,10 @@ function promaxDetailMedia(doc, pageUrl){
   function abs(u){ if(!u) return ''; try{ return new URL(u, pageUrl).href; }catch(e){ return ''; } }
   function bad(u){ return /(logo|placeholder|no[-_]?image|noimage|spacer|blank|coming[-_]?soon|icon|sprite|badge|carfax|autocheck|button|arrow|flag|banner|award|certif|warranty|dealer[-_]?logo|testimonial|review|avatar|headshot|profile|staff|team|customer|person|people|employee|agent|googleusercontent|gravatar|\.svg|\.gif)/i.test(u); }
   // Clave base: quita el TAMANO aunque venga como carpeta (/1010x568/) o sufijo,
-  // para que la misma foto en 2 resoluciones cuente UNA vez.
-  function baseKey(u){ return u.split('?')[0].replace(/\/\d{2,4}x\d{2,4}\//g,'/').replace(/(-|_)?\d{2,4}x\d{2,4}(?=\.)/,'').replace(/(-|_)(thumb|tn|small|tiny|mini)(?=\.)/i,''); }
+  // para que la misma foto en 2 resoluciones cuente UNA vez. Cubre 3 formas:
+  // /800x600/, _800x600 y _480px (Sea-Doo/dx1app: foto.jpg + foto_480px.jpg
+  // eran la MISMA foto y salian duplicadas de primeras en los Jet Ski).
+  function baseKey(u){ return u.split('?')[0].replace(/\/\d{2,4}x\d{2,4}\//g,'/').replace(/(-|_)?\d{2,4}x\d{2,4}(?=\.)/,'').replace(/(-|_)\d{2,4}px(?=\.)/i,'').replace(/(-|_)(thumb|tn|small|tiny|mini)(?=\.)/i,''); }
   // Zonas de "gente" (resenas, equipo, testimonios): sus fotos NO son del carro
   var PEOPLE=/(review|testimonial|team|staff|rating|comment|author|avatar|agent|salesperson)/i;
   function inPeople(el){
