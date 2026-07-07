@@ -263,10 +263,12 @@ function promaxDetailMedia(doc, pageUrl){
   if(out.length<5){
     try{
       var raw=(doc.documentElement&&doc.documentElement.outerHTML)||'';
-      var rx=/https?:(?:\\?\/){2}[^\s"'<>]+?\.(?:jpe?g|png|webp)/gi, mm2, guard=0;
+      // Acepta URLs con protocolo (https:) Y protocolo-relativas (//host) — las
+      // fotos de Motoport/Sea-Doo (dx1app) vienen como //cdpcdn.dx1app.com/...
+      var rx=/(?:https?:)?(?:\\?\/){2}[^\s"'<>]+?\.(?:jpe?g|png|webp)/gi, mm2, guard=0;
       while((mm2=rx.exec(raw))!==null && guard++<4000 && out.length<12){
         var uu=mm2[0].replace(/\\\//g,'/').replace(/\\/g,'');
-        if(/(homenetiol|imagescdn|pictures|photos\/by-size|\/photos\/|\/vehicle|\/inventory|dealercarsearch|edgepilot|dealereprocess|carbaseweb|inventoryphotos|vehicleimages|cloudfront|akamai)/i.test(uu)) add(uu);
+        if(/(homenetiol|imagescdn|pictures|photos\/by-size|\/photos\/|\/vehicle|\/inventory|dealercarsearch|edgepilot|dealereprocess|carbaseweb|inventoryphotos|vehicleimages|cloudfront|akamai|dx1app|cdpcdn)/i.test(uu)) add(uu);
       }
     }catch(e){}
   }

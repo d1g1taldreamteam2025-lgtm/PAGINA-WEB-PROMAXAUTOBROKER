@@ -211,15 +211,17 @@ async function enrichPhotos(ctx, d, rows) {
           if (t === 'image' || t === 'media' || t === 'font' || t === 'stylesheet') return route.abort();
           return route.continue();
         });
-        // 'commit' devuelve apenas navega (rápido); la espera fija deja que el JS
-        // monte la galería. Mucho más veloz que esperar 'domcontentloaded'.
-        await p.goto(r.source_url, { waitUntil: 'commit', timeout: 20000 });
-        await p.waitForTimeout(1600);
+        // 'domcontentloaded' espera a que TODO el HTML esté parseado (con las
+        // imágenes/CSS bloqueadas es rápido). Con 'commit' antes salía sólo la
+        // foto principal (1 sola) porque la galería viene MÁS ABAJO en el HTML
+        // y aún no estaba en el DOM. Además esperamos explícitamente a que
+        // aparezca la galería (swiper/carousel/gallery).
+        await p.goto(r.source_url, { waitUntil: 'domcontentloaded', timeout: 25000 });
+        await p.waitForSelector('[class*="slide"] img,[class*="gallery"] img,[class*="carousel"] img,[class*="photo"] img,figure img', { timeout: 6000 }).catch(function () {});
+        await p.waitForTimeout(800);
         await p.evaluate('(function(){' + ENGINE + ';window.__PMX_MEDIA=promaxDetailMedia;})()');
         let m = await p.evaluate(function () { return window.__PMX_MEDIA(document, location.href); });
-        // Algunas galerías montan por JS en >1.6s (Sea-Doo/Motoport: los Jet Ski
-        // a veces salían con 1 sola foto). Si salieron pocas, damos otra espera y
-        // reintentamos ANTES de rendirnos con la foto de la lista.
+        // Red de seguridad: si aún salieron pocas, otra espera y reintento.
         if (!m || !m.gallery || m.gallery.length < 3) {
           await p.waitForTimeout(2600);
           const m2 = await p.evaluate(function () { return window.__PMX_MEDIA(document, location.href); });
