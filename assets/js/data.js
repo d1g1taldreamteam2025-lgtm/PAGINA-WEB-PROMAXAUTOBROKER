@@ -32,7 +32,7 @@
   }
 
   // Campos livianos para listados (todo lo que usan tarjetas, filtros y buscador)
-  var SLIM = "id,stock,category,year,make,model,trim,body_type,price,msrp,mileage,fuel,transmission,drivetrain,badge,featured,cover_image,created_at";
+  var SLIM = "id,stock,category,year,make,model,trim,body_type,price,msrp,mileage,fuel,transmission,drivetrain,condition,badge,featured,cover_image,created_at";
   var PAGE = 1000; // máximo de filas por respuesta en Supabase/PostgREST
 
   function normalize(r) {
