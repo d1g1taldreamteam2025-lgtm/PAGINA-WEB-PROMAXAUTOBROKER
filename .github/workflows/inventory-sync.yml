@@ -56,6 +56,10 @@ jobs:
           PROMAX_ADMIN_PASSWORD: ${{ secrets.PROMAX_ADMIN_PASSWORD }}
           # Con ventana real (no headless): Cloudflare acepta mucho mejor
           PROMAX_HEADFUL: "1"
+          # Fotos: más fichas en paralelo (14) y más presupuesto (45 min) para
+          # alcanzar a sacarle las 5 fotos a TODOS los ~3000 carros de HGreg.
+          PROMAX_PHOTO_CONC: "14"
+          PROMAX_PHOTO_BUDGET_MS: "2700000"
         run: xvfb-run --auto-servernum -- node sync.js
 
       - name: Commitear el sitemap de vehículos si cambió (SEO)

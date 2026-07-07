@@ -211,19 +211,18 @@ async function enrichPhotos(ctx, d, rows) {
           if (t === 'image' || t === 'media' || t === 'font' || t === 'stylesheet') return route.abort();
           return route.continue();
         });
-        // 'domcontentloaded' espera a que TODO el HTML esté parseado (con las
-        // imágenes/CSS bloqueadas es rápido). Con 'commit' antes salía sólo la
-        // foto principal (1 sola) porque la galería viene MÁS ABAJO en el HTML
-        // y aún no estaba en el DOM. Además esperamos explícitamente a que
-        // aparezca la galería (swiper/carousel/gallery).
-        await p.goto(r.source_url, { waitUntil: 'domcontentloaded', timeout: 25000 });
-        await p.waitForSelector('[class*="slide"] img,[class*="gallery"] img,[class*="carousel"] img,[class*="photo"] img,figure img', { timeout: 6000 }).catch(function () {});
-        await p.waitForTimeout(800);
+        // 'commit' devuelve al primer byte (rápido — clave para alcanzar los
+        // ~3000 carros de HGreg dentro del tope de tiempo). En vez de esperar un
+        // rato fijo, esperamos a que APAREZCA la galería (swiper/carousel/gallery):
+        // rápido si ya está (Motoport estático), y da tiempo si la monta el JS
+        // (HGreg). Espera SÓLO lo necesario, hasta 4s.
+        await p.goto(r.source_url, { waitUntil: 'commit', timeout: 20000 });
+        await p.waitForSelector('[class*="slide"] img,[class*="gallery"] img,[class*="carousel"] img,[class*="photo"] img,figure img', { timeout: 4000 }).catch(function () {});
         await p.evaluate('(function(){' + ENGINE + ';window.__PMX_MEDIA=promaxDetailMedia;})()');
         let m = await p.evaluate(function () { return window.__PMX_MEDIA(document, location.href); });
-        // Red 1: si salieron pocas, otra espera y reintento (galerías JS lentas).
+        // Red 1: si salieron pocas, una espera corta y reintento (galerías JS lentas).
         if (!m || !m.gallery || m.gallery.length < 3) {
-          await p.waitForTimeout(2600);
+          await p.waitForTimeout(1500);
           const m2 = await p.evaluate(function () { return window.__PMX_MEDIA(document, location.href); });
           if (m2 && m2.gallery && m2.gallery.length > ((m && m.gallery && m.gallery.length) || 0)) m = m2;
         }
