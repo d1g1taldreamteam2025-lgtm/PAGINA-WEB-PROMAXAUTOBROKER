@@ -83,8 +83,14 @@
     if (ep.inventoryApiKey) { headers.apikey = ep.inventoryApiKey; headers.Authorization = "Bearer " + ep.inventoryApiKey; }
     return { url: ep.inventoryApiUrl, headers: headers };
   }
+  // En los LISTADOS (catálogo, home, similares) solo mostramos vehículos con
+  // 4+ fotos (regla de Jorge). "gallery->3=not.is.null" = existe el 4º elemento
+  // del arreglo de fotos. La ficha directa (loadVehicle) NO usa este filtro, así
+  // que un link directo sigue abriendo aunque el carro tenga menos de 4 fotos.
+  var MIN4 = "&gallery->3=not.is.null";
   function slimUrl(api) {
-    return api.url.indexOf("select=*") > -1 ? api.url.replace("select=*", "select=" + SLIM) : api.url + "&select=" + SLIM;
+    var u = api.url.indexOf("select=*") > -1 ? api.url.replace("select=*", "select=" + SLIM) : api.url + "&select=" + SLIM;
+    return u + MIN4;
   }
 
   function fetchJson(url, headers) {
