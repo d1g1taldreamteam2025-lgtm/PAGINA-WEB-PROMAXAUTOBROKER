@@ -102,6 +102,92 @@ async function cleanupStale(source, stamp) {
     '?source=eq.' + encodeURIComponent(source) + '&last_sync=lt.' + encodeURIComponent(stamp));
 }
 
+/* ---------- LIMPIEZA POR DECISIÓN DEL CLIENTE (Joel) ---------- */
+// Fuentes RETIRADAS: el cliente solo autorizó los CAMIONES de HGreg
+// (hgregtrucks.com). Los ~3000 carros y vans de hgreg.com no los puede
+// vender (no tiene el contacto) -> se ELIMINAN de la base y, como la fuente
+// ya no está en dealers.json, no vuelven a entrar. Las filas manuales
+// (source null, p. ej. Toyota of North Miami) NUNCA se tocan.
+const RETIRED_SOURCES = ['hgreg.com'];
+async function purgeRetiredSources() {
+  for (const s of RETIRED_SOURCES) {
+    try {
+      const res = await supa('DELETE', '?source=eq.' + encodeURIComponent(s), null, 'return=minimal,count=exact');
+      const cr = res.headers.get('content-range') || '';
+      log('LIMPIEZA: fuente retirada "' + s + '" -> ' + (cr.split('/')[1] || '?') + ' filas eliminadas.');
+    } catch (e) {
+      log('LIMPIEZA: fallo eliminando "' + s + '": ' + e.message);
+    }
+  }
+}
+
+// MSRP corruptos (queja del cliente: Toyotas con "precio anterior" tachado de
+// $470,000/$600,000). Regla: si el msrp es más del DOBLE del precio, es basura
+// del import -> se pone en null y la web deja de mostrar el tachado falso.
+async function fixBadMsrp() {
+  const res = await fetch(TABLE + '?select=id,price,msrp&msrp=not.is.null&limit=10000', {
+    headers: { apikey: AUTH.apikey, Authorization: 'Bearer ' + AUTH.bearer },
+  });
+  if (!res.ok) { log('LIMPIEZA msrp: no pude leer (' + res.status + ')'); return; }
+  const rows = await res.json();
+  const bad = rows.filter(function (r) {
+    const p = Number(r.price), m = Number(r.msrp);
+    return m > 0 && p > 0 && m > 2 * p;
+  });
+  log('LIMPIEZA msrp: ' + bad.length + ' filas con msrp absurdo (> 2x precio).');
+  for (let i = 0; i < bad.length; i += 150) {
+    const ids = bad.slice(i, i + 150)
+      .map(function (r) { return '"' + String(r.id).replace(/["\\,()]/g, '') + '"'; })
+      .join(',');
+    await supa('PATCH', '?id=in.(' + encodeURIComponent(ids) + ')', { msrp: null });
+  }
+  if (bad.length) log('LIMPIEZA msrp: corregidos.');
+}
+
+// CARROCERÍA faltante (queja del cliente: "Toyota + Camionetas = sin
+// resultados" aunque hay Tacomas/Tundras): muchas filas importadas vienen sin
+// body_type. Se infiere por el MODELO (mapa de modelos comunes por tipo) y se
+// guarda en la base para que los filtros SUV/Sedán/Camioneta funcionen.
+const BODY_BY_MODEL = [
+  // 'van' va PRIMERO: "Savana 2500 / ProMaster 3500" son vans aunque digan 2500/3500
+  ['van', /\b(sienna|odyssey|pacifica|carnival|transit|promaster|express|savana|sprinter|metris|nv200|grand caravan|caravan)\b/i],
+  ['truck', /\b(tacoma|tundra|f[- ]?(150|250|350)|silverado|sierra(?!\s*denali\s*suv)|ridgeline|frontier|titan|colorado|canyon|ranger|maverick|gladiator|ram\s*(1500|2500|3500)|1500|2500|3500)\b/i],
+  ['suv', /\b(rav ?4|highlander|4 ?runner|corolla cross|land cruiser|sequoia|venza|bz4x|c-?hr|grand highlander|cr-?v|pilot|hr-?v|passport|rogue|murano|pathfinder|armada|kicks|juke|tucson|santa fe|palisade|kona|venue|sportage|sorento|telluride|seltos|soul|niro|escape|explorer|expedition|edge|bronco|ecosport|equinox|tahoe|suburban|traverse|trailblazer|blazer|trax|compass|cherokee|wrangler|renegade|wagoneer|cx-?(3|30|5|50|9|90)|outback|forester|crosstrek|ascent|rx|nx|gx|lx|ux|mdx|rdx|zdx|qx(50|55|60|80)|x[1-7]|gl[abces]|gle|glc|q[3578]|tiguan|atlas|taos|enclave|encore|envision|terrain|acadia|yukon|escalade|xt[456]|navigator|aviator|corsair|nautilus|range rover|discovery|defender|macan|cayenne)\b/i],
+  ['sedan', /\b(corolla(?!\s*cross)|camry|avalon|crown|prius|mirai|civic|accord|insight|sentra|versa|altima|maxima|elantra|sonata|accent|azera|k5|forte|rio|optima|jetta|passat|arteon|mazda ?[36]|legacy|impreza|is ?(250|300|350)?|es ?(250|300|330|350)?|ls ?(430|460|500)?|gs|tlx|ilx|integra|tsx|tl|rlx|[345] series|[cse][- ]?class|c300|e350|a[3468]|s[3468]|malibu|impala|cruze|sonic|spark|fusion|taurus|focus|fiesta|charger|chrysler 300|continental|mkz|model [3s]|altima|q50|q60|g[3578]0)\b/i],
+  ['coupe', /\b(mustang|challenger|corvette|camaro|gr ?86|86|brz|supra|370z|400z|nissan z|veloster n?|cl[ak]|slk|sl|boxster|cayman|911|m[248]|rc ?(300|350)|lc ?500)\b/i],
+  ['hatchback', /\b(golf|gti|yaris|fit|bolt|leaf|veloster|mini cooper|500e?|i3|mazda ?2|rio 5)\b/i],
+];
+function inferBody(make, model) {
+  const s = ((make || '') + ' ' + (model || '')).toLowerCase();
+  for (const [type, re] of BODY_BY_MODEL) if (re.test(s)) return type;
+  return null;
+}
+async function fillMissingBodyType() {
+  // Solo carros y vans: a las motos/jet ski/UTV no se les infiere carrocería
+  // (un "Sea-Doo GTI" NO es un VW GTI).
+  const res = await fetch(TABLE + '?select=id,make,model,body_type,category&or=(body_type.is.null,body_type.eq.)&category=in.(cars,vans)&limit=10000', {
+    headers: { apikey: AUTH.apikey, Authorization: 'Bearer ' + AUTH.bearer },
+  });
+  if (!res.ok) { log('LIMPIEZA body_type: no pude leer (' + res.status + ')'); return; }
+  const rows = await res.json();
+  const byType = {};
+  rows.forEach(function (r) {
+    const t = inferBody(r.make, r.model);
+    if (t) (byType[t] = byType[t] || []).push(r.id);
+  });
+  for (const t of Object.keys(byType)) {
+    const ids = byType[t];
+    for (let i = 0; i < ids.length; i += 150) {
+      const list = ids.slice(i, i + 150)
+        .map(function (id) { return '"' + String(id).replace(/["\\,()]/g, '') + '"'; })
+        .join(',');
+      await supa('PATCH', '?id=in.(' + encodeURIComponent(list) + ')', { body_type: t });
+    }
+    log('LIMPIEZA body_type: ' + ids.length + ' filas -> ' + t + '.');
+  }
+  log('LIMPIEZA body_type: ' + rows.length + ' sin carrocería revisadas.');
+}
+
 // Da tiempo a que los antibots que redirigen (Imperva/Cloudflare) resuelvan su
 // challenge y aterricen en la página real ANTES de inyectar el motor.
 async function settle(page, ms) {
@@ -341,6 +427,14 @@ async function main() {
   await resolveAuth(); // valida credenciales antes de arrancar
   const stamp = new Date().toISOString();
   log('Sincronización semanal — sello ' + stamp);
+
+  // LIMPIEZA PRIMERO (pedido del cliente): fuera los carros de fuentes
+  // retiradas (hgreg.com), msrp absurdos a null y carrocerías inferidas.
+  // Va antes del scraping para que la web quede limpia YA, sin esperar
+  // la hora que tardan las fotos.
+  await purgeRetiredSources();
+  await fixBadMsrp();
+  await fillMissingBodyType();
   const launchOpts = { args: ['--no-sandbox', '--disable-blink-features=AutomationControlled'], headless: process.env.PROMAX_HEADFUL ? false : true };
   if (process.env.PROMAX_CHROMIUM) launchOpts.executablePath = process.env.PROMAX_CHROMIUM; // solo para pruebas locales
   const browser = await chromium.launch(launchOpts);

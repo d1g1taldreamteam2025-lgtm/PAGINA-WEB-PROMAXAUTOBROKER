@@ -46,6 +46,24 @@
     "<text x='400' y='372' font-family='Arial,Helvetica,sans-serif' font-size='25' fill='#7a828d' text-anchor='middle'>Foto próximamente</text></svg>"
   );
 
+  // Carrocería FALTANTE: muchas filas importadas vienen sin body_type y los
+  // filtros SUV/Sedán/Camioneta no las encontraban ("Toyota + Camionetas = 0"
+  // aunque hay Tacomas). Se infiere por el MODELO — solo carros y vans (un
+  // Sea-Doo GTI no es un VW GTI). El robot también la corrige en la base.
+  var BODY_RES = [
+    ["van", /\b(sienna|odyssey|pacifica|carnival|transit|promaster|express|savana|sprinter|metris|nv200|grand caravan|caravan)\b/i],
+    ["truck", /\b(tacoma|tundra|f[- ]?(150|250|350)|silverado|sierra|ridgeline|frontier|titan|colorado|canyon|ranger|maverick|gladiator|1500|2500|3500)\b/i],
+    ["suv", /\b(rav ?4|highlander|4 ?runner|corolla cross|land cruiser|sequoia|venza|bz4x|c-?hr|grand highlander|cr-?v|pilot|hr-?v|passport|rogue|murano|pathfinder|armada|kicks|juke|tucson|santa fe|palisade|kona|venue|sportage|sorento|telluride|seltos|soul|niro|escape|explorer|expedition|edge|bronco|ecosport|equinox|tahoe|suburban|traverse|trailblazer|blazer|trax|compass|cherokee|wrangler|renegade|wagoneer|cx-?(3|30|5|50|9|90)|outback|forester|crosstrek|ascent|rx|nx|gx|lx|ux|mdx|rdx|zdx|qx(50|55|60|80)|x[1-7]|gl[abces]|gle|glc|q[3578]|tiguan|atlas|taos|enclave|encore|envision|terrain|acadia|yukon|escalade|xt[456]|navigator|aviator|corsair|nautilus|range rover|discovery|defender|macan|cayenne)\b/i],
+    ["sedan", /\b(corolla(?!\s*cross)|camry|avalon|crown|prius|mirai|civic|accord|insight|sentra|versa|altima|maxima|elantra|sonata|accent|azera|k5|forte|rio|optima|jetta|passat|arteon|mazda ?[36]|legacy|impreza|is ?(250|300|350)?|es ?(250|300|330|350)?|tlx|ilx|integra|tsx|malibu|impala|cruze|sonic|spark|fusion|taurus|focus|fiesta|charger|continental|mkz|q50|q60)\b/i],
+    ["coupe", /\b(mustang|challenger|corvette|camaro|gr ?86|brz|supra|370z|400z)\b/i],
+    ["hatchback", /\b(golf|gti|yaris|fit|bolt|leaf|veloster|mini cooper)\b/i],
+  ];
+  function inferBody(make, model) {
+    var s = ((make || "") + " " + (model || "")).toLowerCase();
+    for (var i = 0; i < BODY_RES.length; i++) if (BODY_RES[i][1].test(s)) return BODY_RES[i][0];
+    return "";
+  }
+
   function normalize(r) {
     // Máximo 5 fotos por producto (regla de negocio; el admin también lo valida).
     var gallery = (Array.isArray(r.gallery) ? r.gallery : []).slice(0, 5);
@@ -56,8 +74,14 @@
       id: r.id || r.stock || ((r.year || "") + "-" + (r.make || "") + "-" + (r.model || "")).toLowerCase().replace(/\s+/g, "-"),
       category: cat,
       year: r.year, make: canonMake(r.make), model: r.model, trim: r.trim || "",
-      bodyType: (r.body_type || "").toLowerCase(),
-      price: Number(r.price) || 0, msrp: r.msrp ? Number(r.msrp) : null,
+      bodyType: ((r.body_type || ((cat === "cars" || cat === "vans") ? inferBody(r.make, r.model) : "")) || "").toLowerCase(),
+      price: Number(r.price) || 0,
+      // MSRP corrupto (ej. $205,500 en un Camry de $21,895): si el "precio
+      // anterior" es más del doble del precio real, NO se muestra tachado.
+      msrp: (function () {
+        var p = Number(r.price) || 0, m = Number(r.msrp) || 0;
+        return (m > 0 && p > 0 && m <= 2 * p) ? m : null;
+      })(),
       mileage: Number(r.mileage) || 0,
       fuel: r.fuel || "Gasolina", transmission: r.transmission || "Automática", drivetrain: r.drivetrain || "FWD",
       exteriorColor: r.exterior_color || "", interiorColor: r.interior_color || "",

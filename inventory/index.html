@@ -50,8 +50,16 @@
 .pmx-qf{display:inline-flex;align-items:center;gap:6px;padding:9px 15px;border:2px solid var(--line);background:#fff;border-radius:999px;font:600 13px var(--font-body);color:var(--ink);cursor:pointer;transition:all .2s;}
 .pmx-qf:hover{border-color:var(--brand);color:var(--brand);}
 .pmx-qf.active{background:var(--ink);color:#fff;border-color:var(--ink);}
-.pmx-condtabs{display:flex;gap:6px;justify-content:center;margin:0 auto 16px;max-width:560px;background:#fff;border:2px solid var(--line);border-radius:999px;padding:5px;}
-.pmx-condtab{flex:1;text-align:center;padding:11px 10px;border-radius:999px;font:800 13.5px var(--font-head);color:var(--text-muted);cursor:pointer;background:transparent;transition:all .2s;letter-spacing:.3px;}
+/* Condición USADOS|NUEVOS compacta, integrada en la misma fila de filtros */
+.pmx-condtabs{display:inline-flex;gap:4px;background:#fff;border:2px solid var(--line);border-radius:999px;padding:4px;}
+.pmx-condtab{text-align:center;padding:8px 18px;border-radius:999px;font:800 13px var(--font-head);color:var(--text-muted);cursor:pointer;background:transparent;transition:all .2s;letter-spacing:.3px;border:0;}
+.pmx-qfs{align-items:center;}
+.pmx-qfs__sep{width:1px;align-self:stretch;background:var(--line);margin:0 4px;}
+#pmxVanTypes{display:inline-flex;gap:8px;}
+#pmxVanTypes .pmx-qf.active{background:var(--brand);border-color:var(--brand);}
+.pmx-sel{max-width:210px;text-transform:uppercase;}
+.pmx-sel:disabled{opacity:.55;cursor:not-allowed;}
+@media(max-width:640px){.pmx-sel{max-width:none;flex:1 1 45%;}}
 .pmx-condtab:hover{color:var(--ink);}
 .pmx-condtab.active{background:var(--brand);color:#fff;box-shadow:0 6px 16px rgba(167,2,0,.25);}
 .pmx-controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
@@ -141,20 +149,28 @@
 <div class="pmx-toolbar">
   <div class="pmx-toolbar__in">
     <div class="pmx-catbar" id="pmxCats" role="tablist" aria-label="Categorías"></div>
-    <div class="pmx-condtabs" id="pmxCondTabs">
-      <button class="pmx-condtab active" data-cond="all" data-i18n="cond_all">Todos</button>
-      <button class="pmx-condtab" data-cond="used" data-i18n="cond_used">Usados</button>
-      <button class="pmx-condtab" data-cond="new" data-i18n="cond_new">Nuevos</button>
-    </div>
+    <!-- Una sola fila: condición (USADOS | NUEVOS, sin "todos") + filtros rápidos.
+         Pedido del cliente: menos renglones y sin la opción "TODOS". -->
     <div class="pmx-qfs">
-      <button class="pmx-qf active" data-quick="all" data-i18n="qf_all">Todos</button>
+      <div class="pmx-condtabs" id="pmxCondTabs">
+        <button class="pmx-condtab" data-cond="used" data-i18n="cond_used">Usados</button>
+        <button class="pmx-condtab" data-cond="new" data-i18n="cond_new">Nuevos</button>
+      </div>
+      <span class="pmx-qfs__sep" aria-hidden="true"></span>
       <button class="pmx-qf" data-quick="under-20k" data-i18n="qf_20">Bajo $20k</button>
       <button class="pmx-qf" data-quick="under-10k" data-i18n="qf_10">Bajo $10k</button>
       <button class="pmx-qf" data-quick="suv" data-i18n="qf_suv">SUVs</button>
       <button class="pmx-qf" data-quick="sedan" data-i18n="qf_sedan">Sedanes</button>
       <button class="pmx-qf" data-quick="truck" data-i18n="qf_truck">Camionetas</button>
+      <span id="pmxVanTypes" style="display:none">
+        <button class="pmx-qf" data-vantype="work" data-i18n="vt_work">Vans de trabajo</button>
+        <button class="pmx-qf" data-vantype="pass" data-i18n="vt_pass">Vans de pasajeros</button>
+      </span>
     </div>
     <div class="pmx-controls">
+      <!-- Búsqueda estilo concesionario: MARCA -> MODELO (pedido del cliente) -->
+      <select class="pmx-sort pmx-sel" id="pmxMakeSel" aria-label="Marca"></select>
+      <select class="pmx-sort pmx-sel" id="pmxModelSel" aria-label="Modelo" disabled></select>
       <label class="pmx-search"><span class="material-icons-outlined" style="color:#9a9a9a">search</span><input type="search" id="pmxSearch" data-i18n-ph="inv_search_ph" placeholder="Buscar por marca, modelo, año..."></label>
       <select class="pmx-sort" id="pmxSort">
         <option value="new" data-i18n="sort_new">Más recientes</option>
@@ -176,7 +192,7 @@
     </div>
     <div class="pmx-chips" id="pmxChips"></div>
     <button class="pmx-clear" id="pmxClear"><span class="material-icons-outlined" style="font-size:16px">delete_sweep</span><span data-i18n="inv_clear">Limpiar filtros</span></button>
-    <details class="pmx-fg" open><summary data-i18n="f_make">Marca</summary><div class="pmx-fg__body" id="pmxMake"></div></details>
+    <!-- La MARCA y el MODELO ahora se eligen arriba (selects estilo concesionario) -->
     <details class="pmx-fg" open><summary data-i18n="f_body">Carrocería</summary><div class="pmx-fg__body" id="pmxBody"></div></details>
     <details class="pmx-fg"><summary data-i18n="f_price">Precio</summary><div class="pmx-fg__body"><div class="pmx-range"><input type="number" id="pmxPriceMin" data-i18n-ph="ph_min" placeholder="Mín"><span>—</span><input type="number" id="pmxPriceMax" data-i18n-ph="ph_max" placeholder="Máx"></div></div></details>
     <details class="pmx-fg"><summary data-i18n="f_year">Año</summary><div class="pmx-fg__body"><div class="pmx-range"><input type="number" id="pmxYearMin" data-i18n-ph="ph_from" placeholder="Desde"><span>—</span><input type="number" id="pmxYearMax" data-i18n-ph="ph_to" placeholder="Hasta"></div></div></details>
