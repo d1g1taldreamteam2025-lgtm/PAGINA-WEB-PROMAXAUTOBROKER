@@ -9,6 +9,8 @@
   <url><loc>https://www.promaxautobroker.com/inventory/?cat=motorcycles</loc><priority>0.7</priority></url>
   <url><loc>https://www.promaxautobroker.com/inventory/?cat=utv</loc><priority>0.7</priority></url>
   <url><loc>https://www.promaxautobroker.com/inventory/?cat=watercraft</loc><priority>0.7</priority></url>
+  <url><loc>https://www.promaxautobroker.com/auction/</loc><priority>0.8</priority></url>
+  <url><loc>https://www.promaxautobroker.com/carfax/</loc><priority>0.8</priority></url>
   <url><loc>https://www.promaxautobroker.com/financing/</loc><priority>0.8</priority></url>
   <url><loc>https://www.promaxautobroker.com/financing/apply/</loc><priority>0.8</priority></url>
   <url><loc>https://www.promaxautobroker.com/about/</loc><priority>0.6</priority></url>

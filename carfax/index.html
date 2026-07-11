@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporte CARFAX por $15 | Promax Auto Broker</title>
+<meta name="description" content="Pide el historial CARFAX completo de cualquier vehículo por solo $15: accidentes, dueños anteriores, millaje verificado, estado del título y más. Entrega rápida por WhatsApp.">
+<!-- Open Graph / Twitter (vista previa al compartir en WhatsApp, redes) -->
+<link rel="canonical" href="https://www.promaxautobroker.com/carfax/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Promax Auto Broker">
+<meta property="og:locale" content="es_US">
+<meta property="og:title" content="Reporte CARFAX por $15 | Promax Auto Broker">
+<meta property="og:description" content="Conoce la historia real de un vehículo antes de comprarlo: accidentes, dueños, millaje y título. Reporte CARFAX completo por $15, entrega rápida.">
+<meta property="og:url" content="https://www.promaxautobroker.com/carfax/">
+<meta property="og:image" content="https://res.cloudinary.com/drbc4wbvw/image/upload/c_pad,w_1200,h_630,b_rgb:0a0a0a,f_auto,q_auto/v1782163987/Logos-05_cqy7tj.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Promax Auto Broker">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Reporte CARFAX por $15 | Promax Auto Broker">
+<meta name="twitter:description" content="Conoce la historia real de un vehículo antes de comprarlo: accidentes, dueños, millaje y título. Reporte CARFAX completo por $15, entrega rápida.">
+<meta name="twitter:image" content="https://res.cloudinary.com/drbc4wbvw/image/upload/c_pad,w_1200,h_630,b_rgb:0a0a0a,f_auto,q_auto/v1782163987/Logos-05_cqy7tj.png">
+<link rel="preconnect" href="https://res.cloudinary.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/theme.css">
+<link rel="icon" type="image/png" href="https://res.cloudinary.com/dol89fbil/image/upload/w_256,h_256,c_fit,f_auto,q_auto/v1783701195/Logos-07_umabpq.png"><link rel="apple-touch-icon" href="https://res.cloudinary.com/dol89fbil/image/upload/w_180,h_180,c_pad,b_black,f_png/v1783701195/Logos-07_umabpq.png">
+<style>
+/* HERO CARFAX: oscuro dramático (aquí va el flyer/póster cuando esté listo) */
+.cf-hero{position:relative;background:radial-gradient(120% 150% at 80% 10%,rgba(194,26,18,.35),transparent 55%),linear-gradient(115deg,#0A0B0D 40%,#14060a 75%,#2b0906);color:#fff;text-align:center;overflow:hidden;}
+.cf-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--brand),var(--brand-2),var(--brand));}
+.cf-hero__poster{display:none;width:100%;height:auto;max-height:76vh;object-fit:cover;object-position:center;}
+@media(max-width:768px){.cf-hero__poster{max-height:none;}} /* póster vertical completo, sin recortes */
+.cf-hero.has-img .cf-hero__poster{display:block;}
+.cf-hero__inner{max-width:840px;margin:0 auto;padding:clamp(64px,9vw,110px) 24px;}
+.cf-hero .pmx-eyebrow{color:#fff;background:rgba(194,26,18,.85);padding:7px 16px;border-radius:999px;}
+.cf-hero h1{font-size:clamp(32px,5.2vw,52px);margin:16px 0 14px;line-height:1.08;}
+.cf-hero h1 em{font-style:normal;color:var(--brand-2);}
+.cf-hero p{font-size:clamp(15px,1.8vw,18px);color:#C9CED6;margin:0 0 22px;}
+.cf-hero__price{display:inline-flex;align-items:baseline;gap:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:10px 22px;margin:0 0 26px;}
+.cf-hero__price b{font-family:var(--font-head);font-size:34px;color:var(--accent);line-height:1;}
+.cf-hero__price span{font-size:14px;color:#C9CED6;}
+.cf-hero__cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+/* Con el flyer presente el título va DENTRO de la imagen */
+.cf-hero.has-img .cf-hero__inner{padding:22px 24px 42px;}
+.cf-hero.has-img .cf-hero__inner .pmx-eyebrow,
+.cf-hero.has-img .cf-hero__inner h1,
+.cf-hero.has-img .cf-hero__inner p,
+.cf-hero.has-img .cf-hero__inner .cf-hero__price{display:none;}
+/* Qué incluye */
+.cf-inc{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1020px;margin:0 auto;}
+@media(max-width:900px){.cf-inc{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:560px){.cf-inc{grid-template-columns:1fr;}}
+.cf-inc__item{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px 20px;display:flex;gap:14px;align-items:flex-start;transition:transform .2s,box-shadow .2s,border-color .2s;}
+.cf-inc__item:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:var(--brand);}
+.cf-inc__ic{flex:0 0 auto;width:46px;height:46px;border-radius:12px;background:var(--brand-soft);color:var(--brand);display:flex;align-items:center;justify-content:center;}
+.cf-inc__ic .material-icons-outlined{font-size:24px;}
+.cf-inc h3{margin:2px 0 4px;font-size:16.5px;color:var(--ink);}
+.cf-inc p{margin:0;font-size:14px;color:var(--text-muted);line-height:1.55;}
+/* Pasos */
+.cf-steps{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:14px;}
+.cf-step{display:flex;gap:18px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;transition:transform .2s,box-shadow .2s;}
+.cf-step:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);}
+.cf-step__n{flex:0 0 auto;width:46px;height:46px;border-radius:14px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font:800 18px var(--font-head);}
+.cf-step:last-child .cf-step__n{background:var(--brand);}
+.cf-step h3{margin:2px 0 6px;font-size:18.5px;}
+.cf-step p{margin:0;color:var(--text-muted);font-size:15px;line-height:1.65;}
+/* Tarjeta de pedido (VIN) */
+.cf-order{max-width:640px;margin:0 auto;background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);padding:36px 32px;text-align:center;box-shadow:0 18px 50px rgba(13,15,18,.10);}
+.cf-order h2{font-size:26px;font-weight:800;color:var(--ink);margin:0 0 8px;letter-spacing:-.3px;}
+.cf-order__sub{font-size:15px;color:var(--text-muted);margin:0 0 22px;}
+.cf-order__vin{text-align:left;margin:0 0 16px;}
+.cf-order__vin label{display:block;font-size:13px;font-weight:700;color:var(--ink);margin:0 0 6px;}
+.cf-order__vin input{width:100%;padding:14px 16px;border:1.5px solid var(--line);border-radius:var(--radius-sm);font-size:16px;font-family:inherit;color:var(--ink);outline:none;text-transform:uppercase;letter-spacing:1px;transition:border-color .2s,box-shadow .2s;}
+.cf-order__vin input:focus{border-color:var(--brand);box-shadow:0 0 0 3px rgba(194,26,18,.15);}
+.cf-order__hint{font-size:12.5px;color:var(--text-faint);margin:6px 0 0;}
+.cf-order .pmx-btn{width:100%;justify-content:center;}
+.cf-order__note{font-size:13px;color:var(--text-faint);margin:14px 0 0;line-height:1.6;}
+/* CTA final */
+.cf-cta{background:linear-gradient(118deg,#0A0B0D 35%,#190604 75%,#3a0a05);color:#fff;text-align:center;}
+.cf-cta h2{font-size:clamp(26px,3.8vw,40px);margin:0 0 12px;}
+.cf-cta p{color:#C9CED6;font-size:16.5px;margin:0 0 26px;}
+.cf-cta__btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Service","serviceType":"Reporte de historial vehicular CARFAX","provider":{"@type":"AutoDealer","name":"Promax Auto Broker","telephone":"+1-305-676-1259","url":"https://www.promaxautobroker.com","address":{"@type":"PostalAddress","streetAddress":"7875 NW 107 Ave","addressLocality":"Miami","addressRegion":"FL","postalCode":"33178","addressCountry":"US"}},"areaServed":{"@type":"Country","name":"United States"},"url":"https://www.promaxautobroker.com/carfax/","description":"Historial CARFAX completo de cualquier vehículo: accidentes, dueños anteriores, millaje verificado, estado del título, servicios y recalls.","offers":{"@type":"Offer","price":"15.00","priceCurrency":"USD"}}
+</script>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="cf-hero" id="cfHero">
+  <img class="cf-hero__poster" id="cfPoster" alt="Reporte CARFAX por $15 con Promax Auto Broker" loading="eager">
+  <div class="cf-hero__inner">
+    <span class="pmx-eyebrow" data-i18n="cf_eyebrow">📄 Historial vehicular CARFAX</span>
+    <h1><span data-i18n="cf_t1">Conoce la historia real </span><em data-i18n="cf_t2">antes de comprar</em></h1>
+    <p data-i18n="cf_sub">Accidentes, dueños anteriores, millaje real y estado del título. No compres a ciegas: revisa cualquier vehículo con un reporte CARFAX completo.</p>
+    <div class="cf-hero__price"><b>$15</b><span data-i18n="cf_price_note">Reporte completo · Entrega rápida</span></div>
+    <div class="cf-hero__cta">
+      <a class="pmx-btn pmx-btn--wa" id="cfWaTop" href="#" target="_blank" rel="noopener" data-i18n="cf_cta_wa">💬 Pedir mi CARFAX ($15)</a>
+      <a class="pmx-btn pmx-btn--ghost-light" href="#cfOrder" data-i18n="cf_cta_how">Tengo el VIN a la mano</a>
+    </div>
+  </div>
+</section>
+
+<!-- QUÉ INCLUYE -->
+<section class="pmx-section">
+  <div class="pmx-container">
+    <div class="pmx-section__head">
+      <span class="pmx-eyebrow" data-i18n="cf_inc_eyebrow">¿Qué incluye?</span>
+      <h2 data-i18n="cf_inc_title">Todo lo que el vendedor no te cuenta</h2>
+      <p data-i18n="cf_inc_sub">El reporte CARFAX reúne los registros oficiales del vehículo en un solo documento.</p>
+    </div>
+    <div class="cf-inc">
+      <div class="cf-inc__item"><span class="cf-inc__ic"><span class="material-icons-outlined">car_crash</span></span><div><h3 data-i18n="cf_i1_t">Accidentes reportados</h3><p data-i18n="cf_i1_p">Choques, daños y severidad registrados por aseguradoras y policía.</p></div></div>
+      <div class="cf-inc__item"><span class="cf-inc__ic"><span class="material-icons-outlined">group</span></span><div><h3 data-i18n="cf_i2_t">Dueños anteriores</h3><p data-i18n="cf_i2_p">Cuántas personas lo han tenido, en qué estados y por cuánto tiempo.</p></div></div>
+      <div class="cf-inc__item"><span class="cf-inc__ic"><span class="material-icons-outlined">speed</span></span><div><h3 data-i18n="cf_i3_t">Millaje verificado</h3><p data-i18n="cf_i3_p">Lecturas oficiales del odómetro para detectar millaje alterado.</p></div></div>
+      <div class="cf-inc__item"><span class="cf-inc__ic"><span class="material-icons-outlined">gavel</span></span><div><h3 data-i18n="cf_i4_t">Estado del título</h3><p data-i18n="cf_i4_p">Título limpio, salvage, rebuilt, inundación o pérdida total.</p></div></div>
+      <div class="cf-inc__item"><span class="cf-inc__ic"><span class="material-icons-outlined">build</span></span><div><h3 data-i18n="cf_i5_t">Historial de servicio</h3><p data-i18n="cf_i5_p">Mantenimientos y reparaciones registradas por talleres y dealers.</p></div></div>
+      <div class="cf-inc__item"><span class="cf-inc__ic"><span class="material-icons-outlined">campaign</span></span><div><h3 data-i18n="cf_i6_t">Recalls de fábrica</h3><p data-i18n="cf_i6_p">Llamados a revisión del fabricante pendientes de atender.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CÓMO FUNCIONA -->
+<section class="pmx-section pmx-section--soft">
+  <div class="pmx-container">
+    <div class="pmx-section__head">
+      <span class="pmx-eyebrow" data-i18n="cf_steps_eyebrow">Cómo funciona</span>
+      <h2 data-i18n="cf_steps_title">Tu reporte en 3 pasos</h2>
+      <p data-i18n="cf_steps_sub">Rápido, sencillo y por WhatsApp.</p>
+    </div>
+    <div class="cf-steps">
+      <div class="cf-step"><span class="cf-step__n">1</span><div><h3 data-i18n="cf_s1_t">🔢 Envíanos el VIN</h3><p data-i18n="cf_s1_p">El VIN es el número de serie de 17 caracteres del vehículo (está en el parabrisas, la puerta del conductor o los papeles).</p></div></div>
+      <div class="cf-step"><span class="cf-step__n">2</span><div><h3 data-i18n="cf_s2_t">💳 Confirmas el pago de $15</h3><p data-i18n="cf_s2_p">Te enviamos las opciones de pago por WhatsApp. Sin suscripciones ni cargos ocultos: pagas solo por tu reporte.</p></div></div>
+      <div class="cf-step"><span class="cf-step__n">3</span><div><h3 data-i18n="cf_s3_t">📄 Recibes tu CARFAX completo</h3><p data-i18n="cf_s3_p">Te llega el reporte oficial completo por WhatsApp o email, con nuestra ayuda para interpretarlo si lo necesitas.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PEDIR (VIN) -->
+<section class="pmx-section" id="cfOrder">
+  <div class="pmx-container">
+    <div class="cf-order">
+      <h2 data-i18n="cf_o_title">Pide tu reporte ahora</h2>
+      <p class="cf-order__sub" data-i18n="cf_o_sub">Escribe el VIN (opcional) y te atendemos de inmediato por WhatsApp.</p>
+      <div class="cf-order__vin">
+        <label for="cfVin" data-i18n="cf_o_vin_l">VIN del vehículo (17 caracteres)</label>
+        <input id="cfVin" type="text" maxlength="17" autocomplete="off" spellcheck="false" data-i18n-ph="cf_o_vin_ph" placeholder="Ej: 1HGCM82633A004352">
+        <p class="cf-order__hint" data-i18n="cf_o_vin_hint">¿No lo tienes a la mano? No pasa nada: escríbenos igual y te ayudamos a ubicarlo.</p>
+      </div>
+      <a class="pmx-btn pmx-btn--wa" id="cfWaOrder" href="#" target="_blank" rel="noopener" data-i18n="cf_o_btn">💬 Pedir mi CARFAX por WhatsApp</a>
+      <p class="cf-order__note" data-i18n="cf_o_note">Reporte oficial CARFAX · $15 por vehículo · Atención en español e inglés</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="pmx-section cf-cta">
+  <div class="pmx-container">
+    <h2 data-i18n="cf_final_t">Un carro usado puede esconder mucho</h2>
+    <p data-i18n="cf_final_p">Por $15 compras tranquilidad. Pide tu reporte CARFAX antes de dar el sí.</p>
+    <div class="cf-cta__btns">
+      <a class="pmx-btn pmx-btn--wa" id="cfWaBottom" href="#" target="_blank" rel="noopener" data-i18n="cf_cta_wa2">💬 Pedir mi CARFAX ($15)</a>
+      <a class="pmx-btn pmx-btn--ghost-light" href="/auction/" data-i18n="cf_cta_auction">Conoce la compra en subasta</a>
+    </div>
+  </div>
+</section>
+
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/site.js"></script>
+<script>
+PMX.addTranslations({
+  es:{
+    cf_eyebrow:"📄 Historial vehicular CARFAX",
+    cf_t1:"Conoce la historia real ", cf_t2:"antes de comprar",
+    cf_sub:"Accidentes, dueños anteriores, millaje real y estado del título. No compres a ciegas: revisa cualquier vehículo con un reporte CARFAX completo.",
+    cf_price_note:"Reporte completo · Entrega rápida",
+    cf_cta_wa:"💬 Pedir mi CARFAX ($15)", cf_cta_how:"Tengo el VIN a la mano",
+    cf_inc_eyebrow:"¿Qué incluye?", cf_inc_title:"Todo lo que el vendedor no te cuenta",
+    cf_inc_sub:"El reporte CARFAX reúne los registros oficiales del vehículo en un solo documento.",
+    cf_i1_t:"Accidentes reportados", cf_i1_p:"Choques, daños y severidad registrados por aseguradoras y policía.",
+    cf_i2_t:"Dueños anteriores", cf_i2_p:"Cuántas personas lo han tenido, en qué estados y por cuánto tiempo.",
+    cf_i3_t:"Millaje verificado", cf_i3_p:"Lecturas oficiales del odómetro para detectar millaje alterado.",
+    cf_i4_t:"Estado del título", cf_i4_p:"Título limpio, salvage, rebuilt, inundación o pérdida total.",
+    cf_i5_t:"Historial de servicio", cf_i5_p:"Mantenimientos y reparaciones registradas por talleres y dealers.",
+    cf_i6_t:"Recalls de fábrica", cf_i6_p:"Llamados a revisión del fabricante pendientes de atender.",
+    cf_steps_eyebrow:"Cómo funciona", cf_steps_title:"Tu reporte en 3 pasos",
+    cf_steps_sub:"Rápido, sencillo y por WhatsApp.",
+    cf_s1_t:"🔢 Envíanos el VIN", cf_s1_p:"El VIN es el número de serie de 17 caracteres del vehículo (está en el parabrisas, la puerta del conductor o los papeles).",
+    cf_s2_t:"💳 Confirmas el pago de $15", cf_s2_p:"Te enviamos las opciones de pago por WhatsApp. Sin suscripciones ni cargos ocultos: pagas solo por tu reporte.",
+    cf_s3_t:"📄 Recibes tu CARFAX completo", cf_s3_p:"Te llega el reporte oficial completo por WhatsApp o email, con nuestra ayuda para interpretarlo si lo necesitas.",
+    cf_o_title:"Pide tu reporte ahora",
+    cf_o_sub:"Escribe el VIN (opcional) y te atendemos de inmediato por WhatsApp.",
+    cf_o_vin_l:"VIN del vehículo (17 caracteres)",
+    cf_o_vin_ph:"Ej: 1HGCM82633A004352",
+    cf_o_vin_hint:"¿No lo tienes a la mano? No pasa nada: escríbenos igual y te ayudamos a ubicarlo.",
+    cf_o_btn:"💬 Pedir mi CARFAX por WhatsApp",
+    cf_o_note:"Reporte oficial CARFAX · $15 por vehículo · Atención en español e inglés",
+    cf_final_t:"Un carro usado puede esconder mucho",
+    cf_final_p:"Por $15 compras tranquilidad. Pide tu reporte CARFAX antes de dar el sí.",
+    cf_cta_wa2:"💬 Pedir mi CARFAX ($15)", cf_cta_auction:"Conoce la compra en subasta",
+  },
+  en:{
+    cf_eyebrow:"📄 CARFAX vehicle history",
+    cf_t1:"Know the real history ", cf_t2:"before you buy",
+    cf_sub:"Accidents, previous owners, real mileage and title status. Don't buy blind: check any vehicle with a full CARFAX report.",
+    cf_price_note:"Full report · Fast delivery",
+    cf_cta_wa:"💬 Get my CARFAX ($15)", cf_cta_how:"I have the VIN handy",
+    cf_inc_eyebrow:"What's included?", cf_inc_title:"Everything the seller won't tell you",
+    cf_inc_sub:"The CARFAX report gathers the vehicle's official records into one document.",
+    cf_i1_t:"Reported accidents", cf_i1_p:"Crashes, damage and severity recorded by insurers and police.",
+    cf_i2_t:"Previous owners", cf_i2_p:"How many people owned it, in which states and for how long.",
+    cf_i3_t:"Verified mileage", cf_i3_p:"Official odometer readings to detect rolled-back mileage.",
+    cf_i4_t:"Title status", cf_i4_p:"Clean title, salvage, rebuilt, flood or total loss.",
+    cf_i5_t:"Service history", cf_i5_p:"Maintenance and repairs recorded by shops and dealers.",
+    cf_i6_t:"Factory recalls", cf_i6_p:"Manufacturer safety recalls still pending.",
+    cf_steps_eyebrow:"How it works", cf_steps_title:"Your report in 3 steps",
+    cf_steps_sub:"Fast, simple, and through WhatsApp.",
+    cf_s1_t:"🔢 Send us the VIN", cf_s1_p:"The VIN is the vehicle's 17-character serial number (on the windshield, driver's door or paperwork).",
+    cf_s2_t:"💳 Confirm the $15 payment", cf_s2_p:"We send you the payment options on WhatsApp. No subscriptions or hidden fees: you pay only for your report.",
+    cf_s3_t:"📄 Receive your full CARFAX", cf_s3_p:"You get the complete official report by WhatsApp or email, and we help you interpret it if needed.",
+    cf_o_title:"Order your report now",
+    cf_o_sub:"Type the VIN (optional) and we'll assist you right away on WhatsApp.",
+    cf_o_vin_l:"Vehicle VIN (17 characters)",
+    cf_o_vin_ph:"E.g. 1HGCM82633A004352",
+    cf_o_vin_hint:"Don't have it handy? No problem — message us anyway and we'll help you find it.",
+    cf_o_btn:"💬 Get my CARFAX on WhatsApp",
+    cf_o_note:"Official CARFAX report · $15 per vehicle · Service in Spanish & English",
+    cf_final_t:"A used car can hide a lot",
+    cf_final_p:"For $15 you buy peace of mind. Get your CARFAX report before saying yes.",
+    cf_cta_wa2:"💬 Get my CARFAX ($15)", cf_cta_auction:"Learn about auction buying",
+  }
+});
+
+(function(){
+  // Mensaje profesional de WhatsApp; incluye el VIN si el cliente lo escribió.
+  function vin(){
+    var el = document.getElementById('cfVin');
+    return el ? (el.value || "").toUpperCase().replace(/[^A-Z0-9]/g, "") : "";
+  }
+  function msg(){
+    var v = vin(), en = PMX.lang && PMX.lang()==='en';
+    if (en) return "Hi Promax, I'd like to order a CARFAX REPORT ($15) 📄." + (v ? "\nVIN: " + v : "\nI'll send you the VIN right away.");
+    return "Hola Promax, quiero pedir un REPORTE CARFAX ($15) 📄." + (v ? "\nVIN: " + v : "\nEnseguida les envío el VIN.");
+  }
+  function wire(){
+    var url = PMX.waUrl ? PMX.waUrl(msg()) : "#";
+    ["cfWaTop","cfWaOrder","cfWaBottom"].forEach(function(id){
+      var a = document.getElementById(id); if (a) a.href = url;
+    });
+  }
+  wire();
+  window.addEventListener('pmx-lang', wire);
+  var vinInput = document.getElementById('cfVin');
+  if (vinInput) vinInput.addEventListener('input', wire);
+
+  // Registro del lead al hacer clic (además del WhatsApp que recibe Jorge):
+  // queda guardado en el panel /admin/leads con el VIN si lo escribieron.
+  ["cfWaTop","cfWaOrder","cfWaBottom"].forEach(function(id){
+    var a = document.getElementById(id);
+    if (a) a.addEventListener('click', function(){
+      try{
+        var v = vin();
+        PMX.submitLead({ form_type: "carfax", vehicle_id: v || null,
+          message: "📄 SOLICITUD CARFAX ($15)\n" + (v ? "VIN: " + v : "VIN: pendiente (lo envía por WhatsApp)") })
+        .catch(function(){});
+      }catch(e){}
+    });
+  });
+
+  // Flyer/póster del hero (cuando Jorge entregue las imágenes por Cloudinary):
+  // pega aquí las 4 URLs (es/en × PC/celular) y el hero las usa solo.
+  var POSTERS = { es:"", en:"", esM:"", enM:"" };
+  function poster(){
+    var en = PMX.lang && PMX.lang()==='en';
+    var m = window.matchMedia('(max-width:768px)').matches;
+    var src = m ? (en ? POSTERS.enM : POSTERS.esM) || (en ? POSTERS.en : POSTERS.es)
+                : (en ? POSTERS.en : POSTERS.es);
+    var img = document.getElementById('cfPoster'), hero = document.getElementById('cfHero');
+    if (src && img){ img.src = src; hero.classList.add('has-img'); }
+  }
+  poster();
+  window.addEventListener('pmx-lang', poster);
+  var _pmq = window.matchMedia('(max-width:768px)');
+  if (_pmq.addEventListener) _pmq.addEventListener('change', poster);
+})();
+</script>
+</body>
+</html>

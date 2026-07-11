@@ -14,8 +14,11 @@
   }
   function setLang(l) {
     try { localStorage.setItem("pmx_lang", l); } catch (e) {}
-    window.dispatchEvent(new CustomEvent("pmx-lang", { detail: { lang: l } }));
+    // PRIMERO se aplica el idioma (actualiza LANG) y DESPUÉS se avisa a las
+    // páginas: así los listeners de 'pmx-lang' que llaman PMX.lang() (botones
+    // de WhatsApp de /import/, /auction/, /carfax/…) leen el idioma NUEVO.
     applyI18n(l);
+    window.dispatchEvent(new CustomEvent("pmx-lang", { detail: { lang: l } }));
   }
   var LANG = getLang();
 
@@ -100,10 +103,15 @@
       nav_home: "Inicio", nav_inventory: "Inventario", nav_financing: "Financiamiento",
       nav_fin_overview: "Resumen de Financiamiento", nav_fin_overview_sub: "Tasas, pasos y aliados", nav_fin_apply: "Aplicar a Financiamiento",
       nav_about: "Nosotros", nav_contact: "Contacto", nav_faqs: "Preguntas", nav_import: "Importación",
+      nav_services: "Servicios",
+      nav_import_full: "Importación a Venezuela", nav_import_sub: "USA → Venezuela, puerta a puerta",
+      nav_auction: "Compra en Subasta", nav_auction_sub: "Acceso a subastas de dealers",
+      nav_carfax: "Reporte CARFAX", nav_carfax_sub: "Historial completo por $15",
       foot_tag: "Tu broker de confianza en toda USA: vehículos, maquinaria y financiamiento flexible — y exportación a Venezuela.",
       foot_inventory: "Inventario", foot_view_all: "Ver Todo el Inventario",
       foot_under_20k: "Menos de $20k", foot_under_10k: "Menos de $10k",
       foot_resources: "Recursos", foot_apply: "Aplicar a Financiamiento", foot_import: "Importar a Venezuela",
+      foot_auction: "Compra en Subasta", foot_carfax: "Reporte CARFAX ($15)",
       foot_about: "Nosotros", foot_contact: "Contacto", foot_faqs: "Preguntas Frecuentes",
       foot_newsletter: "Mantente en Contacto", foot_newsletter_sub: "Recibe ofertas y nuevas llegadas.",
       foot_subscribe: "Suscribirme", foot_subscribing: "Enviando...", foot_subscribed: "¡Suscrito!",
@@ -128,10 +136,15 @@
       nav_home: "Home", nav_inventory: "Inventory", nav_financing: "Financing",
       nav_fin_overview: "Financing Overview", nav_fin_overview_sub: "Rates, steps & lenders", nav_fin_apply: "Apply for Financing",
       nav_about: "About", nav_contact: "Contact Us", nav_faqs: "FAQs", nav_import: "Import",
+      nav_services: "Services",
+      nav_import_full: "Import to Venezuela", nav_import_sub: "USA → Venezuela, door to door",
+      nav_auction: "Buy at Auction", nav_auction_sub: "Dealer-only auction access",
+      nav_carfax: "CARFAX Report", nav_carfax_sub: "Full history for $15",
       foot_tag: "Your trusted broker across the USA: vehicles, machinery and flexible financing — plus export to Venezuela.",
       foot_inventory: "Inventory", foot_view_all: "View All Inventory",
       foot_under_20k: "Under $20k", foot_under_10k: "Under $10k",
       foot_resources: "Resources", foot_apply: "Apply for Financing", foot_import: "Import to Venezuela",
+      foot_auction: "Buy at Auction", foot_carfax: "CARFAX Report ($15)",
       foot_about: "About Us", foot_contact: "Contact Us", foot_faqs: "FAQs",
       foot_newsletter: "Stay in Touch", foot_newsletter_sub: "Get specials and new arrivals.",
       foot_subscribe: "Subscribe", foot_subscribing: "Sending...", foot_subscribed: "Subscribed!",
@@ -209,11 +222,20 @@
   var NAV = [
     { href: "/", key: "nav_home" },
     { href: "/inventory/", key: "nav_inventory" },
-    { href: "/import/", key: "nav_import" },
+    // "Servicios": agrupa Importación + Subasta + CARFAX (el clic directo
+    // lleva a /import/, el negocio principal; el hover muestra los tres).
+    { href: "/import/", key: "nav_services", services: true },
     { href: "/financing/", key: "nav_financing", dropdown: true },
     { href: "/about/", key: "nav_about" },
     { href: "/contact/", key: "nav_contact" },
     { href: "/faqs/", key: "nav_faqs" },
+  ];
+
+  // Sub-enlaces del menú "Servicios" (desktop: dropdown; móvil: lista indentada)
+  var SERVICES = [
+    { href: "/import/", key: "nav_import_full", sub: "nav_import_sub" },
+    { href: "/auction/", key: "nav_auction", sub: "nav_auction_sub" },
+    { href: "/carfax/", key: "nav_carfax", sub: "nav_carfax_sub" },
   ];
 
   function langPills(extraClass) {
@@ -261,6 +283,16 @@
           '</div>' +
         '</div>';
       }
+      if (n.services) {
+        // Dropdown "Servicios": Importación a Venezuela / Compra en Subasta / CARFAX
+        var svcLinks = SERVICES.map(function (sv) {
+          return '<a href="' + sv.href + '"><span data-i18n="' + sv.key + '">' + t(sv.key) + '</span><div class="pmx-nav__dd-sub" data-i18n="' + sv.sub + '">' + t(sv.sub) + '</div></a>';
+        }).join("");
+        return '<div class="pmx-nav__dd-wrap" data-dd>' +
+          '<a href="' + n.href + '" class="pmx-nav__item" data-dd-trigger><span data-i18n="' + n.key + '">' + t(n.key) + '</span> <span class="pmx-caret">▾</span></a>' +
+          '<div class="pmx-nav__dd">' + svcLinks + '</div>' +
+        '</div>';
+      }
       if (n.dropdown) {
         return '<div class="pmx-nav__dd-wrap" data-dd>' +
           '<a href="' + n.href + '" class="pmx-nav__item" data-dd-trigger><span data-i18n="' + n.key + '">' + t(n.key) + '</span> <span class="pmx-caret">▾</span></a>' +
@@ -274,6 +306,12 @@
     }).join("");
 
     var navMobile = NAV.map(function (n) {
+      if (n.services) {
+        // En móvil los 3 servicios van como enlaces directos (sin submenú)
+        return SERVICES.map(function (sv) {
+          return '<a href="' + sv.href + '"><span data-i18n="' + sv.key + '">' + t(sv.key) + '</span></a>';
+        }).join("");
+      }
       var out = '<a href="' + n.href + '"><span data-i18n="' + n.key + '">' + t(n.key) + "</span></a>";
       if (n.key === "nav_inventory" && catList().length) {
         out += catList().map(function (cc) {
@@ -345,6 +383,8 @@
             '<h4 data-i18n="foot_resources">' + t("foot_resources") + '</h4><ul>' +
               '<li><a href="/financing/apply/" data-i18n="foot_apply">' + t("foot_apply") + '</a></li>' +
               '<li><a href="/import/" data-i18n="foot_import">' + t("foot_import") + '</a></li>' +
+              '<li><a href="/auction/" data-i18n="foot_auction">' + t("foot_auction") + '</a></li>' +
+              '<li><a href="/carfax/" data-i18n="foot_carfax">' + t("foot_carfax") + '</a></li>' +
               '<li><a href="/about/" data-i18n="foot_about">' + t("foot_about") + '</a></li>' +
               '<li><a href="/contact/" data-i18n="foot_contact">' + t("foot_contact") + '</a></li>' +
               '<li><a href="/faqs/" data-i18n="foot_faqs">' + t("foot_faqs") + '</a></li>' +
@@ -928,6 +968,32 @@
     window.open(waUrl(msg), "_blank", "noopener");
   }
 
+  /* ---------------- TELÉFONO CON FORMATO AUTOMÁTICO ---------------- */
+  // Mientras el cliente escribe su número en cualquier formulario (contacto,
+  // financiamiento, etc.), se formatea solo a (305) 676-1259 — se ve profesional
+  // y evita números incompletos. Los internacionales (+58…) se dejan tal cual.
+  function formatUsPhone(v) {
+    var raw = String(v || "");
+    if (/^\s*\+/.test(raw)) return raw;                 // internacional: no tocar
+    var d = raw.replace(/\D/g, "");
+    if (d.length === 11 && d.charAt(0) === "1") d = d.slice(1); // 1 (código USA) inicial
+    if (d.length > 10) return raw;                       // más largo que USA: no recortar
+    if (d.length > 6) return "(" + d.slice(0, 3) + ") " + d.slice(3, 6) + "-" + d.slice(6);
+    if (d.length > 3) return "(" + d.slice(0, 3) + ") " + d.slice(3);
+    if (d.length) return "(" + d;
+    return "";
+  }
+  function wirePhoneFormat() {
+    // Delegación global: cubre los formularios actuales Y los que se inyecten después
+    document.addEventListener("input", function (e) {
+      var inp = e.target;
+      if (!inp || inp.tagName !== "INPUT") return;
+      if ((inp.getAttribute("type") || "").toLowerCase() !== "tel") return;
+      var v = formatUsPhone(inp.value);
+      if (v !== inp.value) inp.value = v;
+    });
+  }
+
   /* ---------------- INIT ---------------- */
   function mount() {
     // Header al inicio del body
@@ -957,6 +1023,7 @@
     wireNewsletter();
     wireDropdown();
     wireRaffle();
+    wirePhoneFormat();
     applyI18n(LANG);
     wireAnim();
     wireFooterFab();

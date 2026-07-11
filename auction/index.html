@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compra en Subasta | Promax Auto Broker</title>
+<meta name="description" content="Compra tu vehículo en subastas exclusivas de dealers en todo USA y ahorra miles. Promax busca, revisa el historial, puja por ti y te entrega tu vehículo — con asesoría en español.">
+<!-- Open Graph / Twitter (vista previa al compartir en WhatsApp, redes) -->
+<link rel="canonical" href="https://www.promaxautobroker.com/auction/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Promax Auto Broker">
+<meta property="og:locale" content="es_US">
+<meta property="og:title" content="Compra en Subasta | Promax Auto Broker">
+<meta property="og:description" content="Accede a subastas exclusivas de dealers y ahorra miles en tu próximo vehículo. Nosotros buscamos, revisamos y pujamos por ti.">
+<meta property="og:url" content="https://www.promaxautobroker.com/auction/">
+<meta property="og:image" content="https://res.cloudinary.com/drbc4wbvw/image/upload/c_pad,w_1200,h_630,b_rgb:0a0a0a,f_auto,q_auto/v1782163987/Logos-05_cqy7tj.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Promax Auto Broker">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Compra en Subasta | Promax Auto Broker">
+<meta name="twitter:description" content="Accede a subastas exclusivas de dealers y ahorra miles en tu próximo vehículo. Nosotros buscamos, revisamos y pujamos por ti.">
+<meta name="twitter:image" content="https://res.cloudinary.com/drbc4wbvw/image/upload/c_pad,w_1200,h_630,b_rgb:0a0a0a,f_auto,q_auto/v1782163987/Logos-05_cqy7tj.png">
+<link rel="preconnect" href="https://res.cloudinary.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/theme.css">
+<link rel="icon" type="image/png" href="https://res.cloudinary.com/dol89fbil/image/upload/w_256,h_256,c_fit,f_auto,q_auto/v1783701195/Logos-07_umabpq.png"><link rel="apple-touch-icon" href="https://res.cloudinary.com/dol89fbil/image/upload/w_180,h_180,c_pad,b_black,f_png/v1783701195/Logos-07_umabpq.png">
+<style>
+/* HERO subasta: oscuro dramático (aquí va el flyer/póster cuando esté listo) */
+.au-hero{position:relative;background:radial-gradient(120% 150% at 80% 10%,rgba(194,26,18,.35),transparent 55%),linear-gradient(115deg,#0A0B0D 40%,#14060a 75%,#2b0906);color:#fff;text-align:center;overflow:hidden;}
+.au-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--brand),var(--brand-2),var(--brand));}
+.au-hero__poster{display:none;width:100%;height:auto;max-height:76vh;object-fit:cover;object-position:center;}
+@media(max-width:768px){.au-hero__poster{max-height:none;}} /* póster vertical completo, sin recortes */
+.au-hero.has-img .au-hero__poster{display:block;}
+.au-hero__inner{max-width:840px;margin:0 auto;padding:clamp(64px,9vw,110px) 24px;}
+.au-hero .pmx-eyebrow{color:#fff;background:rgba(194,26,18,.85);padding:7px 16px;border-radius:999px;}
+.au-hero h1{font-size:clamp(32px,5.4vw,54px);margin:16px 0 14px;line-height:1.06;}
+.au-hero h1 em{font-style:normal;color:var(--brand-2);}
+.au-hero p{font-size:clamp(15px,1.8vw,18px);color:#C9CED6;margin:0 0 28px;}
+.au-hero__cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+/* Con el flyer presente el título va DENTRO de la imagen: ocultamos el texto
+   duplicado (eyebrow + h1 + subtítulo) y dejamos solo los botones. */
+.au-hero.has-img .au-hero__inner{padding:22px 24px 42px;}
+.au-hero.has-img .au-hero__inner .pmx-eyebrow,
+.au-hero.has-img .au-hero__inner h1,
+.au-hero.has-img .au-hero__inner p{display:none;}
+/* Beneficios */
+.au-why{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:1020px;margin:0 auto;}
+@media(max-width:840px){.au-why{grid-template-columns:1fr;}}
+.au-why__item{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:32px 26px;text-align:center;transition:transform .25s,box-shadow .25s,border-color .25s;}
+.au-why__item:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--brand);}
+.au-why__ic{width:66px;height:66px;border-radius:50%;background:var(--brand-soft);color:var(--brand);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:30px;}
+.au-why__ic .material-icons-outlined{font-size:32px;}
+.au-why h3{font-size:20px;margin:0 0 8px;color:var(--ink);}
+.au-why p{font-size:15px;color:var(--text-muted);margin:0;line-height:1.65;}
+/* Pasos (mismo patrón que Importación) */
+.au-steps{counter-reset:paso;max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:14px;}
+.au-step{display:flex;gap:18px;align-items:flex-start;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px 24px;transition:transform .2s,box-shadow .2s,border-color .2s;}
+.au-step:hover{transform:translateY(-3px);box-shadow:var(--shadow-sm);border-color:transparent;}
+.au-step__n{flex:0 0 auto;width:46px;height:46px;border-radius:14px;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font:800 18px var(--font-head);}
+.au-step:nth-child(5) .au-step__n{background:var(--brand);}
+.au-step h3{margin:2px 0 6px;font-size:18.5px;}
+.au-step p{margin:0;color:var(--text-muted);font-size:15px;line-height:1.65;}
+/* Banda cruzada CARFAX */
+.au-carfax{max-width:860px;margin:44px auto 0;background:#fff;border:1.5px solid var(--line);border-radius:var(--radius-lg);padding:26px 28px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:space-between;box-shadow:var(--shadow-sm);}
+.au-carfax__txt{display:flex;align-items:center;gap:14px;min-width:0;}
+.au-carfax__ic{flex:0 0 auto;width:52px;height:52px;border-radius:14px;background:var(--brand-soft);color:var(--brand);display:flex;align-items:center;justify-content:center;}
+.au-carfax__ic .material-icons-outlined{font-size:28px;}
+.au-carfax h3{margin:0 0 4px;font-size:18px;color:var(--ink);}
+.au-carfax p{margin:0;font-size:14.5px;color:var(--text-muted);}
+/* CTA final */
+.au-cta{background:linear-gradient(118deg,#0A0B0D 35%,#190604 75%,#3a0a05);color:#fff;text-align:center;}
+.au-cta h2{font-size:clamp(26px,3.8vw,40px);margin:0 0 12px;}
+.au-cta p{color:#C9CED6;font-size:16.5px;margin:0 0 26px;}
+.au-cta__btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Service","serviceType":"Compra de vehículos en subastas de dealers","provider":{"@type":"AutoDealer","name":"Promax Auto Broker","telephone":"+1-305-676-1259","url":"https://www.promaxautobroker.com","address":{"@type":"PostalAddress","streetAddress":"7875 NW 107 Ave","addressLocality":"Miami","addressRegion":"FL","postalCode":"33178","addressCountry":"US"}},"areaServed":{"@type":"Country","name":"United States"},"url":"https://www.promaxautobroker.com/auction/","description":"Acceso a subastas exclusivas de dealers en todo Estados Unidos: buscamos tu vehículo, revisamos su historial y condición, pujamos por ti y te lo entregamos."}
+</script>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="au-hero" id="auHero">
+  <img class="au-hero__poster" id="auPoster" alt="Compra en subasta con Promax Auto Broker" loading="eager">
+  <div class="au-hero__inner">
+    <span class="pmx-eyebrow" data-i18n="au_eyebrow">🔨 Subastas exclusivas de dealers</span>
+    <h1><span data-i18n="au_t1">Compra en </span><em data-i18n="au_t2">subasta</em><span data-i18n="au_t3"> y ahorra en grande</span></h1>
+    <p data-i18n="au_sub">Miles de vehículos en subastas a las que solo acceden dealers con licencia. Nosotros buscamos, revisamos el historial, pujamos por ti y te entregamos tu vehículo.</p>
+    <div class="au-hero__cta">
+      <a class="pmx-btn pmx-btn--wa" id="auWaTop" href="#" target="_blank" rel="noopener" data-i18n="au_cta_wa">💬 Quiero comprar en subasta</a>
+      <a class="pmx-btn pmx-btn--ghost-light" href="/inventory/" data-i18n="au_cta_inv">Ver inventario disponible</a>
+    </div>
+  </div>
+</section>
+
+<!-- POR QUÉ EN SUBASTA -->
+<section class="pmx-section">
+  <div class="pmx-container">
+    <div class="pmx-section__head">
+      <span class="pmx-eyebrow" data-i18n="au_why_eyebrow">¿Por qué en subasta?</span>
+      <h2 data-i18n="au_why_title">El precio de dealer, para ti</h2>
+      <p data-i18n="au_why_sub">Las subastas de dealers son donde los concesionarios compran su inventario. Con Promax, tú también puedes.</p>
+    </div>
+    <div class="au-why">
+      <div class="au-why__item">
+        <span class="au-why__ic"><span class="material-icons-outlined">savings</span></span>
+        <h3 data-i18n="au_w1_t">Ahorro real</h3>
+        <p data-i18n="au_w1_p">Compras al precio que pagan los dealers, por debajo del valor de mercado. En muchos casos el ahorro es de miles de dólares.</p>
+      </div>
+      <div class="au-why__item">
+        <span class="au-why__ic"><span class="material-icons-outlined">vpn_key</span></span>
+        <h3 data-i18n="au_w2_t">Acceso exclusivo</h3>
+        <p data-i18n="au_w2_p">Estas subastas requieren licencia de dealer: el público no puede entrar. Nosotros ponemos nuestra licencia a tu servicio.</p>
+      </div>
+      <div class="au-why__item">
+        <span class="au-why__ic"><span class="material-icons-outlined">verified_user</span></span>
+        <h3 data-i18n="au_w3_t">Compra segura</h3>
+        <p data-i18n="au_w3_p">Antes de pujar revisamos historial, condición y documentos del vehículo. Tú apruebas cada paso — sin sorpresas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PASOS -->
+<section class="pmx-section pmx-section--soft">
+  <div class="pmx-container">
+    <div class="pmx-section__head">
+      <span class="pmx-eyebrow" data-i18n="au_steps_eyebrow">Cómo funciona</span>
+      <h2 data-i18n="au_steps_title">Tu compra en subasta, en 5 pasos</h2>
+      <p data-i18n="au_steps_sub">Te acompañamos de principio a fin — tú decides, nosotros ejecutamos.</p>
+    </div>
+    <div class="au-steps">
+      <div class="au-step"><span class="au-step__n">1</span><div><h3 data-i18n="au_s1_t">🎯 Cuéntanos qué buscas</h3><p data-i18n="au_s1_p">Marca, modelo, año y presupuesto. Con eso definimos juntos la estrategia de compra ideal para ti.</p></div></div>
+      <div class="au-step"><span class="au-step__n">2</span><div><h3 data-i18n="au_s2_t">🔎 Buscamos en las subastas</h3><p data-i18n="au_s2_p">Rastreamos las subastas exclusivas de dealers en todo Estados Unidos hasta encontrar las mejores opciones para ti.</p></div></div>
+      <div class="au-step"><span class="au-step__n">3</span><div><h3 data-i18n="au_s3_t">📋 Te enviamos las opciones</h3><p data-i18n="au_s3_p">Recibes fotos, condición e historial del vehículo (CARFAX disponible) para que compares y elijas con total confianza.</p></div></div>
+      <div class="au-step"><span class="au-step__n">4</span><div><h3 data-i18n="au_s4_t">🔨 Pujamos por ti</h3><p data-i18n="au_s4_p">Tú defines el precio máximo y nosotros pujamos en la subasta. Nunca pagarás más de lo que apruebes.</p></div></div>
+      <div class="au-step"><span class="au-step__n">5</span><div><h3 data-i18n="au_s5_t">🔑 Recibe tu vehículo</h3><p data-i18n="au_s5_p">Gestionamos pago, papeles y transporte hasta la entrega. ¿Necesitas financiamiento? También te ayudamos con eso.</p></div></div>
+    </div>
+
+    <!-- Banda cruzada: CARFAX -->
+    <div class="au-carfax">
+      <div class="au-carfax__txt">
+        <span class="au-carfax__ic"><span class="material-icons-outlined">plagiarism</span></span>
+        <div>
+          <h3 data-i18n="au_cf_t">¿Solo quieres revisar un vehículo?</h3>
+          <p data-i18n="au_cf_p">Pide el historial completo CARFAX de cualquier vehículo por solo $15.</p>
+        </div>
+      </div>
+      <a class="pmx-btn pmx-btn--primary" href="/carfax/" data-i18n="au_cf_btn">Pedir mi CARFAX</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="pmx-section au-cta">
+  <div class="pmx-container">
+    <h2 data-i18n="au_final_t">¿Listo para ahorrar en tu próximo vehículo?</h2>
+    <p data-i18n="au_final_p">Escríbenos hoy y empezamos a buscar tu vehículo en subasta — sin compromiso.</p>
+    <div class="au-cta__btns">
+      <a class="pmx-btn pmx-btn--wa" id="auWaBottom" href="#" target="_blank" rel="noopener" data-i18n="au_cta_wa2">💬 Hablar por WhatsApp</a>
+      <a class="pmx-btn pmx-btn--ghost-light" href="/financing/apply/" data-i18n="au_cta_fin">Pre-calificar financiamiento</a>
+    </div>
+  </div>
+</section>
+
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/site.js"></script>
+<script>
+PMX.addTranslations({
+  es:{
+    au_eyebrow:"🔨 Subastas exclusivas de dealers",
+    au_t1:"Compra en ", au_t2:"subasta", au_t3:" y ahorra en grande",
+    au_sub:"Miles de vehículos en subastas a las que solo acceden dealers con licencia. Nosotros buscamos, revisamos el historial, pujamos por ti y te entregamos tu vehículo.",
+    au_cta_wa:"💬 Quiero comprar en subasta", au_cta_inv:"Ver inventario disponible",
+    au_why_eyebrow:"¿Por qué en subasta?", au_why_title:"El precio de dealer, para ti",
+    au_why_sub:"Las subastas de dealers son donde los concesionarios compran su inventario. Con Promax, tú también puedes.",
+    au_w1_t:"Ahorro real", au_w1_p:"Compras al precio que pagan los dealers, por debajo del valor de mercado. En muchos casos el ahorro es de miles de dólares.",
+    au_w2_t:"Acceso exclusivo", au_w2_p:"Estas subastas requieren licencia de dealer: el público no puede entrar. Nosotros ponemos nuestra licencia a tu servicio.",
+    au_w3_t:"Compra segura", au_w3_p:"Antes de pujar revisamos historial, condición y documentos del vehículo. Tú apruebas cada paso — sin sorpresas.",
+    au_steps_eyebrow:"Cómo funciona", au_steps_title:"Tu compra en subasta, en 5 pasos",
+    au_steps_sub:"Te acompañamos de principio a fin — tú decides, nosotros ejecutamos.",
+    au_s1_t:"🎯 Cuéntanos qué buscas", au_s1_p:"Marca, modelo, año y presupuesto. Con eso definimos juntos la estrategia de compra ideal para ti.",
+    au_s2_t:"🔎 Buscamos en las subastas", au_s2_p:"Rastreamos las subastas exclusivas de dealers en todo Estados Unidos hasta encontrar las mejores opciones para ti.",
+    au_s3_t:"📋 Te enviamos las opciones", au_s3_p:"Recibes fotos, condición e historial del vehículo (CARFAX disponible) para que compares y elijas con total confianza.",
+    au_s4_t:"🔨 Pujamos por ti", au_s4_p:"Tú defines el precio máximo y nosotros pujamos en la subasta. Nunca pagarás más de lo que apruebes.",
+    au_s5_t:"🔑 Recibe tu vehículo", au_s5_p:"Gestionamos pago, papeles y transporte hasta la entrega. ¿Necesitas financiamiento? También te ayudamos con eso.",
+    au_cf_t:"¿Solo quieres revisar un vehículo?", au_cf_p:"Pide el historial completo CARFAX de cualquier vehículo por solo $15.",
+    au_cf_btn:"Pedir mi CARFAX",
+    au_final_t:"¿Listo para ahorrar en tu próximo vehículo?",
+    au_final_p:"Escríbenos hoy y empezamos a buscar tu vehículo en subasta — sin compromiso.",
+    au_cta_wa2:"💬 Hablar por WhatsApp", au_cta_fin:"Pre-calificar financiamiento",
+  },
+  en:{
+    au_eyebrow:"🔨 Dealer-only auctions",
+    au_t1:"Buy at ", au_t2:"auction", au_t3:" and save big",
+    au_sub:"Thousands of vehicles at auctions only licensed dealers can access. We search, check the history, bid for you and deliver your vehicle.",
+    au_cta_wa:"💬 I want to buy at auction", au_cta_inv:"Browse available inventory",
+    au_why_eyebrow:"Why auction?", au_why_title:"Dealer pricing, for you",
+    au_why_sub:"Dealer auctions are where dealerships buy their inventory. With Promax, you can too.",
+    au_w1_t:"Real savings", au_w1_p:"You buy at the price dealers pay, below market value. In many cases the savings run into the thousands.",
+    au_w2_t:"Exclusive access", au_w2_p:"These auctions require a dealer license — the public can't get in. We put our license at your service.",
+    au_w3_t:"Safe purchase", au_w3_p:"Before bidding we check the vehicle's history, condition and paperwork. You approve every step — no surprises.",
+    au_steps_eyebrow:"How it works", au_steps_title:"Your auction purchase, in 5 steps",
+    au_steps_sub:"We walk with you from start to finish — you decide, we execute.",
+    au_s1_t:"🎯 Tell us what you're looking for", au_s1_p:"Make, model, year and budget. Together we define the ideal buying strategy for you.",
+    au_s2_t:"🔎 We search the auctions", au_s2_p:"We track dealer-only auctions across the United States until we find the best options for you.",
+    au_s3_t:"📋 You get the options", au_s3_p:"You receive photos, condition and vehicle history (CARFAX available) so you can compare and choose with confidence.",
+    au_s4_t:"🔨 We bid for you", au_s4_p:"You set the maximum price and we bid at the auction. You'll never pay more than what you approve.",
+    au_s5_t:"🔑 Receive your vehicle", au_s5_p:"We handle payment, paperwork and transport until delivery. Need financing? We help with that too.",
+    au_cf_t:"Just want to check a vehicle?", au_cf_p:"Get the full CARFAX history of any vehicle for only $15.",
+    au_cf_btn:"Get my CARFAX",
+    au_final_t:"Ready to save on your next vehicle?",
+    au_final_p:"Message us today and we'll start hunting for your vehicle at auction — no commitment.",
+    au_cta_wa2:"💬 Chat on WhatsApp", au_cta_fin:"Get pre-qualified",
+  }
+});
+
+(function(){
+  // CTAs de WhatsApp con firma de origen + registro del lead (panel /admin/leads).
+  // Así Jorge recibe el mensaje del cliente en WhatsApp Y el lead queda guardado.
+  function msg(){
+    return (PMX.lang && PMX.lang()==='en')
+      ? "Hi Promax, I want to BUY AT AUCTION 🔨. I'd like your help to get my vehicle from dealer-only auctions. How do we start?"
+      : "Hola Promax, quiero COMPRAR EN SUBASTA 🔨. Me gustaría su asesoría para conseguir mi vehículo en subastas exclusivas de dealers. ¿Cómo empezamos?";
+  }
+  function wire(){
+    var url = PMX.waUrl ? PMX.waUrl(msg()) : "#";
+    ["auWaTop","auWaBottom"].forEach(function(id){
+      var a = document.getElementById(id); if (a) a.href = url;
+    });
+  }
+  wire();
+  window.addEventListener('pmx-lang', wire);
+  ["auWaTop","auWaBottom"].forEach(function(id){
+    var a = document.getElementById(id);
+    if (a) a.addEventListener('click', function(){
+      try{
+        PMX.submitLead({ form_type: "auction",
+          message: "🔨 SOLICITUD DE SUBASTA\nCliente interesado en comprar un vehículo en subasta (clic en " + id + " de /auction/)." })
+        .catch(function(){});
+      }catch(e){}
+    });
+  });
+
+  // Flyer/póster del hero (cuando Jorge entregue las imágenes por Cloudinary):
+  // pega aquí las 4 URLs (es/en × PC/celular) y el hero las usa solo.
+  var POSTERS = { es:"", en:"", esM:"", enM:"" };
+  function poster(){
+    var en = PMX.lang && PMX.lang()==='en';
+    var m = window.matchMedia('(max-width:768px)').matches;
+    var src = m ? (en ? POSTERS.enM : POSTERS.esM) || (en ? POSTERS.en : POSTERS.es)
+                : (en ? POSTERS.en : POSTERS.es);
+    var img = document.getElementById('auPoster'), hero = document.getElementById('auHero');
+    if (src && img){ img.src = src; hero.classList.add('has-img'); }
+  }
+  poster();
+  window.addEventListener('pmx-lang', poster);
+  var _pmq = window.matchMedia('(max-width:768px)');
+  if (_pmq.addEventListener) _pmq.addEventListener('change', poster);
+})();
+</script>
+</body>
+</html>
