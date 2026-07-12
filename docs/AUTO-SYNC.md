@@ -162,6 +162,22 @@ En `/admin/` → "Instala los bookmarklets". Roles:
 - `autodealmiami.net` → `[data-vin]` (72 en lista; 5 en ficha, se deduplican) ✓ *(Cloudflare NO molesta en navegador real)*
 - `internationalcarsusa.com` → sin selectores conocidos ⇒ **rescate por VIN** (texto VIN+precio) ✓ probado con fixture
 
+**Versiones VISIBLES (a pedido del dueño, 12-jul-2026):** cada botón lleva su
+versión en el NOMBRE (queda como nombre del marcador al arrastrarlo) y debajo
+un sello `build #xxxxxx` = hash del código real (cambia solo en cada build).
+Las alertas también imprimen la versión. Así una captura de pantalla demuestra
+exactamente qué versión corrió — sin discusiones de "arrastré el viejo".
+
+| Botón | Versión actual | Alcance |
+|---|---|---|
+| 📥 Extract Promax JSON | v3 | ficha de UN vehículo (Dealer.com y similares) |
+| 📦 Extract LOTE | v4 | **solo Dealer.com** (su alerta lo dice) |
+| 🔎 Diagnóstico | v1 | reporte de selectores |
+| 🚀 LOTE TODO | v1 | Dealer.com, todas las páginas · EN PAUSA |
+| 🧪 Prueba Promax | **v2.0 universal** | mismos detectores del motor (antes v1 solo Dealer.com — por eso daba "0" en International) |
+| 🌐 LOTE Universal | **v2.1** | todos los dealers, TODAS las fotos (hasta 24) en alta calidad |
+| 🔄 Sync TODO → Panel | v3.1 · EN PAUSA | igual + sube directo |
+
 **Regenerar los bookmarklets tras tocar engine.js:**
 ```bash
 node tools/auto-sync/build-bookmarklets.js   # valida sintaxis y reemplaza los String.raw del admin
