@@ -104,7 +104,22 @@ JSON-LD → og:image → zonas de galería → enlaces a .jpg → todas las <img
 - `vehKey`/grupo dominante: si la galería mezcla varios carros (miniaturas de "similares"),
   se queda con el grupo del MISMO vehículo (nos pasó: fotos de un Subaru en un Sentra).
 - `baseKey`: dedup de la misma foto en distintos tamaños (`-640px`, `_480px`, sufijos).
+- `qscore`: entre variantes de la MISMA foto gana la de mayor resolución declarada
+  (o la original sin marcador de tamaño). Antes ganaba "la primera vista" → miniaturas.
+- **`promaxUpsize` (12-jul-2026)**: DealerCenter lleva el TAMAÑO en la RUTA —
+  `imagescf.dealercenter.net/279/208/foto.jpg` es una CAJA de 279×208 px (¡no un id!).
+  El dealer pide miniaturas y esa URL chiquita era la que subíamos → fotos pixeladas
+  en International aunque trajéramos "todas". El CDN redimensiona al vuelo (verificado
+  en vivo: `/1280/960/` responde la misma foto en 1280×960 reales; `/0/0/` es el
+  original 2048×1536 pero pesa ~600KB). Se normaliza SIEMPRE a `/1280/960/` en
+  `images()` (tarjeta) y `promaxDetailMedia.add()` (ficha). Fixture en
+  `tests/test-photoquality.js`.
 - Acepta URLs protocol-relative (`//cdpcdn.dx1app.com/...`) — Motoport las usa.
+- **Conteo transparente**: `promaxExtract` cuenta los descartados por la regla de año
+  (2020+ / 2022+ camiones) en `rows.skippedYear`, y `promaxRunAll` lo dice al final
+  ("Nota: N descartado(s) por AÑO…"). Resuelve el "la Prueba dice 10 y el Universal
+  trae 9": la Prueba cuenta TARJETAS crudas; el Universal aplica la regla de año
+  (p.ej. una F-250 2019 se descarta a propósito).
 
 **Condición (regla del negocio, NO del dealer):** año >= año en curso y millaje < 30,000
 ⇒ `new`, aunque el dealer diga "used" (los dealers marcan "usado" cualquier 0-millas).
@@ -120,7 +135,9 @@ mapea jet ski/UTV/motos por palabras; el resto: vans por body, marcas de camión
 Flujo de una corrida: `resolveAuth` → **limpiezas** (`purgeRetiredSources` → borra
 fuentes retiradas; `fixBadMsrp` → `msrp=null` si `msrp > 2×price` — los "precio anterior
 $470,000" tachados; `fillMissingBodyType` → infiere carrocería por modelo, SOLO
-`cars/vans`, para que "Toyota + Camionetas" no dé 0) → por cada dealer: abrir listado
+`cars/vans`, para que "Toyota + Camionetas" no dé 0; `fixDealercenterThumbs` →
+reescribe galerías ya guardadas con miniaturas DealerCenter `/W/H/` a `/1280/960/`,
+sana lo importado por bookmarklets viejos) → por cada dealer: abrir listado
 en Chromium **headful bajo xvfb**, esperar el challenge de Cloudflare (título
 "Just a moment…" hasta 45s, 1 recarga), inyectar engine, recorrer páginas, entrar a
 fichas por fotos (`enrichPhotos`) → re-login → `upsert` (lotes de 100) →
@@ -141,6 +158,7 @@ sitemap-vehicles.xml + commit del robot.
 | Ficha "vehicle not found" | id con `+` sin encodear en la URL | `encodeURIComponent` en todos los links |
 | 2026 aparecían como usados | `has(U,'USED')` del texto del dealer | condición AÑO PRIMERO (ver §5) |
 | MSRP $205,500 en un Camry de $21,895 | import corrupto (Toyota NM) | `fixBadMsrp` (robot) + web oculta msrp>2×price |
+| Fotos PIXELADAS de International (todas) | DealerCenter pone el tamaño EN LA RUTA (`/279/208/` = caja 279×208) y el dealer pide miniaturas; ni `baseKey` ni `qscore` veían ese patrón | `promaxUpsize` normaliza a `/1280/960/` (motor) + `fixDealercenterThumbs` (robot, sana la base) — verificado en vivo que el CDN sirve esa caja |
 
 ## 7. Bookmarklets (flujo manual ACTIVO)
 
@@ -150,9 +168,9 @@ En `/admin/` → "Instala los bookmarklets". Roles:
 |---|---|
 | 🧪 Prueba Promax | PRIMERO en cada dealer nuevo: dice cuántas tarjetas ve. Si no sale nada, el dealer bloquea bookmarklets (usar método por consola). |
 | 🔎 Diagnóstico | reporte de selectores/estado (lo que el dueño pega en el chat para que ajustemos el motor). |
-| 📥 Extract Promax JSON | **1 a 1**: en la FICHA de un vehículo → copia ese carro con TODAS sus fotos → panel → Agregar Vehículo → Pegar JSON. |
+| 📥 Extract Promax JSON | **1 a 1, SOLO Dealer.com**: en la FICHA de un vehículo → copia ese carro con TODAS sus fotos → panel → Agregar Vehículo → Pegar JSON. En otros dealers su error ya lo dice: usar el 🌐 Universal dentro de la ficha (funciona con 1 tarjeta). |
 | 📦 Extract LOTE Promax | UNA página del listado (rápido, sin entrar a fichas). |
-| 🌐 LOTE Universal v2 | **la joya para el flujo manual**: una página del listado + entra a cada ficha por sus 5 fotos + filtra año + categoría → copia → panel → "Importar lote". Sirve en hgregtrucks, Motoport, AutoDeal, International. Para el LOTE COMPLETO: repetir por cada página del listado. |
+| 🌐 LOTE Universal | **la joya para el flujo manual**: una página del listado (o UNA ficha) + entra a cada ficha por TODAS sus fotos (hasta 24, en alta) + filtra año + categoría → copia → panel → "Importar lote". Sirve en hgregtrucks, Motoport, AutoDeal, International. Para el LOTE COMPLETO: repetir por cada página del listado. |
 | 🚀 LOTE TODO · EN PAUSA | recorre TODAS las páginas de un clic (experimental). |
 | 🔄 Sync TODO → Panel (Fase 3) · EN PAUSA | igual + sube directo a Supabase + marca vendidos. Funciona, pero el cliente decidió pausarlo. |
 
@@ -170,12 +188,12 @@ exactamente qué versión corrió — sin discusiones de "arrastré el viejo".
 
 | Botón | Versión actual | Alcance |
 |---|---|---|
-| 📥 Extract Promax JSON | v3 | ficha de UN vehículo (Dealer.com y similares) |
+| 📥 Extract Promax JSON | **v3.1** | ficha de UN vehículo, **solo Dealer.com** (fuera de ahí, su error manda al 🌐) |
 | 📦 Extract LOTE | v4 | **solo Dealer.com** (su alerta lo dice) |
 | 🔎 Diagnóstico | v1 | reporte de selectores |
 | 🚀 LOTE TODO | v1 | Dealer.com, todas las páginas · EN PAUSA |
-| 🧪 Prueba Promax | **v2.0 universal** | mismos detectores del motor (antes v1 solo Dealer.com — por eso daba "0" en International) |
-| 🌐 LOTE Universal | **v2.1** | todos los dealers, TODAS las fotos (hasta 24) en alta calidad |
+| 🧪 Prueba Promax | **v2.0 universal** | mismos detectores del motor (antes v1 solo Dealer.com — por eso daba "0" en International). OJO: cuenta tarjetas CRUDAS, sin filtro de año. |
+| 🌐 LOTE Universal | **v2.2** | todos los dealers, TODAS las fotos (hasta 24) en ALTA (DealerCenter reescrito a 1280×960) + reporta "N descartados por año" (explica el 10 vs 9 contra la Prueba) |
 | 🔄 Sync TODO → Panel | v3.1 · EN PAUSA | igual + sube directo |
 
 **Regenerar los bookmarklets tras tocar engine.js:**
@@ -218,6 +236,9 @@ Estado: **funcional** (botón 🔄 en el admin) pero pausado por decisión comer
   (`data-vin` + growCard), Dealer Spike, Motoport/DX1; dedup por VIN; años; categorías.
 - `test-international.js` — 10 checks: rescate por VIN (eBizAutos) en el motor real
   Y en el minificado de los bookmarklets.
+- `test-photoquality.js` — 23 checks: gana la variante GRANDE de cada foto (no la
+  miniatura), no se recorta en 5, y DealerCenter (`/W/H/` en la ruta) se normaliza a
+  `/1280/960/` en forma plana y con carpeta, sin duplicar y sin tocar otros hosts.
 - `test-inferbody.js` — mapa de carrocerías por modelo (Tacoma=camioneta, Savana=van…).
 - En CI/local: levantar `python3 -m http.server 8099` en la raíz para las suites de la
   web (catálogo/home) si se copian de la sesión.

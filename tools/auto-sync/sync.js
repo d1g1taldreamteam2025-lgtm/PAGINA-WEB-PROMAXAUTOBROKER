@@ -188,6 +188,31 @@ async function fillMissingBodyType() {
   log('LIMPIEZA body_type: ' + rows.length + ' sin carrocería revisadas.');
 }
 
+// FOTOS pixeladas de DealerCenter (queja real de International Cars): el
+// dealer le pide al CDN cajas de 279x208 px y esa URL en miniatura era la que
+// quedaba guardada — por eso se veian borrosas aunque trajeramos "todas".
+// El CDN redimensiona al vuelo (verificado en vivo: /1280/960/ responde la
+// misma foto en 1280x960 reales), asi que aqui se reescriben las galerias YA
+// guardadas. El motor ya normaliza al importar (promaxUpsize); esto sana lo
+// viejo y lo que entre por un bookmarklet desactualizado.
+const DC_BOX = /^(https?:\/\/[^\/]*dealercenter\.net)\/\d{1,4}\/\d{1,4}\//i;
+async function fixDealercenterThumbs() {
+  const res = await fetch(TABLE + '?select=id,gallery,cover_image&cover_image=like.*dealercenter.net*&limit=10000', {
+    headers: { apikey: AUTH.apikey, Authorization: 'Bearer ' + AUTH.bearer },
+  });
+  if (!res.ok) { log('LIMPIEZA fotos-dc: no pude leer (' + res.status + ')'); return; }
+  const rows = await res.json();
+  let fixed = 0;
+  for (const r of rows) {
+    const g = (r.gallery || []).map(function (u) { return String(u).replace(DC_BOX, '$1/1280/960/'); });
+    const cover = r.cover_image ? String(r.cover_image).replace(DC_BOX, '$1/1280/960/') : r.cover_image;
+    if (JSON.stringify(g) === JSON.stringify(r.gallery || []) && cover === r.cover_image) continue;
+    await supa('PATCH', '?id=eq.' + encodeURIComponent(r.id), { gallery: g, cover_image: cover });
+    fixed++;
+  }
+  log('LIMPIEZA fotos-dc: ' + fixed + ' de ' + rows.length + ' galerias DealerCenter reescritas a 1280x960.');
+}
+
 // Da tiempo a que los antibots que redirigen (Imperva/Cloudflare) resuelvan su
 // challenge y aterricen en la página real ANTES de inyectar el motor.
 async function settle(page, ms) {
@@ -437,6 +462,7 @@ async function main() {
   await purgeRetiredSources();
   await fixBadMsrp();
   await fillMissingBodyType();
+  await fixDealercenterThumbs();
   const launchOpts = { args: ['--no-sandbox', '--disable-blink-features=AutomationControlled'], headless: process.env.PROMAX_HEADFUL ? false : true };
   if (process.env.PROMAX_CHROMIUM) launchOpts.executablePath = process.env.PROMAX_CHROMIUM; // solo para pruebas locales
   const browser = await chromium.launch(launchOpts);

@@ -274,7 +274,12 @@ PMX.addTranslations({
 
   // Flyer/póster del hero (cuando Jorge entregue las imágenes por Cloudinary):
   // pega aquí las 4 URLs (es/en × PC/celular) y el hero las usa solo.
-  var POSTERS = { es:"", en:"", esM:"", enM:"" };
+  var POSTERS = {
+    es:  "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783865046/16.9_espanol.9_espanol_uz6zrh.png",
+    en:  "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783865046/ingles_16_rqlmhi.png",
+    esM: "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865048/9.16_espanol.16_espanol_fp59cy.png",
+    enM: "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865048/ingles_9_hitzcl.png"
+  };
   function poster(){
     var en = PMX.lang && PMX.lang()==='en';
     var m = window.matchMedia('(max-width:768px)').matches;

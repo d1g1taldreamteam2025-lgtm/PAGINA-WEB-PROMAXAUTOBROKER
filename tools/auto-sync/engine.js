@@ -6,6 +6,17 @@
    de cada vehiculo para traer TODAS sus fotos (hasta 24) + descripcion.
    Filtra por anio (2020+, camiones 2022+) y mapea a las 6 categorias.
    ==================================================================== */
+/* Algunos CDN llevan el TAMANO en la RUTA y el dealer pide MINIATURAS.
+   International (DealerCenter): imagescf.dealercenter.net/279/208/... es una
+   caja de 279x208 px — esa URL chiquita era la que subiamos y por eso las
+   fotos salian pixeladas aunque trajeramos "todas". El CDN redimensiona al
+   vuelo (verificado en vivo: /1280/960/ responde la MISMA foto en 1280x960
+   reales; /0/0/ da el original 2048x1536 pero pesa 600KB). Normalizamos
+   SIEMPRE a /1280/960/: nitida en pantalla completa y sin duplicados entre
+   variantes de tamanos distintos. */
+function promaxUpsize(u){
+  return String(u||'').replace(/^(https?:\/\/[^\/]*dealercenter\.net)\/\d{1,4}\/\d{1,4}\//i, '$1/1280/960/');
+}
 function promaxExtract(opts, root){
   opts = opts || {};
   root = root || document;
@@ -87,7 +98,7 @@ function promaxExtract(opts, root){
   function badImg(u){ return /(logo|placeholder|no[-_]?image|noimage|spacer|blank|coming[-_]?soon|icon|sprite|badge|carfax|autocheck|button|arrow|flag|banner|award|certif|warranty|\.svg|\.gif)/i.test(u); }
   function images(el){
     var out=[], seen={};
-    function add(u){ if(!u||/^data:/.test(u)) return; if(badImg(u)) return; u=u.split('?')[0]; u=abs(u); if(u && !seen[u]){ seen[u]=1; out.push(u); } }
+    function add(u){ if(!u||/^data:/.test(u)) return; if(badImg(u)) return; u=u.split('?')[0]; u=promaxUpsize(abs(u)); if(u && !seen[u]){ seen[u]=1; out.push(u); } }
     qsa('img',el).forEach(function(im){
       // la foto REAL suele estar en data-src (lazy); el src es un placeholder
       // (en paginas traidas por fetch el lazy-load nunca corre -> foto negra)
@@ -190,14 +201,17 @@ function promaxExtract(opts, root){
       featured:false, features:[], description:'', gallery:g, cover_image:g[0]||'', source:source, source_url:detailUrl(el) };
   }
 
-  var rows=[], seen={};
+  var rows=[], seen={}, skippedYear=0;
   for(var a=0;a<anchors.length;a++){
     var r; try{ r=parseOne(anchors[a]); }catch(e){ continue; }
     if(!r || (!r.make && !r.vin)) continue;
-    if(r._year && r._year < MINYEAR) continue;
+    // La regla de anio EXPLICA "la pagina muestra 10 y el robot trae 9":
+    // contamos los descartados para poder DECIRLO en vez de dejar la duda.
+    if(r._year && r._year < MINYEAR) { skippedYear++; continue; }
     var key=r.vin||r.id; if(key){ if(seen[key]) continue; seen[key]=1; }
     delete r._year; rows.push(r);
   }
+  rows.skippedYear = skippedYear;
   return rows;
 }
 
@@ -230,7 +244,7 @@ function promaxDetailMedia(doc, pageUrl){
   }
   function add(u){
     if(!u||/^data:/.test(u)) return;
-    var full=abs(String(u).trim()); if(!full||bad(full)) return;
+    var full=promaxUpsize(abs(String(u).trim())); if(!full||bad(full)) return;
     if(!/\.(jpe?g|png|webp|avif)(\?|$)/i.test(full) && !/(photo|image|img|units|vehicle|inventory|imagescdn|pictures)/i.test(full)) return;
     var k=baseKey(full), s=qscore(full), clean=full.split('?')[0];
     if(seen[k]==null){ seen[k]=out.length; out.push(clean); outScore.push(s); }
@@ -281,7 +295,7 @@ function promaxDetailMedia(doc, pageUrl){
       var rx=/(?:https?:)?(?:\\?\/){2}[^\s"'<>]+?\.(?:jpe?g|png|webp)/gi, mm2, guard=0;
       while((mm2=rx.exec(raw))!==null && guard++<4000 && out.length<26){
         var uu=mm2[0].replace(/\\\//g,'/').replace(/\\/g,'');
-        if(/(homenetiol|imagescdn|pictures|photos\/by-size|\/photos\/|\/vehicle|\/inventory|dealercarsearch|edgepilot|dealereprocess|carbaseweb|inventoryphotos|vehicleimages|cloudfront|akamai|dx1app|cdpcdn)/i.test(uu)) add(uu);
+        if(/(homenetiol|imagescdn|dealercenter|pictures|photos\/by-size|\/photos\/|\/vehicle|\/inventory|dealercarsearch|edgepilot|dealereprocess|carbaseweb|inventoryphotos|vehicleimages|cloudfront|akamai|dx1app|cdpcdn)/i.test(uu)) add(uu);
       }
     }catch(e){}
   }
@@ -351,9 +365,10 @@ function promaxRunAll(opts, onP){
     }catch(e){}
     return '';
   }
-  var seen={}, rows=[];
+  var seen={}, rows=[], skippedYearTotal=0;
   function merge(list){
     var added=0;
+    skippedYearTotal += (list && list.skippedYear) || 0;
     list.forEach(function(r){ var k=r.vin||r.id||r.source_url; if(!k||seen[k]) return; seen[k]=1; rows.push(r); added++; });
     return added;
   }
@@ -417,6 +432,13 @@ function promaxRunAll(opts, onP){
       if(curPics>prevPics){ outRows[outRows.indexOf(prev)]=r; byKey[k]=r; }
     });
     if(outRows.length<rows.length) onP('Duplicados exactos colapsados: '+rows.length+' -> '+outRows.length);
+    // Transparencia del conteo: si la pagina muestra mas tarjetas de las que
+    // trajimos, casi siempre es por la regla de anio. Lo DECIMOS con numero.
+    if(skippedYearTotal){
+      var MY = opts.minYear || (opts.isTrucks ? 2022 : 2020);
+      onP('Nota: '+skippedYearTotal+' descartado(s) por ANO (regla: solo '+MY+' o mas nuevos). Por eso el conteo puede ser menor que las tarjetas de la pagina.');
+    }
+    outRows.skippedYear = skippedYearTotal;
     return outRows;
   });
 }
@@ -473,4 +495,4 @@ function promaxSync(opts, onP){
     return promaxUpload(rows, opts, onP);
   });
 }
-if(typeof module!=='undefined') module.exports={promaxExtract:promaxExtract, promaxDetailMedia:promaxDetailMedia, promaxRunAll:promaxRunAll, promaxToDb:promaxToDb, promaxUpload:promaxUpload, promaxSync:promaxSync};
+if(typeof module!=='undefined') module.exports={promaxExtract:promaxExtract, promaxDetailMedia:promaxDetailMedia, promaxRunAll:promaxRunAll, promaxToDb:promaxToDb, promaxUpload:promaxUpload, promaxSync:promaxSync, promaxUpsize:promaxUpsize};

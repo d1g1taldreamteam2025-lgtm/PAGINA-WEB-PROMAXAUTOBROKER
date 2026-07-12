@@ -17,7 +17,7 @@ if (MIN.includes('`') || MIN.includes('${')) throw new Error('engine contiene ba
 
 /* ---- 2) separar funciones top-level (tokenizer con regex-awareness) ---- */
 const F = topFns(MIN);
-const need = ['promaxExtract','promaxDetailMedia','promaxRunAll','promaxCanonMake','promaxToDb','promaxUpload','promaxSync'];
+const need = ['promaxUpsize','promaxExtract','promaxDetailMedia','promaxRunAll','promaxCanonMake','promaxToDb','promaxUpload','promaxSync'];
 need.forEach(f => { if (!F[f]) throw new Error('falta funcion ' + f); });
 console.log('funciones extraidas:', Object.keys(F).join(', '));
 
@@ -45,7 +45,7 @@ function rebuild(varName, fnList) {
   admin = admin.replace(m[0], function () { return 'const ' + varName + ' = String.raw`' + rebuilt + '`;'; });
   return rebuilt;
 }
-rebuild('BOOKMARKLET_UNIV_HREF', ['promaxExtract','promaxDetailMedia','promaxRunAll']);
+rebuild('BOOKMARKLET_UNIV_HREF', ['promaxUpsize','promaxExtract','promaxDetailMedia','promaxRunAll']);
 rebuild('BOOKMARKLET_SYNC_HREF', need);
 fs.writeFileSync(adminPath, admin);
 console.log('admin/index.html actualizado');
