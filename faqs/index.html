@@ -31,11 +31,12 @@
 <style>
 /* ===== FAQS (fq_) ===== */
 .fq-hero{background:var(--ink);color:#fff;text-align:center;position:relative;overflow:hidden;}
-.fq-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--brand),var(--brand-2),var(--brand));}
-.fq-hero__inner{max-width:720px;margin:0 auto;padding:84px 24px;}
-.fq-hero h1{font-size:46px;font-weight:800;letter-spacing:-1px;margin:14px 0 16px;line-height:1.08;}
-.fq-hero p{font-size:18px;color:rgba(255,255,255,.85);margin:0 0 28px;}
-.fq-hero .pmx-eyebrow{color:#fff;background:rgba(167,2,0,.9);padding:6px 14px;border-radius:999px;}
+.fq-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--brand),var(--brand-2),var(--brand));z-index:2;}
+/* Póster con el texto integrado (PREGUNTAS FRECUENTES / FAQS) — cambia por
+   idioma y usa la versión vertical en celular. El buscador queda debajo. */
+.fq-hero__poster{display:block;width:100%;height:auto;max-height:72vh;object-fit:cover;object-position:center;}
+@media(max-width:768px){.fq-hero__poster{max-height:none;}}
+.fq-hero__searchbar{padding:20px 24px 28px;}
 .fq-search{position:relative;max-width:520px;margin:0 auto;}
 .fq-search .material-icons-outlined{position:absolute;left:16px;top:50%;transform:translateY(-50%);color:var(--text-faint);font-size:22px;}
 .fq-search input{width:100%;padding:15px 18px 15px 48px;border:1.5px solid transparent;border-radius:var(--radius-sm);font-size:16px;font-family:inherit;color:var(--ink);background:#fff;outline:none;transition:box-shadow .2s;}
@@ -72,12 +73,11 @@
 </head>
 <body>
 
-<!-- HERO -->
+<!-- HERO (imagen con el texto integrado, ES/EN x PC/celular) + buscador -->
 <section class="fq-hero">
-  <div class="fq-hero__inner">
-    <span class="pmx-eyebrow" data-i18n="fq_eyebrow">Ayuda</span>
-    <h1 data-i18n="fq_title">Preguntas Frecuentes</h1>
-    <p data-i18n="fq_sub">Resolvemos las dudas más comunes sobre comprar tu carro y tu financiamiento con Promax.</p>
+  <h1 data-i18n="fq_title" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Preguntas Frecuentes</h1>
+  <img class="fq-hero__poster" data-i18n-src="fq_hero_img" data-i18n-src-m="fq_hero_img_m" src="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783801782/Peguntas_16_9_wdqbyf.png" alt="Preguntas frecuentes de Promax Auto Broker — respuestas claras, sin letra pequeña" loading="eager" fetchpriority="high">
+  <div class="fq-hero__searchbar">
     <div class="fq-search">
       <span class="material-icons-outlined">search</span>
       <input type="search" id="pmxFqSearch" data-i18n-ph="fq_search_ph" placeholder="Buscar preguntas..." autocomplete="off" aria-label="Buscar preguntas">
@@ -196,6 +196,8 @@ PMX.addTranslations({
     fq_eyebrow:"Ayuda",
     fq_title:"Preguntas Frecuentes",
     fq_sub:"Resolvemos las dudas más comunes sobre comprar tu carro y tu financiamiento con Promax.",
+    fq_hero_img:"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783801782/Peguntas_16_9_wdqbyf.png",
+    fq_hero_img_m:"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801782/Preguntas_9_16_oo9aar.png",
     fq_search_ph:"Buscar preguntas...",
     fq_c1_h:"Comprar un auto",
     fq_c1q1:"¿Puedo ver el vehículo antes de comprarlo?",
@@ -239,6 +241,8 @@ PMX.addTranslations({
     fq_eyebrow:"Help",
     fq_title:"Frequently Asked Questions",
     fq_sub:"We answer the most common questions about buying your car and financing with Promax.",
+    fq_hero_img:"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783801781/FAQ16_9_cjyorb.png",
+    fq_hero_img_m:"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801782/Faq_9_16_t2sfde.png",
     fq_search_ph:"Search questions...",
     fq_c1_h:"Buying a car",
     fq_c1q1:"Can I see the vehicle before buying it?",

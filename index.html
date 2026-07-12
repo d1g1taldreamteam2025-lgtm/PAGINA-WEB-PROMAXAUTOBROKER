@@ -214,6 +214,17 @@
 .pmx-cats .pmx-cattile:only-of-type{grid-column:1/-1;min-height:150px;}
 /* CATEGORÍAS (sección oscura bajo el hero) */
 .pmx-homecats .pmx-eyebrow{color:var(--brand-2);}
+/* Carrusel horizontal de Destacados (variedad + flechas; pedido del cliente) */
+.pmx-hswrap{position:relative;}
+#pmxFeatured.pmx-hscroll{display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;padding:6px 4px 18px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--brand) transparent;}
+#pmxFeatured.pmx-hscroll > article{flex:0 0 340px;scroll-snap-align:start;}
+#pmxFeatured.pmx-hscroll > p{flex:1;text-align:center;}
+@media(max-width:480px){#pmxFeatured.pmx-hscroll > article{flex-basis:82vw;}}
+.pmx-harrow{position:absolute;top:42%;transform:translateY(-50%);z-index:5;width:46px;height:46px;border-radius:50%;border:0;background:var(--ink);color:#fff;font-size:24px;line-height:1;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;transition:background .2s,transform .2s;}
+.pmx-harrow:hover{background:var(--brand);transform:translateY(-50%) scale(1.07);}
+.pmx-harrow--prev{left:-12px;}
+.pmx-harrow--next{right:-12px;}
+@media(max-width:768px){.pmx-harrow{width:38px;height:38px;font-size:20px;}.pmx-harrow--prev{left:-6px;}.pmx-harrow--next{right:-6px;}}
 </style>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"AutoDealer","name":"Promax Auto Broker",
@@ -237,9 +248,9 @@
     <div class="pmx-hero2__track" id="pmxHeroTrack">
       <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Tu aliado en USA y Venezuela" fetchpriority="high"
          data-es="https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051518/Tualiadoenusayvzla_y9z4gv.png"
-         data-en="https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051519/YOUR_ALIED_cun5fr.png"
-         data-es-m="https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051516/tualiado9_16_miurgd.png"
-         data-en-m="https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051510/yourallied9_16_gorh12.png"
+         data-en="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783801945/YOUR_ALLY_16_eepvat.png"
+         data-es-m="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801947/TU_ALI_9_hld4jj.png"
+         data-en-m="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801946/YOUR_ALLI_9_rl0dtb.png"
          src="https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051518/Tualiadoenusayvzla_y9z4gv.png"></div>
       <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Desde $1,000 de inicial" loading="lazy"
          data-es="https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051662/desde1000_donwpayment_gnpew2.png"
@@ -336,7 +347,13 @@
       <h2 data-anim="text" data-i18n="feat_title">Vehículos Destacados</h2>
       <p data-anim="up" data-anim-delay="0.12" data-i18n="feat_sub">Seleccionados de nuestras últimas llegadas</p>
     </div>
-    <div class="pmx-vgrid" id="pmxFeatured" data-anim="stagger" data-anim-defer><p style="grid-column:1/-1;text-align:center;color:#888" data-i18n="loading">Cargando vehículos...</p></div>
+    <!-- Carrusel horizontal (pedido del cliente): variedad de categorías y
+         flechas para deslizar; en celular se desliza con el dedo. -->
+    <div class="pmx-hswrap">
+      <button class="pmx-harrow pmx-harrow--prev" id="pmxFeatPrev" type="button" aria-label="Ver anteriores">‹</button>
+      <div class="pmx-vgrid pmx-hscroll" id="pmxFeatured" data-anim="stagger" data-anim-defer><p style="grid-column:1/-1;text-align:center;color:#888" data-i18n="loading">Cargando vehículos...</p></div>
+      <button class="pmx-harrow pmx-harrow--next" id="pmxFeatNext" type="button" aria-label="Ver siguientes">›</button>
+    </div>
     <div style="text-align:center;margin-top:36px" data-anim="up"><a href="/inventory/" class="pmx-btn pmx-btn--ghost" data-i18n="feat_all">Ver Todo el Inventario</a></div>
   </div>
 </section>
@@ -607,14 +624,36 @@ PMX.addTranslations({
   PMX.loadInventory().then(function(cars){
     CARS = cars;
     catTiles(cars);
-    var feat = cars.filter(function(c){return c.featured;});
-    if (feat.length < 3) feat = cars.slice(0, 3);
-    else feat = feat.slice(0, 3);
+    // Destacados VARIADOS (pedido del cliente): mezcla de categorías —
+    // carros, camiones, jet ski, vans, motos… — en lugar de una sola.
+    // Se toma 1 de cada categoría por ronda (los "featured" y más nuevos
+    // primero) hasta llenar 12 tarjetas.
+    var byCat = {};
+    cars.forEach(function(c){ (byCat[c.category] = byCat[c.category] || []).push(c); });
+    Object.keys(byCat).forEach(function(k){
+      byCat[k].sort(function(a,b){ return ((b.featured?1:0)-(a.featured?1:0)) || ((b.year||0)-(a.year||0)); });
+    });
+    var lanes = ["cars","trucks_machinery","watercraft","vans","motorcycles","utv"]
+      .filter(function(k){ return byCat[k] && byCat[k].length; })
+      .map(function(k){ return byCat[k]; });
+    var feat = [];
+    for (var round = 0; feat.length < 12; round++) {
+      var added = false;
+      for (var li = 0; li < lanes.length && feat.length < 12; li++) {
+        if (lanes[li][round]) { feat.push(lanes[li][round]); added = true; }
+      }
+      if (!added) break;
+    }
     var host = document.getElementById("pmxFeatured");
     if (!feat.length) { var sec = document.querySelector(".pmx-featured"); if (sec) sec.style.display = "none"; return; }
     host.innerHTML = feat.map(card).join("");
     // Anima en cascada las tarjetas recién inyectadas (entra/sale con el scroll)
     if (window.PMXAnim) PMXAnim.cards("#pmxFeatured");
+    // Flechas del carrusel (‹ ›); en celular también se desliza con el dedo
+    function slide(dir){ host.scrollBy({ left: dir * host.clientWidth * 0.85, behavior: "smooth" }); }
+    var fp = document.getElementById("pmxFeatPrev"), fn = document.getElementById("pmxFeatNext");
+    if (fp) fp.addEventListener("click", function(){ slide(-1); });
+    if (fn) fn.addEventListener("click", function(){ slide(1); });
   });
 })();
 

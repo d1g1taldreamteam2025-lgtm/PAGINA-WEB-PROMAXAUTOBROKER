@@ -193,6 +193,13 @@
     es.raffle_short = "<b>¡Gana $500 por referir!</b>";
     en.raffle_short = "<b>Earn $500 per referral!</b>";
     es.raffle_cta = "Participar"; en.raffle_cta = "Enter now";
+    // Ticker GRANDE (franja del sorteo en movimiento)
+    es.raffle_big1 = "🎁 ¡GANA <b>$500</b> POR CADA REFERIDO!";
+    es.raffle_big2 = "PARTICIPA POR UN <b>TOYOTA COROLLA 2026</b> 🚗";
+    es.raffle_big3 = "TOCA AQUÍ PARA PARTICIPAR →";
+    en.raffle_big1 = "🎁 EARN <b>$500</b> PER REFERRAL!";
+    en.raffle_big2 = "ENTER TO WIN A <b>2026 TOYOTA COROLLA</b> 🚗";
+    en.raffle_big3 = "TAP HERE TO ENTER →";
     es.act_buy = "Comprar"; en.act_buy = "Buy now";
     es.act_share = "Compartir"; en.act_share = "Share";
     es.act_finance = "Financiar"; en.act_finance = "Finance";
@@ -804,19 +811,24 @@
     }, 1000);
   }
 
-  /* ---------------- FRANJA DE SORTEO (¡Participa!) ---------------- */
+  /* ---------------- FRANJA DE SORTEO (ticker GRANDE en movimiento) ---------------- */
+  // Pedido del cliente: un texto grande que se desliza y OBLIGA a leer.
+  // Toda la franja es un enlace a /referrals/, se pausa al pasar el mouse y
+  // se pliega sola al hacer scroll (body.pmx-scrolled ya la colapsa).
   function buildRaffle() {
     var r = CFG.referrals || {};
     if (!r.raffleEnabled) return "";
     var off = false; try { off = sessionStorage.getItem("pmx_raffle_off") === "1"; } catch (e) {}
     if (off) return "";
-    return '<div class="pmx-raffle" id="pmxRaffle">' +
-      '<div class="pmx-raffle__inner">' +
-        '<span class="pmx-raffle__ic">🎁</span>' +
-        '<span class="pmx-raffle__txt pmx-raffle__txt--full" data-i18n="raffle_txt">' + t("raffle_txt") + '</span>' +
-        '<span class="pmx-raffle__txt pmx-raffle__txt--short" data-i18n="raffle_short">' + t("raffle_short") + '</span>' +
-        '<a class="pmx-raffle__cta" href="/referrals/"><span data-i18n="raffle_cta">' + t("raffle_cta") + '</span></a>' +
-      '</div>' +
+    var group = '<span class="pmx-raffle__group">' +
+      '<span data-i18n="raffle_big1">' + t("raffle_big1") + '</span><span class="pmx-raffle__sep">★</span>' +
+      '<span data-i18n="raffle_big2">' + t("raffle_big2") + '</span><span class="pmx-raffle__sep">★</span>' +
+      '<span data-i18n="raffle_big3">' + t("raffle_big3") + '</span><span class="pmx-raffle__sep">★</span>' +
+    '</span>';
+    return '<div class="pmx-raffle pmx-raffle--big" id="pmxRaffle">' +
+      '<a class="pmx-raffle__link" href="/referrals/" aria-label="Sorteo Promax">' +
+        '<div class="pmx-raffle__track">' + group + group + '</div>' +
+      '</a>' +
       '<button class="pmx-raffle__x" id="pmxRaffleX" type="button" aria-label="Cerrar aviso">&times;</button>' +
     '</div>';
   }

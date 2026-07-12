@@ -254,6 +254,24 @@ body.pmx-open .pmx-mobilemenu{ display:block; }
   transition:background .18s;
 }
 .pmx-raffle__x:hover{ background:rgba(255,255,255,.3); }
+
+/* --- Ticker GRANDE del sorteo (texto en movimiento; pedido del cliente) --- */
+.pmx-raffle--big .pmx-raffle__link{ display:block; color:#fff; text-decoration:none; overflow:hidden; padding:12px 0; }
+.pmx-raffle--big .pmx-raffle__track{ display:flex; width:max-content; animation:pmxM 22s linear infinite; }
+.pmx-raffle--big .pmx-raffle__group{
+  display:flex; align-items:center; gap:28px; padding-right:28px; white-space:nowrap;
+  font:800 18px/1.15 var(--font-head); letter-spacing:.8px; text-transform:uppercase;
+  text-shadow:0 2px 8px rgba(0,0,0,.35);
+}
+.pmx-raffle--big .pmx-raffle__group b{ color:var(--accent); font-weight:800; }
+.pmx-raffle--big .pmx-raffle__sep{ color:var(--accent); font-size:13px; opacity:.9; }
+.pmx-raffle--big:hover .pmx-raffle__track{ animation-play-state:paused; }
+.pmx-raffle--big .pmx-raffle__x{ z-index:3; }
+@media(max-width:768px){
+  .pmx-raffle--big .pmx-raffle__link{ padding:10px 0; }
+  .pmx-raffle--big .pmx-raffle__group{ font-size:14.5px; gap:20px; padding-right:20px; }
+}
+@media (prefers-reduced-motion: reduce){ .pmx-raffle--big .pmx-raffle__track{ animation:none; } }
 /* Móvil: franja de sorteo COMPACTA en una sola línea (no invasiva) */
 @media (max-width:640px){
   .pmx-raffle__inner{ font-size:11.5px; gap:8px; padding:7px 34px 7px 12px; flex-wrap:nowrap; justify-content:center; text-align:center; }
@@ -435,8 +453,9 @@ body.pmx-scrolled .pmx-marquee{ max-height:0; padding-top:0; padding-bottom:0; b
 @keyframes pmxFadeIn{from{opacity:0}to{opacity:1}}
 .pmx-promo__box{position:relative;display:grid;grid-template-columns:1fr 1fr;max-width:760px;width:100%;max-height:92vh;background:#fff;border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-lg);animation:pmxPop .35s cubic-bezier(.2,.8,.3,1);}
 @keyframes pmxPop{from{transform:translateY(18px) scale(.96);opacity:0}to{transform:none;opacity:1}}
-.pmx-promo__img{background:#111;}
-.pmx-promo__img img{width:100%;height:100%;object-fit:cover;display:block;}
+.pmx-promo__img{background:#0a0a0a;display:flex;align-items:center;justify-content:center;}
+/* El creativo trae TEXTO (15% OFF): se muestra COMPLETO (contain), jamas recortado */
+.pmx-promo__img img{width:100%;height:100%;max-height:88vh;object-fit:contain;display:block;}
 .pmx-promo__body{padding:30px 30px 24px;display:flex;flex-direction:column;}
 .pmx-promo__x{position:absolute;top:12px;right:12px;z-index:2;width:34px;height:34px;border-radius:50%;border:0;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.18);color:#333;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .pmx-promo__x:hover{background:var(--brand);color:#fff;}
@@ -459,7 +478,7 @@ body.pmx-scrolled .pmx-marquee{ max-height:0; padding-top:0; padding-bottom:0; b
 .pmx-promo__no:hover{border-color:var(--ink);color:var(--ink);}
 .pmx-promo__fine{font-size:10.5px;color:var(--text-faint);margin:12px 0 0;line-height:1.4;text-transform:uppercase;letter-spacing:.3px;}
 @media(max-width:768px){.pmx-promo-fabwrap{left:14px;bottom:14px;}.pmx-promo-fab{width:60px;height:60px;}.pmx-promo-fab__big{font-size:17px;}.pmx-promo-fab__small{font-size:9.5px;}}
-@media(max-width:680px){.pmx-promo__box{grid-template-columns:1fr;max-width:360px;max-height:92vh;overflow-y:auto;}.pmx-promo__img{max-height:190px;}.pmx-promo__title{font-size:24px;}.pmx-promo__body{padding:22px 22px 20px;}}
+@media(max-width:680px){.pmx-promo__box{grid-template-columns:1fr;max-width:360px;max-height:92vh;overflow-y:auto;}.pmx-promo__img{max-height:42vh;flex:0 0 auto;}.pmx-promo__img img{max-height:42vh;height:auto;}.pmx-promo__title{font-size:24px;}.pmx-promo__body{padding:22px 22px 20px;}}
 
 /* ===================== GALERÍA DE VIDEOS / INSTAGRAM (pmx-ig) ===================== */
 .pmx-ig{background:var(--bg-soft);scroll-margin-top:140px;}
