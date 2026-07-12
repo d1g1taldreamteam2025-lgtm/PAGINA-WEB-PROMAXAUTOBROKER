@@ -326,7 +326,9 @@ async function enrichPhotos(ctx, d, rows) {
             if (m3 && m3.gallery && m3.gallery.length > ((m && m.gallery && m.gallery.length) || 0)) m = m3;
           } catch (e) { /* si el fetch falla, se queda con lo que haya */ }
         }
-        if (m && m.gallery && m.gallery.length) { r.gallery = m.gallery.slice(0, 5); r.cover_image = m.gallery[0]; if (m.gallery.length >= 3) rich++; }
+        // TODAS las fotos (hasta 24): antes un slice(0,5) OCULTO aqui recortaba
+        // lo que el motor ya traia completo — por eso el run #18 subio de 5.
+        if (m && m.gallery && m.gallery.length) { r.gallery = m.gallery.slice(0, 24); r.cover_image = m.gallery[0]; if (m.gallery.length >= 3) rich++; }
         if (m && m.description && !r.description) r.description = m.description;
       } catch (e) { /* ficha caída: se queda con la foto de la lista */ }
       finally {

@@ -36,7 +36,7 @@ DEALERS (webs)                    GitHub Actions (lunes 10:00 UTC + push a tools
   autodealmiami    ──┤  (bloqueado │  1) purgeRetiredSources / fixBadMsrp /   │
   internationalcars┘   Cloudflare) │     fillMissingBodyType  (limpieza)      │
                                    │  2) por dealer: engine.js en el browser  │
-  navegador del DUEÑO              │  3) enrichPhotos (fichas → 5 fotos)      │
+  navegador del DUEÑO              │  3) enrichPhotos (fichas → hasta 24 fotos)│
   (bookmarklets /admin/) ────────► │  4) upsert + cleanupStale + sitemap      │
                                    └───────────────┬──────────────────────────┘
                                                    ▼
@@ -67,7 +67,7 @@ Tabla **`promax_inventory`** (campos que escribe `promaxToDb`):
 `model`, `trim`, `category` (`cars|trucks_machinery|vans|motorcycles|utv|watercraft`),
 `body_type`, `price`, `msrp`, `mileage`, `fuel`, `transmission`, `drivetrain`,
 `exterior_color`, `interior_color`, `badge`, `featured`, `cover_image`, `gallery` (jsonb
-array, máx 5), `features` (jsonb), `description`, `status` (`available|Vendido`),
+array, hasta 24 — mín. 4 para aparecer en la web), `features` (jsonb), `description`, `status` (`available|Vendido`),
 `source` (ej. `hgregtrucks.com`; **null = carga manual, NUNCA se toca automático**),
 `source_url` (ficha original), `last_sync` (sello ISO de la corrida).
 
