@@ -145,7 +145,7 @@ PMX.addTranslations({
   }
 
   function render(c, all){
-    gallery = (c.gallery && c.gallery.length ? c.gallery : [c.image]).slice(0,5);
+    gallery = (c.gallery && c.gallery.length ? c.gallery : [c.image]).slice(0,24); // TODAS las fotos (pedido del cliente)
     var save = c.msrp && c.msrp>c.price ? c.msrp-c.price : 0;
     // Similares: primero misma categoría, luego lo que haya
     var similar = all.filter(function(x){return x.id!==c.id && x.category===c.category;}).slice(0,3);

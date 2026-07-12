@@ -65,8 +65,9 @@
   }
 
   function normalize(r) {
-    // Máximo 5 fotos por producto (regla de negocio; el admin también lo valida).
-    var gallery = (Array.isArray(r.gallery) ? r.gallery : []).slice(0, 5);
+    // TODAS las fotos del vehículo (hasta 24 — pedido del cliente: antes se
+    // recortaba a 5). El mínimo para aparecer en el catálogo sigue siendo 4.
+    var gallery = (Array.isArray(r.gallery) ? r.gallery : []).slice(0, 24);
     var cover = r.cover_image || gallery[0] || NOPHOTO;
     var cat = (r.category || "cars").toLowerCase();
     if (CATEGORY_SLUGS.length && CATEGORY_SLUGS.indexOf(cat) === -1) cat = "cars";

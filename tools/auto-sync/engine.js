@@ -3,7 +3,7 @@
    DealerCenter, Dealer Car Search, Dealer Spike) desde la pagina de
    LISTADO, en el navegador real del usuario (pasa antibots).
    v3: ademas RECORRE todas las paginas del listado y ENTRA a la ficha
-   de cada vehiculo para traer hasta 5 FOTOS reales + descripcion.
+   de cada vehiculo para traer TODAS sus fotos (hasta 24) + descripcion.
    Filtra por anio (2020+, camiones 2022+) y mapea a las 6 categorias.
    ==================================================================== */
 function promaxExtract(opts, root){
@@ -99,7 +99,7 @@ function promaxExtract(opts, root){
     qsa('[style*="background-image"]',el).forEach(function(n){
       var m=/url\(["']?([^"')]+)["']?\)/.exec(n.getAttribute('style')||''); if(m) add(m[1]);
     });
-    return out.slice(0,5);
+    return out.slice(0,24);
   }
   function detailUrl(el){
     var a=el.querySelector('a[itemprop="url"],a[href*="inventory"],a[href*="used"],a[href*="vehicle"],a[href*="detail"],a[href*="for-sale"],a[href]');
@@ -216,12 +216,25 @@ function promaxDetailMedia(doc, pageUrl){
     var n=el; for(var d=0; n && d<8; d++){ var cid=((n.className||'')+' '+(n.id||'')); if(PEOPLE.test(cid)) return true; n=n.parentElement; }
     return false;
   }
-  var out=[], seen={};
+  var out=[], outScore=[], seen={};
+  // Puntaje de CALIDAD de una variante: mayor resolucion declarada = mejor;
+  // sin marcador de tamano = la ORIGINAL (mejor de todas). Antes nos
+  // quedabamos con la PRIMERA variante vista — si era la miniatura, el carro
+  // subia con fotos pixeladas (queja real en International Cars USA).
+  function qscore(u){
+    var m=u.match(/(\d{2,4})\s*[xX]\s*(\d{2,4})/); if(m) return (+m[1])*(+m[2]);
+    m=u.match(/[?&](?:w|width|maxwidth|size)=(\d{2,4})/i); if(m) return (+m[1])*(+m[1]);
+    m=u.match(/[\/._-]w[_-]?(\d{3,4})(?=[\/._-])/); if(m) return (+m[1])*(+m[1]);
+    if(/(thumb|small|tiny|[_-]s\.|[_-]tn\.)/i.test(u)) return 30000;
+    return 9e9;
+  }
   function add(u){
     if(!u||/^data:/.test(u)) return;
-    u=abs(String(u).trim()); if(!u||bad(u)) return;
-    if(!/\.(jpe?g|png|webp|avif)(\?|$)/i.test(u) && !/(photo|image|img|units|vehicle|inventory|imagescdn|pictures)/i.test(u)) return;
-    var k=baseKey(u); if(seen[k]) return; seen[k]=1; out.push(u.split('?')[0]);
+    var full=abs(String(u).trim()); if(!full||bad(full)) return;
+    if(!/\.(jpe?g|png|webp|avif)(\?|$)/i.test(full) && !/(photo|image|img|units|vehicle|inventory|imagescdn|pictures)/i.test(full)) return;
+    var k=baseKey(full), s=qscore(full), clean=full.split('?')[0];
+    if(seen[k]==null){ seen[k]=out.length; out.push(clean); outScore.push(s); }
+    else{ var ix=seen[k]; if(s>outScore[ix]){ out[ix]=clean; outScore[ix]=s; } }
   }
   // 1) JSON-LD (schema.org Vehicle/Product)
   var lds=doc.querySelectorAll('script[type="application/ld+json"]');
@@ -259,14 +272,14 @@ function promaxDetailMedia(doc, pageUrl){
   // Barrido del HTML CRUDO: la galeria real suele venir en un JSON dentro de un
   // <script> (que fetch NO ejecuta, pero su TEXTO si esta ahi). Sacamos URLs de
   // foto de hosts/patrones tipicos de fotos de vehiculos (homenetiol, cdns de
-  // dealer, /photos/by-size, imagescdn...). Asi conseguimos las 5+ fotos.
-  if(out.length<5){
+  // dealer, /photos/by-size, imagescdn...). Asi conseguimos TODAS las fotos.
+  if(out.length<8){
     try{
       var raw=(doc.documentElement&&doc.documentElement.outerHTML)||'';
       // Acepta URLs con protocolo (https:) Y protocolo-relativas (//host) — las
       // fotos de Motoport/Sea-Doo (dx1app) vienen como //cdpcdn.dx1app.com/...
       var rx=/(?:https?:)?(?:\\?\/){2}[^\s"'<>]+?\.(?:jpe?g|png|webp)/gi, mm2, guard=0;
-      while((mm2=rx.exec(raw))!==null && guard++<4000 && out.length<12){
+      while((mm2=rx.exec(raw))!==null && guard++<4000 && out.length<26){
         var uu=mm2[0].replace(/\\\//g,'/').replace(/\\/g,'');
         if(/(homenetiol|imagescdn|pictures|photos\/by-size|\/photos\/|\/vehicle|\/inventory|dealercarsearch|edgepilot|dealereprocess|carbaseweb|inventoryphotos|vehicleimages|cloudfront|akamai|dx1app|cdpcdn)/i.test(uu)) add(uu);
       }
@@ -275,7 +288,7 @@ function promaxDetailMedia(doc, pageUrl){
   // Ultimo recurso: cualquier <img> grande que no sea de gente
   if(out.length<3){
     var alls=doc.querySelectorAll('img');
-    for(var q=0;q<alls.length && out.length<12;q++){
+    for(var q=0;q<alls.length && out.length<26;q++){
       var a3=alls[q]; if(inPeople(a3)) continue;
       add(a3.getAttribute('data-src')||a3.getAttribute('data-original')||a3.getAttribute('data-lazy')||a3.getAttribute('src'));
     }
@@ -302,7 +315,7 @@ function promaxDetailMedia(doc, pageUrl){
       out=groups[order[0]];
     }
   }
-  return { gallery: out.slice(0,5), description: desc };
+  return { gallery: out.slice(0,24), description: desc };
 }
 
 /* ---- Recorre paginas + entra a cada ficha. onP(msg) reporta progreso ---- */
@@ -418,7 +431,7 @@ function promaxCanonMake(m){
   return MAP[low]||m;
 }
 function promaxToDb(r, source, stamp){
-  var g=Array.isArray(r.gallery)?r.gallery.slice(0,5):[];
+  var g=Array.isArray(r.gallery)?r.gallery.slice(0,24):[];
   return { id:String(r.id||r.vin||(r.year+'-'+r.make+'-'+r.model)).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''),
     category:r.category||'cars', year:parseInt(r.year,10)||null, make:promaxCanonMake(r.make)||'', model:r.model||'', trim:r.trim||null,
     body_type:r.body_type||null, status:'available', condition:r.condition||'used',
