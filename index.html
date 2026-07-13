@@ -47,10 +47,24 @@
 @media(max-width:768px){.pmx-hero{min-height:480px;}.pmx-hero__inner{padding:56px 24px;}.pmx-hero h1{font-size:34px;}.pmx-hero p{font-size:16px;}}
 /* HERO CARRUSEL */
 .pmx-hero2{position:relative;overflow:hidden;background:#0a0a0a;}
-.pmx-hero2::after{content:'';position:absolute;left:0;right:0;bottom:0;height:42%;background:linear-gradient(to top,rgba(0,0,0,.6),transparent);pointer-events:none;z-index:1;}
+.pmx-hero2::after{content:'';position:absolute;left:0;right:0;bottom:0;height:34%;background:linear-gradient(to top,rgba(0,0,0,.55),transparent);pointer-events:none;z-index:1;}
 .pmx-hero2__track{display:flex;transition:transform .6s cubic-bezier(.4,0,.2,1);}
 .pmx-hero2__slide{flex:0 0 100%;display:block;line-height:0;}
+/* Móvil: póster vertical a ancho completo, sin barras ni recortes. */
 .pmx-hero2__slide img{width:100%;height:auto;display:block;}
+/* PC: el hero ocupa EXACTAMENTE el primer pliegue (nunca más alto que la
+   pantalla visible ni que 16:9) y la imagen se ve COMPLETA y centrada
+   (object-fit:contain) — sin cortes arriba/abajo ni a los lados. Las DOS
+   diapositivas comparten el mismo marco, así se ven idénticas. */
+@media(min-width:769px){
+  .pmx-hero2__media{height:min(calc(100vh - var(--header-h)),56.25vw);}
+  .pmx-hero2__track,.pmx-hero2__slide{height:100%;}
+  .pmx-hero2__slide{display:flex;align-items:center;justify-content:center;position:relative;background:#0a0a0a center/cover no-repeat;overflow:hidden;}
+  /* Relleno PREMIUM de los costados: copia DESENFOCADA del mismo póster detrás
+     (como Netflix/Spotify) — así los lados no se ven vacíos y la foto va completa. */
+  .pmx-hero2__slide::before{content:'';position:absolute;inset:0;background-image:inherit;background-position:center;background-size:cover;filter:blur(40px) brightness(.45);transform:scale(1.2);z-index:0;}
+  .pmx-hero2__slide img{position:relative;z-index:1;height:100%;object-fit:contain;object-position:center;}
+}
 .pmx-hero2__cta{position:absolute;left:0;right:0;bottom:62px;z-index:3;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:0 16px;}
 /* Móvil: los botones NO tapan el póster — van DEBAJO de la imagen, en franja propia */
 @media(max-width:768px){
@@ -246,7 +260,7 @@
 <!-- H1 para buscadores (invisible): el hero es visual, pero Google necesita un h1 con keywords -->
 <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">Promax Auto Broker — Autos usados en Miami, financiamiento flexible e importación de vehículos a Venezuela</h1>
 <section class="pmx-hero2" id="pmxHero" aria-label="Promax Auto Broker" data-anim-root data-parallax-root>
-  <div class="pmx-hero2__media" data-parallax-scale="1.07">
+  <div class="pmx-hero2__media">
     <div class="pmx-hero2__track" id="pmxHeroTrack">
       <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Tu aliado en USA y Venezuela" fetchpriority="high"
          data-es="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783818914/TU_A_16_9_ozlhul.png"
@@ -730,7 +744,11 @@ PMX.addTranslations({
       var img = slides[s].querySelector('img');
       // Variante vertical para celular si existe (data-es-m / data-en-m)
       var src = (mobile && img.getAttribute('data-' + lang + '-m')) || img.getAttribute('data-' + lang);
-      if (src && img.getAttribute('src') !== src) img.setAttribute('src', src);
+      if (src) {
+        if (img.getAttribute('src') !== src) img.setAttribute('src', src);
+        // El fondo de la diapositiva = mismo póster (lo usa el ::before desenfocado en PC)
+        slides[s].style.backgroundImage = "url('" + src + "')";
+      }
     }
   }
   hero.addEventListener('mouseenter', function(){ if (timer) clearInterval(timer); });
