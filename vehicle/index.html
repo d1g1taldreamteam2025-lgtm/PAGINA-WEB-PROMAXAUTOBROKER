@@ -124,13 +124,13 @@ PMX.addTranslations({
     vd_year:"Año", vd_make:"Marca", vd_model:"Modelo", vd_trim:"Versión", vd_body:"Carrocería", vd_miles:"Millaje",
     vd_fuel:"Combustible", vd_trans:"Transmisión", vd_drive:"Tracción", vd_ext:"Color exterior", vd_int:"Color interior",
     vd_vin:"VIN", vd_stock:"Stock", vd_missing_t:"Vehículo no encontrado", vd_missing_s:"Es posible que ya se haya vendido.",
-    vd_see_all:"Ver todo el catálogo", vd_similar:"También te puede interesar", btn_details:"Ver Detalles" },
+    vd_see_all:"Ver todo el catálogo", vd_similar:"También te puede interesar", btn_details:"Ver Detalles", price_ask:"Consultar precio" },
   en:{ loading:"Loading vehicle...", vd_back:"Catalog", vd_buy:"Buy now", vd_prequal:"Finance this vehicle",
     vd_contact:"More information", vd_share:"Share this vehicle", vd_specs:"Specifications", vd_features:"Features", vd_desc:"Description",
     vd_year:"Year", vd_make:"Make", vd_model:"Model", vd_trim:"Trim", vd_body:"Body", vd_miles:"Mileage",
     vd_fuel:"Fuel", vd_trans:"Transmission", vd_drive:"Drivetrain", vd_ext:"Exterior color", vd_int:"Interior color",
     vd_vin:"VIN", vd_stock:"Stock", vd_missing_t:"Vehicle not found", vd_missing_s:"It may have already been sold.",
-    vd_see_all:"View full catalog", vd_similar:"You may also like", btn_details:"View Details" }
+    vd_see_all:"View full catalog", vd_similar:"You may also like", btn_details:"View Details", price_ask:"Call for price" }
 });
 
 (function(){
@@ -183,7 +183,7 @@ PMX.addTranslations({
           '</div>'+
           '<h1>'+c.year+' '+c.make+' '+c.model+'</h1>'+
           '<div class="pmx-vd__stock">'+(c.trim?c.trim+' • ':'')+PMX.t("vd_stock")+' '+(c.stock||c.id)+'</div>'+
-          '<div class="pmx-vd__price">'+(c.price>0?PMX.money(c.price):'Consultar precio')+'</div>'+
+          '<div class="pmx-vd__price">'+(c.price>0?PMX.money(c.price):PMX.t("price_ask"))+'</div>'+
           (save?'<div class="pmx-vd__msrp">'+PMX.money(c.msrp)+'</div>':'')+
           '<div class="pmx-vd__cta">'+
             '<button class="pmx-btn pmx-btn--primary pmx-btn--block" type="button" data-act="buy">🛒 '+PMX.t("vd_buy")+'</button>'+
@@ -268,7 +268,7 @@ PMX.addTranslations({
         '<span class="pmx-vcard__type">'+(c.category && c.category!=="cars" ? PMX.catLabel(c.category) : (c.bodyType||"").toUpperCase())+'</span>'+
       '</div></a>'+
       '<div class="pmx-vcard__body"><h3 class="pmx-vcard__title">'+c.year+' '+c.make+' '+c.model+'</h3>'+
-      '<div class="pmx-vcard__price">'+(c.price>0?PMX.money(c.price):'Consultar precio')+'</div>'+
+      '<div class="pmx-vcard__price">'+(c.price>0?PMX.money(c.price):PMX.t("price_ask"))+'</div>'+
       '<a href="/vehicle/?id='+encodeURIComponent(c.id)+'" class="pmx-btn pmx-btn--primary" style="margin-top:auto">'+PMX.t("btn_details")+'</a></div></article>';
   }
 

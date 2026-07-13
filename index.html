@@ -495,7 +495,7 @@ PMX.addTranslations({
     live_pill:"En vivo", live_title:"Promax en movimiento", live_sub:"Reservas, aprobaciones y nuevas llegadas — en tiempo real.",
     home_vid_sub:"Mira nuestros vehículos en acción. Toca un video para verlo en pantalla completa con sonido.",
     vid_invite_q:"¿Te gustaría ver videos de nuestro inventario?", vid_invite_yes:"Ver videos", vid_invite_close:"Cerrar",
-    btn_details:"Ver Detalles", btn_prequal:"Pre-Calificar",
+    btn_details:"Ver Detalles", btn_prequal:"Pre-Calificar", price_ask:"Consultar precio",
     home_cats_eyebrow:"Todo en un solo lugar", home_cats_title:"Explora por categoría",
     home_cats_sub:"Carros, camiones y maquinaria, vans, motos, UTV y motos de agua — todo con financiamiento flexible.",
     home_cats_n:"disponibles", home_cats_soon:"Próximamente", home_cats_soonlbl:"Próximamente:",
@@ -541,7 +541,7 @@ PMX.addTranslations({
     live_pill:"Live", live_title:"Promax in motion", live_sub:"Reservations, approvals and new arrivals — in real time.",
     home_vid_sub:"See our vehicles in action. Tap a video to watch it fullscreen with sound.",
     vid_invite_q:"Would you like to see videos of our inventory?", vid_invite_yes:"Watch videos", vid_invite_close:"Close",
-    btn_details:"View Details", btn_prequal:"Pre-Qualify",
+    btn_details:"View Details", btn_prequal:"Pre-Qualify", price_ask:"Call for price",
     home_cats_eyebrow:"Everything in one place", home_cats_title:"Browse by category",
     home_cats_sub:"Cars, trucks & machinery, vans, motorcycles, UTV and watercraft — all with flexible financing.",
     home_cats_n:"available", home_cats_soon:"Coming soon", home_cats_soonlbl:"Coming soon:",
@@ -574,7 +574,7 @@ PMX.addTranslations({
       '<div class="pmx-vcard__body">'+
         '<h3 class="pmx-vcard__title">'+c.year+' '+c.make+' '+c.model+(c.trim?' '+c.trim:'')+'</h3>'+
         (specs.length?'<div class="pmx-vcard__specs">'+specs.map(function(s){return '<span>'+s+'</span>';}).join("")+'</div>':'')+
-        '<div class="pmx-vcard__price">'+(c.price>0?money(c.price):'Consultar precio')+'</div>'+
+        '<div class="pmx-vcard__price">'+(c.price>0?money(c.price):PMX.t("price_ask"))+'</div>'+
         '<div class="pmx-vcard__actions">'+
           '<a href="/vehicle/?id='+encodeURIComponent(c.id)+'" class="pmx-btn pmx-btn--primary">'+PMX.t("btn_details")+'</a>'+
           '<a href="/financing/apply/?vin='+c.id+'" class="pmx-btn pmx-btn--ghost">'+PMX.t("btn_prequal")+'</a>'+
