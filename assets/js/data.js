@@ -105,20 +105,24 @@
     var cover = r.cover_image || gallery[0] || NOPHOTO;
     var cat = (r.category || "cars").toLowerCase();
     if (CATEGORY_SLUGS.length && CATEGORY_SLUGS.indexOf(cat) === -1) cat = "cars";
+    // Carrocería: el NOMBRE manda solo cuando es INEQUÍVOCO (palabra explícita o
+    // modelo de una sola carrocería); si es ambiguo se respeta al dealer; y si el
+    // dealer no mandó nada, se rellena por el modelo. Así se corrige el "sedan"
+    // mal puesto sin volver sedán a un Prius (hatchback) o a un Civic hatchback.
+    var _stored = String(r.body_type || "").toLowerCase();
+    var _isCarVan = (cat === "cars" || cat === "vans");
+    var _confident = _isCarVan ? bodyConfident(r.make, r.model, r.trim) : "";
+    var bodyType = _confident || _stored || (_isCarVan ? bodyFill(r.make, r.model) : "");
+    // Las VANS/minivans van SIEMPRE en la categoría VANS (arriba), nunca en
+    // CARROS: así NO hay un filtro "Van" dentro de Carros que confunda con la
+    // categoría VANS de arriba (pedido del cliente: filtrar VAN debe mostrar
+    // VANS, no un sedán). Se corrige al mostrar, en cada carga de la web.
+    if (cat === "cars" && (bodyType === "van" || bodyType === "minivan")) cat = "vans";
     return {
       id: r.id || r.stock || ((r.year || "") + "-" + (r.make || "") + "-" + (r.model || "")).toLowerCase().replace(/\s+/g, "-"),
       category: cat,
       year: r.year, make: canonMake(r.make), model: r.model, trim: r.trim || "",
-      // El NOMBRE manda solo cuando es INEQUÍVOCO (palabra explícita o modelo de
-      // una sola carrocería); si es ambiguo se respeta al dealer; y si el dealer
-      // no mandó nada, se rellena por el modelo. Así se corrige el "sedan" mal
-      // puesto sin volver sedán a un Prius (hatchback) o a un Civic hatchback.
-      bodyType: (function () {
-        var stored = String(r.body_type || "").toLowerCase();
-        var isCarVan = (cat === "cars" || cat === "vans");
-        var confident = isCarVan ? bodyConfident(r.make, r.model, r.trim) : "";
-        return confident || stored || (isCarVan ? bodyFill(r.make, r.model) : "");
-      })(),
+      bodyType: bodyType,
       price: Number(r.price) || 0,
       // MSRP corrupto (ej. $205,500 en un Camry de $21,895): si el "precio
       // anterior" es más del doble del precio real, NO se muestra tachado.

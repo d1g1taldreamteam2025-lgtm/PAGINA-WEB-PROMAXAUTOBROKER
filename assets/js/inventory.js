@@ -357,6 +357,9 @@
   function renderBodyFacet() {
     var host = $("#pmxBody"); if (!host) return;
     var group = host.closest(".pmx-fg");
+    // En VANS el filtro útil es "de trabajo / de pasajeros" (vanType); TODAS son
+    // van, así que la carrocería no aplica. La ocultamos para no confundir.
+    if (state.category === "vans") { host.innerHTML = ""; if (group) group.style.display = "none"; return; }
     var counts = {};
     inCatCond().forEach(function (c) { if (c.bodyType) counts[c.bodyType] = (counts[c.bodyType] || 0) + 1; });
     state.filters.body.forEach(function (b) { if (counts[b] == null) counts[b] = 0; });
