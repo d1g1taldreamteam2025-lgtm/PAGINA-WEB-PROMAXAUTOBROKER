@@ -63,7 +63,11 @@
   .pmx-hero2__media{height:min(calc(100vh - var(--header-h)),56.25vw);}
   .pmx-hero2__track,.pmx-hero2__slide{height:100%;}
   .pmx-hero2__slide{display:block;}
-  .pmx-hero2__slide img{width:100%;height:100%;object-fit:cover;object-position:center;}
+  /* La imagen llena el marco (cover). object-position hacia ARRIBA para NUNCA
+     recortar el logo (arriba); el recorte, si toca, se va del margen de abajo.
+     Con las imágenes de "zona segura" (contenido centrado + margen arriba/abajo)
+     esto no recorta NADA. */
+  .pmx-hero2__slide img{width:100%;height:100%;object-fit:cover;object-position:center 22%;}
   /* En PC la imagen es la protagonista: SIN botones encima (siguen en móvil).
      Selector más específico para ganarle a la regla base .pmx-hero2__cta. */
   .pmx-hero2 .pmx-hero2__cta{display:none;}
