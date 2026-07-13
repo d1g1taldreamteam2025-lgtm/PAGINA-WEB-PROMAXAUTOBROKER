@@ -40,7 +40,7 @@
       inv_empty_t: "Sin resultados", inv_empty_s: "Ajusta los filtros o explora todo el inventario", inv_reset: "Reiniciar",
       inv_none_t: "Inventario en actualización", inv_none_s: "Estamos cargando nuevos vehículos. Vuelve pronto o escríbenos y te ayudamos a encontrar tu carro.", inv_none_cta: "Contáctanos",
       inv_err_t: "No se pudo cargar el inventario", inv_err_s: "Recarga la página o intenta más tarde.",
-      btn_details: "Ver Detalles", btn_prequal: "Pre-Calificar", prev: "Anterior", next: "Siguiente",
+      btn_details: "Ver Detalles", btn_prequal: "Pre-Calificar", prev: "Anterior", next: "Siguiente", price_ask: "Consultar precio",
       body_suv: "SUV", body_sedan: "SEDÁN", body_truck: "CAMIONETA", body_coupe: "COUPÉ",
       body_hatchback: "HATCHBACK", body_van: "VAN", body_wagon: "FAMILIAR", body_convertible: "CONVERTIBLE", body_minivan: "MINIVAN",
       inv_empty_cat_t: "Próximamente",
@@ -67,7 +67,7 @@
       inv_empty_t: "No results", inv_empty_s: "Adjust filters or browse all inventory", inv_reset: "Reset",
       inv_none_t: "Inventory updating", inv_none_s: "We're loading new vehicles. Check back soon or contact us and we'll help you find your car.", inv_none_cta: "Contact Us",
       inv_err_t: "Unable to load inventory", inv_err_s: "Refresh the page or try later.",
-      btn_details: "View Details", btn_prequal: "Pre-Qualify", prev: "Prev", next: "Next",
+      btn_details: "View Details", btn_prequal: "Pre-Qualify", prev: "Prev", next: "Next", price_ask: "Call for price",
       body_suv: "SUV", body_sedan: "SEDAN", body_truck: "TRUCK", body_coupe: "COUPE",
       body_hatchback: "HATCHBACK", body_van: "VAN", body_wagon: "WAGON", body_convertible: "CONVERTIBLE", body_minivan: "MINIVAN",
       inv_empty_cat_t: "Coming soon",
@@ -97,6 +97,9 @@
   }
   function canonModel(m) { return String(m == null ? "" : m).trim().toUpperCase(); }
   function condMatch(c) { return state.condition === "new" ? c.condition === "new" : c.condition !== "new"; }
+  // Escapa texto antes de meterlo en innerHTML (el buscador es texto libre del
+  // usuario: sin esto, escribir <img onerror=...> ejecutaría script — self-XSS).
+  function esc(s) { return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;"); }
 
   // Base = solo categoría (para conteos de la barra y ensureConditionFits)
   function inCategory(list) {
@@ -129,7 +132,9 @@
   // ---- FUENTE ÚNICA DE VERDAD: un carro pasa el filtro si cumple TODO esto ----
   function buildPredicate() {
     var f = state.filters;
-    var q = state.search ? state.search.toLowerCase() : null;
+    // Normalizamos espacios/guiones para que "mercedes benz" encuentre
+    // "Mercedes-Benz" y "f 250" encuentre "F-250" (canonMake usa guion).
+    var q = state.search ? state.search.toLowerCase().replace(/[\s\-]+/g, " ") : null;
     var cat = state.category, quick = state.quick, vanType = state.vanType;
     return function (c) {
       if (c.category !== cat) return false;
@@ -141,12 +146,14 @@
       }
       if (quick === "under-20k") { if (!(c.price > 0 && c.price < 20000)) return false; }
       else if (quick === "under-10k") { if (!(c.price > 0 && c.price < 10000)) return false; }
-      if (q && (c.year + " " + c.make + " " + c.model + " " + c.trim).toLowerCase().indexOf(q) < 0) return false;
+      if (q && (c.year + " " + c.make + " " + c.model + " " + c.trim).toLowerCase().replace(/[\s\-]+/g, " ").indexOf(q) < 0) return false;
       if (f.make.length && f.make.indexOf(c.make) < 0) return false;
       if (f.model.length && f.model.indexOf(canonModel(c.model)) < 0) return false;
       if (f.body.length && f.body.indexOf(c.bodyType) < 0) return false;
       if (f.priceMin != null && !(c.price >= f.priceMin)) return false;
-      if (f.priceMax != null && !(c.price <= f.priceMax)) return false;
+      // Precio 0 = "Consultar precio" (precio desconocido): NO cuenta como
+      // "dentro de un techo de precio" (igual que los atajos Bajo $20k/$10k).
+      if (f.priceMax != null && !(c.price > 0 && c.price <= f.priceMax)) return false;
       if (f.yearMin != null && !(c.year >= f.yearMin)) return false;
       if (f.yearMax != null && !(c.year <= f.yearMax)) return false;
       if (f.mileageMax != null && !(c.mileage <= f.mileageMax)) return false;
@@ -185,7 +192,7 @@
       '<div class="pmx-vcard__body">' +
         '<h3 class="pmx-vcard__title">' + c.year + ' ' + c.make + ' ' + c.model + (c.trim ? ' ' + c.trim : '') + '</h3>' +
         (specs.length ? '<div class="pmx-vcard__specs">' + specs.map(function (s) { return "<span>" + s + "</span>"; }).join("") + '</div>' : '') +
-        '<div class="pmx-vcard__price">' + (c.price > 0 ? PMX.money(c.price) : 'Consultar precio') + (save ? '<small>' + PMX.money(c.msrp) + '</small>' : '') + '</div>' +
+        '<div class="pmx-vcard__price">' + (c.price > 0 ? PMX.money(c.price) : PMX.t("price_ask")) + (save ? '<small>' + PMX.money(c.msrp) + '</small>' : '') + '</div>' +
         '<div class="pmx-vcard__actions">' +
           '<a href="/vehicle/?id=' + encodeURIComponent(c.id) + '" class="pmx-btn pmx-btn--primary">' + PMX.t("btn_details") + '</a>' +
           '<a href="/financing/apply/?vin=' + c.id + '" class="pmx-btn pmx-btn--ghost">' + PMX.t("btn_prequal") + '</a>' +
@@ -336,7 +343,7 @@
     });
     var host = $("#pmxChips");
     host.innerHTML = chips.map(function (c) {
-      return '<span class="pmx-chip" data-k="' + c.k + '" data-v="' + String(c.v).replace(/"/g, "&quot;") + '">' + c.l + ' ✕</span>';
+      return '<span class="pmx-chip" data-k="' + c.k + '" data-v="' + esc(c.v) + '">' + esc(c.l) + ' ✕</span>';
     }).join("");
     $("#pmxClear").style.display = chips.length ? "inline-flex" : "none";
     var fc = $("#pmxFilterCount"); if (fc) fc.textContent = chips.length || "";
