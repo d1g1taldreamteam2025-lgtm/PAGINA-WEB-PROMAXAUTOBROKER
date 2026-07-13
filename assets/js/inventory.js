@@ -6,6 +6,15 @@
    - Búsqueda estilo concesionario: MARCA -> MODELO en cascada.
    - Vans separadas: de trabajo (carga) vs de pasajeros.
    - Filtros fáciles de deshacer (chips con ✕ + Limpiar filtros).
+
+   REGLA DE ORO de los filtros (para que NUNCA se contradigan):
+   - UN solo lugar decide qué carro pasa: buildPredicate(). Toda la pantalla
+     (grilla, conteo, chips, facetas) se deriva de ahí.
+   - Los botones rápidos SUVs/Sedanes/Camionetas son ATAJOS a la carrocería
+     del panel lateral (mismo estado state.filters.body). Antes vivían en un
+     estado aparte y chocaban con los checkboxes -> daba "0 resultados".
+   - Al cambiar de categoría se limpian TODOS los refinamientos (una SUV
+     marcada no debe arrastrarse a Motos y dejar la lista en 0).
    ===================================================================== */
 (function () {
   "use strict";
@@ -69,6 +78,9 @@
 
   var PER = 9, CARS = [], $ = function (s, r) { return (r || document).querySelector(s); };
   var DEFAULT_CAT = "cars";
+  // Botones rápidos que en realidad son atajos a la CARROCERÍA (state.filters.body).
+  // Los demás (under-20k/under-10k) son atajos de PRECIO (state.quick).
+  var BODY_QUICK = ["suv", "sedan", "truck"];
   var state = { category: DEFAULT_CAT, quick: "all", condition: "used", vanType: "", search: "", sort: "new", page: 1,
     filters: { make: [], model: [], body: [], priceMin: null, priceMax: null, yearMin: null, yearMax: null, mileageMax: null } };
 
@@ -84,10 +96,16 @@
     return (t && t !== "body_" + b) ? t : String(b).replace(/_/g, " ").toUpperCase();
   }
   function canonModel(m) { return String(m == null ? "" : m).trim().toUpperCase(); }
+  function condMatch(c) { return state.condition === "new" ? c.condition === "new" : c.condition !== "new"; }
 
-  // Base = solo categoría (para armar selects/vans y decidir condición default)
+  // Base = solo categoría (para conteos de la barra y ensureConditionFits)
   function inCategory(list) {
-    return list.filter(function (c) { return c.category === state.category; });
+    return (list || CARS).filter(function (c) { return c.category === state.category; });
+  }
+  // Base = categoría + condición (para armar selects y facetas de carrocería,
+  // que deben reflejar lo que el usuario está viendo: usados o nuevos).
+  function inCatCond() {
+    return CARS.filter(function (c) { return c.category === state.category && condMatch(c); });
   }
 
   // Broker = variedad: en el orden por defecto INTERCALAMOS las marcas para que
@@ -108,26 +126,36 @@
     return out;
   }
 
-  function applyAll() {
-    var r = inCategory(CARS);
-    if (state.condition === "new") r = r.filter(function (c) { return c.condition === "new"; });
-    else r = r.filter(function (c) { return c.condition !== "new"; });
-    if (state.category === "vans" && state.vanType) {
-      r = r.filter(function (c) { return state.vanType === "work" ? isWorkVan(c) : !isWorkVan(c); });
-    }
-    if (state.quick === "under-20k") r = r.filter(function (c) { return c.price < 20000 && c.price > 0; });
-    else if (state.quick === "under-10k") r = r.filter(function (c) { return c.price < 10000 && c.price > 0; });
-    else if (["suv", "sedan", "truck"].indexOf(state.quick) > -1) r = r.filter(function (c) { return c.bodyType === state.quick; });
-    if (state.search) { var q = state.search.toLowerCase(); r = r.filter(function (c) { return (c.year + " " + c.make + " " + c.model + " " + c.trim).toLowerCase().indexOf(q) > -1; }); }
+  // ---- FUENTE ÚNICA DE VERDAD: un carro pasa el filtro si cumple TODO esto ----
+  function buildPredicate() {
     var f = state.filters;
-    if (f.make.length) r = r.filter(function (c) { return f.make.indexOf(c.make) > -1; });
-    if (f.model.length) r = r.filter(function (c) { return f.model.indexOf(canonModel(c.model)) > -1; });
-    if (f.body.length) r = r.filter(function (c) { return f.body.indexOf(c.bodyType) > -1; });
-    if (f.priceMin) r = r.filter(function (c) { return c.price >= f.priceMin; });
-    if (f.priceMax) r = r.filter(function (c) { return c.price <= f.priceMax; });
-    if (f.yearMin) r = r.filter(function (c) { return c.year >= f.yearMin; });
-    if (f.yearMax) r = r.filter(function (c) { return c.year <= f.yearMax; });
-    if (f.mileageMax) r = r.filter(function (c) { return c.mileage <= f.mileageMax; });
+    var q = state.search ? state.search.toLowerCase() : null;
+    var cat = state.category, quick = state.quick, vanType = state.vanType;
+    return function (c) {
+      if (c.category !== cat) return false;
+      if (!condMatch(c)) return false;
+      if (cat === "vans" && vanType) {
+        var w = isWorkVan(c);
+        if (vanType === "work" && !w) return false;
+        if (vanType === "pass" && w) return false;
+      }
+      if (quick === "under-20k") { if (!(c.price > 0 && c.price < 20000)) return false; }
+      else if (quick === "under-10k") { if (!(c.price > 0 && c.price < 10000)) return false; }
+      if (q && (c.year + " " + c.make + " " + c.model + " " + c.trim).toLowerCase().indexOf(q) < 0) return false;
+      if (f.make.length && f.make.indexOf(c.make) < 0) return false;
+      if (f.model.length && f.model.indexOf(canonModel(c.model)) < 0) return false;
+      if (f.body.length && f.body.indexOf(c.bodyType) < 0) return false;
+      if (f.priceMin != null && !(c.price >= f.priceMin)) return false;
+      if (f.priceMax != null && !(c.price <= f.priceMax)) return false;
+      if (f.yearMin != null && !(c.year >= f.yearMin)) return false;
+      if (f.yearMax != null && !(c.year <= f.yearMax)) return false;
+      if (f.mileageMax != null && !(c.mileage <= f.mileageMax)) return false;
+      return true;
+    };
+  }
+
+  function applyAll() {
+    var r = CARS.filter(buildPredicate());
     switch (state.sort) {
       case "price-asc": r.sort(function (a, b) { return a.price - b.price; }); break;
       case "price-desc": r.sort(function (a, b) { return b.price - a.price; }); break;
@@ -205,14 +233,43 @@
     });
   }
 
+  // Botones rápidos: PRECIO siempre visibles; CARROCERÍA (SUVs/Sedanes/
+  // Camionetas) solo se muestran donde esa carrocería existe (categoría +
+  // condición actuales) y su estado activo sale de state.filters.body.
+  function renderQuickButtons() {
+    var present = {};
+    inCatCond().forEach(function (c) { if (c.bodyType) present[c.bodyType] = 1; });
+    document.querySelectorAll(".pmx-qf[data-quick]").forEach(function (b) {
+      var v = b.dataset.quick;
+      if (BODY_QUICK.indexOf(v) > -1) {
+        var show = present[v] || state.filters.body.indexOf(v) > -1;
+        b.style.display = show ? "" : "none";
+        b.classList.toggle("active", state.filters.body.indexOf(v) > -1);
+      } else {
+        b.style.display = "";
+        b.classList.toggle("active", state.quick === v);
+      }
+    });
+  }
+
+  function clearRefinements() {
+    state.quick = "all"; state.vanType = ""; state.search = "";
+    state.filters = { make: [], model: [], body: [], priceMin: null, priceMax: null, yearMin: null, yearMax: null, mileageMax: null };
+    var s = $("#pmxSearch"); if (s) s.value = "";
+    document.querySelectorAll('.pmx-sidebar input[type=number]').forEach(function (i) { i.value = ""; });
+    // Los checkboxes de carrocería se re-pintan en render() desde filters.body.
+  }
+
   function setCategory(slug) {
     state.category = slug; state.page = 1;
-    // Al cambiar de categoría se reinician los filtros de la anterior
-    state.vanType = ""; state.quick = "all"; state.filters.make = []; state.filters.model = [];
-    document.querySelectorAll(".pmx-qf[data-quick]").forEach(function (x) { x.classList.remove("active"); });
+    clearRefinements();          // categorías = inventarios distintos: empezamos limpio
+    // Arrancamos siempre en USADOS (default) y dejamos que ensureConditionFits
+    // salte a NUEVOS solo si la categoría no tiene usados. Así una condición
+    // auto-forzada (ej. Jet Ski = todos nuevos) no se "arrastra" a la próxima.
+    state.condition = "used";
     ensureConditionFits();
     buildMakeSelect(); buildModelSelect();
-    renderCats(); renderVanTypes(); render();
+    renderCats(); render();
     // Refleja la categoría en la URL (para compartir el filtro)
     try {
       var u = new URL(location.href);
@@ -225,7 +282,7 @@
   function buildMakeSelect() {
     var sel = $("#pmxMakeSel"); if (!sel) return;
     var counts = {};
-    inCategory(CARS).forEach(function (c) { if (c.make) counts[c.make] = (counts[c.make] || 0) + 1; });
+    inCatCond().forEach(function (c) { if (c.make) counts[c.make] = (counts[c.make] || 0) + 1; });
     var makes = Object.keys(counts).sort();
     var cur = state.filters.make[0] || "";
     if (cur && makes.indexOf(cur) < 0) { cur = ""; state.filters.make = []; state.filters.model = []; }
@@ -243,7 +300,7 @@
       return;
     }
     var counts = {};
-    inCategory(CARS).forEach(function (c) {
+    inCatCond().forEach(function (c) {
       if (c.make === make && c.model) { var k = canonModel(c.model); counts[k] = (counts[k] || 0) + 1; }
     });
     var models = Object.keys(counts).sort();
@@ -255,16 +312,27 @@
     }).join("");
   }
 
+  // Etiquetas legibles para los chips de rango (antes salía "priceMin: 15000")
+  function chipLabel(k, v) {
+    if (k === "priceMin") return PMX.t("f_price") + " ≥ " + PMX.money(v);
+    if (k === "priceMax") return PMX.t("f_price") + " ≤ " + PMX.money(v);
+    if (k === "yearMin") return PMX.t("f_year") + " ≥ " + v;
+    if (k === "yearMax") return PMX.t("f_year") + " ≤ " + v;
+    if (k === "mileageMax") return PMX.t("f_mileage") + " ≤ " + PMX.num(v) + " mi";
+    return String(v);
+  }
+
   function renderChips() {
     var chips = [];
-    if (state.quick !== "all") chips.push({ k: "quick", v: state.quick, l: PMX.t("qf_" + ({ "under-20k": "20", "under-10k": "10", suv: "suv", sedan: "sedan", truck: "truck" }[state.quick] || "20")) });
+    if (state.quick === "under-20k" || state.quick === "under-10k")
+      chips.push({ k: "quick", v: state.quick, l: PMX.t(state.quick === "under-20k" ? "qf_20" : "qf_10") });
     if (state.vanType) chips.push({ k: "vantype", v: state.vanType, l: PMX.t(state.vanType === "work" ? "vt_work" : "vt_pass") });
     if (state.search) chips.push({ k: "search", v: state.search, l: '"' + state.search + '"' });
     state.filters.make.forEach(function (m) { chips.push({ k: "make", v: m, l: m }); });
     state.filters.model.forEach(function (m) { chips.push({ k: "model", v: m, l: m }); });
     state.filters.body.forEach(function (b) { chips.push({ k: "body", v: b, l: bodyLabel(b) }); });
     ["priceMin", "priceMax", "yearMin", "yearMax", "mileageMax"].forEach(function (key) {
-      if (state.filters[key]) chips.push({ k: key, v: state.filters[key], l: key + ": " + state.filters[key] });
+      if (state.filters[key] != null) chips.push({ k: key, v: state.filters[key], l: chipLabel(key, state.filters[key]) });
     });
     var host = $("#pmxChips");
     host.innerHTML = chips.map(function (c) {
@@ -272,6 +340,26 @@
     }).join("");
     $("#pmxClear").style.display = chips.length ? "inline-flex" : "none";
     var fc = $("#pmxFilterCount"); if (fc) fc.textContent = chips.length || "";
+  }
+
+  // Facetas de CARROCERÍA: solo las que existen en la categoría + condición
+  // actuales, con su conteo real. Se re-pinta en cada render, tomando el
+  // "marcado" desde state.filters.body (así los atajos SUVs/Sedanes y los
+  // checkboxes SIEMPRE coinciden). Si no hay carrocerías (motos, jet ski),
+  // se oculta el grupo entero.
+  function renderBodyFacet() {
+    var host = $("#pmxBody"); if (!host) return;
+    var group = host.closest(".pmx-fg");
+    var counts = {};
+    inCatCond().forEach(function (c) { if (c.bodyType) counts[c.bodyType] = (counts[c.bodyType] || 0) + 1; });
+    state.filters.body.forEach(function (b) { if (counts[b] == null) counts[b] = 0; });
+    var keys = Object.keys(counts).sort();
+    if (!keys.length) { host.innerHTML = ""; if (group) group.style.display = "none"; return; }
+    if (group) group.style.display = "";
+    host.innerHTML = keys.map(function (b) {
+      var on = state.filters.body.indexOf(b) > -1 ? " checked" : "";
+      return '<label class="pmx-check"><input type="checkbox" data-ft="body" value="' + b + '"' + on + '><span>' + bodyLabel(b) + '</span><span class="pmx-count">' + counts[b] + '</span></label>';
+    }).join("");
   }
 
   function renderPagination(total) {
@@ -290,7 +378,7 @@
   function hasRefinements() {
     var f = state.filters;
     return state.quick !== "all" || !!state.search || !!state.vanType || f.make.length || f.model.length || f.body.length ||
-      f.priceMin || f.priceMax || f.yearMin || f.yearMax || f.mileageMax;
+      f.priceMin != null || f.priceMax != null || f.yearMin != null || f.yearMax != null || f.mileageMax != null;
   }
   function emptyBlock() {
     // Vacío por FILTROS: botón para reiniciarlos. Vacío porque la categoría no
@@ -309,48 +397,31 @@
 
   function render() {
     var filtered = applyAll(), total = filtered.length;
+    // Página fuera de rango (p.ej. al filtrar se reducen las páginas): reencuadra
+    var pages = Math.max(1, Math.ceil(total / PER));
+    if (state.page > pages) state.page = pages;
     var start = (state.page - 1) * PER, paged = filtered.slice(start, start + PER);
     $("#pmxCount").textContent = total;
     $("#pmxStatCount").textContent = CARS.length;
     var grid = $("#pmxGrid");
     grid.innerHTML = total ? paged.map(card).join("") : emptyBlock();
     var rb = $("#pmxReset"); if (rb) rb.addEventListener("click", reset);
-    renderChips(); renderPagination(total);
+    renderChips();
+    renderBodyFacet();     // carrocerías de la categoría/condición + marcado sincronizado
+    renderQuickButtons();  // atajos precio/carrocería: visibilidad y estado activo
+    renderVanTypes();
+    renderPagination(total);
     if (window.PMX && PMX.reveal) PMX.reveal(grid);
-  }
-
-  function checkboxGroup(hostId, type, values) {
-    $(hostId).innerHTML = values.map(function (o) {
-      var label = type === "body" ? bodyLabel(o.v) : o.v;
-      return '<label class="pmx-check"><input type="checkbox" data-ft="' + type + '" value="' + o.v + '"><span>' + label + '</span><span class="pmx-count">' + o.n + '</span></label>';
-    }).join("");
-  }
-  function buildFilters() {
-    var bodies = {};
-    CARS.forEach(function (c) { if (c.bodyType) bodies[c.bodyType] = (bodies[c.bodyType] || 0) + 1; });
-    checkboxGroup("#pmxBody", "body", Object.keys(bodies).sort().map(function (k) { return { v: k, n: bodies[k] }; }));
-    document.querySelectorAll('#pmxBody input').forEach(function (inp) {
-      inp.addEventListener("change", function () {
-        var t = inp.dataset.ft, v = inp.value;
-        if (inp.checked) { if (state.filters[t].indexOf(v) < 0) state.filters[t].push(v); }
-        else state.filters[t] = state.filters[t].filter(function (x) { return x !== v; });
-        state.page = 1; render();
-      });
-    });
   }
 
   function reset() {
     // Reinicia FILTROS pero respeta dónde está parado el usuario (categoría);
     // la condición vuelve a la que tenga resultados en esa categoría.
-    state.quick = "all"; state.vanType = ""; state.search = ""; state.sort = "new"; state.page = 1;
-    state.condition = "used";
-    state.filters = { make: [], model: [], body: [], priceMin: null, priceMax: null, yearMin: null, yearMax: null, mileageMax: null };
-    document.querySelectorAll(".pmx-qf[data-quick]").forEach(function (b) { b.classList.remove("active"); });
+    clearRefinements();
+    state.sort = "new"; state.page = 1; state.condition = "used";
+    var so = $("#pmxSort"); if (so) so.value = "new";
     ensureConditionFits();
-    document.querySelectorAll('.pmx-sidebar input[type=checkbox]').forEach(function (i) { i.checked = false; });
-    document.querySelectorAll('.pmx-sidebar input[type=number]').forEach(function (i) { i.value = ""; });
-    $("#pmxSearch").value = ""; $("#pmxSort").value = "new";
-    buildMakeSelect(); buildModelSelect(); renderVanTypes();
+    buildMakeSelect(); buildModelSelect();
     render();
   }
 
@@ -358,23 +429,29 @@
     document.querySelectorAll(".pmx-condtab").forEach(function (b) {
       b.addEventListener("click", function () {
         state.condition = b.dataset.cond; state.page = 1;
-        syncCondTabs(); render();
+        syncCondTabs();
+        buildMakeSelect(); buildModelSelect(); // los conteos dependen de la condición
+        render();
       });
     });
     document.querySelectorAll(".pmx-qf[data-quick]").forEach(function (b) {
       b.addEventListener("click", function () {
-        // Toque en el chip activo = se apaga (así no hace falta un botón "todos")
-        var on = b.classList.contains("active");
-        document.querySelectorAll(".pmx-qf[data-quick]").forEach(function (x) { x.classList.remove("active"); });
-        state.quick = on ? "all" : b.dataset.quick;
-        if (!on) b.classList.add("active");
+        var v = b.dataset.quick;
+        if (BODY_QUICK.indexOf(v) > -1) {
+          // Atajo de CARROCERÍA: enciende/apaga en el mismo estado que los checkboxes
+          var i = state.filters.body.indexOf(v);
+          if (i > -1) state.filters.body.splice(i, 1); else state.filters.body.push(v);
+        } else {
+          // Atajo de PRECIO (toque en el activo = se apaga)
+          state.quick = (state.quick === v) ? "all" : v;
+        }
         state.page = 1; render();
       });
     });
     document.querySelectorAll("[data-vantype]").forEach(function (b) {
       b.addEventListener("click", function () {
         state.vanType = state.vanType === b.dataset.vantype ? "" : b.dataset.vantype;
-        state.page = 1; renderVanTypes(); render();
+        state.page = 1; render();
       });
     });
     var mk = $("#pmxMakeSel");
@@ -390,23 +467,39 @@
       state.page = 1; render();
     });
     var s = $("#pmxSearch"); s.addEventListener("input", function () { state.search = s.value.trim(); state.page = 1; render(); });
-    $("#pmxSort").addEventListener("change", function (e) { state.sort = e.target.value; render(); });
+    $("#pmxSort").addEventListener("change", function (e) { state.sort = e.target.value; state.page = 1; render(); });
     [["pmxPriceMin", "priceMin"], ["pmxPriceMax", "priceMax"], ["pmxYearMin", "yearMin"], ["pmxYearMax", "yearMax"], ["pmxMileageMax", "mileageMax"]].forEach(function (p) {
-      $("#" + p[0]).addEventListener("change", function (e) { state.filters[p[1]] = e.target.value ? parseInt(e.target.value, 10) : null; state.page = 1; render(); });
+      $("#" + p[0]).addEventListener("change", function (e) {
+        var raw = e.target.value.trim();
+        state.filters[p[1]] = raw === "" ? null : parseInt(raw, 10);
+        if (isNaN(state.filters[p[1]])) state.filters[p[1]] = null;
+        state.page = 1; render();
+      });
+    });
+    // Checkboxes de carrocería (delegación: el grupo se re-pinta en cada render)
+    var bodyHost = $("#pmxBody");
+    if (bodyHost) bodyHost.addEventListener("change", function (e) {
+      var inp = e.target.closest('input[data-ft="body"]'); if (!inp) return;
+      var v = inp.value;
+      if (inp.checked) { if (state.filters.body.indexOf(v) < 0) state.filters.body.push(v); }
+      else state.filters.body = state.filters.body.filter(function (x) { return x !== v; });
+      state.page = 1; render();
     });
     $("#pmxChips").addEventListener("click", function (e) {
       var chip = e.target.closest(".pmx-chip"); if (!chip) return;
       var k = chip.dataset.k, v = chip.dataset.v;
-      if (k === "quick") { state.quick = "all"; document.querySelectorAll(".pmx-qf[data-quick]").forEach(function (x) { x.classList.remove("active"); }); }
-      else if (k === "vantype") { state.vanType = ""; renderVanTypes(); }
+      if (k === "quick") { state.quick = "all"; }
+      else if (k === "vantype") { state.vanType = ""; }
       else if (k === "search") { state.search = ""; $("#pmxSearch").value = ""; }
       else if (k === "make") { state.filters.make = []; state.filters.model = []; buildMakeSelect(); buildModelSelect(); }
       else if (k === "model") { state.filters.model = []; buildModelSelect(); }
       else if (["priceMin", "priceMax", "yearMin", "yearMax", "mileageMax"].indexOf(k) > -1) {
         state.filters[k] = null;
         var map = { priceMin: "pmxPriceMin", priceMax: "pmxPriceMax", yearMin: "pmxYearMin", yearMax: "pmxYearMax", mileageMax: "pmxMileageMax" };
-        $("#" + map[k]).value = "";
-      } else { state.filters[k] = state.filters[k].filter(function (x) { return x !== v; }); document.querySelectorAll('input[data-ft="' + k + '"][value="' + v + '"]').forEach(function (i) { i.checked = false; }); }
+        var el = $("#" + map[k]); if (el) el.value = "";
+      } else if (k === "body") {
+        state.filters.body = state.filters.body.filter(function (x) { return x !== v; });
+      }
       state.page = 1; render();
     });
     $("#pmxClear").addEventListener("click", reset);
@@ -454,21 +547,20 @@
       var stat = $("#pmxStatCount"); if (stat) stat.textContent = "0";
       return;
     }
-    buildFilters();
     var url = new URLSearchParams(location.search);
     // Categoría desde la URL (?cat=cars|trucks_machinery|vans|motorcycles|utv|watercraft)
     var cat = url.get("cat");
     if (cat && (PMX.categories ? PMX.categories() : []).some(function (c) { return c.slug === cat; })) {
       state.category = cat;
     }
-    if (url.get("filter")) {
-      state.quick = url.get("filter");
-      document.querySelectorAll(".pmx-qf[data-quick]").forEach(function (b) { b.classList.toggle("active", b.dataset.quick === state.quick); });
-    }
+    // ?filter= solo trae atajos de PRECIO (footer/sitemap). SUVs/Sedanes/etc.
+    // no llegan por URL; son atajos de carrocería dentro de la página.
+    var filt = url.get("filter");
+    if (filt === "under-20k" || filt === "under-10k") state.quick = filt;
     var cond = url.get("cond");
     if (cond === "new" || cond === "used") state.condition = cond;
     ensureConditionFits();
     buildMakeSelect(); buildModelSelect();
-    wire(); renderCats(); renderVanTypes(); render();
+    wire(); renderCats(); render();
   });
 })();
