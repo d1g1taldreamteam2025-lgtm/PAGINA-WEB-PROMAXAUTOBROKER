@@ -33,7 +33,7 @@
 .ab-hero{background:var(--ink);color:#fff;text-align:center;position:relative;overflow:hidden;}
 /* La imagen se muestra COMPLETA (antes una franja fija la recortaba y "se veía
    cortado"). Cuando lleguen las versiones de celular, van en ab_hero_img_m. */
-.ab-hero__poster{display:block;width:100%;height:auto;max-height:76vh;object-fit:cover;object-position:center;}
+.ab-hero__poster{display:block;width:100%;height:auto;max-height:76vh;object-fit:contain;object-position:center;}
 @media(max-width:768px){.ab-hero__poster{max-height:none;}}
 .ab-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--brand),var(--brand-2),var(--brand));}
 .ab-hero__inner{max-width:780px;margin:0 auto;padding:84px 24px;}
