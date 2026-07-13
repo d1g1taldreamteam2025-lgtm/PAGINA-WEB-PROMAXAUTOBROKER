@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detalle del Vehículo | DEMO Promax Auto Broker</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Demo de ficha de vehículo en la plataforma Promax Auto Broker.">
+<link rel="preconnect" href="https://res.cloudinary.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/theme.css">
+<link rel="icon" type="image/png" href="https://res.cloudinary.com/dol89fbil/image/upload/w_256,h_256,c_fit,f_auto,q_auto/v1783701195/Logos-07_umabpq.png"><link rel="apple-touch-icon" href="https://res.cloudinary.com/dol89fbil/image/upload/w_180,h_180,c_pad,b_black,f_png/v1783701195/Logos-07_umabpq.png">
+<style>
+.pmx-demo-banner{background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;text-align:center;padding:10px 20px;font:700 14px/1.4 var(--font-head,system-ui);letter-spacing:.5px;position:sticky;top:0;z-index:999;}
+.pmx-demo-banner a{color:#000;text-decoration:underline;}
+.pmx-vd{max-width:var(--maxw);margin:0 auto;padding:30px 24px 70px;}
+.pmx-crumb{font-size:13px;color:var(--text-muted);margin-bottom:18px;}
+.pmx-crumb a{color:var(--brand);text-decoration:none;}
+.pmx-vd__top{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:36px;}
+@media(max-width:900px){.pmx-vd__top{grid-template-columns:minmax(0,1fr);gap:24px;}}
+.pmx-vd__main{border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:#fff;}
+.pmx-vd__hero,.pmx-vd__thumb{background-color:#e9ecef;}
+.pmx-vd__herowrap{position:relative;}
+.pmx-vd__hero{height:440px;background-size:contain;background-repeat:no-repeat;background-position:center;background-color:#101216;cursor:zoom-in;}
+@media(max-width:600px){.pmx-vd__hero{height:260px;}}
+.pmx-vd__nav{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;border:none;background:rgba(10,11,13,.55);color:#fff;font:700 30px/1 system-ui,Arial;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3;padding-bottom:4px;transition:background .15s;}
+.pmx-vd__nav:hover{background:var(--brand);}
+.pmx-vd__nav--prev{left:12px;}
+.pmx-vd__nav--next{right:12px;}
+@media(max-width:600px){.pmx-vd__nav{width:38px;height:38px;font-size:24px;}}
+.pmx-vd__count{position:absolute;right:12px;bottom:12px;z-index:3;background:rgba(10,11,13,.65);color:#fff;font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;font-variant-numeric:tabular-nums;}
+.pmx-vd__thumbs{display:flex;gap:8px;padding:12px;flex-wrap:wrap;}
+.pmx-vd__thumb{width:84px;height:60px;border-radius:8px;background-size:cover;background-position:center;cursor:pointer;border:2px solid transparent;transition:border-color .15s, transform .15s;}
+.pmx-vd__thumb:hover{transform:translateY(-2px);}
+.pmx-vd__thumb.active{border-color:var(--brand);}
+.pmx-vd__panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:28px;height:fit-content;position:sticky;top:calc(42px + 16px);}
+.pmx-vd__badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.pmx-vd__badge{display:inline-block;background:var(--ink);color:#fff;font-family:var(--font-head);font-weight:800;font-size:10.5px;letter-spacing:1.2px;padding:6px 12px;border-radius:999px;text-transform:uppercase;}
+.pmx-vd__badge--soft{background:var(--brand-soft);color:var(--brand-dark);}
+.pmx-vd__panel h1{font-size:27px;margin:0 0 6px;}
+.pmx-vd__stock{color:var(--text-muted);font-size:13px;margin-bottom:16px;}
+.pmx-vd__price{font-family:var(--font-head);font-size:40px;font-weight:800;color:var(--ink);line-height:1;margin-bottom:4px;letter-spacing:-.02em;font-variant-numeric:tabular-nums;}
+.pmx-vd__msrp{color:var(--text-faint);text-decoration:line-through;font-size:15px;margin-bottom:18px;}
+.pmx-vd__cta{display:flex;flex-direction:column;gap:10px;margin:18px 0;}
+.pmx-vd__cta-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+.pmx-vd__keyspecs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px;padding-top:18px;border-top:1px dashed var(--line);}
+.pmx-vd__ks{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--text-muted);min-width:0;}
+.pmx-vd__ks .material-icons-outlined{color:var(--brand);font-size:18px;}
+.pmx-vd__sections{margin-top:48px;display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+@media(max-width:780px){.pmx-vd__sections{grid-template-columns:1fr;gap:28px;}}
+.pmx-vd__sections h2{font-size:22px;margin:0 0 16px;}
+.pmx-spectable{width:100%;border-collapse:collapse;}
+.pmx-spectable td{padding:11px 0;border-bottom:1px solid var(--line-soft);font-size:14px;}
+.pmx-spectable td:first-child{color:var(--text-muted);}
+.pmx-spectable td:last-child{text-align:right;font-weight:600;}
+.pmx-featlist{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.pmx-featlist li{display:flex;align-items:center;gap:8px;font-size:14px;}
+.pmx-featlist li::before{content:'\2713';color:var(--brand);font-weight:800;}
+.pmx-vd__desc{grid-column:1/-1;}
+.pmx-vd__desc p{color:var(--text-muted);line-height:1.75;}
+.pmx-vd__missing{text-align:center;padding:90px 20px;}
+.pmx-actbar--sticky{display:none;}
+@media(max-width:768px){.pmx-actbar--sticky{display:grid;}}
+</style>
+</head>
+<body>
+
+<div class="pmx-demo-banner">DEMO &mdash; Ficha de ejemplo &middot; <a href="/demo/">Volver al inventario demo</a></div>
+
+<div class="pmx-vd" id="pmxVD">
+  <p style="text-align:center;color:var(--text-faint);padding:60px 0" data-i18n="loading">Cargando vehículo...</p>
+</div>
+
+<div class="pmx-actbar pmx-actbar--sticky" id="pmxActBar" hidden>
+  <button class="pmx-btn pmx-btn--primary" type="button" data-act="buy"><span data-i18n="act_buy">Comprar</span></button>
+  <a class="pmx-btn pmx-btn--dark" data-act="finance" href="#"><span data-i18n="act_finance">Financiar</span></a>
+  <button class="pmx-btn pmx-btn--ghost" type="button" data-act="info"><span data-i18n="act_moreinfo">Más info</span></button>
+  <button class="pmx-btn pmx-btn--ghost" type="button" data-act="share"><span data-i18n="act_share">Compartir</span></button>
+</div>
+
+<div class="pmx-lb" id="pmxLb" role="dialog" aria-modal="true" aria-label="Galería">
+  <button class="pmx-lb__close" id="pmxLbClose" type="button" aria-label="Cerrar">&times;</button>
+  <button class="pmx-lb__nav pmx-lb__nav--prev" id="pmxLbPrev" type="button" aria-label="Anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+  <img class="pmx-lb__img" id="pmxLbImg" alt="Foto del vehículo">
+  <button class="pmx-lb__nav pmx-lb__nav--next" id="pmxLbNext" type="button" aria-label="Siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+  <span class="pmx-lb__count" id="pmxLbCount"></span>
+</div>
+
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/site.js"></script>
+<script src="/assets/js/data.js"></script>
+<script src="/demo/demo-data.js"></script>
+<script>
+PMX.addTranslations({
+  es:{ loading:"Cargando vehículo...", vd_back:"Inventario Demo", vd_buy:"Comprar ahora", vd_prequal:"Financiar este vehículo",
+    vd_contact:"Más información", vd_share:"Compartir este vehículo", vd_specs:"Especificaciones", vd_features:"Equipamiento", vd_desc:"Descripción",
+    vd_year:"Año", vd_make:"Marca", vd_model:"Modelo", vd_trim:"Versión", vd_body:"Carrocería", vd_miles:"Millaje",
+    vd_fuel:"Combustible", vd_trans:"Transmisión", vd_drive:"Tracción", vd_ext:"Color exterior", vd_int:"Color interior",
+    vd_vin:"VIN", vd_stock:"Stock", vd_missing_t:"Vehículo no encontrado", vd_missing_s:"Es posible que ya se haya vendido.",
+    vd_see_all:"Ver todo el inventario demo", vd_similar:"También te puede interesar", btn_details:"Ver Detalles" },
+  en:{ loading:"Loading vehicle...", vd_back:"Demo Inventory", vd_buy:"Buy now", vd_prequal:"Finance this vehicle",
+    vd_contact:"More information", vd_share:"Share this vehicle", vd_specs:"Specifications", vd_features:"Features", vd_desc:"Description",
+    vd_year:"Year", vd_make:"Make", vd_model:"Model", vd_trim:"Trim", vd_body:"Body", vd_miles:"Mileage",
+    vd_fuel:"Fuel", vd_trans:"Transmission", vd_drive:"Drivetrain", vd_ext:"Exterior color", vd_int:"Interior color",
+    vd_vin:"VIN", vd_stock:"Stock", vd_missing_t:"Vehicle not found", vd_missing_s:"It may have already been sold.",
+    vd_see_all:"View demo inventory", vd_similar:"You may also like", btn_details:"View Details" }
+});
+
+(function(){
+  var id = new URLSearchParams(location.search).get("id");
+  var gallery = [], gIdx = 0, CAR = null;
+
+  function row(lbl,val){ return val ? '<tr><td>'+PMX.t(lbl)+'</td><td>'+val+'</td></tr>' : ''; }
+  function shareData(c){
+    var title = [c.year,c.make,c.model,c.trim].filter(Boolean).join(" ") + (c.price>0 ? " · "+PMX.money(c.price) : "");
+    var base = (PMX.cfg && PMX.cfg.siteUrl) || location.origin;
+    return { title: title, url: base + "/demo/vehicle/?id=" + encodeURIComponent(c.id) };
+  }
+
+  function render(c, all){
+    gallery = (c.gallery && c.gallery.length ? c.gallery : [c.image]).slice(0,24);
+    var save = c.msrp && c.msrp>c.price ? c.msrp-c.price : 0;
+    var similar = all.filter(function(x){return x.id!==c.id && x.category===c.category;}).slice(0,3);
+    if(similar.length<3) similar = similar.concat(all.filter(function(x){return x.id!==c.id && x.category!==c.category;}).slice(0,3-similar.length));
+    var ICO = {
+      speed: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 13.5 16 9"/><path d="M3.6 16.5a8.8 8.8 0 1 1 16.8 0"/></svg>',
+      fuel: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 19.5v-13a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v13"/><path d="M3 19.5h11"/><path d="M12.5 10h2a1.5 1.5 0 0 1 1.5 1.5v5a1.4 1.4 0 0 0 2.8 0v-6l-2.3-2.3"/><path d="M6.7 8h3.6"/></svg>',
+      gear: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3.5v2.2M12 18.3v2.2M3.5 12h2.2M18.3 12h2.2M6 6l1.6 1.6M16.4 16.4 18 18M18 6l-1.6 1.6M7.6 16.4 6 18"/></svg>',
+      drive: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="2.4"/><circle cx="17" cy="7" r="2.4"/><circle cx="7" cy="17" r="2.4"/><circle cx="17" cy="17" r="2.4"/><path d="M7 9.4v5.2M17 9.4v5.2M9.4 12h5.2"/></svg>',
+    };
+    var ks = [];
+    if(c.mileage>0) ks.push([ICO.speed, PMX.num(c.mileage)+' mi']);
+    if(c.fuel) ks.push([ICO.fuel, c.fuel]);
+    if(c.transmission) ks.push([ICO.gear, c.transmission]);
+    if(c.drivetrain) ks.push([ICO.drive, c.drivetrain]);
+
+    document.getElementById("pmxVD").innerHTML =
+      '<div class="pmx-crumb"><a href="/demo/">'+PMX.t("vd_back")+'</a> / <a href="/demo/?cat='+c.category+'">'+PMX.catLabel(c.category)+'</a> / '+c.year+' '+c.make+' '+c.model+'</div>'+
+      '<div class="pmx-vd__top">'+
+        '<div>'+
+          '<div class="pmx-vd__main">'+
+            '<div class="pmx-vd__herowrap">'+
+              '<div class="pmx-vd__hero" id="pmxHero" style="background-image:url(\''+gallery[0]+'\')" role="button" aria-label="Ampliar foto"></div>'+
+              (gallery.length>1?'<button class="pmx-vd__nav pmx-vd__nav--prev" id="pmxPrev" type="button" aria-label="Foto anterior">&#8249;</button><button class="pmx-vd__nav pmx-vd__nav--next" id="pmxNext" type="button" aria-label="Foto siguiente">&#8250;</button>':'')+
+              '<span class="pmx-vd__count" id="pmxHeroCount">1 / '+gallery.length+'</span>'+
+            '</div>'+
+            (gallery.length>1?'<div class="pmx-vd__thumbs">'+gallery.map(function(g,i){return '<div class="pmx-vd__thumb '+(i===0?'active':'')+'" data-img="'+g+'" style="background-image:url(\''+g+'\')"></div>';}).join("")+'</div>':'')+
+          '</div>'+
+        '</div>'+
+        '<div class="pmx-vd__panel">'+
+          '<div class="pmx-vd__badges">'+
+            '<span class="pmx-vd__badge"><span class="pmx-cati pmx-cati--xs" style="vertical-align:-2px">'+(PMX.catSvg?PMX.catSvg(c.category):'')+'</span> '+PMX.catLabel(c.category)+'</span>'+
+            (c.badge?'<span class="pmx-vd__badge pmx-vd__badge--soft">'+c.badge+'</span>':'')+
+          '</div>'+
+          '<h1>'+c.year+' '+c.make+' '+c.model+'</h1>'+
+          '<div class="pmx-vd__stock">'+(c.trim?c.trim+' &bull; ':'')+PMX.t("vd_stock")+' '+(c.stock||c.id)+'</div>'+
+          '<div class="pmx-vd__price">'+(c.price>0?PMX.money(c.price):'Consultar precio')+'</div>'+
+          (save?'<div class="pmx-vd__msrp">'+PMX.money(c.msrp)+'</div>':'')+
+          '<div class="pmx-vd__cta">'+
+            '<button class="pmx-btn pmx-btn--primary pmx-btn--block" type="button" data-act="buy">&#128722; '+PMX.t("vd_buy")+'</button>'+
+            '<a href="/financing/apply/?vin='+c.id+'" class="pmx-btn pmx-btn--dark pmx-btn--block" data-act-link="finance">'+PMX.t("vd_prequal")+'</a>'+
+            '<div class="pmx-vd__cta-row">'+
+              '<button class="pmx-btn pmx-btn--ghost" type="button" data-act="share"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg> '+PMX.t("act_share")+'</button>'+
+              '<button class="pmx-btn pmx-btn--ghost" type="button" data-act="info">'+PMX.t("act_moreinfo")+'</button>'+
+            '</div>'+
+          '</div>'+
+          (ks.length?'<div class="pmx-vd__keyspecs">'+ks.map(function(k){return '<span class="pmx-vd__ks"><span class="pmx-cati pmx-cati--sm" style="color:var(--brand)">'+k[0]+'</span>'+k[1]+'</span>';}).join("")+'</div>':'')+
+        '</div>'+
+      '</div>'+
+      '<div class="pmx-vd__sections">'+
+        '<div><h2>'+PMX.t("vd_specs")+'</h2><table class="pmx-spectable">'+
+          row("vd_year",c.year)+row("vd_make",c.make)+row("vd_model",c.model)+row("vd_trim",c.trim)+
+          (c.category==="cars"?row("vd_body",c.bodyType.toUpperCase()):'')+
+          (c.mileage>0?row("vd_miles",PMX.num(c.mileage)+" mi"):'')+
+          row("vd_fuel",c.fuel)+row("vd_trans",c.transmission)+row("vd_drive",c.drivetrain)+
+          row("vd_ext",c.exteriorColor)+row("vd_int",c.interiorColor)+row("vd_vin",c.vin)+
+        '</table></div>'+
+        '<div>'+(c.features.length?'<h2>'+PMX.t("vd_features")+'</h2><ul class="pmx-featlist">'+c.features.map(function(f){return '<li>'+f+'</li>';}).join("")+'</ul>':'')+'</div>'+
+        (c.description?'<div class="pmx-vd__desc"><h2>'+PMX.t("vd_desc")+'</h2><p>'+c.description+'</p></div>':'')+
+      '</div>'+
+      (similar.length?'<div style="margin-top:56px"><h2 style="font-size:24px;margin-bottom:20px">'+PMX.t("vd_similar")+'</h2><div class="pmx-vgrid">'+similar.map(simCard).join("")+'</div></div>':'');
+
+    wireGallery();
+    wireActions(c);
+  }
+
+  function heroShow(i){
+    gIdx=(i+gallery.length)%gallery.length;
+    var hero=document.getElementById("pmxHero");
+    if(hero) hero.style.backgroundImage="url('"+gallery[gIdx]+"')";
+    document.querySelectorAll(".pmx-vd__thumb").forEach(function(x,k){x.classList.toggle("active",k===gIdx);});
+    var hc=document.getElementById("pmxHeroCount"); if(hc) hc.textContent=(gIdx+1)+" / "+gallery.length;
+    lbSync();
+  }
+  function wireGallery(){
+    document.querySelectorAll(".pmx-vd__thumb").forEach(function(th,k){ th.addEventListener("click",function(){heroShow(k);}); });
+    var p=document.getElementById("pmxPrev"), n=document.getElementById("pmxNext");
+    if(p) p.addEventListener("click",function(){heroShow(gIdx-1);});
+    if(n) n.addEventListener("click",function(){heroShow(gIdx+1);});
+    var hero=document.getElementById("pmxHero");
+    if(hero) hero.addEventListener("click",function(){ lbOpen(); });
+  }
+  var lb=document.getElementById("pmxLb");
+  function lbOpen(){ lb.classList.add("is-open"); lbSync(); }
+  function lbClose(){ lb.classList.remove("is-open"); }
+  function lbSync(){
+    if(!lb.classList.contains("is-open")) return;
+    document.getElementById("pmxLbImg").src=gallery[gIdx];
+    document.getElementById("pmxLbCount").textContent=(gIdx+1)+" / "+gallery.length;
+    var multi = gallery.length>1;
+    document.getElementById("pmxLbPrev").style.display = multi?"flex":"none";
+    document.getElementById("pmxLbNext").style.display = multi?"flex":"none";
+  }
+  document.getElementById("pmxLbClose").addEventListener("click", lbClose);
+  document.getElementById("pmxLbPrev").addEventListener("click", function(){heroShow(gIdx-1);});
+  document.getElementById("pmxLbNext").addEventListener("click", function(){heroShow(gIdx+1);});
+  lb.addEventListener("click", function(e){ if(e.target===lb) lbClose(); });
+  document.addEventListener("keydown",function(e){
+    if(e.key==="Escape") lbClose();
+    if(!gallery.length) return;
+    if(e.key==="ArrowLeft") heroShow(gIdx-1);
+    else if(e.key==="ArrowRight") heroShow(gIdx+1);
+  });
+
+  function wireActions(c){
+    document.querySelectorAll('[data-act="buy"]').forEach(function(b){ b.onclick=function(){ PMX.buy(c); }; });
+    document.querySelectorAll('[data-act="share"]').forEach(function(b){ b.onclick=function(){ PMX.share(shareData(c)); }; });
+    document.querySelectorAll('[data-act="info"]').forEach(function(b){ b.onclick=function(){ PMX.moreInfo(c); }; });
+    document.querySelectorAll('[data-act="finance"]').forEach(function(a){ a.setAttribute("href","/financing/apply/?vin="+encodeURIComponent(c.id)); });
+    var bar=document.getElementById("pmxActBar");
+    if(bar){ bar.hidden=false; document.body.classList.add("pmx-has-actbar"); }
+  }
+
+  function simCard(c){
+    return '<article class="pmx-vcard"><a href="/demo/vehicle/?id='+encodeURIComponent(c.id)+'" style="text-decoration:none;color:inherit;display:contents">'+
+      '<div class="pmx-vcard__img" style="background-image:url(\''+c.image+'\')">'+
+        '<span class="pmx-vcard__type">'+(c.category && c.category!=="cars" ? PMX.catLabel(c.category) : (c.bodyType||"").toUpperCase())+'</span>'+
+      '</div></a>'+
+      '<div class="pmx-vcard__body"><h3 class="pmx-vcard__title">'+c.year+' '+c.make+' '+c.model+'</h3>'+
+      '<div class="pmx-vcard__price">'+(c.price>0?PMX.money(c.price):'Consultar precio')+'</div>'+
+      '<a href="/demo/vehicle/?id='+encodeURIComponent(c.id)+'" class="pmx-btn pmx-btn--primary" style="margin-top:auto">'+PMX.t("btn_details")+'</a></div></article>';
+  }
+
+  PMX.loadVehicle(id).then(function(c){
+    if(!c){
+      document.getElementById("pmxVD").innerHTML='<div class="pmx-vd__missing"><h2>'+PMX.t("vd_missing_t")+'</h2><p style="color:var(--text-faint);margin:8px 0 22px">'+PMX.t("vd_missing_s")+'</p><a href="/demo/" class="pmx-btn pmx-btn--primary">'+PMX.t("vd_see_all")+'</a></div>';
+      return;
+    }
+    CAR = c;
+    document.title = c.year+" "+c.make+" "+c.model+" | DEMO Promax Auto Broker";
+    PMX.loadSimilar(c.category, c.id, 6).then(function(sims){
+      render(c, sims || []);
+      PMX.apply();
+      window.addEventListener("pmx-lang", function(){ render(c, sims || []); PMX.apply(); });
+    });
+  });
+})();
+</script>
+</body>
+</html>
