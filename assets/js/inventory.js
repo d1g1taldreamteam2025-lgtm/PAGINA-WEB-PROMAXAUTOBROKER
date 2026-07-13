@@ -22,7 +22,7 @@
       vt_work: "De trabajo", vt_pass: "De pasajeros",
       sel_make: "Marca: todas", sel_model: "Modelo: todos", sel_model_wait: "Modelo (elige marca)",
       inv_search_ph: "Buscar por marca, modelo, año...",
-      sort_new: "Más recientes", sort_pa: "Precio: menor a mayor", sort_pd: "Precio: mayor a menor",
+      sort_new: "Variado", sort_pa: "Precio: menor a mayor", sort_pd: "Precio: mayor a menor",
       sort_ma: "Millaje: menor a mayor", sort_yd: "Año: nuevo a viejo",
       inv_filters: "Filtros", inv_refine: "Refinar búsqueda", inv_clear: "Limpiar filtros",
       f_make: "Marca", f_model: "Modelo", f_body: "Carrocería", f_price: "Precio", f_year: "Año", f_mileage: "Millaje",
@@ -49,7 +49,7 @@
       vt_work: "Work vans", vt_pass: "Passenger",
       sel_make: "Make: all", sel_model: "Model: all", sel_model_wait: "Model (pick a make)",
       inv_search_ph: "Search by make, model, year...",
-      sort_new: "Newest", sort_pa: "Price: low to high", sort_pd: "Price: high to low",
+      sort_new: "Varied", sort_pa: "Price: low to high", sort_pd: "Price: high to low",
       sort_ma: "Mileage: low to high", sort_yd: "Year: new to old",
       inv_filters: "Filters", inv_refine: "Refine search", inv_clear: "Clear filters",
       f_make: "Make", f_model: "Model", f_body: "Body type", f_price: "Price", f_year: "Year", f_mileage: "Mileage",
@@ -90,6 +90,24 @@
     return list.filter(function (c) { return c.category === state.category; });
   }
 
+  // Broker = variedad: en el orden por defecto INTERCALAMOS las marcas para que
+  // NO salgan varios carros seguidos de la misma marca (se veia como si solo
+  // promocionaramos una). Cada carga baraja (_shuf, fijado una sola vez) y
+  // luego, carro a carro, elegimos el siguiente de una marca DISTINTA a la
+  // anterior; solo se repite marca cuando ya no queda de otra. Es estable
+  // durante la sesion, asi que la paginacion no "salta".
+  function diversify(list) {
+    var pool = list.slice().sort(function (a, b) { return (a._shuf || 0) - (b._shuf || 0); });
+    var out = [], lastMake = null;
+    while (pool.length) {
+      var idx = 0;
+      for (var i = 0; i < pool.length; i++) { if (pool[i].make !== lastMake) { idx = i; break; } }
+      var c = pool.splice(idx, 1)[0];
+      out.push(c); lastMake = c.make;
+    }
+    return out;
+  }
+
   function applyAll() {
     var r = inCategory(CARS);
     if (state.condition === "new") r = r.filter(function (c) { return c.condition === "new"; });
@@ -115,7 +133,7 @@
       case "price-desc": r.sort(function (a, b) { return b.price - a.price; }); break;
       case "mileage-asc": r.sort(function (a, b) { return a.mileage - b.mileage; }); break;
       case "year-desc": r.sort(function (a, b) { return b.year - a.year; }); break;
-      default: r.sort(function (a, b) { return b.year - a.year; });
+      default: r = diversify(r); // "Variado": mezcla intercalada por marca
     }
     return r;
   }
@@ -427,6 +445,8 @@
 
   PMX.loadInventory().then(function (cars) {
     CARS = cars;
+    // Barajado estable por sesion: da variedad y no reordena al paginar/filtrar.
+    CARS.forEach(function (c) { c._shuf = Math.random(); });
     if (!CARS.length) {
       $("#pmxGrid").innerHTML = '<div class="pmx-empty"><h3>' + PMX.t("inv_none_t") + '</h3><p>' + PMX.t("inv_none_s") + '</p><a class="pmx-btn pmx-btn--primary" href="/contact/">' + PMX.t("inv_none_cta") + '</a></div>';
       [".pmx-toolbar", ".pmx-results__bar", "#pmxSidebar"].forEach(function (s) { var el = document.querySelector(s); if (el) el.style.display = "none"; });
