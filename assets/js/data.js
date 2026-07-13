@@ -48,44 +48,53 @@
 
   // Carrocería del DEALER poco fiable: International/DealerCenter manda casi
   // todo como "sedan", así que aparecían una RAM 1500, un Kia Soul o un Mustang
-  // bajo el filtro SEDÁN. Cuando el NOMBRE del vehículo dice claramente qué es
-  // (modelo conocido o palabra de carrocería en la versión, ej. "Quad Cab"),
-  // ese nombre MANDA sobre el body_type del dealer. Solo carros y vans (un
-  // Sea-Doo GTI no es un VW GTI). El robot también la corrige en la base.
-  // Señales ESTRUCTURALES fuertes (en modelo o versión): un "Quad Cab" es
-  // camioneta aunque el dealer lo ponga "sedan".
-  var BODY_STRONG = [
+  // bajo el filtro SEDÁN. Regla: el NOMBRE corrige al dealer SOLO cuando es
+  // inequívoco — una palabra explícita ("Quad Cab", "Convertible", "Hatchback")
+  // o un modelo de UNA sola carrocería (RAM 1500 = camioneta, Mustang = coupé,
+  // Sienna = van). Para modelos que vienen en varias carrocerías (Civic,
+  // Corolla, Mazda3, Prius pueden ser sedán o hatchback) se RESPETA al dealer,
+  // que sí sabe cuál es. Solo carros y vans (un Sea-Doo GTI no es un VW GTI).
+  //
+  // 1) Palabras EXPLÍCITAS de carrocería (en modelo o versión) — mandan siempre.
+  var BODY_WORDS = [
     ["truck", /\b(quad|crew|regular|extended|double|king|mega|super)[\s-]?cab\b|\bpick[\s-]?up\b/],
     ["convertible", /\b(convertible|cabriolet|cabrio|roadster|spyder|spider)\b/],
-    ["van", /\b(cargo van|passenger van|box truck|cutaway|minivan)\b/],
-  ];
-  // Palabras de carrocería explícitas (respaldo si el modelo no está en la lista)
-  var BODY_WEAK = [
+    ["van", /\b(minivan|cargo van|passenger van|box truck|cutaway)\b/],
     ["coupe", /\bcoupe\b|coupé/],
     ["hatchback", /\b(hatchback|liftback)\b/],
     ["wagon", /\b(wagon|sportwagen)\b/],
-    ["suv", /\b(sport utility|crossover|\bsuv)\b/],
+    ["suv", /\b(sport utility|crossover)\b/],
     ["sedan", /\bsedan\b/],
   ];
-  var BODY_RES = [
+  // 2) Modelos de UNA sola carrocería (el dealer suele equivocarlos): el modelo manda.
+  var BODY_DEDICATED = [
     ["van", /\b(sienna|odyssey|pacifica|carnival|transit|promaster|express|savana|sprinter|metris|nv200|grand caravan|caravan)\b/i],
     ["truck", /\b(tacoma|tundra|f[- ]?(150|250|350)|silverado|sierra|ridgeline|frontier|titan|colorado|canyon|ranger|maverick|gladiator|1500|2500|3500)\b/i],
     ["suv", /\b(rav ?4|highlander|4 ?runner|corolla cross|land cruiser|sequoia|venza|bz4x|c-?hr|grand highlander|cr-?v|pilot|hr-?v|passport|rogue|murano|pathfinder|armada|kicks|juke|tucson|santa fe|palisade|kona|venue|sportage|sorento|telluride|seltos|soul|niro|escape|explorer|expedition|edge|bronco|ecosport|equinox|tahoe|suburban|traverse|trailblazer|blazer|trax|compass|cherokee|wrangler|renegade|wagoneer|cx-?(3|30|5|50|9|90)|outback|forester|crosstrek|ascent|rx|nx|gx|lx|ux|mdx|rdx|zdx|qx(50|55|60|80)|x[1-7]|gl[abces]|gle|glc|q[3578]|tiguan|atlas|taos|enclave|encore|envision|terrain|acadia|yukon|escalade|xt[456]|navigator|aviator|corsair|nautilus|range rover|discovery|defender|macan|cayenne)\b/i],
-    ["sedan", /\b(corolla(?!\s*cross)|camry|avalon|crown|prius|mirai|civic|accord|insight|sentra|versa|altima|maxima|elantra|sonata|accent|azera|k5|forte|rio|optima|jetta|passat|arteon|mazda ?[36]|legacy|impreza|is ?(250|300|350)?|es ?(250|300|330|350)?|tlx|ilx|integra|tsx|malibu|impala|cruze|sonic|spark|fusion|taurus|focus|fiesta|charger|continental|mkz|q50|q60)\b/i],
     ["coupe", /\b(mustang|challenger|corvette|camaro|gr ?86|brz|supra|370z|400z)\b/i],
-    ["hatchback", /\b(golf|gti|yaris|fit|bolt|leaf|veloster|mini cooper)\b/i],
   ];
-  function inferBody(make, model, trim) {
-    var nm = ((make || "") + " " + (model || "")).toLowerCase();       // marca + modelo
-    var full = nm + " " + String(trim || "").toLowerCase();            // + versión
+  // 3) Modelos AMBIGUOS (sedán o hatchback según versión): NO sobreescriben al
+  //    dealer; solo sirven para RELLENAR cuando el dealer no mandó carrocería.
+  var BODY_AMBIG = [
+    ["sedan", /\b(corolla(?!\s*cross)|camry|avalon|crown|mirai|civic|accord|insight|sentra|versa|altima|maxima|elantra|sonata|accent|azera|k5|forte|rio|optima|jetta|passat|arteon|mazda ?[36]|legacy|impreza|is ?(250|300|350)?|es ?(250|300|330|350)?|tlx|ilx|integra|tsx|malibu|impala|cruze|sonic|spark|fusion|taurus|focus|fiesta|charger|continental|mkz|q50|q60)\b/i],
+    ["hatchback", /\b(prius|golf|gti|yaris|fit|bolt|leaf|veloster|mini cooper)\b/i],
+  ];
+  // Carrocería CONFIABLE por el nombre (para SOBREESCRIBIR al dealer): palabra
+  // explícita o modelo de una sola carrocería. "" si es ambiguo (respeta al dealer).
+  function bodyConfident(make, model, trim) {
+    var nm = ((make || "") + " " + (model || "")).toLowerCase();
+    var full = nm + " " + String(trim || "").toLowerCase();
     var i;
-    // 1) señal estructural fuerte (modelo o versión) — "Quad Cab" => camioneta
-    for (i = 0; i < BODY_STRONG.length; i++) if (BODY_STRONG[i][1].test(full)) return BODY_STRONG[i][0];
-    // 2) modelo conocido (lista curada) — solo marca+modelo, para no confundir
-    //    con la versión (un "Sport" no vuelve deportivo a un sedán)
-    for (i = 0; i < BODY_RES.length; i++) if (BODY_RES[i][1].test(nm)) return BODY_RES[i][0];
-    // 3) palabra de carrocería explícita en el nombre/versión
-    for (i = 0; i < BODY_WEAK.length; i++) if (BODY_WEAK[i][1].test(full)) return BODY_WEAK[i][0];
+    for (i = 0; i < BODY_WORDS.length; i++) if (BODY_WORDS[i][1].test(full)) return BODY_WORDS[i][0];
+    for (i = 0; i < BODY_DEDICATED.length; i++) if (BODY_DEDICATED[i][1].test(nm)) return BODY_DEDICATED[i][0];
+    return "";
+  }
+  // Carrocería para RELLENAR la que falta (incluye los modelos ambiguos)
+  function bodyFill(make, model) {
+    var nm = ((make || "") + " " + (model || "")).toLowerCase();
+    var i;
+    for (i = 0; i < BODY_DEDICATED.length; i++) if (BODY_DEDICATED[i][1].test(nm)) return BODY_DEDICATED[i][0];
+    for (i = 0; i < BODY_AMBIG.length; i++) if (BODY_AMBIG[i][1].test(nm)) return BODY_AMBIG[i][0];
     return "";
   }
 
@@ -100,12 +109,15 @@
       id: r.id || r.stock || ((r.year || "") + "-" + (r.make || "") + "-" + (r.model || "")).toLowerCase().replace(/\s+/g, "-"),
       category: cat,
       year: r.year, make: canonMake(r.make), model: r.model, trim: r.trim || "",
-      // El NOMBRE manda cuando es confiable (corrige "sedan" mal puesto por el
-      // dealer); si el nombre no dice nada, se respeta el body_type del dealer.
+      // El NOMBRE manda solo cuando es INEQUÍVOCO (palabra explícita o modelo de
+      // una sola carrocería); si es ambiguo se respeta al dealer; y si el dealer
+      // no mandó nada, se rellena por el modelo. Así se corrige el "sedan" mal
+      // puesto sin volver sedán a un Prius (hatchback) o a un Civic hatchback.
       bodyType: (function () {
         var stored = String(r.body_type || "").toLowerCase();
-        var named = (cat === "cars" || cat === "vans") ? inferBody(r.make, r.model, r.trim) : "";
-        return named || stored;
+        var isCarVan = (cat === "cars" || cat === "vans");
+        var confident = isCarVan ? bodyConfident(r.make, r.model, r.trim) : "";
+        return confident || stored || (isCarVan ? bodyFill(r.make, r.model) : "");
       })(),
       price: Number(r.price) || 0,
       // MSRP corrupto (ej. $205,500 en un Camry de $21,895): si el "precio
