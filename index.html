@@ -63,11 +63,12 @@
   .pmx-hero2__media{height:min(calc(100vh - var(--header-h)),56.25vw);}
   .pmx-hero2__track,.pmx-hero2__slide{height:100%;}
   .pmx-hero2__slide{display:block;}
-  /* La imagen llena el marco (cover). object-position hacia ARRIBA para NUNCA
-     recortar el logo (arriba); el recorte, si toca, se va del margen de abajo.
-     Con las imágenes de "zona segura" (contenido centrado + margen arriba/abajo)
-     esto no recorta NADA. */
-  .pmx-hero2__slide img{width:100%;height:100%;object-fit:cover;object-position:center 22%;}
+  /* La imagen llena el marco (cover) y va CENTRADA. Las imágenes son de
+     "zona segura" 16:9 (logo/título/subtítulo en la franja central, con
+     margen oscuro amplio arriba y abajo: ES 22.9%/17.9%, EN 26%/20.1%),
+     así el recorte del pliegue solo se come el fondo oscuro y NO toca
+     ni el logo (arriba) ni el subtítulo (abajo). */
+  .pmx-hero2__slide img{width:100%;height:100%;object-fit:cover;object-position:center;}
   /* En PC la imagen es la protagonista: SIN botones encima (siguen en móvil).
      Selector más específico para ganarle a la regla base .pmx-hero2__cta. */
   .pmx-hero2 .pmx-hero2__cta{display:none;}
@@ -270,11 +271,11 @@
   <div class="pmx-hero2__media">
     <div class="pmx-hero2__track" id="pmxHeroTrack">
       <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Tu aliado en USA y Venezuela" fetchpriority="high"
-         data-es="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783818914/TU_A_16_9_ozlhul.png"
-         data-en="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783801945/YOUR_ALLY_16_eepvat.png"
+         data-es="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783974149/Imagen_16.9_tu_aliado_espa%C3%B1_sawrrv.png"
+         data-en="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783973283/ChatGPT_Image_13_jul_2026_15_07_00_xbclps.png"
          data-es-m="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801947/TU_ALI_9_hld4jj.png"
          data-en-m="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801946/YOUR_ALLI_9_rl0dtb.png"
-         src="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783818914/TU_A_16_9_ozlhul.png"></div>
+         src="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783974149/Imagen_16.9_tu_aliado_espa%C3%B1_sawrrv.png"></div>
       <!-- (Slide "$1,000 de inicial" ELIMINADO a pedido del cliente: salían personas.
            La oferta sigue viva en la banda "Oferta especial" más abajo, sin humanos.) -->
       <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Gana $500 por referir y participa por un Toyota Corolla 2026" loading="lazy"
