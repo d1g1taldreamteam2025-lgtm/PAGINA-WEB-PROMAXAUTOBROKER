@@ -57,13 +57,16 @@
    (object-fit:contain) — sin cortes arriba/abajo ni a los lados. Las DOS
    diapositivas comparten el mismo marco, así se ven idénticas. */
 @media(min-width:769px){
+  /* PC: el hero ocupa EXACTO el primer pliegue (no desborda) y la imagen LLENA
+     todo el marco (object-fit:cover) — sin barras a los lados. Las dos
+     diapositivas comparten el mismo marco. */
   .pmx-hero2__media{height:min(calc(100vh - var(--header-h)),56.25vw);}
   .pmx-hero2__track,.pmx-hero2__slide{height:100%;}
-  .pmx-hero2__slide{display:flex;align-items:center;justify-content:center;position:relative;background:#0a0a0a center/cover no-repeat;overflow:hidden;}
-  /* Relleno PREMIUM de los costados: copia DESENFOCADA del mismo póster detrás
-     (como Netflix/Spotify) — así los lados no se ven vacíos y la foto va completa. */
-  .pmx-hero2__slide::before{content:'';position:absolute;inset:0;background-image:inherit;background-position:center;background-size:cover;filter:blur(40px) brightness(.45);transform:scale(1.2);z-index:0;}
-  .pmx-hero2__slide img{position:relative;z-index:1;height:100%;object-fit:contain;object-position:center;}
+  .pmx-hero2__slide{display:block;}
+  .pmx-hero2__slide img{width:100%;height:100%;object-fit:cover;object-position:center;}
+  /* En PC la imagen es la protagonista: SIN botones encima (siguen en móvil).
+     Selector más específico para ganarle a la regla base .pmx-hero2__cta. */
+  .pmx-hero2 .pmx-hero2__cta{display:none;}
 }
 .pmx-hero2__cta{position:absolute;left:0;right:0;bottom:62px;z-index:3;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:0 16px;}
 /* Móvil: los botones NO tapan el póster — van DEBAJO de la imagen, en franja propia */
@@ -744,11 +747,7 @@ PMX.addTranslations({
       var img = slides[s].querySelector('img');
       // Variante vertical para celular si existe (data-es-m / data-en-m)
       var src = (mobile && img.getAttribute('data-' + lang + '-m')) || img.getAttribute('data-' + lang);
-      if (src) {
-        if (img.getAttribute('src') !== src) img.setAttribute('src', src);
-        // El fondo de la diapositiva = mismo póster (lo usa el ::before desenfocado en PC)
-        slides[s].style.backgroundImage = "url('" + src + "')";
-      }
+      if (src && img.getAttribute('src') !== src) img.setAttribute('src', src);
     }
   }
   hero.addEventListener('mouseenter', function(){ if (timer) clearInterval(timer); });
