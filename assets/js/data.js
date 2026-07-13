@@ -46,10 +46,27 @@
     "<text x='400' y='372' font-family='Arial,Helvetica,sans-serif' font-size='25' fill='#7a828d' text-anchor='middle'>Foto próximamente</text></svg>"
   );
 
-  // Carrocería FALTANTE: muchas filas importadas vienen sin body_type y los
-  // filtros SUV/Sedán/Camioneta no las encontraban ("Toyota + Camionetas = 0"
-  // aunque hay Tacomas). Se infiere por el MODELO — solo carros y vans (un
+  // Carrocería del DEALER poco fiable: International/DealerCenter manda casi
+  // todo como "sedan", así que aparecían una RAM 1500, un Kia Soul o un Mustang
+  // bajo el filtro SEDÁN. Cuando el NOMBRE del vehículo dice claramente qué es
+  // (modelo conocido o palabra de carrocería en la versión, ej. "Quad Cab"),
+  // ese nombre MANDA sobre el body_type del dealer. Solo carros y vans (un
   // Sea-Doo GTI no es un VW GTI). El robot también la corrige en la base.
+  // Señales ESTRUCTURALES fuertes (en modelo o versión): un "Quad Cab" es
+  // camioneta aunque el dealer lo ponga "sedan".
+  var BODY_STRONG = [
+    ["truck", /\b(quad|crew|regular|extended|double|king|mega|super)[\s-]?cab\b|\bpick[\s-]?up\b/],
+    ["convertible", /\b(convertible|cabriolet|cabrio|roadster|spyder|spider)\b/],
+    ["van", /\b(cargo van|passenger van|box truck|cutaway|minivan)\b/],
+  ];
+  // Palabras de carrocería explícitas (respaldo si el modelo no está en la lista)
+  var BODY_WEAK = [
+    ["coupe", /\bcoupe\b|coupé/],
+    ["hatchback", /\b(hatchback|liftback)\b/],
+    ["wagon", /\b(wagon|sportwagen)\b/],
+    ["suv", /\b(sport utility|crossover|\bsuv)\b/],
+    ["sedan", /\bsedan\b/],
+  ];
   var BODY_RES = [
     ["van", /\b(sienna|odyssey|pacifica|carnival|transit|promaster|express|savana|sprinter|metris|nv200|grand caravan|caravan)\b/i],
     ["truck", /\b(tacoma|tundra|f[- ]?(150|250|350)|silverado|sierra|ridgeline|frontier|titan|colorado|canyon|ranger|maverick|gladiator|1500|2500|3500)\b/i],
@@ -58,9 +75,17 @@
     ["coupe", /\b(mustang|challenger|corvette|camaro|gr ?86|brz|supra|370z|400z)\b/i],
     ["hatchback", /\b(golf|gti|yaris|fit|bolt|leaf|veloster|mini cooper)\b/i],
   ];
-  function inferBody(make, model) {
-    var s = ((make || "") + " " + (model || "")).toLowerCase();
-    for (var i = 0; i < BODY_RES.length; i++) if (BODY_RES[i][1].test(s)) return BODY_RES[i][0];
+  function inferBody(make, model, trim) {
+    var nm = ((make || "") + " " + (model || "")).toLowerCase();       // marca + modelo
+    var full = nm + " " + String(trim || "").toLowerCase();            // + versión
+    var i;
+    // 1) señal estructural fuerte (modelo o versión) — "Quad Cab" => camioneta
+    for (i = 0; i < BODY_STRONG.length; i++) if (BODY_STRONG[i][1].test(full)) return BODY_STRONG[i][0];
+    // 2) modelo conocido (lista curada) — solo marca+modelo, para no confundir
+    //    con la versión (un "Sport" no vuelve deportivo a un sedán)
+    for (i = 0; i < BODY_RES.length; i++) if (BODY_RES[i][1].test(nm)) return BODY_RES[i][0];
+    // 3) palabra de carrocería explícita en el nombre/versión
+    for (i = 0; i < BODY_WEAK.length; i++) if (BODY_WEAK[i][1].test(full)) return BODY_WEAK[i][0];
     return "";
   }
 
@@ -75,7 +100,13 @@
       id: r.id || r.stock || ((r.year || "") + "-" + (r.make || "") + "-" + (r.model || "")).toLowerCase().replace(/\s+/g, "-"),
       category: cat,
       year: r.year, make: canonMake(r.make), model: r.model, trim: r.trim || "",
-      bodyType: ((r.body_type || ((cat === "cars" || cat === "vans") ? inferBody(r.make, r.model) : "")) || "").toLowerCase(),
+      // El NOMBRE manda cuando es confiable (corrige "sedan" mal puesto por el
+      // dealer); si el nombre no dice nada, se respeta el body_type del dealer.
+      bodyType: (function () {
+        var stored = String(r.body_type || "").toLowerCase();
+        var named = (cat === "cars" || cat === "vans") ? inferBody(r.make, r.model, r.trim) : "";
+        return named || stored;
+      })(),
       price: Number(r.price) || 0,
       // MSRP corrupto (ej. $205,500 en un Camry de $21,895): si el "precio
       // anterior" es más del doble del precio real, NO se muestra tachado.
