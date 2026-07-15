@@ -990,24 +990,51 @@
     });
   }
 
-  /* ---------------- ALTO REAL DEL HEADER (padding dinámico) ---------------- */
-  // El header fijo puede crecer (franja de sorteo) o encoger (al cerrarla);
-  // medimos su alto real para que el contenido nunca quede tapado.
+  /* ---------------- ALTO DEL HEADER: ESTABLE vs VIVO ----------------
+     REGLA DE ORO (queja del cliente: "la página se mueve y salta sola"):
+     la ESTRUCTURA de la página jamás se reacomoda por el header.
+     · --header-h / --header-h-mobile = alto EXPANDIDO del header, medido con
+       el plegado neutralizado. De aquí cuelgan el padding del body y el alto
+       de los banners → se fija al cargar y NO cambia al hacer scroll.
+     · --header-h-live = alto REAL en este instante (con la franja plegada).
+       Solo lo usan los elementos sticky (barra de filtros, paneles): mover el
+       top de un sticky NO reacomoda el documento, solo desliza esa barra. */
   function syncHeaderPad() {
     var s = document.getElementById("pmxSticky");
     if (!s) return;
+    var b = document.body;
+    var wasScrolled = b.classList.contains("pmx-scrolled");
+    if (wasScrolled) {
+      // Medición del alto EXPANDIDO sin que se vea ni se anime nada: se apagan
+      // las transiciones, se despliega, se mide y se vuelve a plegar — todo
+      // síncrono dentro del mismo frame (no hay pintado intermedio).
+      b.classList.add("pmx-measuring");
+      b.classList.remove("pmx-scrolled");
+    }
     var h = s.offsetHeight;
+    if (wasScrolled) {
+      b.classList.add("pmx-scrolled");
+      void s.offsetHeight; // aplica el plegado AHORA, aún sin transiciones
+      b.classList.remove("pmx-measuring");
+    }
     if (h > 0) {
-      // Actualiza las variables para que el padding del body Y los elementos
-      // sticky (toolbar del catálogo, sidebar) sigan el alto real del header.
       document.documentElement.style.setProperty("--header-h", h + "px");
       document.documentElement.style.setProperty("--header-h-mobile", h + "px");
     }
+    syncHeaderLive();
+  }
+  function syncHeaderLive() {
+    var s = document.getElementById("pmxSticky");
+    if (!s) return;
+    var h = s.offsetHeight;
+    if (h > 0) document.documentElement.style.setProperty("--header-h-live", h + "px");
   }
 
   /* ---------------- HEADER QUE SE ENCOGE AL HACER SCROLL ---------------- */
   // Al bajar, la franja del sorteo y el marquee se pliegan (el header fijo no
   // se come la pantalla, clave en móvil). Al volver arriba, reaparecen.
+  // ⚠️ Aquí SOLO se actualiza --header-h-live (sticky). El padding del body y
+  // los banners usan el alto expandido y NO se tocan: cero saltos de página.
   function wireHeaderShrink() {
     var shrunk = false, t = null;
     function apply(s) {
@@ -1015,7 +1042,7 @@
       shrunk = s;
       document.body.classList.toggle("pmx-scrolled", s);
       if (t) clearTimeout(t);
-      t = setTimeout(syncHeaderPad, 300); // tras la transición de plegado
+      t = setTimeout(syncHeaderLive, 320); // tras la transición de plegado
     }
     function onScroll() {
       var y = window.scrollY || 0;
@@ -1196,6 +1223,9 @@
     window.addEventListener("resize", syncHeaderPad);
     window.addEventListener("load", syncHeaderPad);
     setTimeout(syncHeaderPad, 350);
+    // Cuando terminan de cargar las FUENTES el texto del header cambia de
+    // métrica: una última medición y de ahí en adelante el alto queda quieto.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(syncHeaderPad);
     wireHeaderShrink();
   }
 

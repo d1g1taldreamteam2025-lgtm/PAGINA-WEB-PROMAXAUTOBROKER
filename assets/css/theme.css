@@ -57,9 +57,18 @@
   --shadow-lg:   0 24px 70px rgba(10,11,13,.30);
 
   --maxw: 1240px;
-  --header-h: 168px;          /* fallback; el JS lo ajusta al alto real */
-  --header-h-mobile: 118px;
+  /* Alto EXPANDIDO del header (estable): padding del body y banners. El JS lo
+     afina al cargar y NO cambia al hacer scroll (cero saltos). Los fallbacks
+     son los valores REALES medidos (228 PC / 154 móvil): así el primer pintado
+     ya nace en su sitio y el ajuste posterior es de ±2px (CLS ≈ 0). */
+  --header-h: 228px;
+  --header-h-mobile: 154px;
+  --header-h-live: 228px;     /* alto REAL en este instante (con la franja plegada): SOLO sticky. */
 }
+
+/* Medición del header sin que se note: syncHeaderPad() apaga las transiciones,
+   despliega, mide y vuelve a plegar dentro del mismo frame (nada se pinta). */
+body.pmx-measuring #pmxSticky, body.pmx-measuring #pmxSticky *{ transition:none !important; animation:none !important; }
 
 /* ===================== RESET / BASE ===================== */
 *,*::before,*::after{ box-sizing:border-box; }
@@ -81,9 +90,11 @@ h1,h2,h3,h4{ font-family:var(--font-head); line-height:1.15; letter-spacing:-.02
 /* Foco visible y elegante */
 :focus-visible{ outline:2px solid var(--brand); outline-offset:2px; border-radius:4px; }
 
-/* Reserva espacio para el header fijo (el JS ajusta al alto real) */
-body.pmx-mounted{ padding-top:var(--header-h); }
-@media (max-width:1024px){ body.pmx-mounted{ padding-top:var(--header-h-mobile); } }
+/* Reserva del header fijo DESDE EL CSS (antes del primer pintado): la página
+   nace ya en su sitio y el header aparece en su hueco sin empujar nada (CLS 0).
+   La única página sin header (referrals) lo apaga con <body class="pmx-nopad">. */
+body:not(.pmx-nopad){ padding-top:var(--header-h); }
+@media (max-width:1024px){ body:not(.pmx-nopad){ padding-top:var(--header-h-mobile); } }
 
 .pmx-container{ max-width:var(--maxw); margin:0 auto; padding:0 48px; }
 @media (max-width:980px){ .pmx-container{ padding:0 22px; } }
@@ -283,9 +294,10 @@ body.pmx-open .pmx-mobilemenu{ display:block; }
 }
 
 /* ===================== HEADER QUE SE ENCOGE AL HACER SCROLL ===================== */
-/* Al bajar: se pliegan sorteo y marquee (y el topbar en desktop). El padding
-   del body lo re-mide el JS (syncHeaderPad) tras la transición. */
-body.pmx-mounted{ transition:padding-top .28s ease; }
+/* Al bajar: se pliegan sorteo y marquee (y el topbar en desktop) DENTRO del
+   header fijo. El padding del body NO se toca (usa el alto expandido estable)
+   y NO se anima: animar el padding hacía que toda la página bajara en
+   escaloncitos al cargar (CLS) — era el "la página se mueve sola". */
 body.pmx-scrolled .pmx-raffle{ max-height:0; }
 body.pmx-scrolled .pmx-marquee{ max-height:0; padding-top:0; padding-bottom:0; border-bottom:0; }
 @media (min-width:1025px){

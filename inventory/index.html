@@ -52,8 +52,9 @@ window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,
 .pmx-invstat{display:flex;flex-direction:column;gap:4px;color:rgba(255,255,255,.7);font-size:12px;text-transform:uppercase;letter-spacing:1px;}
 .pmx-invstat strong{font-family:var(--font-head);color:var(--brand-2);font-size:26px;}
 @media(max-width:768px){.pmx-invhero h1{font-size:30px;}}
-.pmx-toolbar{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:var(--header-h);z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.04);}
-@media(max-width:1024px){.pmx-toolbar{top:var(--header-h-mobile);}}
+/* top con el alto VIVO del header (plegado al escrolear): mover el top de un
+   sticky solo desliza esta barra, NO reacomoda la página (cero saltos). */
+.pmx-toolbar{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:var(--header-h-live,var(--header-h));z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.04);}
 .pmx-toolbar__in{max-width:var(--maxw);margin:0 auto;padding:14px 24px;}
 .pmx-qfs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
 .pmx-qf{display:inline-flex;align-items:center;gap:6px;padding:9px 15px;border:2px solid var(--line);background:#fff;border-radius:999px;font:600 13px var(--font-body);color:var(--ink);cursor:pointer;transition:all .2s;}
@@ -80,7 +81,7 @@ window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,
 .pmx-filterbtn__count{background:var(--brand);color:#fff;padding:1px 7px;border-radius:999px;font-size:11px;}
 .pmx-filterbtn__count:empty{display:none;}
 .pmx-invmain{display:grid;grid-template-columns:280px 1fr;gap:30px;max-width:var(--maxw);margin:0 auto;padding:32px 24px 80px;}
-.pmx-sidebar{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;height:fit-content;position:sticky;top:calc(var(--header-h) + 120px);}
+.pmx-sidebar{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;height:fit-content;position:sticky;top:calc(var(--header-h-live,var(--header-h)) + 120px);}
 .pmx-sidebar__head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line);}
 .pmx-sidebar__head h3{margin:0;font-size:17px;display:inline-flex;gap:8px;align-items:center;}
 .pmx-sidebar__close{display:none;background:none;border:0;cursor:pointer;}
@@ -215,7 +216,9 @@ window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,
       <span class="count"><strong id="pmxCount">0</strong> <span data-i18n="inv_match">vehículos</span></span>
       <a href="/contact/"><span data-i18n="inv_help">¿Necesitas ayuda? Escríbenos</span></a>
     </div>
-    <div class="pmx-vgrid" id="pmxGrid"></div>
+    <!-- min-height inline: reserva el alto mientras cargan los carros para que
+         el pie de página no suba y luego baje de golpe (cero saltos). -->
+    <div class="pmx-vgrid" id="pmxGrid" style="min-height:440px"></div>
     <div class="pmx-pagination" id="pmxPagination"></div>
   </div>
 </div>

@@ -245,6 +245,9 @@ window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,
 .pmx-homecats .pmx-eyebrow{color:var(--brand-2);}
 /* Carrusel horizontal de Destacados (variedad + flechas; pedido del cliente) */
 .pmx-hswrap{position:relative;}
+/* min-height: reserva el alto de las tarjetas ANTES de que carguen — cuando
+   llegan, la sección no crece ni empuja el resto de la página (cero saltos). */
+#pmxFeatured{min-height:440px;}
 #pmxFeatured.pmx-hscroll{display:flex;gap:22px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;padding:6px 4px 18px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--brand) transparent;}
 /* Sin barra VERTICAL fantasma mientras las tarjetas animan su entrada */
 #pmxFeatured.pmx-hscroll::-webkit-scrollbar:vertical{display:none;}
