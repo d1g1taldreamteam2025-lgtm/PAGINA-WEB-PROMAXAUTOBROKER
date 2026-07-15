@@ -112,14 +112,20 @@ window.PROMAX = {
   /* ---------- MEDICIÓN / ANALYTICS ---------- */
   // Analytics PROPIO: siempre activo (guarda visitas, clics, WhatsApp, calor…
   // en tu Supabase; se ve en /admin/analytics.html). Además, si pegas aquí tus
-  // IDs, se activan solos Google Analytics 4 y/o Microsoft Clarity (gratis):
-  //   ga4:     analytics.google.com → Administrar → Flujos de datos → "G-XXXXXXXXXX"
-  //   clarity: clarity.microsoft.com → tu proyecto → Settings → el código corto
+  // IDs, se activan solos (gratis) — cada uno es un simple identificador
+  // PÚBLICO, no una contraseña:
+  //   ga4:       analytics.google.com → Administrar → Flujos de datos → "G-XXXXXXXXXX"
+  //   clarity:   clarity.microsoft.com → tu proyecto → Settings → el código corto
+  //   metaPixel: facebook.com/events_manager → Orígenes de datos → tu Pixel →
+  //              el "Id. del píxel" (unos 15-16 dígitos, p.ej. 123456789012345).
+  //              Con eso, WhatsApp/llamadas/formularios se reportan a Facebook
+  //              como conversiones (Lead/Contact) para optimizar los anuncios.
   analytics: {
     enabled: true,
     table: "promax_analytics",
     ga4: "",
     clarity: "",
+    metaPixel: "",
   },
 
   /* ---------- REFERIDOS / SORTEO ---------- */

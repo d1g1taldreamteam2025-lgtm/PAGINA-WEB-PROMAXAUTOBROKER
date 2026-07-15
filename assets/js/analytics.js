@@ -24,6 +24,25 @@
   if (!DB.url || !DB.anonKey) return;
   if (/^\/admin\//.test(location.pathname)) return; // el panel no se mide
 
+  // ---- Meta Pixel (Facebook/Instagram Ads) — opcional: solo si el cliente
+  // pone su Pixel ID en config.analytics.metaPixel. Carga async (no frena el
+  // render). Se inicializa ANTES de medir la primera visita para no perder
+  // eventos. Abajo, en track(), reflejamos las conversiones clave como eventos
+  // estándar de Meta (Lead/Contact/ViewContent) para que los anuncios del
+  // cliente optimicen por resultados reales, no solo por clics. ----
+  var FB_EVENTS = { whatsapp: "Contact", call: "Contact", form: "Lead", buy: "Lead", vehicle_view: "ViewContent" };
+  if (AN.metaPixel) {
+    try {
+      !function (f, b, e, v, n, t, s) {
+        if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+        if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = "2.0"; n.queue = [];
+        t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
+      }(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+      window.fbq("init", String(AN.metaPixel));
+      window.fbq("track", "PageView");
+    } catch (e) {}
+  }
+
   var ENDPOINT = DB.url.replace(/\/$/, "") + "/rest/v1/" + (AN.table || "promax_analytics");
   var PAGE = location.pathname + (location.search && /[?&](cat|id)=/.test(location.search) ? location.search : "");
   var DEVICE = (window.innerWidth || 1024) < 820 ? "mobile" : "desktop";
@@ -76,6 +95,10 @@
     if (queue.length >= 20) { flush(false); return; }
     clearTimeout(flushTimer);
     flushTimer = setTimeout(function () { flush(false); }, 6000);
+    // Espejo al Meta Pixel del cliente (si lo configuró): la misma conversión
+    // que guardamos en tu base también se le reporta a Facebook como evento
+    // estándar. PageView ya se disparó al iniciar el píxel, así que no se repite.
+    if (window.fbq && FB_EVENTS[event]) { try { window.fbq("track", FB_EVENTS[event]); } catch (e) {} }
   }
   window.addEventListener("visibilitychange", function () { if (document.visibilityState === "hidden") flush(true); });
   window.addEventListener("pagehide", function () { flush(true); });
