@@ -234,7 +234,7 @@ PMX.addTranslations({
     if(bar){ bar.hidden=false; document.body.classList.add("pmx-has-actbar"); }
   }
 
-  function simCard(c){
+  function simCard(c, i){
     return '<article class="pmx-vcard"><a href="/demo/vehicle/?id='+encodeURIComponent(c.id)+'" style="text-decoration:none;color:inherit;display:contents">'+
       '<div class="pmx-vcard__img">'+
         '<img class="pmx-vcard__ph" alt="'+(c.year+' '+c.make+' '+c.model).replace(/"/g,'&quot;')+'" src="'+String(c.thumb||c.image).replace(/"/g,'&quot;')+'" data-orig="'+String(c.image).replace(/"/g,'&quot;')+'"'+(i<8?' loading="eager" fetchpriority="high" decoding="sync"':' loading="lazy" decoding="async"')+'>'+
@@ -252,11 +252,18 @@ PMX.addTranslations({
     }
     CAR = c;
     document.title = c.year+" "+c.make+" "+c.model+" | DEMO Promax Auto Broker";
+    // Pinta YA sin esperar a los similares (si esa petición fallara, antes la
+    // página se quedaba "Cargando..." para siempre); los similares llegan luego.
+    render(c, []);
+    PMX.apply();
+    var SIMS = [];
+    window.addEventListener("pmx-lang", function(){ render(c, SIMS); PMX.apply(); });
     PMX.loadSimilar(c.category, c.id, 6).then(function(sims){
-      render(c, sims || []);
-      PMX.apply();
-      window.addEventListener("pmx-lang", function(){ render(c, sims || []); PMX.apply(); });
-    });
+      SIMS = sims || [];
+      if (SIMS.length) { render(c, SIMS); PMX.apply(); }
+    }).catch(function(){});
+  }).catch(function(){
+    document.getElementById("pmxVD").innerHTML='<div class="pmx-vd__missing"><h2>Error</h2><p style="color:var(--text-faint);margin:8px 0 22px">No se pudo cargar.</p><button class="pmx-btn pmx-btn--primary" onclick="location.reload()">↻ Reintentar</button></div>';
   });
 })();
 </script>

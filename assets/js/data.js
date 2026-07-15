@@ -220,10 +220,31 @@
     return u + MIN4;
   }
 
+  /* fetch con TIMEOUT: una petición colgada (red móvil floja, hipo del server)
+     dejaba la página "Cargando..." por 20-60s. Ahora se corta a los 6s y se
+     REINTENTA una vez (8s). Peor caso ~14s con error claro; caso normal, nada
+     cambia. Nunca más un cuelgue infinito. */
+  function fetchTimeout(url, opts, ms) {
+    return new Promise(function (resolve) {
+      var ctl = (typeof AbortController !== "undefined") ? new AbortController() : null;
+      var t = setTimeout(function () { if (ctl) ctl.abort(); }, ms || 6000);
+      var o = opts || {};
+      if (ctl) o.signal = ctl.signal;
+      fetch(url, o).then(
+        function (r) { clearTimeout(t); resolve(r); },
+        function () { clearTimeout(t); resolve(null); }
+      );
+    });
+  }
   function fetchJson(url, headers) {
-    return fetch(url, headers ? { headers: headers } : undefined)
-      .then(function (r) { return r.ok ? r.json() : null; })
-      .catch(function () { return null; });
+    var opts = headers ? { headers: headers } : {};
+    return fetchTimeout(url, opts, 6000).then(function (r) {
+      if (r && r.ok) return r.json().catch(function () { return null; });
+      // reintento único con más aire
+      return fetchTimeout(url, headers ? { headers: headers } : {}, 8000).then(function (r2) {
+        return (r2 && r2.ok) ? r2.json().catch(function () { return null; }) : null;
+      });
+    });
   }
 
   // Una página de resultados; con wantCount lee el total del header Content-Range.
@@ -236,15 +257,21 @@
     if (wantCount) h.Prefer = "count=exact";
     var full = url + "&limit=" + PAGE + "&offset=" + offset;
     var early = window.__pmxEarlyInv;
-    var req = (early && early.u === full && early.p) ? early.p : fetch(full, { headers: h });
+    var req = (early && early.u === full && early.p) ? early.p : fetchTimeout(full, { headers: h }, 6000);
     if (early && early.u === full) window.__pmxEarlyInv = null; // una sola vez
+    function parse(res) {
+      if (!res || !res.ok) return null; // (el fetch temprano resuelve null si falló)
+      var total = null;
+      var cr = res.headers.get("content-range");
+      if (cr && cr.indexOf("/") > -1) { var t = parseInt(cr.split("/")[1], 10); if (!isNaN(t)) total = t; }
+      return res.json().then(function (rows) { return Array.isArray(rows) ? { rows: rows, total: total } : null; });
+    }
     return Promise.resolve(req)
-      .then(function (res) {
-        if (!res || !res.ok) return null; // (el fetch temprano resuelve null si falló)
-        var total = null;
-        var cr = res.headers.get("content-range");
-        if (cr && cr.indexOf("/") > -1) { var t = parseInt(cr.split("/")[1], 10); if (!isNaN(t)) total = t; }
-        return res.json().then(function (rows) { return Array.isArray(rows) ? { rows: rows, total: total } : null; });
+      .then(parse)
+      .then(function (out) {
+        if (out) return out;
+        // reintento único directo (por si el primer intento/el temprano se cayó)
+        return fetchTimeout(full, { headers: h }, 8000).then(parse);
       })
       .catch(function () { return null; });
   }
@@ -324,24 +351,47 @@
 
   // Ficha COMPLETA de UN vehículo (galería, descripción, equipamiento) — no
   // descarga todo el inventario para mostrar uno.
+  // Con caché POR FICHA en sessionStorage: el catálogo la PREcarga al pasar el
+  // mouse por la tarjeta (prefetch) y volver a una ficha ya vista es 0ms.
+  function vehKey(id) { return "pmx_veh_" + String(id); }
   function loadVehicle(id) {
+    try {
+      var j = JSON.parse(sessionStorage.getItem(vehKey(id)));
+      if (j && (Date.now() - j.t) < SS_TTL && j.row) return Promise.resolve(normalize(j.row));
+    } catch (e) {}
     var api = apiInfo();
     if (api) {
       var url = api.url + "&id=eq." + encodeURIComponent(id) + "&limit=1";
       return fetchJson(url, api.headers).then(function (rows) {
         if (Array.isArray(rows) && rows.length) {
           var m = rows.filter(function (r) { return String(r.id) === String(id); })[0] || rows[0];
+          try { sessionStorage.setItem(vehKey(id), JSON.stringify({ t: Date.now(), row: m })); } catch (e) {}
           return normalize(m);
         }
-        return loadStatic().then(function (s) {
-          var r = s.filter(function (x) { return String(x.id || "") === String(id); })[0];
-          return r ? normalize(r) : null;
-        });
+        if (Array.isArray(rows)) {
+          // La base respondió []: el carro de verdad NO existe (vendido/retirado)
+          return loadStatic().then(function (s) {
+            var r = s.filter(function (x) { return String(x.id || "") === String(id); })[0];
+            return r ? normalize(r) : null;
+          });
+        }
+        // null = la RED falló (timeout/500) — distinto de "no existe": la ficha
+        // muestra "revisa tu conexión + Reintentar" en vez de "ya se vendió".
+        throw new Error("network");
       });
     }
     return load().then(function (cars) {
       return cars.filter(function (c) { return String(c.id) === String(id); })[0] || null;
     });
+  }
+  // Versión "fuego y olvido" para el prefetch por intención (hover/touch):
+  // baja la ficha completa al caché sin bloquear nada. Duplicados: inofensivos.
+  var PREFETCHING = {};
+  function prefetchVehicle(id) {
+    if (!id || PREFETCHING[id]) return;
+    try { var j = JSON.parse(sessionStorage.getItem(vehKey(id))); if (j && (Date.now() - j.t) < SS_TTL) return; } catch (e) {}
+    PREFETCHING[id] = 1;
+    loadVehicle(id).catch(function () {}).then(function () { PREFETCHING[id] = 0; });
   }
 
   // Vehículos similares (liviano): misma categoría, sin el actual
@@ -368,4 +418,19 @@
   window.PMX.normalizeVehicle = normalize;
   window.PMX.thumb = thumb;
   window.PMX.diversify = diversify;
+  window.PMX.prefetchVehicle = prefetchVehicle;
+  // Carro liviano YA disponible en el caché de sesión (para pintar la ficha a
+  // 0ms mientras llega la completa). Devuelve normalizado o null, SIN red.
+  window.PMX.peekVehicle = function (id) {
+    try {
+      var j = JSON.parse(sessionStorage.getItem(vehKey(id)));
+      if (j && (Date.now() - j.t) < SS_TTL && j.row) return normalize(j.row); // ficha completa cacheada
+      var s = readStore();
+      if (s) {
+        var r = s.rows.filter(function (x) { return String(x.id) === String(id); })[0];
+        if (r) return normalize(r); // versión liviana del catálogo (sin galería)
+      }
+    } catch (e) {}
+    return null;
+  };
 })();

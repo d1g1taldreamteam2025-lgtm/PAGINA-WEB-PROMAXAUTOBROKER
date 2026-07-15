@@ -529,6 +529,19 @@
       setCategory(b.dataset.cat);
     });
 
+    // PREFETCH POR INTENCIÓN: al pasar el mouse (o primer toque) sobre una
+    // tarjeta, se baja la ficha COMPLETA de ese carro al caché en segundo
+    // plano. Cuando el usuario hace clic, la ficha abre a 0ms (galería incluida).
+    function prefetchFromEvent(e) {
+      if (!PMX.prefetchVehicle) return;
+      var a = e.target.closest ? e.target.closest('a[href*="/vehicle/?id="]') : null;
+      if (!a) return;
+      var m = a.getAttribute("href").match(/id=([^&]+)/);
+      if (m) PMX.prefetchVehicle(decodeURIComponent(m[1]));
+    }
+    $("#pmxGrid").addEventListener("mouseover", prefetchFromEvent, { passive: true });
+    $("#pmxGrid").addEventListener("touchstart", prefetchFromEvent, { passive: true });
+
     // Compartir desde la tarjeta (el botón vive dentro del enlace: frenamos la navegación)
     $("#pmxGrid").addEventListener("click", function (e) {
       var b = e.target.closest("[data-share-id]"); if (!b) return;

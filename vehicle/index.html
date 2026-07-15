@@ -262,7 +262,7 @@ PMX.addTranslations({
     if(bar){ bar.hidden=false; document.body.classList.add("pmx-has-actbar"); }
   }
 
-  function simCard(c){
+  function simCard(c, i){
     return '<article class="pmx-vcard"><a href="/vehicle/?id='+encodeURIComponent(c.id)+'" style="text-decoration:none;color:inherit;display:contents">'+
       '<div class="pmx-vcard__img">'+
         '<img class="pmx-vcard__ph" alt="'+(c.year+' '+c.make+' '+c.model).replace(/"/g,'&quot;')+'" src="'+String(c.thumb||c.image).replace(/"/g,'&quot;')+'" data-orig="'+String(c.image).replace(/"/g,'&quot;')+'"'+(i<8?' loading="eager" fetchpriority="high" decoding="sync"':' loading="lazy" decoding="async"')+'>'+
@@ -273,10 +273,23 @@ PMX.addTranslations({
       '<a href="/vehicle/?id='+encodeURIComponent(c.id)+'" class="pmx-btn pmx-btn--primary" style="margin-top:auto">'+PMX.t("btn_details")+'</a></div></article>';
   }
 
-  // Escala: pide SOLO este vehículo (ficha completa) + unos similares livianos,
-  // en vez de descargar todo el inventario para mostrar uno.
+  // ===== 0ms PERCIBIDO =====
+  // 1) Si el carro ya está en caché (prefetch al pasar el mouse en el catálogo,
+  //    ficha ya vista, o la versión liviana del catálogo), se PINTA YA — precio,
+  //    specs y portada al instante; la galería completa hidrata al llegar.
+  var peek = PMX.peekVehicle ? PMX.peekVehicle(id) : null;
+  if (peek) { CAR = peek; render(peek, []); PMX.apply(); }
+  // 2) La ficha completa: si falla o se cae la red, mensaje claro con botón de
+  //    reintento (antes se quedaba "Cargando vehículo..." PARA SIEMPRE).
+  function vehicleFail(){
+    if (CAR) return; // ya hay algo pintado del caché: mejor eso que un error
+    document.getElementById("pmxVD").innerHTML='<div class="pmx-vd__missing"><h2>'+PMX.t("inv_err_t")+'</h2><p style="color:var(--text-faint);margin:8px 0 22px">'+PMX.t("inv_err_s")+'</p><button class="pmx-btn pmx-btn--primary" onclick="location.reload()">↻ '+(PMX.lang()==='en'?'Retry':'Reintentar')+'</button></div>';
+  }
+  PMX.addTranslations({ es:{ inv_err_t:"No se pudo cargar el vehículo", inv_err_s:"Revisa tu conexión e intenta de nuevo." },
+                        en:{ inv_err_t:"Couldn't load this vehicle", inv_err_s:"Check your connection and try again." } });
   PMX.loadVehicle(id).then(function(c){
     if(!c){
+      if (CAR) return; // el caché ya pintó algo válido
       document.getElementById("pmxVD").innerHTML='<div class="pmx-vd__missing"><h2>'+PMX.t("vd_missing_t")+'</h2><p style="color:var(--text-faint);margin:8px 0 22px">'+PMX.t("vd_missing_s")+'</p><a href="/inventory/" class="pmx-btn pmx-btn--primary">'+PMX.t("vd_see_all")+'</a></div>';
       return;
     }
@@ -308,13 +321,18 @@ PMX.addTranslations({
       var ls=document.createElement("script"); ls.type="application/ld+json"; ls.textContent=JSON.stringify(ld);
       document.head.appendChild(ls);
     }catch(e){}
+    // La ficha COMPLETA se pinta YA (sin esperar a los similares — antes el
+    // render vivía dentro del .then de los similares y si esa petición se
+    // colgaba, la página entera se quedaba "Cargando..." para siempre).
+    render(c, []);
+    PMX.apply();
+    var SIMS = [];
+    window.addEventListener("pmx-lang", function(){ render(c, SIMS); PMX.apply(); });
     PMX.loadSimilar(c.category, c.id, 6).then(function(sims){
-      render(c, sims || []);
-      PMX.apply();
-      // Al cambiar idioma, re-pintar toda la ficha con las etiquetas traducidas
-      window.addEventListener("pmx-lang", function(){ render(c, sims || []); PMX.apply(); });
-    });
-  });
+      SIMS = sims || [];
+      if (SIMS.length) { render(c, SIMS); PMX.apply(); }
+    }).catch(function(){});
+  }).catch(vehicleFail);
 })();
 </script>
 </body>
