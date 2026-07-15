@@ -22,6 +22,19 @@
 <meta name="twitter:description" content="Promax Auto Broker: vehículos de calidad, precios honestos y financiamiento flexible. Encuentra tu próximo carro y pre-califica en minutos.">
 <meta name="twitter:image" content="https://res.cloudinary.com/drbc4wbvw/image/upload/c_pad,w_1200,h_630,b_rgb:0a0a0a,f_auto,q_auto/v1782163987/Logos-05_cqy7tj.png">
 <link rel="preconnect" href="https://res.cloudinary.com">
+<script src="/assets/js/config.js"></script>
+<script>/* Arranque TEMPRANO del inventario: el fetch sale AHORA, en paralelo con
+   CSS/fuentes; data.js (fetchPage) reutiliza esta respuesta y la primera visita
+   gana 200-500ms. ⚠️ La consulta debe ser IDÉNTICA a la de assets/js/data.js
+   (SLIM + gallery->3 + limit/offset); si cambias una, cambia la otra. */
+(function(){try{
+  var ep=(window.PROMAX||{}).endpoints||{};
+  if(ep.inventorySource!=="api"||!ep.inventoryApiUrl)return;
+  var SLIM="id,stock,category,year,make,model,trim,body_type,price,msrp,mileage,fuel,transmission,drivetrain,condition,badge,featured,cover_image,created_at";
+  var u=ep.inventoryApiUrl;
+  u=(u.indexOf("select=*")>-1?u.replace("select=*","select="+SLIM):u+"&select="+SLIM)+"&gallery->3=not.is.null"+"&limit=1000&offset=0";
+  window.__pmxEarlyInv={u:u,p:fetch(u,{headers:{apikey:ep.inventoryApiKey,Authorization:"Bearer "+ep.inventoryApiKey,Prefer:"count=exact"}}).catch(function(){return null})};
+}catch(e){}})();</script>
 <script>/* Héroe de la página — ÚNICA fuente de sus variantes (idioma × PC/celular).
    Se elige AQUÍ, antes de las hojas de estilo, y se inyecta un preload: la foto
    del primer vistazo baja EN PARALELO con el CSS (LCP rápido) y el celular jamás
@@ -380,7 +393,7 @@ window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,
          flechas para deslizar; en celular se desliza con el dedo. -->
     <div class="pmx-hswrap">
       <button class="pmx-harrow pmx-harrow--prev" id="pmxFeatPrev" type="button" aria-label="Ver anteriores">‹</button>
-      <div class="pmx-vgrid pmx-hscroll" id="pmxFeatured" data-anim="stagger" data-anim-defer><p style="grid-column:1/-1;text-align:center;color:#888" data-i18n="loading">Cargando vehículos...</p></div>
+      <div class="pmx-vgrid pmx-hscroll" id="pmxFeatured" data-anim="stagger" data-anim-defer><div class="pmx-skel" style="flex:0 0 340px"></div><div class="pmx-skel" style="flex:0 0 340px"></div><div class="pmx-skel" style="flex:0 0 340px"></div><div class="pmx-skel" style="flex:0 0 340px"></div></div>
       <button class="pmx-harrow pmx-harrow--next" id="pmxFeatNext" type="button" aria-label="Ver siguientes">›</button>
     </div>
     <div style="text-align:center;margin-top:36px" data-anim="up"><a href="/inventory/" class="pmx-btn pmx-btn--ghost" data-i18n="feat_all">Ver Todo el Inventario</a></div>
@@ -590,7 +603,7 @@ PMX.addTranslations({
   function money(n){return "$"+(Number(n)||0).toLocaleString("en-US");}
   function num(n){return (Number(n)||0).toLocaleString("en-US");}
   var CARS = [];
-  function card(c){
+  function card(c, i){
     var typeLabel = (c.category && c.category!=="cars") ? PMX.catLabel(c.category) : "";
     var specs = [];
     if (c.mileage>0) specs.push(num(c.mileage)+' mi');
@@ -598,7 +611,8 @@ PMX.addTranslations({
     if (c.drivetrain) specs.push(c.drivetrain);
     return '<article class="pmx-vcard">'+
       '<a href="/vehicle/?id='+encodeURIComponent(c.id)+'" style="text-decoration:none;color:inherit;display:contents">'+
-      '<div class="pmx-vcard__img" style="background-image:url(\''+c.image+'\')">'+
+      '<div class="pmx-vcard__img">'+
+        '<img class="pmx-vcard__ph" alt="'+(c.year+' '+c.make+' '+c.model).replace(/"/g,'&quot;')+'" src="'+String(c.thumb||c.image).replace(/"/g,'&quot;')+'" data-orig="'+String(c.image).replace(/"/g,'&quot;')+'"'+(i<8?' loading="eager" fetchpriority="high"':' loading="lazy"')+' decoding="async">'+
         (c.badge?'<span class="pmx-vcard__badge">'+c.badge+'</span>':'')+
         (typeLabel?'<span class="pmx-vcard__type">'+typeLabel+'</span>':'')+
       '</div></a>'+

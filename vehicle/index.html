@@ -264,7 +264,8 @@ PMX.addTranslations({
 
   function simCard(c){
     return '<article class="pmx-vcard"><a href="/vehicle/?id='+encodeURIComponent(c.id)+'" style="text-decoration:none;color:inherit;display:contents">'+
-      '<div class="pmx-vcard__img" style="background-image:url(\''+c.image+'\')">'+
+      '<div class="pmx-vcard__img">'+
+        '<img class="pmx-vcard__ph" alt="'+(c.year+' '+c.make+' '+c.model).replace(/"/g,'&quot;')+'" src="'+String(c.thumb||c.image).replace(/"/g,'&quot;')+'" data-orig="'+String(c.image).replace(/"/g,'&quot;')+'"'+(i<8?' loading="eager" fetchpriority="high"':' loading="lazy"')+' decoding="async">'+
         '<span class="pmx-vcard__type">'+(c.category && c.category!=="cars" ? PMX.catLabel(c.category) : (c.bodyType||"").toUpperCase())+'</span>'+
       '</div></a>'+
       '<div class="pmx-vcard__body"><h3 class="pmx-vcard__title">'+c.year+' '+c.make+' '+c.model+'</h3>'+

@@ -13,6 +13,27 @@
   var CFG = window.PROMAX || {};
   var cache = null;
 
+  /* ---------- MINIATURAS LIGERAS (fotos instantáneas en las tarjetas) ----------
+     Las fotos de los dealers pesan 100-400KB cada una: la grilla tardaba 1-2s
+     en pintarlas. thumb() las sirve por el proxy de Cloudinary redimensionadas
+     (w_640) y en formato moderno (f_auto => AVIF/WebP, ~3-10x más ligero).
+     · Foto ya en Cloudinary  -> se le inserta la transformación directo.
+     · Foto remota del dealer -> res.cloudinary.com/<nube>/image/fetch/…/URL
+     Solo la nube kcixfvoq tiene 'fetch' habilitado (verificado con 200; las
+     otras devuelven 401). Si el proxy fallara, site.js repinta la ORIGINAL
+     (fallback data-orig), así que nunca se pierde una foto. */
+  var THUMB_CLOUD = "kcixfvoq";
+  function thumb(url, w) {
+    url = String(url == null ? "" : url);
+    if (!url || url.slice(0, 5) === "data:") return url;
+    var m = url.match(/^(https:\/\/res\.cloudinary\.com\/[^\/]+\/image\/upload\/)(.+)$/);
+    if (m) return m[1] + "f_auto,q_auto,c_limit,w_" + w + "/" + m[2];
+    if (/^https?:\/\//.test(url)) {
+      return "https://res.cloudinary.com/" + THUMB_CLOUD + "/image/fetch/f_auto,q_auto,c_limit,w_" + w + "/" + encodeURIComponent(url);
+    }
+    return url;
+  }
+
   var CATEGORY_SLUGS = (CFG.categories || []).map(function (c) { return c.slug; });
 
   // Los dealers guardan la marca en cualquier casing ("CADILLAC", "ford",
@@ -134,7 +155,7 @@
       fuel: r.fuel || "Gasolina", transmission: r.transmission || "Automática", drivetrain: r.drivetrain || "FWD",
       exteriorColor: r.exterior_color || "", interiorColor: r.interior_color || "",
       vin: r.vin || "", stock: r.stock || "", badge: r.badge || "",
-      featured: !!r.featured, photos: gallery.length || 1, image: cover, gallery: gallery,
+      featured: !!r.featured, photos: gallery.length || 1, image: cover, thumb: thumb(cover, 640), gallery: gallery,
       features: Array.isArray(r.features) ? r.features : [],
       description: r.description || "",
       condition: (function () {
@@ -171,14 +192,21 @@
       .catch(function () { return null; });
   }
 
-  // Una página de resultados; con wantCount lee el total del header Content-Range
+  // Una página de resultados; con wantCount lee el total del header Content-Range.
+  // Si el <head> de la página arrancó el MISMO fetch antes (window.__pmxEarlyInv,
+  // en paralelo con CSS/fuentes), aquí se reutiliza esa respuesta: la primera
+  // visita gana 200-500ms sin pedir dos veces.
   function fetchPage(url, headers, offset, wantCount) {
     var h = {};
     for (var k in headers) h[k] = headers[k];
     if (wantCount) h.Prefer = "count=exact";
-    return fetch(url + "&limit=" + PAGE + "&offset=" + offset, { headers: h })
+    var full = url + "&limit=" + PAGE + "&offset=" + offset;
+    var early = window.__pmxEarlyInv;
+    var req = (early && early.u === full && early.p) ? early.p : fetch(full, { headers: h });
+    if (early && early.u === full) window.__pmxEarlyInv = null; // una sola vez
+    return Promise.resolve(req)
       .then(function (res) {
-        if (!res.ok) return null;
+        if (!res || !res.ok) return null; // (el fetch temprano resuelve null si falló)
         var total = null;
         var cr = res.headers.get("content-range");
         if (cr && cr.indexOf("/") > -1) { var t = parseInt(cr.split("/")[1], 10); if (!isNaN(t)) total = t; }
@@ -193,32 +221,69 @@
     });
   }
 
+  // Trae TODO el inventario vivo de la base (filas crudas), paginando si hace falta
+  function fetchLiveRows() {
+    var api = apiInfo();
+    if (!api) return Promise.resolve(null);
+    var u = slimUrl(api);
+    return fetchPage(u, api.headers, 0, true).then(function (first) {
+      if (!first) return null;
+      var total = first.total != null ? first.total : first.rows.length;
+      if (first.rows.length >= PAGE && total > PAGE) {
+        // Hay más de 1000: trae el resto de páginas en paralelo
+        var jobs = [];
+        for (var off = PAGE; off < total; off += PAGE) jobs.push(fetchPage(u, api.headers, off, false));
+        return Promise.all(jobs).then(function (rest) {
+          var all = first.rows.slice();
+          rest.forEach(function (p) { if (p) all = all.concat(p.rows); });
+          return all;
+        });
+      }
+      return first.rows;
+    });
+  }
+
+  /* ---------- CACHÉ DE SESIÓN (catálogo INSTANTÁNEO al navegar) ----------
+     La primera visita guarda las filas crudas en sessionStorage; las visitas
+     siguientes (volver del detalle, cambiar de página, recargar) pintan las
+     tarjetas AL INSTANTE desde el caché y, por detrás, se pide la lista fresca:
+     si cambió (precios, vendidos, nuevos), se avisa con el evento
+     'pmx-inventory' y el catálogo se re-pinta solo. TTL corto por si la
+     pestaña queda abierta mucho rato. */
+  var SS_KEY = "pmx_inv_v1", SS_TTL = 10 * 60 * 1000;
+  function readStore() {
+    try {
+      var j = JSON.parse(sessionStorage.getItem(SS_KEY));
+      if (j && (Date.now() - j.t) < SS_TTL && Array.isArray(j.rows) && j.rows.length) return j;
+    } catch (e) {}
+    return null;
+  }
+  function writeStore(rows) {
+    try { sessionStorage.setItem(SS_KEY, JSON.stringify({ t: Date.now(), rows: rows })); } catch (e) {}
+  }
+  function refreshInBackground(oldRows) {
+    fetchLiveRows().then(function (rows) {
+      if (!Array.isArray(rows) || !rows.length) return;
+      writeStore(rows);
+      // ¿Cambió algo de verdad? (carros nuevos/vendidos, precios…)
+      try { if (JSON.stringify(rows) === JSON.stringify(oldRows)) return; } catch (e) {}
+      cache = rows.map(normalize);
+      window.dispatchEvent(new CustomEvent("pmx-inventory", { detail: { cars: cache } }));
+    });
+  }
+
   // Lista LIVIANA de todo el inventario (para catálogo, home y conteos)
   function load() {
     if (cache) return Promise.resolve(cache);
-    var api = apiInfo();
-    var live = Promise.resolve(null);
-    if (api) {
-      var u = slimUrl(api);
-      live = fetchPage(u, api.headers, 0, true).then(function (first) {
-        if (!first) return null;
-        var total = first.total != null ? first.total : first.rows.length;
-        if (first.rows.length >= PAGE && total > PAGE) {
-          // Hay más de 1000: trae el resto de páginas en paralelo
-          var jobs = [];
-          for (var off = PAGE; off < total; off += PAGE) jobs.push(fetchPage(u, api.headers, off, false));
-          return Promise.all(jobs).then(function (rest) {
-            var all = first.rows.slice();
-            rest.forEach(function (p) { if (p) all = all.concat(p.rows); });
-            return all;
-          });
-        }
-        return first.rows;
-      });
+    var stored = readStore();
+    if (stored) {
+      cache = stored.rows.map(normalize);
+      refreshInBackground(stored.rows);
+      return Promise.resolve(cache);
     }
-    return live.then(function (rows) {
+    return fetchLiveRows().then(function (rows) {
       // Si la base respondió con carros, úsalos; si está vacía o falla, usa el JSON local (respaldo).
-      if (Array.isArray(rows) && rows.length) { cache = rows.map(normalize); return cache; }
+      if (Array.isArray(rows) && rows.length) { writeStore(rows); cache = rows.map(normalize); return cache; }
       return loadStatic().then(function (s) { cache = s.map(normalize); return cache; });
     });
   }
@@ -267,4 +332,5 @@
   window.PMX.loadVehicle = loadVehicle;
   window.PMX.loadSimilar = loadSimilar;
   window.PMX.normalizeVehicle = normalize;
+  window.PMX.thumb = thumb;
 })();

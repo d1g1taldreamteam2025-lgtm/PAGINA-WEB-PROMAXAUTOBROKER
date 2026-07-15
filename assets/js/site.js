@@ -976,6 +976,17 @@
       '<button class="pmx-raffle__x" id="pmxRaffleX" type="button" aria-label="Cerrar aviso">&times;</button>' +
     '</div>';
   }
+  /* Fotos de tarjetas: si la MINIATURA (proxy de Cloudinary) fallara, se
+     repinta al vuelo la foto ORIGINAL del dealer (data-orig). Y si esa también
+     falla, se oculta la rota y queda el placeholder gris del contenedor. */
+  document.addEventListener("error", function (e) {
+    var el = e.target;
+    if (!el || el.tagName !== "IMG" || !el.classList || !el.classList.contains("pmx-vcard__ph")) return;
+    var orig = el.getAttribute("data-orig");
+    if (orig && el.getAttribute("src") !== orig) { el.removeAttribute("data-orig"); el.setAttribute("src", orig); }
+    else el.style.visibility = "hidden";
+  }, true);
+
   function wireRaffle() {
     fillTickers();
     window.addEventListener("resize", fillTickers);

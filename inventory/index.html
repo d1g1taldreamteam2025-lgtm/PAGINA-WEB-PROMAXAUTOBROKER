@@ -22,6 +22,19 @@
 <meta name="twitter:description" content="Explora el inventario de Promax Auto Broker. Filtra por marca, precio, año y más. Vehículos inspeccionados con financiamiento flexible.">
 <meta name="twitter:image" content="https://res.cloudinary.com/drbc4wbvw/image/upload/c_pad,w_1200,h_630,b_rgb:0a0a0a,f_auto,q_auto/v1782163987/Logos-05_cqy7tj.png">
 <link rel="preconnect" href="https://res.cloudinary.com">
+<script src="/assets/js/config.js"></script>
+<script>/* Arranque TEMPRANO del inventario: el fetch sale AHORA, en paralelo con
+   CSS/fuentes; data.js (fetchPage) reutiliza esta respuesta y la primera visita
+   gana 200-500ms. ⚠️ La consulta debe ser IDÉNTICA a la de assets/js/data.js
+   (SLIM + gallery->3 + limit/offset); si cambias una, cambia la otra. */
+(function(){try{
+  var ep=(window.PROMAX||{}).endpoints||{};
+  if(ep.inventorySource!=="api"||!ep.inventoryApiUrl)return;
+  var SLIM="id,stock,category,year,make,model,trim,body_type,price,msrp,mileage,fuel,transmission,drivetrain,condition,badge,featured,cover_image,created_at";
+  var u=ep.inventoryApiUrl;
+  u=(u.indexOf("select=*")>-1?u.replace("select=*","select="+SLIM):u+"&select="+SLIM)+"&gallery->3=not.is.null"+"&limit=1000&offset=0";
+  window.__pmxEarlyInv={u:u,p:fetch(u,{headers:{apikey:ep.inventoryApiKey,Authorization:"Bearer "+ep.inventoryApiKey,Prefer:"count=exact"}}).catch(function(){return null})};
+}catch(e){}})();</script>
 <script>/* Héroe de la página — ÚNICA fuente de sus variantes (idioma × PC/celular).
    Se elige AQUÍ, antes de las hojas de estilo, y se inyecta un preload: la foto
    del primer vistazo baja EN PARALELO con el CSS (LCP rápido) y el celular jamás
@@ -218,7 +231,7 @@ window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,
     </div>
     <!-- min-height inline: reserva el alto mientras cargan los carros para que
          el pie de página no suba y luego baje de golpe (cero saltos). -->
-    <div class="pmx-vgrid" id="pmxGrid" style="min-height:440px"></div>
+    <div class="pmx-vgrid" id="pmxGrid" style="min-height:440px"><div class="pmx-skel"></div><div class="pmx-skel"></div><div class="pmx-skel"></div><div class="pmx-skel"></div><div class="pmx-skel"></div><div class="pmx-skel"></div><div class="pmx-skel"></div><div class="pmx-skel"></div></div>
     <div class="pmx-pagination" id="pmxPagination"></div>
   </div>
 </div>

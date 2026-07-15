@@ -174,7 +174,7 @@
     return r;
   }
 
-  function card(c) {
+  function card(c, i) {
     var save = c.msrp && c.msrp > c.price ? c.msrp - c.price : 0;
     // Etiqueta superior: para carros la carrocería; para otras categorías, la categoría.
     var typeLabel = (c.category && c.category !== "cars") ? PMX.catLabel(c.category) : bodyLabel(c.bodyType);
@@ -185,7 +185,14 @@
     if (c.drivetrain) specs.push(c.drivetrain);
     return '<article class="pmx-vcard">' +
       '<a href="/demo/vehicle/?id=' + encodeURIComponent(c.id) + '" style="text-decoration:none;color:inherit;display:contents">' +
-      '<div class="pmx-vcard__img" style="background-image:url(\'' + c.image + '\')">' +
+      // <img> REAL (no background CSS): el navegador la prioriza y empieza a
+      // bajarla de una. Las primeras 8 (lo visible) van eager+high; el resto
+      // lazy. data-orig = foto original por si el proxy de miniaturas fallara.
+      '<div class="pmx-vcard__img">' +
+        '<img class="pmx-vcard__ph" alt="' + (c.year + ' ' + c.make + ' ' + c.model).replace(/"/g, "&quot;") + '"' +
+          ' src="' + String(c.thumb || c.image).replace(/"/g, "&quot;") + '"' +
+          ' data-orig="' + String(c.image).replace(/"/g, "&quot;") + '"' +
+          (i < 8 ? ' loading="eager" fetchpriority="high"' : ' loading="lazy"') + ' decoding="async">' +
         (c.badge ? '<span class="pmx-vcard__badge">' + c.badge + '</span>' : '') +
         (typeLabel ? '<span class="pmx-vcard__type">' + typeLabel + '</span>' : '') +
         '<button class="pmx-vcard__share" type="button" data-share-id="' + c.id + '" aria-label="' + PMX.t("act_share") + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>' +
@@ -545,6 +552,21 @@
 
     // Al cambiar idioma, re-pinta chips, selects y tarjetas con las etiquetas traducidas
     window.addEventListener("pmx-lang", function () { renderCats(); buildMakeSelect(); buildModelSelect(); render(); });
+
+    // El catálogo pintó AL INSTANTE desde el caché de sesión; si la lista fresca
+    // que llegó por detrás trae cambios (precios, vendidos, carros nuevos),
+    // data.js dispara 'pmx-inventory' y aquí se re-pinta respetando los filtros
+    // del usuario. El barajado (_shuf) se conserva por id para que no "salte"
+    // el orden delante del visitante.
+    window.addEventListener("pmx-inventory", function (e) {
+      var fresh = (e.detail && e.detail.cars) || [];
+      if (!fresh.length) return;
+      var shufById = {};
+      CARS.forEach(function (c) { shufById[c.id] = c._shuf; });
+      fresh.forEach(function (c) { c._shuf = (shufById[c.id] != null) ? shufById[c.id] : Math.random(); });
+      CARS = fresh;
+      renderCats(); buildMakeSelect(); buildModelSelect(); render();
+    });
   }
 
   PMX.loadInventory().then(function (cars) {
