@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>Analytics · Promax Auto Broker</title>
+<script src="/admin/gate.js"></script><!-- SÍNCRONO: decide login vs splash ANTES de pintar (sin parpadeo) -->
+<style>
+/* Fondo del NAVEGADOR también oscuro (sin fogonazo blanco al rebotar el scroll) */
+html{background:#0c0c0c;overscroll-behavior-y:none;}
+/* Compuerta de sesión (gate.js): con sesión guardada NO se pinta el login. */
+html.pmx-hassession #loginScreen{display:none;}
+#pmxSplash{display:none;position:fixed;inset:0;z-index:300;background:linear-gradient(135deg,#0c0c0c,#1a1a1a);align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+html.pmx-hassession #pmxSplash{display:flex;}
+html.pmx-ready #pmxSplash{display:none;}
+.pmx-splash__spin{width:34px;height:34px;border:3px solid rgba(244,220,52,.22);border-top-color:#F4DC34;border-radius:50%;animation:pmxspin .8s linear infinite;}
+@keyframes pmxspin{to{transform:rotate(360deg)}}
+</style>
 <link rel="icon" type="image/png" href="https://res.cloudinary.com/dol89fbil/image/upload/w_256,h_256,c_fit,f_auto,q_auto/v1783701195/Logos-07_umabpq.png"><link rel="apple-touch-icon" href="https://res.cloudinary.com/dol89fbil/image/upload/w_180,h_180,c_pad,b_black,f_png/v1783701195/Logos-07_umabpq.png">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -91,6 +103,15 @@ td .bar.green{background:#4ade80;}
 </style>
 </head>
 <body>
+
+<!-- Splash de sesión: solo se ve si YA hay sesión guardada, mientras se valida.
+     Así el login jamás parpadea al que ya está adentro. -->
+<div id="pmxSplash" role="status" aria-label="Cargando el panel">
+  <img src="https://res.cloudinary.com/drbc4wbvw/image/upload/v1782163987/Logos-05_cqy7tj.png" alt="" style="height:46px;width:auto">
+  <div class="pmx-splash__spin"></div>
+  <p style="color:#8b8b8b;font-size:13px">Cargando tu panel…</p>
+</div>
+
 
 <div class="login" id="loginScreen">
   <div class="login__card">
@@ -189,8 +210,8 @@ function num(n){return (Number(n)||0).toLocaleString('en-US');}
 function pct(a,b){return b?Math.round(a/b*100)+'%':'0%';}
 
 /* ---------- auth (idéntico al resto del panel) ---------- */
-function showLogin(){document.getElementById('loginScreen').style.display='flex';document.getElementById('app').style.display='none';}
-function showApp(user){document.getElementById('loginScreen').style.display='none';document.getElementById('app').style.display='block';document.getElementById('userEmail').textContent=user.email;loadAll();}
+function showLogin(){ gateFail();document.getElementById('loginScreen').style.display='flex';document.getElementById('app').style.display='none';}
+function showApp(user){ gateReveal();document.getElementById('loginScreen').style.display='none';document.getElementById('app').style.display='block';document.getElementById('userEmail').textContent=user.email;loadAll();}
 document.getElementById('loginForm').addEventListener('submit',async(e)=>{
   e.preventDefault();
   const btn=document.getElementById('loginBtn'),err=document.getElementById('loginErr');
