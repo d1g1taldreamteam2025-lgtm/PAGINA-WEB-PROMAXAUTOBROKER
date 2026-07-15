@@ -89,7 +89,7 @@
     });
     document.documentElement.setAttribute("lang", LANG);
     var mtrack = document.querySelector(".pmx-marquee__track");
-    if (mtrack) mtrack.innerHTML = marqueeTrackHTML(LANG);
+    if (mtrack) { mtrack.innerHTML = marqueeTrackHTML(LANG); fillTickers(); }
     updateWidgets(LANG);
     updateOpenStatus();
   }
@@ -265,6 +265,24 @@
     var txt = (b.logoText || "PROMAX").replace(/MAX/i, "<b>$&</b>");
     var style = "display:" + fallbackDisplay + (opts.light ? ";color:#fff" : "");
     return img + '<span class="pmx-nav__logo-text" style="' + style + '">' + txt + "</span>";
+  }
+
+  // Las cintas en movimiento (sorteo y marquee) animan la MITAD de la pista
+  // (translateX(-50%)); esa mitad debe cubrir el ancho de la pantalla o queda
+  // un HUECO vacío al final de cada ciclo (pasaba en monitores anchos).
+  // Clonamos el grupo en PARES (así -50% sigue cayendo exacto en el borde de
+  // un grupo y el bucle no salta) hasta cubrir de sobra cualquier pantalla.
+  function fillTickers() {
+    [".pmx-raffle__track", ".pmx-marquee__track"].forEach(function (sel) {
+      var tr = document.querySelector(sel);
+      var g = tr && tr.firstElementChild;
+      if (!g) return;
+      var safety = 0;
+      while (tr.scrollWidth < window.innerWidth * 2 + 20 && safety++ < 10) {
+        tr.appendChild(g.cloneNode(true));
+        tr.appendChild(g.cloneNode(true));
+      }
+    });
   }
 
   function marqueeTrackHTML(lang) {
@@ -833,6 +851,9 @@
     '</div>';
   }
   function wireRaffle() {
+    fillTickers();
+    window.addEventListener("resize", fillTickers);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fillTickers);
     var x = document.getElementById("pmxRaffleX");
     if (!x) return;
     x.addEventListener("click", function () {
