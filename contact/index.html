@@ -22,6 +22,13 @@
 <meta name="twitter:description" content="Contacta a Promax Auto Broker. Llámanos, escríbenos por WhatsApp o envíanos un mensaje. Te asesoramos en español para encontrar tu próximo carro y tu financiamiento.">
 <meta name="twitter:image" content="https://res.cloudinary.com/drbc4wbvw/image/upload/c_pad,w_1200,h_630,b_rgb:0a0a0a,f_auto,q_auto/v1782163987/Logos-05_cqy7tj.png">
 <link rel="preconnect" href="https://res.cloudinary.com">
+<script>/* Héroe de la página — ÚNICA fuente de sus variantes (idioma × PC/celular).
+   Se elige AQUÍ, antes de las hojas de estilo, y se inyecta un preload: la foto
+   del primer vistazo baja EN PARALELO con el CSS (LCP rápido) y el celular jamás
+   descarga la foto de PC. El <img> del body copia estos datos con su mini-script.
+   ⚠️ Si cambias una foto, actualiza también HERO_WARM en assets/js/site.js. */
+window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784081912/ChatGPT_Image_Jul_14_2026_07_11_38_PM_kzjuco.png","en":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784081914/ChatGPT_Image_Jul_14_2026_07_10_59_PM_ayfrph.png","es-m":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801513/CONTACTANOS_9_16_kfuai0.png","en-m":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801513/Message_us_now_9_16_ukj4af.png","ar":"1672/941","ar-m":"941/1672","ar-m-es":"948/1659"};
+(function(){var H=window.__pmxHero,l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var n=document.createElement("link");n.rel="preload";n.as="image";n.setAttribute("fetchpriority","high");n.href=(m?H[l+"-m"]:0)||H[l];document.head.appendChild(n);})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -33,9 +40,12 @@
 .ct-hero{background:var(--ink);color:#fff;text-align:center;position:relative;overflow:hidden;}
 .ct-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--brand),var(--brand-2),var(--brand));z-index:2;}
 /* Póster con el texto integrado (HABLEMOS / LET'S TALK) — cambia por idioma y
-   usa la versión vertical en celular (data-i18n-src-m). */
-.ct-hero__poster{display:block;width:100%;height:auto;max-height:none;object-fit:contain;object-position:center;} /* imagen 16:9 completa a lo ancho: sin barras ni recortes */
-@media(max-width:768px){.ct-hero__poster{max-height:none;}}
+   usa la versión vertical en celular (data-es/-en/-es-m/-en-m en el <img>). */
+.ct-hero__poster{display:block;width:100%;height:auto;object-fit:contain;object-position:center;}
+/* PC: el banner llena EXACTO el primer pliegue (como el home): la foto es 16:9 de
+   "zona segura" y el recorte solo se come fondo. center 25% = el recorte carga
+   hacia abajo (los carros sangran con estilo) y el logo de arriba queda intacto. */
+@media(min-width:769px){.ct-hero__poster{height:clamp(37vw,calc(100vh - var(--header-h)),56.25vw);object-fit:cover;object-position:center 25%;}}
 
 /* Layout */
 .ct-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:32px;align-items:start;}
@@ -101,7 +111,9 @@ a.ct-line__val:hover{color:var(--brand);}
 <!-- HERO (imagen con el texto integrado, ES/EN x PC/celular) -->
 <section class="ct-hero">
   <h1 data-i18n="ct_title" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Hablemos</h1>
-  <img class="ct-hero__poster" data-i18n-src="ct_hero_img" data-i18n-src-m="ct_hero_img_m" src="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783801510/Contactanos_Ahora_16_9_r4aocj.png" alt="Hablemos — contacta a Promax Auto Broker por WhatsApp, te respondemos rápido en español o inglés" loading="eager" fetchpriority="high">
+  <!-- Sin src fijo: el mini-script elige la variante correcta (idioma + PC/celular)
+       ANTES del primer pintado; data-ar reserva el alto (sin saltos al cargar). -->
+  <img class="ct-hero__poster" alt="Hablemos — contacta a Promax Auto Broker por WhatsApp, te respondemos rápido en español o inglés" loading="eager" fetchpriority="high"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.src=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script>
 </section>
 
 <!-- MAIN -->
@@ -233,8 +245,7 @@ PMX.addTranslations({
     ct_eyebrow:"Contacto",
     ct_title:"Hablemos",
     ct_sub:"¿Buscas un carro o tienes una pregunta sobre financiamiento? Escríbenos y te respondemos rápido, en español o inglés.",
-    ct_hero_img:"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783801510/Contactanos_Ahora_16_9_r4aocj.png",
-    ct_hero_img_m:"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801513/CONTACTANOS_9_16_kfuai0.png",
+    /* (la imagen del héroe ya no vive aquí: va en el <img> con data-es/data-en) */
     ct_form_h:"Envíanos un mensaje",
     ct_form_intro:"Completa el formulario y un asesor de Promax te contactará pronto.",
     ct_f_first:"Nombre", ct_f_last:"Apellido", ct_f_email:"Email", ct_f_phone:"Teléfono",
@@ -266,8 +277,7 @@ PMX.addTranslations({
     ct_eyebrow:"Contact",
     ct_title:"Let's talk",
     ct_sub:"Looking for a car or have a financing question? Message us and we'll reply fast, in Spanish or English.",
-    ct_hero_img:"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783801512/Message_us_16_9_eu3lrs.png",
-    ct_hero_img_m:"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801513/Message_us_now_9_16_ukj4af.png",
+    /* (la imagen del héroe ya no vive aquí: va en el <img> con data-es/data-en) */
     ct_form_h:"Send us a message",
     ct_form_intro:"Fill out the form and a Promax advisor will contact you soon.",
     ct_f_first:"First name", ct_f_last:"Last name", ct_f_email:"Email", ct_f_phone:"Phone",

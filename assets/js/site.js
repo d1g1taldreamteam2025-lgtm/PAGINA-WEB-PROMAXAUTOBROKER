@@ -27,6 +27,43 @@
   var MOBILE_MQ = window.matchMedia ? window.matchMedia("(max-width:768px)") : null;
   if (MOBILE_MQ && MOBILE_MQ.addEventListener) MOBILE_MQ.addEventListener("change", function () { applyI18n(LANG); });
 
+  /* ---------------- CAMBIO DE IMAGEN SIN PANTALLAZO ----------------
+     Cambiar el src de un <img> a lo bruto deja el hueco EN BLANCO/NEGRO
+     mientras el navegador descarga la imagen nueva (queja del cliente al
+     cambiar ES/EN). Aquí la descargamos primero en memoria y solo cuando ya
+     está lista hacemos el cambio: la imagen vieja se queda visible hasta el
+     último instante y el relevo es instantáneo. Si la nueva falla, se queda
+     la vieja (mejor que un hueco roto). */
+  function swapImgSmooth(el, url) {
+    if (!url) return;
+    // Marca de "lo último pedido": si el usuario alterna ES→EN→ES rápido, la
+    // descarga vieja que llegue tarde NO debe pisar a la elección más reciente.
+    el._pmxWant = url;
+    if (el.getAttribute("src") === url) return;
+    if (!el.getAttribute("src")) { el.setAttribute("src", url); return; } // primer pintado
+    var im = new Image();
+    im.onload = function () { if (el._pmxWant === url) el.setAttribute("src", url); };
+    im.src = url;
+    if (im.complete && el._pmxWant === url) el.setAttribute("src", url); // ya en caché
+  }
+
+  // Héroes bilingües declarados en el HTML con data-es / data-en (+ -m para
+  // celular y data-ar / data-ar-m con su proporción para RESERVAR el alto
+  // antes de que cargue la foto — sin saltos de página). El primer pintado lo
+  // hace un mini-script inline junto a cada <img> (antes de que cargue este
+  // archivo); aquí solo atendemos los cambios de idioma / tamaño de pantalla.
+  function applyHeroImgs() {
+    document.querySelectorAll("img[data-es][data-en]").forEach(function (el) {
+      var m = MOBILE_MQ && MOBILE_MQ.matches;
+      // Algunos pósters móviles ES miden distinto que los EN (948×1659 vs
+      // 941×1672): data-ar-m-es declara la proporción ES para reservar exacto.
+      var ar = m ? ((LANG === "es" && el.getAttribute("data-ar-m-es")) || el.getAttribute("data-ar-m"))
+                 : el.getAttribute("data-ar");
+      if (ar) el.style.aspectRatio = "auto " + ar; // 'auto' = manda la foto real al llegar
+      swapImgSmooth(el, (m ? el.getAttribute("data-" + LANG + "-m") : null) || el.getAttribute("data-" + LANG));
+    });
+  }
+
   /* ---------------- PRECARGA DEL OTRO IDIOMA (cambio ES/EN instantáneo) ----------------
      Sin esto, al pulsar ES/EN el navegador recién descargaba las imágenes del
      otro idioma (pesadas) y el cambio se sentía trabado. Cuando la página ya
@@ -41,8 +78,10 @@
         var k = (mob && el.getAttribute("data-i18n-src-m")) || el.getAttribute("data-i18n-src");
         if (k && DICT[other] && DICT[other][k]) urls.push(DICT[other][k]);
       });
-      // 2) Slides del carrusel del home (data-es/data-en y variantes -m de celular)
-      document.querySelectorAll("[data-es],[data-en]").forEach(function (el) {
+      // 2) Héroes bilingües (data-es/data-en y variantes -m de celular).
+      //    SOLO <img>: el <video> de /nosotros/ también usa data-es/data-en y
+      //    descargarlo como imagen desperdiciaba megas sin servir de nada.
+      document.querySelectorAll("img[data-es],img[data-en]").forEach(function (el) {
         var u = (mob && el.getAttribute("data-" + other + "-m")) || el.getAttribute("data-" + other);
         if (u) urls.push(u);
       });
@@ -52,9 +91,95 @@
       urls.forEach(function (u) { var im = new Image(); im.decoding = "async"; im.src = u; });
     } catch (e) {}
   }
-  function schedulePreload() { setTimeout(preloadLangImages, 1200); }
+  // Antes esperaba 1.2s tras el load: si el visitante pulsaba EN apenas entrar,
+  // la foto del otro idioma no estaba lista. Ahora arranca casi de inmediato.
+  function schedulePreload() { setTimeout(preloadLangImages, 250); }
   if (document.readyState === "complete") schedulePreload();
   else window.addEventListener("load", schedulePreload);
+
+  /* ---------------- CALENTAR LOS HÉROES DE LAS DEMÁS PÁGINAS ----------------
+     Queja del cliente: al navegar de una página a otra, el banner llegaba en
+     negro y la foto "aparecía de la nada". Cuando esta página ya terminó de
+     cargar y el navegador está ocioso, descargamos en fila (una por una, sin
+     ahogar la red) los banners de las OTRAS páginas en el idioma y tamaño
+     actuales: al navegar, el banner sale de la caché al instante.
+     ⚠️ Si cambias la foto de un héroe en cualquier página, actualiza su URL
+     aquí también (mismas transformaciones de Cloudinary, o no hay caché). */
+  var HERO_WARM = {
+    d: { // PC (f_auto,q_auto,c_limit,w_1920)
+      es: [
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783974149/Imagen_16.9_tu_aliado_espa%C3%B1_sawrrv.png",
+        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783050858/500_referido_j03mev.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784081959/ChatGPT_Image_Jul_14_2026_07_15_42_PM_zt23m8.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082243/ChatGPT_Image_Jul_14_2026_07_12_22_PM_evn6it.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784081912/ChatGPT_Image_Jul_14_2026_07_11_38_PM_kzjuco.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082034/ChatGPT_Image_Jul_14_2026_07_10_09_PM_y3c1op.png",
+        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051028/precalifica_espa_ol_bi4ttf.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082200/ChatGPT_Image_Jul_14_2026_07_14_34_PM_tlmrbj.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082088/ChatGPT_Image_Jul_14_2026_07_14_22_PM_xfy6ap.png",
+        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051270/importacion_jqenay.png"
+      ],
+      en: [
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783973283/ChatGPT_Image_13_jul_2026_15_07_00_xbclps.png",
+        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783050858/referidos_ingles_vkqdkh.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784081958/ChatGPT_Image_Jul_14_2026_07_15_29_PM_m2y5xn.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082254/ChatGPT_Image_Jul_14_2026_07_12_07_PM_tabkr8.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784081914/ChatGPT_Image_Jul_14_2026_07_10_59_PM_ayfrph.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082045/ChatGPT_Image_Jul_14_2026_07_09_56_PM_ohbajv.png",
+        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051029/precalifica_ingles_qaahwk.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082197/ChatGPT_Image_Jul_14_2026_07_15_04_PM_ncn5ml.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082086/ChatGPT_Image_Jul_14_2026_07_14_14_PM_idjpdr.png",
+        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051270/importacion_ingles_yket1x.png"
+      ]
+    },
+    m: { // celular (f_auto,q_auto,c_limit,w_1080)
+      es: [
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801947/TU_ALI_9_hld4jj.png",
+        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783050858/referidos_500_telefono_cslj5t.png",
+        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051158/inventario_telfno_ntahxa.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865300/espa_9_glr0qv.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801513/CONTACTANOS_9_16_kfuai0.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801782/Preguntas_9_16_oo9aar.png",
+        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051028/precalifica_telf_espa_o_bel8ag.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865142/subasta_9_sxmqw6.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865048/9.16_espanol.16_espanol_fp59cy.png",
+        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051267/importa_telefono_es_cqo2xy.png"
+      ],
+      en: [
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801946/YOUR_ALLI_9_rl0dtb.png",
+        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783050857/refer_500_telefono_en_xcid7w.png",
+        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051159/inventory_tefl_fwp1xt.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865298/ingle_9_vbmdlm.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801513/Message_us_now_9_16_ukj4af.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801782/Faq_9_16_t2sfde.png",
+        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051028/get_precualifed_telf_ingles_mcdlsh.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865144/auction_9_vepjvo.png",
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865048/ingles_9_hitzcl.png",
+        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051269/importa_ingles_tel_mb8wg1.png"
+      ]
+    }
+  };
+  function warmOtherHeroes() {
+    try {
+      if (navigator.connection && navigator.connection.saveData) return; // respeta ahorro de datos
+      var list = HERO_WARM[(MOBILE_MQ && MOBILE_MQ.matches) ? "m" : "d"][LANG] || [];
+      var i = 0;
+      (function next() {
+        if (i >= list.length) return;
+        var im = new Image();
+        im.decoding = "async";
+        if ("fetchPriority" in im) im.fetchPriority = "low";
+        im.onload = im.onerror = function () { setTimeout(next, 150); };
+        im.src = list[i++];
+      })();
+    } catch (e) {}
+  }
+  function scheduleWarm() {
+    if (window.requestIdleCallback) requestIdleCallback(warmOtherHeroes, { timeout: 4000 });
+    else setTimeout(warmOtherHeroes, 2500);
+  }
+  if (document.readyState === "complete") scheduleWarm();
+  else window.addEventListener("load", scheduleWarm);
 
   // Diccionario global (las páginas pueden extenderlo con PMX.addTranslations)
   var DICT = { es: {}, en: {} };
@@ -82,8 +207,9 @@
       // Variante vertical para celular (data-i18n-src-m), si la página la define
       var km = el.getAttribute("data-i18n-src-m");
       if (km && MOBILE_MQ && MOBILE_MQ.matches && DICT[LANG] && DICT[LANG][km] != null) k = km;
-      if (DICT[LANG] && DICT[LANG][k] != null) el.setAttribute("src", DICT[LANG][k]);
+      if (DICT[LANG] && DICT[LANG][k] != null) swapImgSmooth(el, DICT[LANG][k]);
     });
+    applyHeroImgs();
     document.querySelectorAll(".pmx-lang__btn").forEach(function (b) {
       b.classList.toggle("active", b.getAttribute("data-lang") === LANG);
     });

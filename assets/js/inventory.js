@@ -24,8 +24,7 @@
       inv_eyebrow: "Vehículos disponibles", inv_title: "Encuentra tu vehículo ideal",
       inv_sub: "Vehículos seleccionados, precios honestos, financiamiento flexible",
       inv_available: "Disponibles", inv_rating: "Calificación", inv_sold: "Vendidos",
-      inv_hero_img: "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051159/INventario_espa_ol_zrqvtz.png",
-      inv_hero_img_m: "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051158/inventario_telfno_ntahxa.png",
+      /* (la imagen del héroe ya no vive aquí: va en el <img> con data-es/data-en) */
       qf_20: "Bajo $20k", qf_10: "Bajo $10k", qf_suv: "SUVs", qf_sedan: "Sedanes", qf_truck: "Camionetas",
       cond_used: "Usados", cond_new: "Nuevos",
       vt_work: "De trabajo", vt_pass: "De pasajeros",
@@ -51,8 +50,7 @@
       inv_eyebrow: "Available vehicles", inv_title: "Find your perfect ride",
       inv_sub: "Hand-picked vehicles, honest pricing, flexible financing",
       inv_available: "Available", inv_rating: "Rating", inv_sold: "Sold",
-      inv_hero_img: "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051158/inventory_i_gwbhxv.png",
-      inv_hero_img_m: "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051159/inventory_tefl_fwp1xt.png",
+      /* (la imagen del héroe ya no vive aquí: va en el <img> con data-es/data-en) */
       qf_20: "Under $20k", qf_10: "Under $10k", qf_suv: "SUVs", qf_sedan: "Sedans", qf_truck: "Trucks",
       cond_used: "Used", cond_new: "New",
       vt_work: "Work vans", vt_pass: "Passenger",
