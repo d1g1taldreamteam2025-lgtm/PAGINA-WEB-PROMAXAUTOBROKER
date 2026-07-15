@@ -612,7 +612,7 @@ PMX.addTranslations({
     return '<article class="pmx-vcard">'+
       '<a href="/vehicle/?id='+encodeURIComponent(c.id)+'" style="text-decoration:none;color:inherit;display:contents">'+
       '<div class="pmx-vcard__img">'+
-        '<img class="pmx-vcard__ph" alt="'+(c.year+' '+c.make+' '+c.model).replace(/"/g,'&quot;')+'" src="'+String(c.thumb||c.image).replace(/"/g,'&quot;')+'" data-orig="'+String(c.image).replace(/"/g,'&quot;')+'"'+(i<8?' loading="eager" fetchpriority="high"':' loading="lazy"')+' decoding="async">'+
+        '<img class="pmx-vcard__ph" alt="'+(c.year+' '+c.make+' '+c.model).replace(/"/g,'&quot;')+'" src="'+String(c.thumb||c.image).replace(/"/g,'&quot;')+'" data-orig="'+String(c.image).replace(/"/g,'&quot;')+'"'+(i<8?' loading="eager" fetchpriority="high" decoding="sync"':' loading="lazy" decoding="async"')+'>'+
         (c.badge?'<span class="pmx-vcard__badge">'+c.badge+'</span>':'')+
         (typeLabel?'<span class="pmx-vcard__type">'+typeLabel+'</span>':'')+
       '</div></a>'+

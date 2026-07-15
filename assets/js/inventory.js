@@ -116,15 +116,9 @@
   // anterior; solo se repite marca cuando ya no queda de otra. Es estable
   // durante la sesion, asi que la paginacion no "salta".
   function diversify(list) {
-    var pool = list.slice().sort(function (a, b) { return (a._shuf || 0) - (b._shuf || 0); });
-    var out = [], lastMake = null;
-    while (pool.length) {
-      var idx = 0;
-      for (var i = 0; i < pool.length; i++) { if (pool[i].make !== lastMake) { idx = i; break; } }
-      var c = pool.splice(idx, 1)[0];
-      out.push(c); lastMake = c.make;
-    }
-    return out;
+    // Implementación ÚNICA en data.js (PMX.diversify): el precalentado de fotos
+    // de site.js usa la misma, así calienta EXACTAMENTE lo que aquí se muestra.
+    return PMX.diversify ? PMX.diversify(list) : list.slice();
   }
 
   // ---- FUENTE ÚNICA DE VERDAD: un carro pasa el filtro si cumple TODO esto ----
@@ -189,7 +183,7 @@
         '<img class="pmx-vcard__ph" alt="' + (c.year + ' ' + c.make + ' ' + c.model).replace(/"/g, "&quot;") + '"' +
           ' src="' + String(c.thumb || c.image).replace(/"/g, "&quot;") + '"' +
           ' data-orig="' + String(c.image).replace(/"/g, "&quot;") + '"' +
-          (i < 8 ? ' loading="eager" fetchpriority="high"' : ' loading="lazy"') + ' decoding="async">' +
+          (i < 8 ? ' loading="eager" fetchpriority="high" decoding="sync"' : ' loading="lazy" decoding="async"') + '>' +
         (c.badge ? '<span class="pmx-vcard__badge">' + c.badge + '</span>' : '') +
         (typeLabel ? '<span class="pmx-vcard__type">' + typeLabel + '</span>' : '') +
         '<button class="pmx-vcard__share" type="button" data-share-id="' + c.id + '" aria-label="' + PMX.t("act_share") + '"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></button>' +
@@ -568,8 +562,9 @@
 
   PMX.loadInventory().then(function (cars) {
     CARS = cars;
-    // Barajado estable por sesion: da variedad y no reordena al paginar/filtrar.
-    CARS.forEach(function (c) { c._shuf = Math.random(); });
+    // Barajado estable por sesión: viene calculado de data.js (semilla de
+    // sesión). El respaldo Math.random() es solo por si faltara.
+    CARS.forEach(function (c) { if (c._shuf == null) c._shuf = Math.random(); });
     if (!CARS.length) {
       $("#pmxGrid").innerHTML = '<div class="pmx-empty"><h3>' + PMX.t("inv_none_t") + '</h3><p>' + PMX.t("inv_none_s") + '</p><a class="pmx-btn pmx-btn--primary" href="/contact/">' + PMX.t("inv_none_cta") + '</a></div>';
       [".pmx-toolbar", ".pmx-results__bar", "#pmxSidebar"].forEach(function (s) { var el = document.querySelector(s); if (el) el.style.display = "none"; });

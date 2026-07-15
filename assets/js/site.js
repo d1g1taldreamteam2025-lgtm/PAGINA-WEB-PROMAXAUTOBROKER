@@ -165,13 +165,38 @@
       var list = HERO_WARM[(MOBILE_MQ && MOBILE_MQ.matches) ? "m" : "d"][LANG] || [];
       var i = 0;
       (function next() {
-        if (i >= list.length) return;
+        if (i >= list.length) { warmInventoryThumbs(); return; } // luego, las fotos del catálogo
         var im = new Image();
         im.decoding = "async";
         if ("fetchPriority" in im) im.fetchPriority = "low";
         im.onload = im.onerror = function () { setTimeout(next, 150); };
         im.src = list[i++];
       })();
+    } catch (e) {}
+  }
+
+  /* Precalienta las MINIATURAS que el catálogo va a mostrar de entrada.
+     Gracias a la semilla de sesión (data.js), el orden "Variado" es idéntico
+     en todas las páginas: aquí calculamos con PMX.diversify EXACTAMENTE las
+     primeras tarjetas (Carros usados, la vista por defecto) y bajamos sus
+     fotos en fila. Al entrar al inventario ya están en caché: 0ms a la vista.
+     Solo corre en páginas que cargan data.js (home, catálogo, ficha). */
+  function warmInventoryThumbs() {
+    try {
+      if (!window.PMX || !PMX.loadInventory || !PMX.diversify) return;
+      PMX.loadInventory().then(function (cars) {
+        var base = cars.filter(function (c) { return c.category === "cars" && c.condition !== "new"; });
+        var first = PMX.diversify(base).slice(0, 12);
+        var i = 0;
+        (function next() {
+          if (i >= first.length) return;
+          var im = new Image();
+          im.decoding = "async";
+          if ("fetchPriority" in im) im.fetchPriority = "low";
+          im.onload = im.onerror = function () { setTimeout(next, 120); };
+          im.src = first[i].thumb || first[i].image; i++;
+        })();
+      }).catch(function () {});
     } catch (e) {}
   }
   function scheduleWarm() {

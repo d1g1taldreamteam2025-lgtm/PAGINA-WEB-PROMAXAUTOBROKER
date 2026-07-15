@@ -23,6 +23,40 @@
      otras devuelven 401). Si el proxy fallara, site.js repinta la ORIGINAL
      (fallback data-orig), así que nunca se pierde una foto. */
   var THUMB_CLOUD = "kcixfvoq";
+
+  /* ---------- BARAJADO ESTABLE POR SESIÓN ----------
+     El orden "Variado" del catálogo baraja con _shuf. Antes era Math.random()
+     por página: el home no podía saber qué carros mostraría el catálogo.
+     Ahora la semilla vive en sessionStorage y _shuf se calcula del id+semilla:
+     el MISMO orden en home/catálogo/ficha durante toda la sesión → se puede
+     PRECALENTAR exactamente las fotos que el catálogo va a enseñar (0ms). */
+  var SHUF_SEED = (function () {
+    try {
+      var s = sessionStorage.getItem("pmx_shuf_seed");
+      if (!s) { s = String(Math.random()).slice(2, 12); sessionStorage.setItem("pmx_shuf_seed", s); }
+      return s;
+    } catch (e) { return String(Math.random()).slice(2, 12); }
+  })();
+  function shufKey(id) { // hash FNV-1a determinista de id+semilla → [0,1)
+    var h = 2166136261, s = String(id) + "|" + SHUF_SEED;
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = (h * 16777619) >>> 0; }
+    return h / 4294967296;
+  }
+
+  // Orden "Variado" del broker: baraja por _shuf e INTERCALA las marcas para no
+  // repetir la misma marca seguida. ÚNICA implementación (catálogo, home y el
+  // precalentado de site.js la comparten — si difieren, el warm falla).
+  function diversify(list) {
+    var pool = list.slice().sort(function (a, b) { return (a._shuf || 0) - (b._shuf || 0); });
+    var out = [], lastMake = null;
+    while (pool.length) {
+      var idx = 0;
+      for (var i = 0; i < pool.length; i++) { if (pool[i].make !== lastMake) { idx = i; break; } }
+      var c = pool.splice(idx, 1)[0];
+      out.push(c); lastMake = c.make;
+    }
+    return out;
+  }
   function thumb(url, w) {
     url = String(url == null ? "" : url);
     if (!url || url.slice(0, 5) === "data:") return url;
@@ -155,7 +189,7 @@
       fuel: r.fuel || "Gasolina", transmission: r.transmission || "Automática", drivetrain: r.drivetrain || "FWD",
       exteriorColor: r.exterior_color || "", interiorColor: r.interior_color || "",
       vin: r.vin || "", stock: r.stock || "", badge: r.badge || "",
-      featured: !!r.featured, photos: gallery.length || 1, image: cover, thumb: thumb(cover, 640), gallery: gallery,
+      featured: !!r.featured, photos: gallery.length || 1, image: cover, thumb: thumb(cover, 640), gallery: gallery, _shuf: shufKey(r.id),
       features: Array.isArray(r.features) ? r.features : [],
       description: r.description || "",
       condition: (function () {
@@ -333,4 +367,5 @@
   window.PMX.loadSimilar = loadSimilar;
   window.PMX.normalizeVehicle = normalize;
   window.PMX.thumb = thumb;
+  window.PMX.diversify = diversify;
 })();
