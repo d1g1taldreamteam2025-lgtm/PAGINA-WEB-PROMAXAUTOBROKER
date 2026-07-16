@@ -40,7 +40,7 @@
    del primer vistazo baja EN PARALELO con el CSS (LCP rápido) y el celular jamás
    descarga la foto de PC. El <img> del body copia estos datos con su mini-script.
    ⚠️ Si cambias una foto, actualiza también HERO_WARM en assets/js/site.js. */
-window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783974149/Imagen_16.9_tu_aliado_espa%C3%B1_sawrrv.png","en":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783973283/ChatGPT_Image_13_jul_2026_15_07_00_xbclps.png","es-m":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801947/TU_ALI_9_hld4jj.png","en-m":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801946/YOUR_ALLI_9_rl0dtb.png","ar":"1672/941","ar-m":"941/1672"};
+window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784168155/ChatGPT_Image_Jul_15_2026_07_10_26_PM_yswyxb.png","en":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784168156/ChatGPT_Image_Jul_15_2026_07_11_11_PM_z5xxlb.png","es-m":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1784168155/ChatGPT_Image_Jul_15_2026_07_11_36_PM_lsrg5m.png","en-m":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1784168156/ChatGPT_Image_Jul_15_2026_07_11_22_PM_hsteru.png","ar":"1672/941","ar-m":"941/1672"};
 (function(){var H=window.__pmxHero,l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var n=document.createElement("link");n.rel="preload";n.as="image";n.setAttribute("fetchpriority","high");n.href=(m?H[l+"-m"]:0)||H[l];document.head.appendChild(n);})();</script>
 <link rel="preconnect" href="https://db.ucallnow.fun" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
@@ -83,12 +83,11 @@ window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,
   .pmx-hero2__media{height:min(calc(100vh - var(--header-h)),56.25vw);}
   .pmx-hero2__track,.pmx-hero2__slide{height:100%;}
   .pmx-hero2__slide{display:block;}
-  /* La imagen llena el marco (cover) y va CENTRADA. Las imágenes son de
-     "zona segura" 16:9 (logo/título/subtítulo en la franja central, con
-     margen oscuro amplio arriba y abajo: ES 22.9%/17.9%, EN 26%/20.1%),
-     así el recorte del pliegue solo se come el fondo oscuro y NO toca
-     ni el logo (arriba) ni el subtítulo (abajo). */
-  .pmx-hero2__slide img{width:100%;height:100%;object-fit:cover;object-position:center;}
+  /* La imagen llena el marco (cover). object-position:center 42% = sesgo leve
+     hacia ARRIBA: protege el LOGO (arriba) de las 3 diapositivas y el recorte
+     del pliegue se va mas al fondo/vehiculos de abajo (que sangran con estilo).
+     Verificado que ni el logo ni los subtitulos se cortan en pantallas reales. */
+  .pmx-hero2__slide img{width:100%;height:100%;object-fit:cover;object-position:center 42%;}
   /* En PC la imagen es la protagonista: SIN botones encima (siguen en móvil).
      Selector más específico para ganarle a la regla base .pmx-hero2__cta. */
   .pmx-hero2 .pmx-hero2__cta{display:none;}
@@ -299,7 +298,16 @@ window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,
            correcta (idioma + PC/celular) antes del primer pintado, así el celular
            nunca carga la foto de PC primero (adiós al doble salto). data-ar
            reserva el alto exacto para que la página no brinque mientras carga. -->
-      <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Tu aliado en USA y Venezuela" fetchpriority="high" loading="eager"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.src=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script></div>
+      <!-- SLIDE 1 (principal): "Tu broker de confianza" con TODOS los servicios.
+           Lee sus imágenes de __pmxHero (arriba), que ademas se PRECARGA como LCP. -->
+      <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Tu broker de confianza en USA: compra, financiamiento, subastas, CARFAX e importación a Venezuela" fetchpriority="high" loading="eager"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.src=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script></div>
+      <!-- SLIDE 2: "Tu aliado en USA y Venezuela" (imagenes propias, ya no via __pmxHero). -->
+      <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Tu aliado en USA y Venezuela" loading="lazy"
+         data-es="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783974149/Imagen_16.9_tu_aliado_espa%C3%B1_sawrrv.png"
+         data-en="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783973283/ChatGPT_Image_13_jul_2026_15_07_00_xbclps.png"
+         data-es-m="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801947/TU_ALI_9_hld4jj.png"
+         data-en-m="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801946/YOUR_ALLI_9_rl0dtb.png"
+         data-ar="1672/941" data-ar-m="941/1672"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.src=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script></div>
       <!-- (Slide "$1,000 de inicial" ELIMINADO a pedido del cliente: salían personas.
            La oferta sigue viva en la banda "Oferta especial" más abajo, sin humanos.) -->
       <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Gana $500 por referir y participa por un Toyota Corolla 2026" loading="lazy"

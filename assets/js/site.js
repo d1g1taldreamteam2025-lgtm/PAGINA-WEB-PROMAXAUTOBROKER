@@ -108,6 +108,7 @@
   var HERO_WARM = {
     d: { // PC (f_auto,q_auto,c_limit,w_1920)
       es: [
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784168155/ChatGPT_Image_Jul_15_2026_07_10_26_PM_yswyxb.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783974149/Imagen_16.9_tu_aliado_espa%C3%B1_sawrrv.png",
         "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783050858/500_referido_j03mev.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784081959/ChatGPT_Image_Jul_14_2026_07_15_42_PM_zt23m8.png",
@@ -120,6 +121,7 @@
         "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051270/importacion_jqenay.png"
       ],
       en: [
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784168156/ChatGPT_Image_Jul_15_2026_07_11_11_PM_z5xxlb.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783973283/ChatGPT_Image_13_jul_2026_15_07_00_xbclps.png",
         "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783050858/referidos_ingles_vkqdkh.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784081958/ChatGPT_Image_Jul_14_2026_07_15_29_PM_m2y5xn.png",
@@ -134,6 +136,7 @@
     },
     m: { // celular (f_auto,q_auto,c_limit,w_1080)
       es: [
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1784168155/ChatGPT_Image_Jul_15_2026_07_11_36_PM_lsrg5m.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801947/TU_ALI_9_hld4jj.png",
         "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783050858/referidos_500_telefono_cslj5t.png",
         "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051158/inventario_telfno_ntahxa.png",
@@ -146,6 +149,7 @@
         "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051267/importa_telefono_es_cqo2xy.png"
       ],
       en: [
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1784168156/ChatGPT_Image_Jul_15_2026_07_11_22_PM_hsteru.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801946/YOUR_ALLI_9_rl0dtb.png",
         "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783050857/refer_500_telefono_en_xcid7w.png",
         "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051159/inventory_tefl_fwp1xt.png",
