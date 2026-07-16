@@ -13,7 +13,7 @@
 :root{--gold:#F4DC34;--gold-h:#ffe957;--bg:#0c0c0c;--card:#1a1a1a;--border:#2a2a2a;--input-bg:#0c0c0c;--text:#fff;--muted:#888;--subtle:#aaa;--green:#4ade80;--red:#dc2626;--blue:#60a5fa;--purple:#a78bfa;--brand:#A70200;}
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',-apple-system,sans-serif;}
 /* Fondo del NAVEGADOR también oscuro (sin fogonazo blanco al rebotar el scroll) */
-html{background:var(--bg);overscroll-behavior-y:none;}
+html{background:var(--bg);} /* sin overscroll-behavior: bloqueaba la rueda en algunos equipos */
 body{background:var(--bg);color:var(--text);min-height:100vh;}
 /* ---- Compuerta de sesión (gate.js): con sesión guardada NO se pinta el login;
    se ve este splash hasta que el panel esté listo (pmx-ready). ---- */

@@ -75,9 +75,10 @@ body.pmx-measuring #pmxSticky, body.pmx-measuring #pmxSticky *{ transition:none 
 html,body{ margin:0; padding:0; max-width:100vw; overflow-x:hidden; }
 /* El fondo del NAVEGADOR (detrás de la página) va en negro de marca: al rebotar
    el scroll arriba/abajo (overscroll) se ve oscuro — nunca el fogonazo blanco.
-   overscroll-behavior corta además el rebote elástico en Chrome/Edge/Android. */
-html{ background:var(--ink); overscroll-behavior-y:none; }
-body{ overscroll-behavior-y:none; }
+   ⚠️ NO poner overscroll-behavior en html/body: el cliente reportó que la
+   rueda del mouse y el scroll táctil dejaron de responder tras agregarlo
+   (Brave PC + teléfono). El fondo oscuro por sí solo elimina el flash blanco. */
+html{ background:var(--ink); }
 body{
   font-family:var(--font-body);
   color:var(--text);

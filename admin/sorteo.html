@@ -8,7 +8,7 @@
 <script src="/admin/gate.js"></script><!-- SÍNCRONO: decide login vs splash ANTES de pintar (sin parpadeo) -->
 <style>
 /* Fondo del NAVEGADOR también oscuro (sin fogonazo blanco al rebotar el scroll) */
-html{background:#0c0c0c;overscroll-behavior-y:none;}
+html{background:#0c0c0c;} /* sin overscroll-behavior: bloqueaba la rueda en algunos equipos */
 /* Compuerta de sesión (gate.js): con sesión guardada NO se pinta el login. */
 html.pmx-hassession #loginScreen{display:none;}
 #pmxSplash{display:none;position:fixed;inset:0;z-index:300;background:linear-gradient(135deg,#0c0c0c,#1a1a1a);align-items:center;justify-content:center;flex-direction:column;gap:16px;}
