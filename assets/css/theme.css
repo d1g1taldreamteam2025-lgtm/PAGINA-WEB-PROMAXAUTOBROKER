@@ -186,7 +186,11 @@ body:not(.pmx-nopad){ padding-top:var(--header-h); }
 /* Barra principal (desktop) — translúcida con blur (premium).
    OJO: el blur crea un stacking context; el z-index alto mantiene el
    dropdown de categorías POR ENCIMA del marquee y del contenido. */
-.pmx-nav{ position:relative; z-index:60; background:rgba(10,11,13,.86); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); box-shadow:0 10px 34px rgba(0,0,0,.35); border-bottom:1px solid rgba(255,255,255,.05); }
+/* Nav OPACO (sin transparencia ni backdrop-filter): antes era rgba(...,.86)+blur
+   y, como el header es fijo y el body es blanco, por detrás asomaba blanco a
+   los lados (el desenfoque muestreaba el fondo claro). Solido = 0 blanco, en
+   cualquier pagina, y sin costo de rendimiento del blur. */
+.pmx-nav{ position:relative; z-index:60; background:#15171c; box-shadow:0 10px 34px rgba(0,0,0,.35); border-bottom:1px solid rgba(255,255,255,.05); }
 .pmx-nav__inner{
   display:flex; align-items:center; gap:12px; max-width:var(--maxw);
   margin:0 auto; padding:13px 24px;
@@ -206,8 +210,9 @@ body:not(.pmx-nopad){ padding-top:var(--header-h); }
 .pmx-nav__item::after{ content:''; position:absolute; left:14px; right:14px; bottom:5px; height:2px; background:var(--brand-2); transform:scaleX(0); transform-origin:left; transition:transform .22s ease; border-radius:2px; }
 .pmx-nav__item:hover::after{ transform:scaleX(1); }
 
-/* Barra móvil */
-.pmx-mobilebar{ background:rgba(10,11,13,.92); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); box-shadow:0 6px 20px rgba(0,0,0,.35); display:none; }
+/* Barra móvil — OPACA igual que el nav de PC (misma razón: fija sobre body
+   blanco; con .92+blur asomaba blanco a los lados en el teléfono). Solido = 0 blanco. */
+.pmx-mobilebar{ background:#15171c; box-shadow:0 6px 20px rgba(0,0,0,.35); display:none; }
 .pmx-mobilebar__inner{ display:flex; align-items:center; gap:10px; padding:12px 16px; max-width:var(--maxw); margin:0 auto; }
 .pmx-mobilebar__logo{ margin-right:auto; display:flex; align-items:center; text-decoration:none; }
 .pmx-mobilebar__logo img{ height:42px; width:auto; max-width:170px; object-fit:contain; }
