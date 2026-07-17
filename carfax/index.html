@@ -272,15 +272,22 @@ PMX.addTranslations({
 
   // Registro del lead al hacer clic (además del WhatsApp que recibe Jorge):
   // queda guardado en el panel /admin/leads con el VIN si lo escribieron.
+  // Al tocar: pedimos Nombre + WhatsApp (una vez, se recuerda) + el VIN si lo
+  // escribieron, y abrimos WhatsApp. El lead llega con contacto. Respaldo: href nativo.
   ["cfWaTop","cfWaOrder","cfWaBottom"].forEach(function(id){
     var a = document.getElementById(id);
-    if (a) a.addEventListener('click', function(){
-      try{
-        var v = vin();
-        PMX.submitLead({ form_type: "carfax", vehicle_id: v || null,
-          message: "📄 SOLICITUD CARFAX ($15)\n" + (v ? "VIN: " + v : "VIN: pendiente (lo envía por WhatsApp)") })
-        .catch(function(){});
-      }catch(e){}
+    if (!a) return;
+    a.addEventListener('click', function(ev){
+      if (!PMX.captureThenWhatsApp) return;
+      ev.preventDefault();
+      var v = vin(), en = PMX.lang && PMX.lang()==='en';
+      PMX.captureThenWhatsApp({
+        form_type: "carfax", vehicle_id: v || null,
+        waText: msg(),
+        leadText: "📄 SOLICITUD CARFAX ($15)\n" + (v ? "VIN: " + v : "VIN: pendiente (lo envía por WhatsApp)"),
+        title: en ? "CARFAX report 📄" : "Reporte CARFAX 📄",
+        sub: en ? "Leave your name and WhatsApp and we'll send you the report." : "Déjanos tu nombre y WhatsApp y te enviamos el reporte."
+      });
     });
   });
 

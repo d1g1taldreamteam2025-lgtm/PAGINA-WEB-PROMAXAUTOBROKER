@@ -1166,32 +1166,144 @@
   function vehicleTitle(v) { return [v.year, v.make, v.model, v.trim].filter(Boolean).join(" "); }
   function vehicleUrl(v) { return (CFG.siteUrl || location.origin) + "/vehicle/?id=" + encodeURIComponent(v.id); }
 
-  // COMPRAR: abre WhatsApp con el producto y registra el lead de compra.
+  /* ---------------- CAPTURA DE CONTACTO + WHATSAPP ----------------
+     Antes de abrir WhatsApp pedimos Nombre + WhatsApp UNA sola vez (se
+     recuerdan). Así el dueño SIEMPRE recibe el lead con datos de contacto
+     (nombre + teléfono) — antes llegaban avisos "vacíos" desde los botones.
+     Si ya tenemos los datos guardados, es 1 toque, sin fricción. */
+  var LEAD_CB = null; // callback pendiente mientras el mini-formulario está abierto
+  function leadStore() {
+    try {
+      var n = (localStorage.getItem("pmx_lead_name") || "").trim();
+      var p = (localStorage.getItem("pmx_lead_phone") || "").trim();
+      return (n && p.replace(/\D/g, "").length >= 7) ? { name: n, phone: p } : null;
+    } catch (e) { return null; }
+  }
+  function leadSave(n, p) { try { localStorage.setItem("pmx_lead_name", n); localStorage.setItem("pmx_lead_phone", p); } catch (e) {} }
+
+  function buildLeadModal() {
+    var wa = '<svg viewBox="0 0 24 24" width="26" height="26" fill="#fff" aria-hidden="true"><path d="M17.6 6.32A7.85 7.85 0 0 0 12 4a7.94 7.94 0 0 0-6.9 11.9L4 20l4.2-1.1A7.9 7.9 0 0 0 12 19.9h.01a7.94 7.94 0 0 0 5.6-13.58ZM12 18.56a6.6 6.6 0 0 1-3.36-.92l-.24-.14-2.5.65.67-2.43-.16-.25a6.59 6.59 0 1 1 5.59 3.09Zm3.62-4.93c-.2-.1-1.17-.58-1.35-.64s-.31-.1-.44.1-.51.64-.62.77-.23.15-.43.05a5.4 5.4 0 0 1-1.59-.98 6 6 0 0 1-1.1-1.37c-.12-.2 0-.31.09-.41s.2-.23.3-.35a1.36 1.36 0 0 0 .2-.33.37.37 0 0 0-.02-.35c-.05-.1-.44-1.07-.6-1.46s-.32-.33-.44-.34h-.38a.72.72 0 0 0-.52.24 2.19 2.19 0 0 0-.69 1.63 3.8 3.8 0 0 0 .8 2.02 8.7 8.7 0 0 0 3.33 2.94c.47.2.83.32 1.11.41a2.68 2.68 0 0 0 1.23.08c.37-.06 1.17-.48 1.33-.94s.17-.86.12-.94-.18-.14-.38-.24Z"/></svg>';
+    return '' +
+      '<div class="pmx-lead" id="pmxLead" aria-hidden="true">' +
+        '<div class="pmx-lead__box" role="dialog" aria-modal="true" aria-labelledby="pmxLeadTitle">' +
+          '<button type="button" class="pmx-lead__x" id="pmxLeadX" aria-label="Cerrar">&times;</button>' +
+          '<div class="pmx-lead__brand">' + wa + '</div>' +
+          '<h3 class="pmx-lead__title" id="pmxLeadTitle"></h3>' +
+          '<p class="pmx-lead__sub" id="pmxLeadSub"></p>' +
+          '<form class="pmx-lead__form" id="pmxLeadForm" novalidate>' +
+            '<label class="pmx-lead__lbl" id="pmxLeadNameLbl" for="pmxLeadName"></label>' +
+            '<input class="pmx-lead__in" id="pmxLeadName" type="text" autocomplete="name" required>' +
+            '<label class="pmx-lead__lbl" id="pmxLeadPhoneLbl" for="pmxLeadPhone"></label>' +
+            '<input class="pmx-lead__in" id="pmxLeadPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(000) 000-0000" required>' +
+            '<button class="pmx-btn pmx-btn--primary pmx-btn--block pmx-lead__go" id="pmxLeadGo" type="submit"></button>' +
+            '<p class="pmx-lead__note" id="pmxLeadNote"></p>' +
+          '</form>' +
+        '</div>' +
+      '</div>';
+  }
+  function leadLabels() {
+    return LANG === "en"
+      ? { name: "Your name", phone: "Your WhatsApp", go: "Continue to WhatsApp →", note: "🔒 Only used to contact you. No spam.", title: "Almost there!", sub: "Leave your name and WhatsApp and we'll reply right away." }
+      : { name: "Tu nombre", phone: "Tu WhatsApp", go: "Continuar a WhatsApp →", note: "🔒 Solo lo usamos para contactarte. Sin spam.", title: "¡Casi listo!", sub: "Déjanos tu nombre y WhatsApp y te respondemos enseguida." };
+  }
+  function shakeField(el) { if (!el) return; el.classList.remove("pmx-shake"); void el.offsetWidth; el.classList.add("pmx-shake"); try { el.focus(); } catch (e) {} }
+
+  // Núcleo: registra el lead CON nombre + WhatsApp y abre WhatsApp al dueño.
+  function captureThenWhatsApp(opts) {
+    opts = opts || {};
+    function done(name, phone) {
+      try {
+        submitLead({
+          form_type: opts.form_type || "lead",
+          name: name, phone: phone,
+          vehicle_id: opts.vehicle_id || null,
+          vehicle_title: opts.vehicle_title || null,
+          message: opts.leadText || "",
+        }).catch(function () {});
+      } catch (e) {}
+      try { window.open(waUrl(opts.waText), "_blank", "noopener"); } catch (e) {}
+    }
+    var known = leadStore();
+    if (known) { done(known.name, known.phone); return; }   // ya nos dieron sus datos: 1 toque
+    openLeadModal(opts, done);
+  }
+
+  function openLeadModal(opts, cb) {
+    var m = document.getElementById("pmxLead");
+    // Si el modal aún no montó, NO bloqueamos al cliente: abrimos WhatsApp igual.
+    if (!m) { try { window.open(waUrl(opts.waText), "_blank", "noopener"); } catch (e) {} return; }
+    var L = leadLabels();
+    document.getElementById("pmxLeadTitle").textContent = opts.title || L.title;
+    document.getElementById("pmxLeadSub").textContent = opts.sub || L.sub;
+    document.getElementById("pmxLeadNameLbl").textContent = L.name;
+    document.getElementById("pmxLeadPhoneLbl").textContent = L.phone;
+    document.getElementById("pmxLeadGo").textContent = L.go;
+    document.getElementById("pmxLeadNote").textContent = L.note;
+    document.getElementById("pmxLeadX").setAttribute("aria-label", L.go);
+    var pre = leadStore() || {};
+    var nEl = document.getElementById("pmxLeadName"), pEl = document.getElementById("pmxLeadPhone");
+    if (pre.name) nEl.value = pre.name;
+    if (pre.phone) pEl.value = pre.phone;
+    LEAD_CB = cb;
+    m.classList.add("is-open"); m.setAttribute("aria-hidden", "false");
+    document.body.classList.add("pmx-lead-open");
+    setTimeout(function () { try { (nEl.value ? pEl : nEl).focus(); } catch (e) {} }, 60);
+  }
+  function closeLeadModal() {
+    var m = document.getElementById("pmxLead");
+    if (m) { m.classList.remove("is-open"); m.setAttribute("aria-hidden", "true"); }
+    document.body.classList.remove("pmx-lead-open");
+    LEAD_CB = null;
+  }
+  function wireLead() {
+    var m = document.getElementById("pmxLead"); if (!m) return;
+    var x = document.getElementById("pmxLeadX"), form = document.getElementById("pmxLeadForm");
+    if (x) x.addEventListener("click", closeLeadModal);
+    m.addEventListener("click", function (e) { if (e.target === m) closeLeadModal(); });
+    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && m.classList.contains("is-open")) closeLeadModal(); });
+    if (form) form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var nEl = document.getElementById("pmxLeadName"), pEl = document.getElementById("pmxLeadPhone");
+      var n = (nEl.value || "").trim(), p = (pEl.value || "").trim();
+      if (n.length < 2) { shakeField(nEl); return; }
+      if (p.replace(/\D/g, "").length < 7) { shakeField(pEl); return; }
+      leadSave(n, p);
+      var cb = LEAD_CB; LEAD_CB = null;
+      if (cb) cb(n, p);          // dentro del gesto del submit: window.open no se bloquea
+      closeLeadModal();
+    });
+  }
+
+  // COMPRAR: pide nombre + WhatsApp (una vez), guarda el lead CON contacto y abre WhatsApp.
   function buyVehicle(v) {
     if (!v) return;
     var title = vehicleTitle(v), price = money(v.price), url = vehicleUrl(v);
-    var msg = (LANG === "en")
+    var waText = (LANG === "en")
       ? "Hi Promax, I want to BUY this " + title + " (ID " + v.id + ", " + price + "). How do I proceed?\n" + url
       : "Hola Promax, quiero COMPRAR este " + title + " (ID " + v.id + ", " + price + "). ¿Cómo continúo?\n" + url;
-    submitLead({
+    captureThenWhatsApp({
       form_type: "purchase", vehicle_id: v.id, vehicle_title: title,
-      message: "🛒 INTENCIÓN DE COMPRA\n" + title + " · " + price + "\n" + url,
-    }).catch(function () {});
-    window.open(waUrl(msg), "_blank", "noopener");
+      waText: waText,
+      leadText: "🛒 INTENCIÓN DE COMPRA\n" + title + " · " + price + "\n" + url,
+      title: (LANG === "en" ? "Great choice! 🛒" : "¡Excelente elección! 🛒"),
+      sub: (LANG === "en" ? "Leave your name and WhatsApp — we'll help you with this " + title + " right away." : "Déjanos tu nombre y WhatsApp y te ayudamos con este " + title + " enseguida."),
+    });
   }
 
-  // MÁS INFORMACIÓN: WhatsApp pre-llenado con el producto + lead tipo "quote".
+  // MÁS INFORMACIÓN: mismo flujo, lead tipo "quote".
   function moreInfoVehicle(v) {
     if (!v) return;
     var title = vehicleTitle(v), price = money(v.price), url = vehicleUrl(v);
-    var msg = (LANG === "en")
+    var waText = (LANG === "en")
       ? "Hi Promax, I'd like MORE INFORMATION about this " + title + " (" + price + ").\n" + url
       : "Hola Promax, quiero MÁS INFORMACIÓN sobre este " + title + " (" + price + ").\n" + url;
-    submitLead({
+    captureThenWhatsApp({
       form_type: "quote", vehicle_id: v.id, vehicle_title: title,
-      message: "ℹ️ SOLICITUD DE INFORMACIÓN\n" + title + " · " + price + "\n" + url,
-    }).catch(function () {});
-    window.open(waUrl(msg), "_blank", "noopener");
+      waText: waText,
+      leadText: "ℹ️ SOLICITUD DE INFORMACIÓN\n" + title + " · " + price + "\n" + url,
+      title: (LANG === "en" ? "We'll send you the details ℹ️" : "Te damos toda la info ℹ️"),
+      sub: (LANG === "en" ? "Leave your name and WhatsApp for this " + title + "." : "Déjanos tu nombre y WhatsApp para este " + title + "."),
+    });
   }
 
   /* ---------------- TELÉFONO CON FORMATO AUTOMÁTICO ---------------- */
@@ -1241,6 +1353,10 @@
       var pr = document.createElement("div"); pr.innerHTML = buildPromo();
       while (pr.firstChild) document.body.appendChild(pr.firstChild);
     }
+    if (!document.getElementById("pmxLead")) {
+      var ld = document.createElement("div"); ld.innerHTML = buildLeadModal();
+      document.body.appendChild(ld.firstChild);
+    }
 
     var y = document.getElementById("pmxYear");
     if (y) y.textContent = new Date().getFullYear();
@@ -1256,6 +1372,7 @@
     updateOpenStatus();
     setInterval(updateOpenStatus, 60000);
     wirePromo();
+    wireLead();
 
     // Alto real del header (franja de sorteo incluida): al montar, al cargar
     // fuentes/recursos y al cambiar el tamaño de la ventana.
@@ -1290,6 +1407,7 @@
     waUrl: waUrl,
     buy: buyVehicle,
     moreInfo: moreInfoVehicle,
+    captureThenWhatsApp: captureThenWhatsApp,
     toast: toast,
     syncHeader: syncHeaderPad,
   };

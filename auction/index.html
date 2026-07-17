@@ -248,14 +248,23 @@ PMX.addTranslations({
   }
   wire();
   window.addEventListener('pmx-lang', wire);
+  // Al tocar: pedimos Nombre + WhatsApp (una vez) y abrimos WhatsApp. Así el
+  // lead SIEMPRE llega con datos de contacto. Si PMX aún no cargó, el href
+  // nativo (que apunta a WhatsApp) sirve de respaldo.
   ["auWaTop","auWaBottom"].forEach(function(id){
     var a = document.getElementById(id);
-    if (a) a.addEventListener('click', function(){
-      try{
-        PMX.submitLead({ form_type: "auction",
-          message: "🔨 SOLICITUD DE SUBASTA\nCliente interesado en comprar un vehículo en subasta (clic en " + id + " de /auction/)." })
-        .catch(function(){});
-      }catch(e){}
+    if (!a) return;
+    a.addEventListener('click', function(ev){
+      if (!PMX.captureThenWhatsApp) return;
+      ev.preventDefault();
+      var en = PMX.lang && PMX.lang()==='en';
+      PMX.captureThenWhatsApp({
+        form_type: "auction",
+        waText: msg(),
+        leadText: "🔨 SOLICITUD DE SUBASTA\nCliente quiere comprar un vehículo en SUBASTA (desde /auction/).",
+        title: en ? "Buy at auction 🔨" : "Compra en subasta 🔨",
+        sub: en ? "Leave your name and WhatsApp and we'll guide you through the auction." : "Déjanos tu nombre y WhatsApp y te asesoramos con la subasta."
+      });
     });
   });
 
