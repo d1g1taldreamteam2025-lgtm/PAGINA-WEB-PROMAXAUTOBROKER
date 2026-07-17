@@ -609,7 +609,7 @@
   // Enlace de WhatsApp con firma de origen: el dueño SIEMPRE sabe que el
   // mensaje llegó desde la página web (pedido expreso del cliente).
   function waOriginLine() {
-    return LANG === "en" ? "— I'm coming from your website 🌐" : "— Vengo de su página web 🌐";
+    return LANG === "en" ? "— I'm coming from your website" : "— Vengo de su página web";
   }
   function waUrl(msg) {
     var m = (msg || t("wa_msg")) + "\n" + waOriginLine();

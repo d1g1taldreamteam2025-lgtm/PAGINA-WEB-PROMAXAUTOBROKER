@@ -256,8 +256,8 @@ PMX.addTranslations({
   }
   function msg(){
     var v = vin(), en = PMX.lang && PMX.lang()==='en';
-    if (en) return "Hi Promax, I'd like to order a CARFAX REPORT ($15) 📄." + (v ? "\nVIN: " + v : "\nI'll send you the VIN right away.");
-    return "Hola Promax, quiero pedir un REPORTE CARFAX ($15) 📄." + (v ? "\nVIN: " + v : "\nEnseguida les envío el VIN.");
+    if (en) return "Hi Promax, I'd like to order a CARFAX REPORT ($15)." + (v ? "\nVIN: " + v : "\nI'll send you the VIN right away.");
+    return "Hola Promax, quiero pedir un REPORTE CARFAX ($15)." + (v ? "\nVIN: " + v : "\nEnseguida les envío el VIN.");
   }
   function wire(){
     var url = PMX.waUrl ? PMX.waUrl(msg()) : "#";
