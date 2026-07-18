@@ -196,7 +196,7 @@ body:not(.pmx-nopad){ padding-top:var(--header-h); }
   margin:0 auto; padding:13px 24px;
 }
 .pmx-nav__logo{ margin-right:auto; display:flex; align-items:center; text-decoration:none; }
-.pmx-nav__logo img{ height:52px; width:auto; max-width:230px; object-fit:contain; }
+.pmx-nav__logo img{ height:60px; width:auto; max-width:230px; object-fit:contain; }
 .pmx-nav__logo-text{ font-family:var(--font-head); font-weight:800; font-size:24px; color:#fff; letter-spacing:-.5px; }
 .pmx-nav__logo-text b{ color:var(--accent); }
 .pmx-nav__item{
@@ -215,7 +215,7 @@ body:not(.pmx-nopad){ padding-top:var(--header-h); }
 .pmx-mobilebar{ background:#15171c; box-shadow:0 6px 20px rgba(0,0,0,.35); display:none; }
 .pmx-mobilebar__inner{ display:flex; align-items:center; gap:10px; padding:12px 16px; max-width:var(--maxw); margin:0 auto; }
 .pmx-mobilebar__logo{ margin-right:auto; display:flex; align-items:center; text-decoration:none; }
-.pmx-mobilebar__logo img{ height:42px; width:auto; max-width:170px; object-fit:contain; }
+.pmx-mobilebar__logo img{ height:48px; width:auto; max-width:170px; object-fit:contain; }
 .pmx-mobilebar__logo .pmx-nav__logo-text{ font-size:20px; }
 .pmx-burger{
   width:42px; height:42px; background:transparent; border:1.5px solid rgba(255,255,255,.4);
