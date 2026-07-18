@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 56" width="240" height="56">
-  <text x="0" y="32" font-family="Poppins, Arial, sans-serif" font-size="30" font-weight="800" letter-spacing="-0.5">
-    <tspan fill="#ffffff">PRO</tspan><tspan fill="#E11D2A">MAX</tspan>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 58" width="240" height="58" role="img" aria-label="Promax Auto Broker">
+  <text x="0" y="37" font-family="'Arial Black','Helvetica Neue',Arial,sans-serif" font-size="39" font-weight="900" letter-spacing="-1.5">
+    <tspan fill="#ffffff">PRO</tspan><tspan fill="#F4DC34">MAX</tspan>
   </text>
-  <text x="2" y="50" font-family="Inter, Arial, sans-serif" font-size="10" letter-spacing="3" fill="#94a3b8">AUTO BROKER</text>
+  <text x="3" y="53" font-family="Arial,sans-serif" font-size="10.5" font-weight="700" letter-spacing="5.6" fill="#cfd3da">AUTO BROKER</text>
 </svg>

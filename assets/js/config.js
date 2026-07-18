@@ -11,11 +11,13 @@ window.PROMAX = {
   brand: {
     name: "Promax Auto Broker",
     short: "Promax",
-    // Logo oficial (Cloudinary). El header/footer es oscuro, por eso usamos el mismo en ambos.
-    logo: "https://res.cloudinary.com/drbc4wbvw/image/upload/v1782163987/Logos-05_cqy7tj.png",
-    logoLight: "https://res.cloudinary.com/drbc4wbvw/image/upload/v1782163987/Logos-05_cqy7tj.png",
+    // Logo LOCAL (SVG, siempre carga). El PNG de Cloudinary daba 401 (restringido)
+    // y el header caía al texto de respaldo; por eso se ve el wordmark local.
+    // El header/footer/barra móvil son oscuros → usamos la versión BLANCA en los tres.
+    logo: "/assets/img/logo-white.svg",
+    logoLight: "/assets/img/logo-white.svg",
     // Versión para FONDOS CLAROS (letras negras): no se pierde sobre blanco.
-    logoDark: "https://res.cloudinary.com/drbc4wbvw/image/upload/e_trim/v1782222860/Logos-06_ojajis.png",
+    logoDark: "/assets/img/logo.svg",
     logoText: "PROMAX",
     // Ícono de WhatsApp del botón flotante. Vacío ("") = ícono integrado nítido
     // (teléfono BLANCO sobre círculo verde). Si quieres una imagen propia, pega su
