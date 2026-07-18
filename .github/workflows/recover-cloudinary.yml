@@ -1,0 +1,84 @@
+# VIGILANTE DE RECUPERACIÓN — cuenta Cloudinary drbc4wbvw (suspendida jul 2026)
+#
+# La cuenta murió con banners/flyers/videos dentro y sin respaldo. Las
+# suspensiones del plan gratis suelen levantarse SOLAS el día 1 del mes (o si
+# el dueño arregla la cuenta). Este workflow prueba a diario: en cuanto los
+# archivos respondan 200, los DESCARGA al repo (assets/img/recovered/) y hace
+# commit — rescate automático sin que nadie tenga que acordarse.
+#
+# Cuando haya archivos en assets/img/recovered/: avisar en el chat de Claude
+# para re-conectarlos a las páginas (los sitios exactos están anotados en
+# CLAUDE.md y en comentarios <!-- --> dentro de index.html, financing, import
+# y about). Después de recuperar todo, borrar este workflow.
+name: Rescate Cloudinary caída
+
+on:
+  schedule:
+    - cron: "17 9 * * *"   # diario 9:17 UTC
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Probar y descargar lo que reviva
+        run: |
+          mkdir -p assets/img/recovered
+          BASE="https://res.cloudinary.com/drbc4wbvw"
+          # nombre-destino|ruta-original (SIN transformaciones: máxima calidad)
+          ASSETS='
+          banner-500-referidos-es-pc.png|image/upload/v1783050858/500_referido_j03mev.png
+          banner-500-referidos-en-pc.png|image/upload/v1783050858/referidos_ingles_vkqdkh.png
+          banner-500-referidos-es-movil.png|image/upload/v1783050858/referidos_500_telefono_cslj5t.png
+          banner-500-referidos-en-movil.png|image/upload/v1783050857/refer_500_telefono_en_xcid7w.png
+          hero-import-es-pc.png|image/upload/v1783051270/importacion_jqenay.png
+          hero-import-en-pc.png|image/upload/v1783051270/importacion_ingles_yket1x.png
+          hero-import-es-movil.png|image/upload/v1783051267/importa_telefono_es_cqo2xy.png
+          hero-import-en-movil.png|image/upload/v1783051269/importa_ingles_tel_mb8wg1.png
+          hero-financing-es-pc.png|image/upload/v1783051028/precalifica_espa_ol_bi4ttf.png
+          hero-financing-en-pc.png|image/upload/v1783051029/precalifica_ingles_qaahwk.png
+          hero-financing-es-movil.png|image/upload/v1783051028/precalifica_telf_espa_o_bel8ag.png
+          hero-financing-en-movil.png|image/upload/v1783051028/get_precualifed_telf_ingles_mcdlsh.png
+          hero-inventory-es-movil.png|image/upload/v1783051158/inventario_telfno_ntahxa.png
+          hero-inventory-en-movil.png|image/upload/v1783051159/inventory_tefl_fwp1xt.png
+          flyer-15off-es.png|image/upload/v1783050699/15_OFF_ESPA_OL_mupupy.png
+          flyer-15off-en.png|image/upload/v1783050716/15_OFF_ENGLHISH_boybwo.png
+          video-bienvenida-es.mp4|video/upload/v1782140344/PROMAX_ESPA%C3%91OL_jwoj9a.mp4
+          video-bienvenida-es-poster.jpg|video/upload/v1782140344/PROMAX_ESPA%C3%91OL_jwoj9a.jpg
+          video-bienvenida-en.mp4|video/upload/v1782140318/PROMAX_INGLES_wcvbbw.mp4
+          video-bienvenida-en-poster.jpg|video/upload/v1782140318/PROMAX_INGLES_wcvbbw.jpg
+          video-embarque-venezuela.mp4|video/upload/v1783355923/Recibiendo_para_serEnviada_a_venezuela_en_nuestro_pr%C3%B3ximo_embarque_v5xnas.mp4
+          video-sequoia.mp4|video/upload/v1783363409/Toyota_Sequoia_Limited_Lujo_espacio_y_poder_en_una_sola_SUV_La_combinaci%C3%B3n_perfecta_entr_1_vldfxe.mp4
+          '
+          ALIVE=0; NEW=0
+          while IFS='|' read -r dest path; do
+            [ -z "$dest" ] && continue
+            [ -f "assets/img/recovered/$dest" ] && { ALIVE=$((ALIVE+1)); continue; }
+            code=$(curl -sS -o "/tmp/dl" -w "%{http_code}" --max-time 120 "$BASE/$path" || echo 000)
+            size=$(wc -c < /tmp/dl 2>/dev/null || echo 0)
+            if [ "$code" = "200" ] && [ "$size" -gt 5000 ]; then
+              mv /tmp/dl "assets/img/recovered/$dest"
+              echo "RECUPERADO: $dest ($size bytes)"
+              ALIVE=$((ALIVE+1)); NEW=$((NEW+1))
+            else
+              echo "aún muerto ($code): $dest"
+            fi
+          done <<EOF2
+          $ASSETS
+          EOF2
+          echo "vivos=$ALIVE nuevos=$NEW"
+          echo "NEW=$NEW" >> "$GITHUB_ENV"
+
+      - name: Commit de lo recuperado
+        if: env.NEW != '0'
+        run: |
+          git config user.name "promax-rescate"
+          git config user.email "actions@github.com"
+          git add assets/img/recovered
+          git commit -m "🛟 Rescate automático: la cuenta Cloudinary respondió — archivos salvados al repo"
+          git push
