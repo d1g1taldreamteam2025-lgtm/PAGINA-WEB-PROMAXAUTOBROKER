@@ -110,56 +110,42 @@
       es: [
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784168155/ChatGPT_Image_Jul_15_2026_07_10_26_PM_yswyxb.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783974149/Imagen_16.9_tu_aliado_espa%C3%B1_sawrrv.png",
-        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783050858/500_referido_j03mev.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784081959/ChatGPT_Image_Jul_14_2026_07_15_42_PM_zt23m8.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082243/ChatGPT_Image_Jul_14_2026_07_12_22_PM_evn6it.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784081912/ChatGPT_Image_Jul_14_2026_07_11_38_PM_kzjuco.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082034/ChatGPT_Image_Jul_14_2026_07_10_09_PM_y3c1op.png",
-        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051028/precalifica_espa_ol_bi4ttf.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082200/ChatGPT_Image_Jul_14_2026_07_14_34_PM_tlmrbj.png",
-        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082088/ChatGPT_Image_Jul_14_2026_07_14_22_PM_xfy6ap.png",
-        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051270/importacion_jqenay.png"
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082088/ChatGPT_Image_Jul_14_2026_07_14_22_PM_xfy6ap.png"
       ],
       en: [
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784168156/ChatGPT_Image_Jul_15_2026_07_11_11_PM_z5xxlb.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783973283/ChatGPT_Image_13_jul_2026_15_07_00_xbclps.png",
-        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783050858/referidos_ingles_vkqdkh.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784081958/ChatGPT_Image_Jul_14_2026_07_15_29_PM_m2y5xn.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082254/ChatGPT_Image_Jul_14_2026_07_12_07_PM_tabkr8.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784081914/ChatGPT_Image_Jul_14_2026_07_10_59_PM_ayfrph.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082045/ChatGPT_Image_Jul_14_2026_07_09_56_PM_ohbajv.png",
-        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051029/precalifica_ingles_qaahwk.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082197/ChatGPT_Image_Jul_14_2026_07_15_04_PM_ncn5ml.png",
-        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082086/ChatGPT_Image_Jul_14_2026_07_14_14_PM_idjpdr.png",
-        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051270/importacion_ingles_yket1x.png"
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082086/ChatGPT_Image_Jul_14_2026_07_14_14_PM_idjpdr.png"
       ]
     },
     m: { // celular (f_auto,q_auto,c_limit,w_1080)
       es: [
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1784168155/ChatGPT_Image_Jul_15_2026_07_11_36_PM_lsrg5m.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801947/TU_ALI_9_hld4jj.png",
-        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783050858/referidos_500_telefono_cslj5t.png",
-        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051158/inventario_telfno_ntahxa.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865300/espa_9_glr0qv.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801513/CONTACTANOS_9_16_kfuai0.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801782/Preguntas_9_16_oo9aar.png",
-        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051028/precalifica_telf_espa_o_bel8ag.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865142/subasta_9_sxmqw6.png",
-        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865048/9.16_espanol.16_espanol_fp59cy.png",
-        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051267/importa_telefono_es_cqo2xy.png"
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865048/9.16_espanol.16_espanol_fp59cy.png"
       ],
       en: [
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1784168156/ChatGPT_Image_Jul_15_2026_07_11_22_PM_hsteru.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801946/YOUR_ALLI_9_rl0dtb.png",
-        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783050857/refer_500_telefono_en_xcid7w.png",
-        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051159/inventory_tefl_fwp1xt.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865298/ingle_9_vbmdlm.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801513/Message_us_now_9_16_ukj4af.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801782/Faq_9_16_t2sfde.png",
-        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051028/get_precualifed_telf_ingles_mcdlsh.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865144/auction_9_vepjvo.png",
-        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865048/ingles_9_hitzcl.png",
-        "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051269/importa_ingles_tel_mb8wg1.png"
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865048/ingles_9_hitzcl.png"
       ]
     }
   };
@@ -390,14 +376,14 @@
     { href: "/financing/", key: "nav_financing", dropdown: true },
     { href: "/about/", key: "nav_about" },
     { href: "/contact/", key: "nav_contact" },
-    { href: "/faqs/", key: "nav_faqs" },
+    { href: "/faqs/", key: "nav_faqs" }
   ];
 
   // Sub-enlaces del menú "Servicios" (desktop: dropdown; móvil: lista indentada)
   var SERVICES = [
     { href: "/import/", key: "nav_import_full", sub: "nav_import_sub" },
     { href: "/auction/", key: "nav_auction", sub: "nav_auction_sub" },
-    { href: "/carfax/", key: "nav_carfax", sub: "nav_carfax_sub" },
+    { href: "/carfax/", key: "nav_carfax", sub: "nav_carfax_sub" }
   ];
 
   function langPills(extraClass) {
@@ -539,7 +525,7 @@
   function buildFooter() {
     var s = CFG.social || {};
     var socialLinks = [
-      ["instagram", s.instagram], ["facebook", s.facebook], ["youtube", s.youtube], ["tiktok", s.tiktok],
+      ["instagram", s.instagram], ["facebook", s.facebook], ["youtube", s.youtube], ["tiktok", s.tiktok]
     ].filter(function (x) { return x[1]; })
      .map(function (x) { return '<a href="' + x[1] + '" target="_blank" rel="noopener" aria-label="' + x[0] + '">' + IC[x[0]] + "</a>"; })
      .join("");
@@ -918,7 +904,7 @@
       '<div class="pmx-promo" id="pmxPromo">' +
         '<div class="pmx-promo__box">' +
           '<button class="pmx-promo__x" id="pmxPromoX" type="button" aria-label="Cerrar">&times;</button>' +
-          '<div class="pmx-promo__img"><img id="pmxPromoImg" data-i18n-src="promo_img" src="' + t("promo_img") + '" alt="15% OFF"></div>' +
+          '<div class="pmx-promo__img"><img id="pmxPromoImg" alt="15% OFF"></div>' +
           '<div class="pmx-promo__body">' +
             '<span class="pmx-promo__badge" data-i18n="promo_badge">' + t("promo_badge") + '</span>' +
             '<h3 class="pmx-promo__title" data-i18n="promo_title">' + t("promo_title") + '</h3>' +
@@ -978,8 +964,16 @@
       try { sessionStorage.setItem(TKEY, String(acc)); } catch (e) {}
       if (acc >= 120) {
         clearInterval(iv);
-        try { sessionStorage.setItem(SHOWN, "1"); } catch (e) {}
-        open();
+        // El flyer del popup vive en un CDN externo: la imagen se descarga y el
+        // popup se abre SOLO si realmente carga (si el CDN falla, no se muestra
+        // nada roto — y no gastamos la descarga al entrar a la página).
+        var probe = new Image();
+        probe.onload = function () {
+          var pi = document.getElementById("pmxPromoImg"); if (pi) pi.src = probe.src;
+          try { sessionStorage.setItem(SHOWN, "1"); } catch (e) {}
+          open();
+        };
+        probe.src = t("promo_img");
       }
     }, 1000);
   }

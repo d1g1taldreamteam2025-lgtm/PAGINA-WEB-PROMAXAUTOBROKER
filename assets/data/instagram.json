@@ -1,32 +1,42 @@
 [
-  { "video": "https://res.cloudinary.com/drbc4wbvw/video/upload/v1783355923/Recibiendo_para_serEnviada_a_venezuela_en_nuestro_pr%C3%B3ximo_embarque_v5xnas.mp4",
-    "poster": "https://res.cloudinary.com/drbc4wbvw/video/upload/so_0,w_640/v1783355923/Recibiendo_para_serEnviada_a_venezuela_en_nuestro_pr%C3%B3ximo_embarque_v5xnas.jpg",
-    "caption": "🚢 Recibiendo tu vehículo para enviarlo a Venezuela en nuestro próximo embarque." },
-  { "video": "https://res.cloudinary.com/kcixfvoq/video/upload/v1783365288/Toyota_Corolla_SE_2026_Estrena_tu_Toyota_Corolla_SE_2026_Desde_398_al_mes_Financ_d1h5me.mp4",
+  {
+    "video": "https://res.cloudinary.com/kcixfvoq/video/upload/v1783365288/Toyota_Corolla_SE_2026_Estrena_tu_Toyota_Corolla_SE_2026_Desde_398_al_mes_Financ_d1h5me.mp4",
     "poster": "https://res.cloudinary.com/kcixfvoq/video/upload/so_0,w_640/v1783365288/Toyota_Corolla_SE_2026_Estrena_tu_Toyota_Corolla_SE_2026_Desde_398_al_mes_Financ_d1h5me.jpg",
-    "caption": "🚗 Toyota Corolla SE 2026 — estréna el tuyo desde $398 al mes. Financiamiento disponible." },
-  { "video": "https://res.cloudinary.com/kcixfvoq/video/upload/v1783365507/TOYOTA_4RUNNER_TRD_OFF-ROAD_2026_Lista_para_cualquier_terreno_Motor_potente_y_con_ukhbyj.mp4",
+    "caption": "🚗 Toyota Corolla SE 2026 — estréna el tuyo desde $398 al mes. Financiamiento disponible."
+  },
+  {
+    "video": "https://res.cloudinary.com/kcixfvoq/video/upload/v1783365507/TOYOTA_4RUNNER_TRD_OFF-ROAD_2026_Lista_para_cualquier_terreno_Motor_potente_y_con_ukhbyj.mp4",
     "poster": "https://res.cloudinary.com/kcixfvoq/video/upload/so_0,w_640/v1783365507/TOYOTA_4RUNNER_TRD_OFF-ROAD_2026_Lista_para_cualquier_terreno_Motor_potente_y_con_ukhbyj.jpg",
-    "caption": "🏔️ Toyota 4Runner TRD Off-Road 2026 — lista para cualquier terreno." },
-  { "video": "https://res.cloudinary.com/kcixfvoq/video/upload/v1783365511/Toyota_Crown_Limited_2026_Elegancia_tecnolog%C3%ADa_y_potencia_h%C3%ADbrida_en_un_solo_veh%C3%ADculo._La_mkutsn.mp4",
+    "caption": "🏔️ Toyota 4Runner TRD Off-Road 2026 — lista para cualquier terreno."
+  },
+  {
+    "video": "https://res.cloudinary.com/kcixfvoq/video/upload/v1783365511/Toyota_Crown_Limited_2026_Elegancia_tecnolog%C3%ADa_y_potencia_h%C3%ADbrida_en_un_solo_veh%C3%ADculo._La_mkutsn.mp4",
     "poster": "https://res.cloudinary.com/kcixfvoq/video/upload/so_0,w_640/v1783365511/Toyota_Crown_Limited_2026_Elegancia_tecnolog%C3%ADa_y_potencia_h%C3%ADbrida_en_un_solo_veh%C3%ADculo._La_mkutsn.jpg",
-    "caption": "💎 Toyota Crown Limited 2026 — elegancia, tecnología y potencia híbrida." },
-  { "video": "https://res.cloudinary.com/drbc4wbvw/video/upload/v1783363409/Toyota_Sequoia_Limited_Lujo_espacio_y_poder_en_una_sola_SUV_La_combinaci%C3%B3n_perfecta_entr_1_vldfxe.mp4",
-    "poster": "https://res.cloudinary.com/drbc4wbvw/video/upload/so_0,w_640/v1783363409/Toyota_Sequoia_Limited_Lujo_espacio_y_poder_en_una_sola_SUV_La_combinaci%C3%B3n_perfecta_entr_1_vldfxe.jpg",
-    "caption": "✨ Toyota Sequoia Limited — lujo, espacio y poder en una sola SUV." },
-  { "video": "https://res.cloudinary.com/kcixfvoq/video/upload/v1783365300/AQPgxlKN0ccBHX8V-JWIPdQNdruTh0fhMdJPCyRMweqW8IqCgrz0v8gyjovpzfetluX1pfi0eGNOg_bRn6izPIfioDWVpEoq_jjus1h.mp4",
+    "caption": "💎 Toyota Crown Limited 2026 — elegancia, tecnología y potencia híbrida."
+  },
+  {
+    "video": "https://res.cloudinary.com/kcixfvoq/video/upload/v1783365300/AQPgxlKN0ccBHX8V-JWIPdQNdruTh0fhMdJPCyRMweqW8IqCgrz0v8gyjovpzfetluX1pfi0eGNOg_bRn6izPIfioDWVpEoq_jjus1h.mp4",
     "poster": "https://res.cloudinary.com/kcixfvoq/video/upload/so_0,w_640/v1783365300/AQPgxlKN0ccBHX8V-JWIPdQNdruTh0fhMdJPCyRMweqW8IqCgrz0v8gyjovpzfetluX1pfi0eGNOg_bRn6izPIfioDWVpEoq_jjus1h.jpg",
-    "caption": "🛻 Toyota — potencia y estilo para tu día a día." },
-  { "video": "https://res.cloudinary.com/kcixfvoq/video/upload/v1783365626/2023_Kenworth_W990_caracasvenezuela_importacion_chutos_venezuela_dxzviv.mp4",
+    "caption": "🛻 Toyota — potencia y estilo para tu día a día."
+  },
+  {
+    "video": "https://res.cloudinary.com/kcixfvoq/video/upload/v1783365626/2023_Kenworth_W990_caracasvenezuela_importacion_chutos_venezuela_dxzviv.mp4",
     "poster": "https://res.cloudinary.com/kcixfvoq/video/upload/so_0,w_640/v1783365626/2023_Kenworth_W990_caracasvenezuela_importacion_chutos_venezuela_dxzviv.jpg",
-    "caption": "🚛 Kenworth W990 2023 — importación de chutos a Venezuela." },
-  { "video": "https://res.cloudinary.com/kcixfvoq/video/upload/v1783365717/MACK_ANTHEM_2022_SLEEPER_Potencia_presencia_y_comodidad_en_un_solo_chuto._A%C3%B1o_2022_Sl_dgkxvg.mp4",
+    "caption": "🚛 Kenworth W990 2023 — importación de chutos a Venezuela."
+  },
+  {
+    "video": "https://res.cloudinary.com/kcixfvoq/video/upload/v1783365717/MACK_ANTHEM_2022_SLEEPER_Potencia_presencia_y_comodidad_en_un_solo_chuto._A%C3%B1o_2022_Sl_dgkxvg.mp4",
     "poster": "https://res.cloudinary.com/kcixfvoq/video/upload/so_0,w_640/v1783365717/MACK_ANTHEM_2022_SLEEPER_Potencia_presencia_y_comodidad_en_un_solo_chuto._A%C3%B1o_2022_Sl_dgkxvg.jpg",
-    "caption": "🚚 Mack Anthem 2022 Sleeper — potencia, presencia y comodidad en un solo chuto." },
-  { "video": "https://res.cloudinary.com/kcixfvoq/video/upload/v1783365817/Importa_tu_box_Truck_con_nosotros_caracasvenezuela_camion_venezuela_importacion_usa_zdksbk.mp4",
+    "caption": "🚚 Mack Anthem 2022 Sleeper — potencia, presencia y comodidad en un solo chuto."
+  },
+  {
+    "video": "https://res.cloudinary.com/kcixfvoq/video/upload/v1783365817/Importa_tu_box_Truck_con_nosotros_caracasvenezuela_camion_venezuela_importacion_usa_zdksbk.mp4",
     "poster": "https://res.cloudinary.com/kcixfvoq/video/upload/so_0,w_640/v1783365817/Importa_tu_box_Truck_con_nosotros_caracasvenezuela_camion_venezuela_importacion_usa_zdksbk.jpg",
-    "caption": "📦 Importa tu Box Truck con nosotros — de USA a Venezuela." },
-  { "video": "https://res.cloudinary.com/kcixfvoq/video/upload/v1783365935/IMPORTA_TU_VEH%C3%8DCULO_A_VENEZUELA_SIN_COMPLICACIONES_Quieres_llevar_tu_carro_desde_U_qdfkdn.mp4",
+    "caption": "📦 Importa tu Box Truck con nosotros — de USA a Venezuela."
+  },
+  {
+    "video": "https://res.cloudinary.com/kcixfvoq/video/upload/v1783365935/IMPORTA_TU_VEH%C3%8DCULO_A_VENEZUELA_SIN_COMPLICACIONES_Quieres_llevar_tu_carro_desde_U_qdfkdn.mp4",
     "poster": "https://res.cloudinary.com/kcixfvoq/video/upload/so_0,w_640/v1783365935/IMPORTA_TU_VEH%C3%8DCULO_A_VENEZUELA_SIN_COMPLICACIONES_Quieres_llevar_tu_carro_desde_U_qdfkdn.jpg",
-    "caption": "🌎 Importa tu vehículo a Venezuela sin complicaciones." }
+    "caption": "🌎 Importa tu vehículo a Venezuela sin complicaciones."
+  }
 ]

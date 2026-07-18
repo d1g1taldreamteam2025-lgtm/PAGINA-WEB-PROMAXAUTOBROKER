@@ -22,13 +22,12 @@
 <meta name="twitter:description" content="Compra en USA y recibe en Venezuela: inspección, compra, exportación, embarque y seguimiento — de punta a punta.">
 <meta name="twitter:image" content="https://www.promaxautobroker.com/assets/img/promax-og.png">
 <link rel="preconnect" href="https://res.cloudinary.com">
-<script>/* Héroe de la página — ÚNICA fuente de sus variantes (idioma × PC/celular).
-   Se elige AQUÍ, antes de las hojas de estilo, y se inyecta un preload: la foto
-   del primer vistazo baja EN PARALELO con el CSS (LCP rápido) y el celular jamás
-   descarga la foto de PC. El <img> del body copia estos datos con su mini-script.
-   ⚠️ Si cambias una foto, actualiza también HERO_WARM en assets/js/site.js. */
-window.__pmxHero={"es":"https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051270/importacion_jqenay.png","en":"https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1920/v1783051270/importacion_ingles_yket1x.png","es-m":"https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051267/importa_telefono_es_cqo2xy.png","en-m":"https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_1080/v1783051269/importa_ingles_tel_mb8wg1.png","ar":"1942/809","ar-m":"1122/1402"};
-(function(){var H=window.__pmxHero,l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var n=document.createElement("link");n.rel="preload";n.as="image";n.setAttribute("fetchpriority","high");n.href=(m?H[l+"-m"]:0)||H[l];document.head.appendChild(n);})();</script>
+<script>/* Héroe: las imágenes de esta página vivían en la cuenta Cloudinary
+   drbc4wbvw, que quedó SUSPENDIDA (HTTP 401) — el hero mostraba un hueco vacío.
+   Mientras se re-suben los banners (idealmente a /assets/img/), la página usa su
+   hero de TEXTO diseñado. Para restaurar: volver a declarar window.__pmxHero con
+   las URLs nuevas (es/en/es-m/en-m + ar/ar-m) y quitar este comentario. */
+window.__pmxHero=null;</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -84,7 +83,7 @@ window.__pmxHero={"es":"https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto
 <section class="imp-hero" id="impHero">
   <!-- Sin src fijo: el mini-script elige la variante correcta (idioma + PC/celular)
        ANTES del primer pintado; data-ar reserva el alto (sin saltos al cargar). -->
-  <img class="imp-hero__poster" id="impPoster" alt="Importación a Venezuela" loading="eager" fetchpriority="high"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.src=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script>
+  <img class="imp-hero__poster" id="impPoster" alt="Importación a Venezuela" loading="eager" fetchpriority="high"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var u=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(u){var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.onerror=function(){if(h)h.classList.remove("has-img");i.style.display="none";};i.src=u;if(h)h.classList.add("has-img");}else{i.style.display="none";}s.remove();})();</script>
   <div class="imp-hero__inner">
     <span class="pmx-eyebrow" data-i18n="imp_eyebrow">Exportación · USA → Venezuela</span>
     <h1><span data-i18n="imp_t1">Compra en Estados Unidos, </span><br><em data-i18n="imp_t2">recíbelo en Venezuela</em></h1>

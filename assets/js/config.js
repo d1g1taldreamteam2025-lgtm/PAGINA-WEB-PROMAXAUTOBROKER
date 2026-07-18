@@ -11,13 +11,14 @@ window.PROMAX = {
   brand: {
     name: "Promax Auto Broker",
     short: "Promax",
-    // Logo OFICIAL de Promax (emblema circular PRO·MAX·AUTO BROKER), alojado LOCAL
-    // para que nunca falle. El PNG de Cloudinary anterior (cuenta drbc4wbvw) daba
-    // 401 y el header caía a un texto de respaldo feo. El emblema tiene su propio
-    // círculo oscuro, así que se ve bien en cualquier fondo (header, footer, móvil).
-    logo: "/assets/img/promax-logo.png",
-    logoLight: "/assets/img/promax-logo.png",
-    logoDark: "/assets/img/promax-logo.png",
+    // Logos OFICIALES de Promax (los del correo de Joel), alojados LOCAL en nuestro
+    // servidor: nunca dependen de Cloudinary (la cuenta drbc4wbvw murió con 401 y
+    // rompió el logo anterior). Dos variantes:
+    //   logo-header.svg  = PRO amarillo + MAX BLANCO  (fondos oscuros; SVG = jamás pixela)
+    //   logo-footer.png  = PRO amarillo + MAX NEGRO   (fondos claros / chip blanco del footer)
+    logo: "/assets/img/logo-header.svg",
+    logoLight: "/assets/img/logo-footer.png",
+    logoDark: "/assets/img/logo-footer.png",
     logoText: "PROMAX",
     // Ícono de WhatsApp del botón flotante. Vacío ("") = ícono integrado nítido
     // (teléfono BLANCO sobre círculo verde). Si quieres una imagen propia, pega su
@@ -29,8 +30,9 @@ window.PROMAX = {
   /* ---------- BANDERAS DEL SELECTOR DE IDIOMA ---------- */
   // Cambia el código (us, ve, co, es) por el país que prefieras.
   flags: {
-    en: "https://flagcdn.com/w40/us.png",   // Inglés → Estados Unidos
-    es: "https://flagcdn.com/w40/es.png",   // Español → España
+    // LOCALES (antes flagcdn.com): cero dependencias de CDNs externos.
+    en: "/assets/img/flag-us.png",   // Inglés → Estados Unidos
+    es: "/assets/img/flag-es.png",   // Español → España
   },
 
   /* ---------- CONTACTO ---------- */
