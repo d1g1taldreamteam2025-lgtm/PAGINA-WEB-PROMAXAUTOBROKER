@@ -22,12 +22,10 @@
 <meta name="twitter:description" content="Pre-califica en minutos con Promax Auto Broker. Consulta suave sin impacto al crédito, aceptamos ITIN y primer comprador, y trabajamos con varios prestamistas.">
 <meta name="twitter:image" content="https://www.promaxautobroker.com/assets/img/promax-og.png">
 <link rel="preconnect" href="https://res.cloudinary.com">
-<script>/* Héroe: las imágenes de esta página vivían en la cuenta Cloudinary
-   drbc4wbvw, que quedó SUSPENDIDA (HTTP 401) — el hero mostraba un hueco vacío.
-   Mientras se re-suben los banners (idealmente a /assets/img/), la página usa su
-   hero de TEXTO diseñado. Para restaurar: volver a declarar window.__pmxHero con
-   las URLs nuevas (es/en/es-m/en-m + ar/ar-m) y quitar este comentario. */
-window.__pmxHero=null;</script>
+<script>/* Héroe LOCAL (en el repo — regla: nada de Cloudinary). El preload baja la
+   variante correcta (idioma × PC/celular) en paralelo con el CSS (LCP rápido). */
+window.__pmxHero={"es":"/assets/img/heroes/financing-es-pc.webp","en":"/assets/img/heroes/financing-en-pc.webp","es-m":"/assets/img/heroes/financing-es-movil.webp","en-m":"/assets/img/heroes/financing-en-movil.webp","ar":"1942/809","ar-m":"1122/1402"};
+(function(){var H=window.__pmxHero,l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var n=document.createElement("link");n.rel="preload";n.as="image";n.setAttribute("fetchpriority","high");n.href=(m?H[l+"-m"]:0)||H[l];if(n.href)document.head.appendChild(n);})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">

@@ -115,7 +115,9 @@
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784081912/ChatGPT_Image_Jul_14_2026_07_11_38_PM_kzjuco.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082034/ChatGPT_Image_Jul_14_2026_07_10_09_PM_y3c1op.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082200/ChatGPT_Image_Jul_14_2026_07_14_34_PM_tlmrbj.png",
-        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082088/ChatGPT_Image_Jul_14_2026_07_14_22_PM_xfy6ap.png"
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082088/ChatGPT_Image_Jul_14_2026_07_14_22_PM_xfy6ap.png",
+        "/assets/img/heroes/import-es-pc.webp",
+        "/assets/img/heroes/financing-es-pc.webp"
       ],
       en: [
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784168156/ChatGPT_Image_Jul_15_2026_07_11_11_PM_z5xxlb.png",
@@ -126,7 +128,8 @@
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082045/ChatGPT_Image_Jul_14_2026_07_09_56_PM_ohbajv.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082197/ChatGPT_Image_Jul_14_2026_07_15_04_PM_ncn5ml.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082086/ChatGPT_Image_Jul_14_2026_07_14_14_PM_idjpdr.png",
-        "/assets/img/heroes/import-es-pc.webp"
+        "/assets/img/heroes/import-en-pc.webp",
+        "/assets/img/heroes/financing-en-pc.webp"
       ]
     },
     m: { // celular (f_auto,q_auto,c_limit,w_1080)
@@ -138,7 +141,8 @@
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801782/Preguntas_9_16_oo9aar.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865142/subasta_9_sxmqw6.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865048/9.16_espanol.16_espanol_fp59cy.png",
-        "/assets/img/heroes/import-es-movil.webp"
+        "/assets/img/heroes/import-es-movil.webp",
+        "/assets/img/heroes/financing-es-movil.webp"
       ],
       en: [
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1784168156/ChatGPT_Image_Jul_15_2026_07_11_22_PM_hsteru.png",
@@ -148,7 +152,8 @@
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801782/Faq_9_16_t2sfde.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865144/auction_9_vepjvo.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865048/ingles_9_hitzcl.png",
-        "/assets/img/heroes/import-en-movil.webp"
+        "/assets/img/heroes/import-en-movil.webp",
+        "/assets/img/heroes/financing-en-movil.webp"
       ]
     }
   };
