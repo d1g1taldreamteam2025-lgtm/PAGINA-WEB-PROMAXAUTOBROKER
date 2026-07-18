@@ -340,9 +340,8 @@ body.pmx-scrolled .pmx-marquee{ max-height:0; padding-top:0; padding-bottom:0; b
 }
 .pmx-footer__logo{ height:46px; width:auto; margin-bottom:16px; }
 .pmx-footer .pmx-nav__logo-text{ color:#fff; }
-/* El logo del footer (variante MAX negro, la del correo de Joel) va sobre un
-   chip blanco redondeado: legible sobre el footer oscuro y se ve intencional. */
-.pmx-footer .pmx-nav__logo img{ height:58px; background:#fff; padding:9px 16px; border-radius:12px; box-sizing:border-box; }
+/* Footer oscuro → logo BLANCO oficial directo (pedido de Jorge), sin chip. */
+.pmx-footer .pmx-nav__logo img{ height:48px; }
 .pmx-footer__tag{ font-size:14.5px; line-height:1.65; color:var(--dk-muted); margin:0 0 20px; }
 .pmx-footer__social{ display:flex; gap:10px; }
 .pmx-footer__social a{

@@ -17,8 +17,8 @@ window.PROMAX = {
     //   logo-header.svg  = PRO amarillo + MAX BLANCO  (fondos oscuros; SVG = jamás pixela)
     //   logo-footer.png  = PRO amarillo + MAX NEGRO   (fondos claros / chip blanco del footer)
     logo: "/assets/img/logo-header.svg",
-    logoLight: "/assets/img/logo-footer.png",
-    logoDark: "/assets/img/logo-footer.png",
+    logoLight: "/assets/img/logo-header.svg",   // footer oscuro → la versión BLANCA (pedido de Jorge)
+    logoDark: "/assets/img/logo-footer.png",    // fondos claros (login admin, orbit, sorteo)
     logoText: "PROMAX",
     // Ícono de WhatsApp del botón flotante. Vacío ("") = ícono integrado nítido
     // (teléfono BLANCO sobre círculo verde). Si quieres una imagen propia, pega su
