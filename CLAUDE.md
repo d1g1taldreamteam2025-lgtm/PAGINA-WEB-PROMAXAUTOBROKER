@@ -34,11 +34,16 @@ No hubo forma de recuperar los archivos (Wayback tampoco los tenía).
 - `/assets/img/flag-es.png`, `flag-us.png` — banderas selector de idioma.
 - `/assets/img/google-g.svg` — G de Google (reseñas).
 
-## Pendiente de restaurar (los originales murieron con drbc4wbvw)
-Cuando Jorge/Juan pasen los archivos: banners $500 referidos (slide 3 del home,
-nota en index.html), heros de import/financing (notas en sus <head>), flyers
-15% OFF (popup ya gateado: revive solo si la imagen carga), video de bienvenida
-de /about/ (bloque comentado con instrucciones).
+## Restauración post-caída: COMPLETA (jul 2026)
+Jorge re-generó y pasó por el chat todos los artes; quedaron LOCALES:
+- `/assets/img/promo/15off-{es,en}.webp` — popup 15% OFF (gateado: solo abre si carga).
+- `/assets/img/heroes/import-*.webp`, `financing-*.webp`, `referidos-*.webp` —
+  heros de /import/, /financing/ y slide 3 del carrusel del home (ES/EN × PC/móvil).
+- `/assets/video/bienvenida-{es,en}.mp4` — video de /about/ (H.264/AAC, faststart
+  aplicado con qt-faststart casero; el ffmpeg del sandbox es solo-webm y el
+  Chromium del sandbox NO decodifica H.264 → validar por presencia + HTTP, no por
+  reproducción). Los videos pesan ~25MB c/u en el repo — candidato #1 a migrar a
+  Supabase Storage.
 
 ⚠️ El uploader del panel admin (`admin/index.html`, `CLOUDINARY_CLOUD_NAME`)
 apunta a la cuenta muerta: subir fotos desde el admin FALLA hasta apuntarlo a

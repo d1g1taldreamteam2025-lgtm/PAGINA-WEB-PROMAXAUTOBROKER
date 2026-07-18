@@ -105,13 +105,18 @@ window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,
 <section class="pmx-section">
   <div class="pmx-container">
     <div class="ab-story__grid">
-      <!-- VIDEO DE BIENVENIDA retirado TEMPORALMENTE: los .mp4 (ES/EN) vivían en la
-           cuenta Cloudinary drbc4wbvw, que quedó SUSPENDIDA (HTTP 401) y el player
-           salía vacío. Para restaurar: re-subir los videos (o moverlos al repo) y
-           devolver aquí el <div class="ab-story__img ab-story__img--video"> con el
-           <video id="abWelcome"> y sus data-es/data-en/data-poster-* nuevos — el JS
-           de idioma y el guardián de errores ya están listos y no hay que tocarlos. -->
-      <div class="ab-story__text" style="grid-column:1/-1;max-width:760px;margin:0 auto">
+      <!-- VIDEO DE BIENVENIDA — LOCAL en el repo (regla: nada de Cloudinary).
+           faststart aplicado: el moov va al frente y el video arranca al instante. -->
+      <div class="ab-story__img ab-story__img--video">
+        <video id="abWelcome" class="ab-story__video" controls playsinline preload="metadata"
+               poster="/assets/img/promax-og.png"
+               data-es="/assets/video/bienvenida-es.mp4"
+               data-en="/assets/video/bienvenida-en.mp4"
+               data-poster-es="/assets/img/promax-og.png"
+               data-poster-en="/assets/img/promax-og.png">
+        </video>
+      </div>
+      <div class="ab-story__text">
         <span class="pmx-eyebrow" data-i18n="ab_story_eyebrow">Nuestra historia</span>
         <h2 data-i18n="ab_story_h">Trabajamos para ti, de principio a fin</h2>
         <p data-i18n="ab_story_p1">Promax Auto Broker nació para ponerle fin a la experiencia estresante de comprar un carro. En lugar de empujarte hacia cualquier vehículo, te escuchamos: entendemos tu presupuesto, tu estilo de vida y lo que realmente necesitas, y solo entonces buscamos las mejores opciones para ti.</p>
