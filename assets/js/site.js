@@ -125,7 +125,8 @@
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784081914/ChatGPT_Image_Jul_14_2026_07_10_59_PM_ayfrph.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082045/ChatGPT_Image_Jul_14_2026_07_09_56_PM_ohbajv.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082197/ChatGPT_Image_Jul_14_2026_07_15_04_PM_ncn5ml.png",
-        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082086/ChatGPT_Image_Jul_14_2026_07_14_14_PM_idjpdr.png"
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082086/ChatGPT_Image_Jul_14_2026_07_14_14_PM_idjpdr.png",
+        "/assets/img/heroes/import-es-pc.webp"
       ]
     },
     m: { // celular (f_auto,q_auto,c_limit,w_1080)
@@ -136,7 +137,8 @@
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801513/CONTACTANOS_9_16_kfuai0.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801782/Preguntas_9_16_oo9aar.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865142/subasta_9_sxmqw6.png",
-        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865048/9.16_espanol.16_espanol_fp59cy.png"
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865048/9.16_espanol.16_espanol_fp59cy.png",
+        "/assets/img/heroes/import-es-movil.webp"
       ],
       en: [
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1784168156/ChatGPT_Image_Jul_15_2026_07_11_22_PM_hsteru.png",
@@ -145,7 +147,8 @@
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801513/Message_us_now_9_16_ukj4af.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801782/Faq_9_16_t2sfde.png",
         "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865144/auction_9_vepjvo.png",
-        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865048/ingles_9_hitzcl.png"
+        "https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865048/ingles_9_hitzcl.png",
+        "/assets/img/heroes/import-en-movil.webp"
       ]
     }
   };
@@ -264,7 +267,7 @@
       open_now: "Abierto ahora", closed_now: "Cerrado",
       proof_action: "acaba de reservar", proof_verified: "Reserva verificada",
       promo_badge: "Solo para ti", promo_title: "Reclama tu 15% OFF",
-      promo_img: "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_900/v1783050699/15_OFF_ESPA_OL_mupupy.png",
+      promo_img: "/assets/img/promo/15off-es.webp",
       promo_sub: "Aplica hoy a tu financiamiento y recibe <b>15% de descuento</b> en tu primera compra.",
       promo_ends: "Tu descuento vence en", promo_h: "Horas", promo_m: "Min", promo_s: "Seg", promo_ms: "Ms",
       promo_yes: "Quiero mi descuento", promo_no: "No, gracias",
@@ -297,7 +300,7 @@
       open_now: "Open now", closed_now: "Closed",
       proof_action: "just reserved", proof_verified: "Verified reservation",
       promo_badge: "Just for you", promo_title: "Claim your 15% OFF",
-      promo_img: "https://res.cloudinary.com/drbc4wbvw/image/upload/f_auto,q_auto,c_limit,w_900/v1783050716/15_OFF_ENGLHISH_boybwo.png",
+      promo_img: "/assets/img/promo/15off-en.webp",
       promo_sub: "Apply for financing today and get <b>15% off</b> your first purchase.",
       promo_ends: "Your discount expires in", promo_h: "Hours", promo_m: "Min", promo_s: "Sec", promo_ms: "Ms",
       promo_yes: "I want my discount", promo_no: "No, thanks",
