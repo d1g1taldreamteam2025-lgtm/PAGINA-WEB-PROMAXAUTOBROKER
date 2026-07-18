@@ -310,13 +310,16 @@ window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,
          data-ar="1672/941" data-ar-m="941/1672"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.src=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script></div>
       <!-- (Slide "$1,000 de inicial" ELIMINADO a pedido del cliente: salían personas.
            La oferta sigue viva en la banda "Oferta especial" más abajo, sin humanos.) -->
-      <!-- SLIDE 3: "Gana $500 por referir" (banners LOCALES en el repo). -->
+      <!-- SLIDE 3: "Gana $500 por referir" — SOLO PC (pedido de Jorge): el arte
+           vertical disponible es 4:5 (1122×1402) y en el carrusel móvil (9:16)
+           dejaba franja negra. En teléfono este slide se AUTO-ELIMINA antes de
+           que arranque el carrusel (los puntitos se ajustan solos a 2). Si Joel
+           genera el arte 9:16, devolver data-es-m/en-m (archivos guardados en
+           /assets/img/heroes/referidos-*-movil.webp) y quitar la auto-eliminación. -->
       <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Gana $500 por referir y participa por un Toyota Corolla 2026" loading="lazy"
          data-es="/assets/img/heroes/referidos-es-pc.webp"
          data-en="/assets/img/heroes/referidos-en-pc.webp"
-         data-es-m="/assets/img/heroes/referidos-es-movil.webp"
-         data-en-m="/assets/img/heroes/referidos-en-movil.webp"
-         data-ar="1942/809" data-ar-m="1122/1402"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.src=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script></div>
+         data-ar="1942/809"><script>(function(){var s=document.currentScript,m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;if(m){var sl=s.closest(".pmx-hero2__slide");if(sl){sl.remove();return;}}var i=s.previousElementSibling,l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var a=i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.src=i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script></div>
     </div>
   </div>
   <div class="pmx-hero2__cta">
