@@ -62,6 +62,10 @@
     if (!url || url.slice(0, 5) === "data:") return url;
     var m = url.match(/^(https:\/\/res\.cloudinary\.com\/[^\/]+\/image\/upload\/)(.+)$/);
     if (m) return m[1] + "f_auto,q_auto,c_limit,w_" + w + "/" + m[2];
+    // Fotos SUBIDAS POR NOSOTROS (Supabase Storage del panel admin): ya salen
+    // achicadas del navegador al subirlas, así que se sirven DIRECTAS. Pasarlas
+    // por un proxy ajeno solo agregaría una dependencia que puede caerse.
+    if (url.indexOf("/storage/v1/object/public/") !== -1) return url;
     if (/^https?:\/\//.test(url)) {
       return "https://res.cloudinary.com/" + THUMB_CLOUD + "/image/fetch/f_auto,q_auto,c_limit,w_" + w + "/" + encodeURIComponent(url);
     }

@@ -45,9 +45,17 @@ Jorge re-generó y pasó por el chat todos los artes; quedaron LOCALES:
   reproducción). Los videos pesan ~25MB c/u en el repo — candidato #1 a migrar a
   Supabase Storage.
 
-⚠️ El uploader del panel admin (`admin/index.html`, `CLOUDINARY_CLOUD_NAME`)
-apunta a la cuenta muerta: subir fotos desde el admin FALLA hasta apuntarlo a
-otra cuenta o (mejor) a Supabase Storage.
+## Uploader del admin → Supabase Storage (jul 2026)
+El widget de Cloudinary se eliminó (daba "cloud_name is disabled"). `admin/index.html`
+ahora sube con `sb.storage.from('promax')` a la carpeta `inventory/`:
+- Achica en el navegador (máx 1600px, calidad .85, WebP si el navegador puede).
+- `pickPhotos()` / `uploadPhotos()` / `shrinkImage()` / `uploadOnePhoto()`; UI:
+  `#photoInput`, `#photoDrop` (arrastrar), `#uploadQueue`, `#storageSetup`.
+- Si falta el bucket: intenta crearlo con la sesión del admin y, si el servidor
+  lo rechaza (RLS), muestra el aviso con el SQL — `docs/supabase-storage-fotos.sql`.
+- `data.js:thumb()` sirve DIRECTO cualquier URL con `/storage/v1/object/public/`
+  (ya vienen optimizadas) en vez de pasarlas por el proxy de Cloudinary.
+⚠️ Pendiente del lado del cliente: correr ese SQL una vez en Supabase.
 
 ## Datos clave
 - Leads: Supabase `promax_inquiries` + webhook n8n (UCallNow) → WhatsApp
