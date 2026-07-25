@@ -54,6 +54,10 @@
   // archivo); aquí solo atendemos los cambios de idioma / tamaño de pantalla.
   function applyHeroImgs() {
     document.querySelectorAll("img[data-es][data-en]").forEach(function (el) {
+      // Imágenes de slides SOLO-PC: en pantallas donde el CSS las oculta (≤1024px)
+      // ni siquiera se descargan — no gastamos datos del cliente en algo invisible.
+      if (el.hasAttribute("data-pconly") && window.matchMedia &&
+          window.matchMedia("(max-width:1024px)").matches) return;
       var m = MOBILE_MQ && MOBILE_MQ.matches;
       // Algunos pósters móviles ES miden distinto que los EN (948×1659 vs
       // 941×1672): data-ar-m-es declara la proporción ES para reservar exacto.

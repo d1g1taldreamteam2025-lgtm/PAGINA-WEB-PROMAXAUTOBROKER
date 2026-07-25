@@ -70,6 +70,12 @@ window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,
 .pmx-hero2::after{content:'';position:absolute;left:0;right:0;bottom:0;height:34%;background:linear-gradient(to top,rgba(0,0,0,.55),transparent);pointer-events:none;z-index:1;}
 .pmx-hero2__track{display:flex;transition:transform .6s cubic-bezier(.4,0,.2,1);}
 .pmx-hero2__slide{flex:0 0 100%;display:block;line-height:0;}
+/* Slides marcados SOLO-PC: se ocultan en la MISMA medida en que el header pasa a
+   su version movil (1024px), no en 768. Antes el corte era 768 y entre 769-1024px
+   (tablet, telefono en horizontal, ventana angosta) se veia el banner ancho con
+   una franja negra debajo. display:none los saca del flex: el carrusel recuenta
+   y los puntitos quedan en 2. */
+@media(max-width:1024px){ .pmx-hero2__slide--pconly{ display:none !important; } }
 /* Móvil: póster vertical a ancho completo, sin barras ni recortes. */
 .pmx-hero2__slide img{width:100%;height:auto;display:block;}
 /* PC: el hero ocupa EXACTAMENTE el primer pliegue (nunca más alto que la
@@ -316,10 +322,16 @@ window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,
            que arranque el carrusel (los puntitos se ajustan solos a 2). Si Joel
            genera el arte 9:16, devolver data-es-m/en-m (archivos guardados en
            /assets/img/heroes/referidos-*-movil.webp) y quitar la auto-eliminación. -->
-      <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Gana $500 por referir y participa por un Toyota Corolla 2026" loading="lazy"
+      <div class="pmx-hero2__slide pmx-hero2__slide--pconly"><img alt="Promax Auto Broker — Gana $500 por referir y participa por un Toyota Corolla 2026" loading="lazy" data-pconly="1"
          data-es="/assets/img/heroes/referidos-es-pc.webp"
          data-en="/assets/img/heroes/referidos-en-pc.webp"
-         data-ar="1942/809"><script>(function(){var s=document.currentScript,m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;if(m){var sl=s.closest(".pmx-hero2__slide");if(sl){sl.remove();return;}}var i=s.previousElementSibling,l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var a=i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.src=i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script></div>
+         data-ar="1942/809"><script>(function(){var s=document.currentScript,i=s.previousElementSibling;s.remove();
+         /* Solo-PC: en pantallas <=1024px el CSS lo oculta y NI SIQUIERA descargamos
+            la foto. Si el usuario agranda la ventana, el carrusel la hidrata sola. */
+         if(window.matchMedia&&!window.matchMedia("(min-width:1025px)").matches)return;
+         var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}
+         var a=i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.src=i.getAttribute("data-"+l);
+         var h=i.closest("section");if(h)h.classList.add("has-img");})();</script></div>
     </div>
   </div>
   <div class="pmx-hero2__cta">
@@ -796,19 +808,46 @@ PMX.addTranslations({
   var dotsWrap = document.getElementById('pmxHeroDots');
   var hero = document.getElementById('pmxHero');
   if (!track || !dotsWrap || !hero) return;
-  var slides = track.querySelectorAll('.pmx-hero2__slide');
-  var n = slides.length, i = 0, timer = null;
+  // Los slides SOLO-PC se ocultan por CSS en pantallas chicas: el carrusel cuenta
+  // unicamente los VISIBLES (asi los puntitos y el desplazamiento siempre cuadran)
+  // y se recalcula al girar el telefono o cambiar el tamano de la ventana.
+  var all = [].slice.call(track.querySelectorAll('.pmx-hero2__slide'));
+  var n = 0, i = 0, timer = null, dots = [];
 
-  for (var d = 0; d < n; d++) {
-    var b = document.createElement('button');
-    b.type = 'button'; b.textContent = String(d + 1);
-    b.setAttribute('aria-label', 'Ir a la imagen ' + (d + 1));
-    (function(idx){ b.addEventListener('click', function(){ go(idx); start(); }); })(d);
-    dotsWrap.appendChild(b);
+  function isVisible(el){
+    return window.getComputedStyle ? window.getComputedStyle(el).display !== 'none' : true;
   }
-  var dots = dotsWrap.querySelectorAll('button');
+  function hydrate(el){
+    // Un slide que estaba oculto (solo-PC) puede volverse visible al agrandar la
+    // ventana: recien entonces le damos su foto (no gastamos datos en celular).
+    var img = el.querySelector('img');
+    if (!img || img.getAttribute('src')) return;
+    var l = 'es'; try { if (localStorage.getItem('pmx_lang') === 'en') l = 'en'; } catch (e) {}
+    var m = window.matchMedia && window.matchMedia('(max-width:768px)').matches;
+    var ar = m ? (img.getAttribute('data-ar-m') || img.getAttribute('data-ar')) : img.getAttribute('data-ar');
+    if (ar) img.style.aspectRatio = 'auto ' + ar;
+    var src = (m ? img.getAttribute('data-' + l + '-m') : null) || img.getAttribute('data-' + l);
+    if (src) img.src = src;
+  }
+  function build(){
+    var vis = all.filter(isVisible);
+    vis.forEach(hydrate);
+    n = vis.length;
+    dotsWrap.innerHTML = '';
+    for (var d = 0; d < n; d++) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.textContent = String(d + 1);
+      b.setAttribute('aria-label', 'Ir a la imagen ' + (d + 1));
+      (function(idx){ b.addEventListener('click', function(){ go(idx); start(); }); })(d);
+      dotsWrap.appendChild(b);
+    }
+    dots = dotsWrap.querySelectorAll('button');
+    if (i >= n) i = 0;
+    go(i);
+  }
 
   function go(idx){
+    if (!n) return;
     i = (idx + n) % n;
     track.style.transform = 'translateX(-' + (i * 100) + '%)';
     for (var k = 0; k < dots.length; k++) dots[k].classList.toggle('is-on', k === i);
@@ -826,7 +865,13 @@ PMX.addTranslations({
                  : 'Hola Promax, vi su página web y quiero más información';
     if (window.PMX && PMX.waUrl) window.open(PMX.waUrl(msg), '_blank', 'noopener');
   });
-  go(0); start();
+  build(); start();
+  // Al rotar el telefono o cambiar el tamano de la ventana, recontar (con calma).
+  var rz = null;
+  window.addEventListener('resize', function(){
+    if (rz) clearTimeout(rz);
+    rz = setTimeout(function(){ var vis = all.filter(isVisible).length; if (vis !== n) build(); }, 200);
+  });
 })();
 
 /* (feed 'en vivo' retirado a pedido del cliente) */
