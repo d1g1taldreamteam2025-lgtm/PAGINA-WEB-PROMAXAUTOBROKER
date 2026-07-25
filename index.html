@@ -21,7 +21,6 @@
 <meta name="twitter:title" content="Promax Auto Broker | Tu Broker de Autos de Confianza">
 <meta name="twitter:description" content="Promax Auto Broker: vehículos de calidad, precios honestos y financiamiento flexible. Encuentra tu próximo carro y pre-califica en minutos.">
 <meta name="twitter:image" content="https://www.promaxautobroker.com/assets/img/promax-og.png">
-<link rel="preconnect" href="https://res.cloudinary.com">
 <script src="/assets/js/config.js"></script>
 <script>/* Arranque TEMPRANO del inventario: el fetch sale AHORA, en paralelo con
    CSS/fuentes; data.js (fetchPage) reutiliza esta respuesta y la primera visita
@@ -40,7 +39,7 @@
    del primer vistazo baja EN PARALELO con el CSS (LCP rápido) y el celular jamás
    descarga la foto de PC. El <img> del body copia estos datos con su mini-script.
    ⚠️ Si cambias una foto, actualiza también HERO_WARM en assets/js/site.js. */
-window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784168155/ChatGPT_Image_Jul_15_2026_07_10_26_PM_yswyxb.png","en":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784168156/ChatGPT_Image_Jul_15_2026_07_11_11_PM_z5xxlb.png","es-m":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1784168155/ChatGPT_Image_Jul_15_2026_07_11_36_PM_lsrg5m.png","en-m":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1784168156/ChatGPT_Image_Jul_15_2026_07_11_22_PM_hsteru.png","ar":"1672/941","ar-m":"941/1672"};
+window.__pmxHero={"es":"/assets/img/heroes/import-es-pc.webp","en":"/assets/img/heroes/import-en-pc.webp","es-m":"/assets/img/heroes/import-es-movil.webp","en-m":"/assets/img/heroes/import-en-movil.webp","ar":"1942/809","ar-m":"1122/1402"};
 (function(){var H=window.__pmxHero,l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var n=document.createElement("link");n.rel="preload";n.as="image";n.setAttribute("fetchpriority","high");n.href=(m?H[l+"-m"]:0)||H[l];document.head.appendChild(n);})();</script>
 <link rel="preconnect" href="https://db.ucallnow.fun" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
@@ -49,7 +48,7 @@ window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/theme.css">
-<link rel="icon" type="image/png" href="https://res.cloudinary.com/dol89fbil/image/upload/w_256,h_256,c_fit,f_auto,q_auto/v1783701195/Logos-07_umabpq.png"><link rel="apple-touch-icon" href="https://res.cloudinary.com/dol89fbil/image/upload/w_180,h_180,c_pad,b_black,f_png/v1783701195/Logos-07_umabpq.png">
+<link rel="icon" type="image/png" href="/assets/img/favicon-256.png"><link rel="apple-touch-icon" href="/assets/img/favicon-180.png">
 <!-- Anti-parpadeo: marca <html> para ocultar lo que GSAP animará. anim.js lo
      retira si el usuario pide menos movimiento o si GSAP no llega a cargar. -->
 <script>(function(){try{var m=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;if(!m)document.documentElement.className+=" pmx-ganim";}catch(e){}})();</script>
@@ -306,14 +305,14 @@ window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,
            reserva el alto exacto para que la página no brinque mientras carga. -->
       <!-- SLIDE 1 (principal): "Tu broker de confianza" con TODOS los servicios.
            Lee sus imágenes de __pmxHero (arriba), que ademas se PRECARGA como LCP. -->
-      <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Tu broker de confianza en USA: compra, financiamiento, subastas, CARFAX e importación a Venezuela" fetchpriority="high" loading="eager"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.src=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script></div>
+      <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Tu broker de confianza en USA: compra, financiamiento, subastas, CARFAX e importación a Venezuela" fetchpriority="high" loading="eager"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.onerror=function(){var sl=i.closest(".pmx-hero2__slide");if(sl){sl.style.display="none";try{window.dispatchEvent(new Event("resize"))}catch(e){}}};i.src=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script></div>
       <!-- SLIDE 2: "Tu aliado en USA y Venezuela" (imagenes propias, ya no via __pmxHero). -->
-      <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Tu aliado en USA y Venezuela" loading="lazy"
-         data-es="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783974149/Imagen_16.9_tu_aliado_espa%C3%B1_sawrrv.png"
-         data-en="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1783973283/ChatGPT_Image_13_jul_2026_15_07_00_xbclps.png"
-         data-es-m="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801947/TU_ALI_9_hld4jj.png"
-         data-en-m="https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783801946/YOUR_ALLI_9_rl0dtb.png"
-         data-ar="1672/941" data-ar-m="941/1672"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.src=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script></div>
+      <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Pre-califica en minutos: rápido, seguro y sin impacto" loading="lazy"
+         data-es="/assets/img/heroes/financing-es-pc.webp"
+         data-en="/assets/img/heroes/financing-en-pc.webp"
+         data-es-m="/assets/img/heroes/financing-es-movil.webp"
+         data-en-m="/assets/img/heroes/financing-en-movil.webp"
+         data-ar="1942/809" data-ar-m="1122/1402"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.onerror=function(){var sl=i.closest(".pmx-hero2__slide");if(sl){sl.style.display="none";try{window.dispatchEvent(new Event("resize"))}catch(e){}}};i.src=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script></div>
       <!-- (Slide "$1,000 de inicial" ELIMINADO a pedido del cliente: salían personas.
            La oferta sigue viva en la banda "Oferta especial" más abajo, sin humanos.) -->
       <!-- SLIDE 3: "Gana $500 por referir" — SOLO PC (pedido de Jorge): el arte
@@ -330,7 +329,7 @@ window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,
             la foto. Si el usuario agranda la ventana, el carrusel la hidrata sola. */
          if(window.matchMedia&&!window.matchMedia("(min-width:1025px)").matches)return;
          var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}
-         var a=i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.src=i.getAttribute("data-"+l);
+         var a=i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.onerror=function(){var sl=i.closest(".pmx-hero2__slide");if(sl){sl.style.display="none";try{window.dispatchEvent(new Event("resize"))}catch(e){}}};i.src=i.getAttribute("data-"+l);
          var h=i.closest("section");if(h)h.classList.add("has-img");})();</script></div>
     </div>
   </div>

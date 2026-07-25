@@ -66,9 +66,9 @@
     // achicadas del navegador al subirlas, así que se sirven DIRECTAS. Pasarlas
     // por un proxy ajeno solo agregaría una dependencia que puede caerse.
     if (url.indexOf("/storage/v1/object/public/") !== -1) return url;
-    if (/^https?:\/\//.test(url)) {
-      return "https://res.cloudinary.com/" + THUMB_CLOUD + "/image/fetch/f_auto,q_auto,c_limit,w_" + w + "/" + encodeURIComponent(url);
-    }
+    // El proxy de optimizacion (cuenta kcixfvoq) MURIO en jul 2026: las fotos de
+    // dealers se sirven DIRECTAS de su URL original (el fallback que ya existia).
+    if (/^https?:\/\//.test(url)) return url;
     return url;
   }
 

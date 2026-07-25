@@ -93,6 +93,9 @@
 
   function render(items) {
     var host = document.querySelector(GRID);
+    // Sin videos (el CDN kcixfvoq murio en jul 2026): se oculta la seccion entera
+    // en vez de mostrar tarjetas rotas. Al reponer videos en instagram.json vuelve sola.
+    if (!items || !items.length) { var sec = host && host.closest("section"); if (sec) sec.style.display = "none"; return; }
     var limit = parseInt(host.getAttribute("data-limit"), 10) || 15;
     STATE = (items || []).map(norm).slice(0, limit);
     host.innerHTML = STATE.length ? STATE.map(function (c, i) { return card(c, i); }).join("")

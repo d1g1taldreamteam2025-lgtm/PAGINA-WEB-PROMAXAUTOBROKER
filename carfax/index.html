@@ -21,20 +21,19 @@
 <meta name="twitter:title" content="Reporte CARFAX por $15 | Promax Auto Broker">
 <meta name="twitter:description" content="Conoce la historia real de un vehículo antes de comprarlo: accidentes, dueños, millaje y título. Reporte CARFAX completo por $15, entrega rápida.">
 <meta name="twitter:image" content="https://www.promaxautobroker.com/assets/img/promax-og.png">
-<link rel="preconnect" href="https://res.cloudinary.com">
-<script>/* Héroe de la página — ÚNICA fuente de sus variantes (idioma × PC/celular).
-   Se elige AQUÍ, antes de las hojas de estilo, y se inyecta un preload: la foto
-   del primer vistazo baja EN PARALELO con el CSS (LCP rápido) y el celular jamás
-   descarga la foto de PC. El <img> del body copia estos datos con su mini-script.
-   ⚠️ Si cambias una foto, actualiza también HERO_WARM en assets/js/site.js. */
-window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082088/ChatGPT_Image_Jul_14_2026_07_14_22_PM_xfy6ap.png","en":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1920/v1784082086/ChatGPT_Image_Jul_14_2026_07_14_14_PM_idjpdr.png","es-m":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865048/9.16_espanol.16_espanol_fp59cy.png","en-m":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,q_auto,c_limit,w_1080/v1783865048/ingles_9_hitzcl.png","ar":"1672/941","ar-m":"941/1672"};
-(function(){var H=window.__pmxHero,l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var n=document.createElement("link");n.rel="preload";n.as="image";n.setAttribute("fetchpriority","high");n.href=(m?H[l+"-m"]:0)||H[l];document.head.appendChild(n);})();</script>
+<script>/* Héroe: las imágenes de esta página vivían en la cuenta Cloudinary kcixfvoq,
+   que murió en jul 2026 (HTTP 404 en todo su contenido — igual que drbc4wbvw
+   antes). Mientras Joel re-genera los artes (los tiene en su historial de
+   ChatGPT), la página usa su hero de TEXTO diseñado. Para restaurar: guardar
+   los archivos en /assets/img/heroes/ y declarar aquí window.__pmxHero con
+   es/en/es-m/en-m + ar/ar-m, como hacen /import/ y /financing/. */
+window.__pmxHero=null;</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/theme.css">
-<link rel="icon" type="image/png" href="https://res.cloudinary.com/dol89fbil/image/upload/w_256,h_256,c_fit,f_auto,q_auto/v1783701195/Logos-07_umabpq.png"><link rel="apple-touch-icon" href="https://res.cloudinary.com/dol89fbil/image/upload/w_180,h_180,c_pad,b_black,f_png/v1783701195/Logos-07_umabpq.png">
+<link rel="icon" type="image/png" href="/assets/img/favicon-256.png"><link rel="apple-touch-icon" href="/assets/img/favicon-180.png">
 <style>
 /* HERO CARFAX: oscuro dramático (aquí va el flyer/póster cuando esté listo) */
 .cf-hero{position:relative;background:radial-gradient(120% 150% at 80% 10%,rgba(194,26,18,.35),transparent 55%),linear-gradient(115deg,#0A0B0D 40%,#14060a 75%,#2b0906);color:#fff;text-align:center;overflow:hidden;}
@@ -105,7 +104,7 @@ window.__pmxHero={"es":"https://res.cloudinary.com/kcixfvoq/image/upload/f_auto,
 <section class="cf-hero" id="cfHero">
   <!-- Sin src fijo: el mini-script elige la variante correcta (idioma + PC/celular)
        ANTES del primer pintado; data-ar reserva el alto (sin saltos al cargar). -->
-  <img class="cf-hero__poster" id="cfPoster" alt="Reporte CARFAX por $15 con Promax Auto Broker" loading="eager" fetchpriority="high"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.src=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script>
+  <img class="cf-hero__poster" id="cfPoster" alt="Reporte CARFAX por $15 con Promax Auto Broker" loading="eager" fetchpriority="high"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var u=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(u){var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.onerror=function(){if(h)h.classList.remove("has-img");i.style.display="none";};i.src=u;if(h)h.classList.add("has-img");}else{i.style.display="none";}s.remove();})();</script>
   <div class="cf-hero__inner">
     <span class="pmx-eyebrow" data-i18n="cf_eyebrow">📄 Historial vehicular CARFAX</span>
     <h1><span data-i18n="cf_t1">Conoce la historia real </span><em data-i18n="cf_t2">antes de comprar</em></h1>

@@ -7,20 +7,32 @@ contenido) y rompió media web de un día para otro: logos, banners de
 referidos/precalifica/importación, popup 15% OFF, videos y logos de bancos.
 No hubo forma de recuperar los archivos (Wayback tampoco los tenía).
 
-**Política desde entonces:**
-1. TODO asset nuevo (logos, banners, flyers, íconos) se guarda **en este repo**
-   (`/assets/img/...`) o en **Supabase Storage** — nunca en Cloudinary.
-2. Nada del layout crítico (header, footer, heros, secciones) puede apuntar a
-   `res.cloudinary.com`. Si un asset llega por Cloudinary, descargarlo y
-   alojarlo local antes de referenciarlo.
-3. La cuenta `kcixfvoq` sigue viva y aún sirve: heros de páginas (auction,
-   carfax, faqs, contact, about, home, inventory), fotos móviles y 8 videos de
-   `assets/data/instagram.json`. **Migrarlos a Supabase Storage cuando se pueda**
-   (Jorge: "todo de Supabase próximamente").
-4. Los thumbs del catálogo usan Cloudinary **fetch** (`/image/fetch/`) solo como
-   proxy de optimización sobre URLs de dealers — si falla, el sitio cae a la URL
-   original del dealer (patrón ya implementado en data.js). Ese uso es tolerable
-   hasta migrar.
+⚠️ ACTUALIZACIÓN 25-jul-2026: la SEGUNDA cuenta (`kcixfvoq`) TAMBIÉN murió
+(HTTP 404 en todo). Se perdieron los heros de about/auction/carfax/contact/
+faqs/inventory y home slides 1-2, y los 8 videos del inventario. Estabilizado
+así (todo verificado):
+- Home: slide 1 → arte local de /import/, slide 2 → arte local de /financing/
+  (los 2 con sus 4 variantes locales); slide 3 $500 ya era local. Slides con
+  guardia onerror (se ocultan y el carrusel recuenta puntitos vía resize).
+- about/auction/carfax/contact/faqs/inventory/demo: hero de TEXTO (head con
+  `window.__pmxHero=null` + script del póster blindado). Para restaurar un
+  hero: archivos a `/assets/img/heroes/` + declarar `__pmxHero` como /import/.
+- Videos inventario: `assets/data/instagram.json` = [] (la sección se auto-
+  oculta); respaldo de captions en `docs/instagram-videos-respaldo.json`. Los
+  reels viven en el Instagram de Promax → pedir a Jorge re-subirlos por Drive.
+- Favicons: rescatados a `/assets/img/favicon-256.png` y `favicon-180.png`
+  (estaban en una 3ª cuenta `dol89fbil`, aún viva de milagro).
+- Thumbs del catálogo: `data.js:thumb()` sirve DIRECTO la URL del dealer (el
+  proxy fetch usaba kcixfvoq). `<link preconnect cloudinary>` eliminado.
+
+**Política (más vigente que nunca):**
+1. TODO asset (logos, banners, flyers, íconos, videos) se guarda **en este
+   repo** (`/assets/...`) o en **Supabase Storage** — NUNCA en Cloudinary ni
+   CDNs de terceros. Ya murieron DOS cuentas con material dentro.
+2. Nada del sitio puede apuntar a `res.cloudinary.com`. Si un asset llega por
+   URL externa, descargarlo y alojarlo local antes de referenciarlo.
+3. `.github/workflows/recover-cloudinary.yml` vigila a diario AMBAS cuentas
+   muertas y descarga a `assets/img/recovered/` lo que reviva.
 
 ## Assets locales actuales
 - `/assets/img/logo-header.svg` — logo oficial BLANCO (header, barra móvil,
