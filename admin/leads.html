@@ -193,8 +193,8 @@ tr:last-child td{border-bottom:0;}
     <div class="table-wrap">
       <div class="table-scroll">
         <table>
-          <thead><tr><th>Fecha</th><th>Tipo</th><th>Nombre</th><th>Contacto</th><th>Vehículo</th><th>Status</th><th>Acciones</th></tr></thead>
-          <tbody id="leadsTbody"><tr><td colspan="7" class="empty"><div class="spinner"></div> Cargando…</td></tr></tbody>
+          <thead><tr><th>Fecha</th><th>Tipo</th><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Vehículo</th><th>Status</th><th>Acciones</th></tr></thead>
+          <tbody id="leadsTbody"><tr><td colspan="8" class="empty"><div class="spinner"></div> Cargando…</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -230,6 +230,7 @@ const TYPES = {
 };
 
 let allLeads = [];
+let vehTitles = {};   // id de vehículo -> "año marca modelo" (para el link del lead)
 let currentLead = null;
 
 async function checkAuth() {
@@ -275,15 +276,29 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
 
 async function loadLeads() {
   const tbody = document.getElementById('leadsTbody');
-  tbody.innerHTML = '<tr><td colspan="7" class="empty"><div class="spinner"></div> Cargando…</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="8" class="empty"><div class="spinner"></div> Cargando…</td></tr>';
   const { data, error } = await sb.from(INQ_TABLE).select('*').order('created_at', { ascending: false }).limit(500);
   if (error) {
-    tbody.innerHTML = `<tr><td colspan="7" class="empty"><b>Error</b>${error.message}</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="8" class="empty"><b>Error</b>${error.message}</td></tr>`;
     return;
   }
   allLeads = data || [];
+  await loadVehicleTitles();   // nombres de los carros para los links (tolerante a fallos)
   renderStats();
   renderLeads();
+}
+
+// Trae "año marca modelo" de los vehículos referenciados por los leads, para
+// mostrar el NOMBRE del carro en el link (en vez del id). Si falla, no pasa
+// nada: el link igual funciona con un texto genérico ("Ver vehículo").
+async function loadVehicleTitles() {
+  try {
+    const ids = [...new Set(allLeads.map(l => l.vehicle_id).filter(Boolean))];
+    if (!ids.length) return;
+    const { data, error } = await sb.from(INV_TABLE).select('id,year,make,model').in('id', ids);
+    if (error || !data) return;
+    data.forEach(v => { vehTitles[v.id] = [v.year, v.make, v.model].filter(Boolean).join(' '); });
+  } catch (_) {}
 }
 
 function renderStats() {
@@ -293,6 +308,17 @@ function renderStats() {
   document.getElementById('statClosed').textContent = allLeads.filter(l => l.status === 'closed').length;
   const today = new Date().toISOString().slice(0,10);
   document.getElementById('statToday').textContent = allLeads.filter(l => (l.created_at||'').slice(0,10) === today).length;
+}
+
+// Celda de vehículo: link clickeable a la ficha del carro (/vehicle/?id=…),
+// mostrando el NOMBRE del carro si lo tenemos (año marca modelo); si no, el
+// vehicle_title guardado o "Ver vehículo". Sin vehículo -> guion.
+function vehicleCell(l) {
+  if (!l.vehicle_id && !l.vehicle_title) return '<span style="color:#555">—</span>';
+  const label = escapeHtml(vehTitles[l.vehicle_id] || l.vehicle_title || 'Ver vehículo');
+  if (!l.vehicle_id) return `<span style="color:#aaa">${label}</span>`;
+  const href = '/vehicle/?id=' + encodeURIComponent(l.vehicle_id);
+  return `<a href="${href}" target="_blank" rel="noopener" title="${escapeHtml(l.vehicle_id)}" style="color:#F4DC34;text-decoration:none;font-weight:600;white-space:nowrap">${label} <span style="opacity:.65;font-weight:400">↗</span></a>`;
 }
 
 function renderLeads() {
@@ -311,7 +337,7 @@ function renderLeads() {
   });
   const tbody = document.getElementById('leadsTbody');
   if (!filtered.length) {
-    tbody.innerHTML = '<tr><td colspan="7" class="empty"><b>No hay leads</b>Ajusta los filtros o espera a que entren nuevos.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" class="empty"><b>No hay leads</b>Ajusta los filtros o espera a que entren nuevos.</td></tr>';
     return;
   }
   tbody.innerHTML = filtered.map(l => {
@@ -327,11 +353,9 @@ function renderLeads() {
         <td style="white-space:nowrap;color:#888;">${date}</td>
         <td><span class="type-badge">${t.emoji} ${t.label}</span></td>
         <td><b style="color:#fff">${escapeHtml(l.name||'—')}</b></td>
-        <td>
-          ${l.email ? `<div style="color:#aaa;font-size:12px">${escapeHtml(l.email)}</div>` : ''}
-          ${l.phone ? `<div style="color:#888;font-size:12px">${escapeHtml(l.phone)}</div>` : ''}
-        </td>
-        <td style="color:#aaa;font-size:12px">${escapeHtml(l.vehicle_title || l.vehicle_id || '—')}</td>
+        <td>${l.email ? `<a href="mailto:${escapeHtml(l.email)}" style="color:#8ab4f8;font-size:12px;text-decoration:none">${escapeHtml(l.email)}</a>` : '<span style="color:#555">—</span>'}</td>
+        <td style="white-space:nowrap">${l.phone ? `<a href="tel:${phoneClean}" style="color:#ddd;font-size:12px;text-decoration:none">${escapeHtml(l.phone)}</a>` : '<span style="color:#555">—</span>'}</td>
+        <td style="font-size:12px">${vehicleCell(l)}</td>
         <td>
           <select class="status-select s-${status}" onchange="updateStatus('${l.id}', this.value)">
             <option value="new"      ${status==='new'?'selected':''}>Nuevo</option>
