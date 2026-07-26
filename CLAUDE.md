@@ -14,9 +14,11 @@ así (todo verificado):
 - Home: slide 1 → arte local de /import/, slide 2 → arte local de /financing/
   (los 2 con sus 4 variantes locales); slide 3 $500 ya era local. Slides con
   guardia onerror (se ocultan y el carrusel recuenta puntitos vía resize).
-- about/auction/carfax/contact/faqs/inventory/demo: hero de TEXTO (head con
-  `window.__pmxHero=null` + script del póster blindado). Para restaurar un
-  hero: archivos a `/assets/img/heroes/` + declarar `__pmxHero` como /import/.
+- about/auction/carfax/contact/faqs/inventory/demo: RESTAURADOS (26-jul) con
+  los artes nuevos de Joel — `/assets/img/heroes/<pagina>-{es,en}-pc.webp`
+  (1672×941, WebP ~q90). Decisión de Jorge: el MISMO arte 16:9 se usa también
+  en teléfono (se ve bien y evita pedir 12 verticales); por eso cada head
+  declara `ar` y `ar-m` = "1672/941". El script del póster sigue blindado.
 - Videos inventario: `assets/data/instagram.json` = [] (la sección se auto-
   oculta); respaldo de captions en `docs/instagram-videos-respaldo.json`. Los
   reels viven en el Instagram de Promax → pedir a Jorge re-subirlos por Drive.

@@ -23,11 +23,7 @@
 <meta name="twitter:image" content="https://www.promaxautobroker.com/assets/img/promax-og.png">
 <script>/* Héroe LOCAL (en el repo — regla del proyecto: nada de CDNs ajenos).
    El preload baja la foto del primer vistazo EN PARALELO con el CSS (LCP rápido). */
-window.__pmxHero={"es":"/assets/img/heroes/carfax-es-pc.webp","en":"/assets/img/heroes/carfax-en-pc.webp","ar":"1672/941"};
-/* ⏳ Falta el arte VERTICAL de teléfono: mientras tanto, en celular se mantiene el
-   hero de TEXTO (legible) en lugar de encoger el banner 16:9. Cuando lleguen las
-   versiones de teléfono: añadir "es-m"/"en-m" + "ar-m" y borrar estas 3 líneas. */
-if(window.matchMedia&&window.matchMedia("(max-width:768px)").matches)window.__pmxHero=null;
+window.__pmxHero={"es":"/assets/img/heroes/carfax-es-pc.webp","en":"/assets/img/heroes/carfax-en-pc.webp","ar":"1672/941","ar-m":"1672/941"};
 (function(){var H=window.__pmxHero;if(!H)return;var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var n=document.createElement("link");n.rel="preload";n.as="image";n.setAttribute("fetchpriority","high");n.href=(m?H[l+"-m"]:0)||H[l];if(n.href)document.head.appendChild(n);})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
