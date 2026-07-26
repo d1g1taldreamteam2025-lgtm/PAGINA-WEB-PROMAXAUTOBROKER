@@ -107,17 +107,21 @@ manual (los destacados salen primero por año).
 
 ## Meta Pixel (Facebook) — jul 2026
 Pixel de Meta `1709075950232187` (lo pidió Juan de UCallNow para anuncios).
-- Lógica centralizada en `/assets/js/meta-pixel.js` (init + `PageView`). Cada
-  página PÚBLICA carga ese `<script>` en el `<head>` + un `<noscript>` de
-  respaldo. Insertado en las 19 páginas públicas; **NO en `/admin/`** (para no
-  ensuciar los datos con las visitas del panel del staff).
-- El sitio NO tiene CSP → no hubo que autorizar dominios. Si algún día se agrega
-  CSP, hay que permitir `connect.facebook.net` (script) y `www.facebook.com`
-  (img/connect).
-- Los datos se ven en **Meta Events Manager** (panel de Meta), NO en nuestro
-  `/admin/analytics.html` (son sistemas separados). Pendiente/opcional: eventos
-  avanzados (`Lead` al capturar nombre+teléfono, `ViewContent` en la ficha del
-  carro) para optimizar anuncios — aún no implementados.
+- **BASE** en `/assets/js/meta-pixel.js` (init + `PageView`). Cada página PÚBLICA
+  carga ese `<script>` en el `<head>` + un `<noscript>` de respaldo. Insertado en
+  las 19 páginas públicas; **NO en `/admin/`** (no ensuciar datos con el staff).
+- **EVENTOS DE CONVERSIÓN** (fuente ÚNICA, con parámetros) en `/assets/js/analytics.js`:
+  ya tenía cableados los eventos del sitio y los refleja a Meta enriquecidos.
+  `vehicle_view→ViewContent` (content_ids=id del carro), `form→Lead` (envuelve
+  `submitLead` = TODOS los formularios; content_category=tipo, content_ids=id),
+  `whatsapp/call→Contact` (content_category=whatsapp/telefono). Se le QUITÓ a
+  analytics.js su init propio (lo hace meta-pixel.js) para no duplicar PageView.
+  Cada evento dispara UNA vez, con params (verificado 12/12). NO poner eventos
+  duplicados en site.js/vehicle (se intentó y se revirtió: analytics.js ya los cubre).
+- El sitio NO tiene CSP → carga sin bloqueos. Si se agrega CSP: permitir
+  `connect.facebook.net` (script) y `www.facebook.com` (img/connect).
+- Los datos se ven en **Meta Events Manager**, NO en `/admin/analytics.html`
+  (sistemas separados). Notas de qué significa cada dato: `docs/meta-pixel-eventos.md`.
 
 ## Datos clave
 - Leads: Supabase `promax_inquiries` + webhook n8n (UCallNow) → WhatsApp
