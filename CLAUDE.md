@@ -105,6 +105,20 @@ vacío = al final por año) + relleno VARIADO por categoría hasta 12.
 (agrega la columna `featured_order`). Sin correrlo, todo funciona salvo el orden
 manual (los destacados salen primero por año).
 
+## Meta Pixel (Facebook) — jul 2026
+Pixel de Meta `1709075950232187` (lo pidió Juan de UCallNow para anuncios).
+- Lógica centralizada en `/assets/js/meta-pixel.js` (init + `PageView`). Cada
+  página PÚBLICA carga ese `<script>` en el `<head>` + un `<noscript>` de
+  respaldo. Insertado en las 19 páginas públicas; **NO en `/admin/`** (para no
+  ensuciar los datos con las visitas del panel del staff).
+- El sitio NO tiene CSP → no hubo que autorizar dominios. Si algún día se agrega
+  CSP, hay que permitir `connect.facebook.net` (script) y `www.facebook.com`
+  (img/connect).
+- Los datos se ven en **Meta Events Manager** (panel de Meta), NO en nuestro
+  `/admin/analytics.html` (son sistemas separados). Pendiente/opcional: eventos
+  avanzados (`Lead` al capturar nombre+teléfono, `ViewContent` en la ficha del
+  carro) para optimizar anuncios — aún no implementados.
+
 ## Datos clave
 - Leads: Supabase `promax_inquiries` + webhook n8n (UCallNow) → WhatsApp
   13056761259 + email. El front SIEMPRE manda nombre+teléfono (captura modal
