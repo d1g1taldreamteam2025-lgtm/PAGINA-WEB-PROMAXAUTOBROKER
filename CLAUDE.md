@@ -23,10 +23,14 @@ así (todo verificado):
   (Jorge los pasó por Drive). Alojados LOCAL en `/assets/video/inventory/reel-NN
   .mp4` (720×1280 vertical 9:16, avc1/mp4a = H.264/AAC, ya vienen con faststart)
   y servidos por `assets/data/instagram.json`. **Son 8** (Jorge mandó 10 pero
-  pidió quitar el que "sobraba": a ~3 columnas 10 deja un huérfano solo; 8 queda
-  parejo en TODOS los breakpoints — 5col:5+3, 3col:3+3+2, 2col:4×2, sin single
-  suelto). La sección "Lo más reciente en Instagram" aparece en home (`data-
-  limit="3"` → preview de 3) y en about (`#videos`, sin límite → los 8). Sin
+  pidió quitar los que "sobraban"). Para que NO queden huecos en blanco (exigencia
+  de Jorge), la cuadrícula de about se pasó a **4 columnas (PC/tablet) y 2 (móvil)**
+  en `theme.css`: 8=4+4 y 8=4×2, fila llena en cualquier ancho (antes era 5/3/2col
+  y 8 dejaba huecos: 5+3). El **home tiene su PROPIO diseño** (`#pmxVideos
+  .pmx-ig__grid` = 3-col centrado máx 760px en PC + carrusel deslizable en móvil):
+  muestra `data-limit="3"` = fila llena de 3, NO se toca. La sección "Lo más
+  reciente en Instagram" aparece en home (preview de 3) y en about (`#videos`,
+  sin límite → los 8, grid 4×2 en PC / 2×4 en móvil). Sin
   `poster` (el sandbox no decodifica H.264 → no genero miniaturas): media-
   fragment `#t=0.1` para que el navegador real muestre el primer frame; fallback
   = tile oscuro + botón play. **Hover = reproduce CON sonido** (mouseenter:
