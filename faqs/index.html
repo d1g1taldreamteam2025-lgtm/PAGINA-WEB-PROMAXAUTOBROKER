@@ -21,13 +21,14 @@
 <meta name="twitter:title" content="Preguntas Frecuentes | Promax Auto Broker">
 <meta name="twitter:description" content="Preguntas frecuentes de Promax Auto Broker: comprar un auto, financiamiento, ITIN, pago inicial, pruebas de manejo y más. Respuestas claras en español.">
 <meta name="twitter:image" content="https://www.promaxautobroker.com/assets/img/promax-og.png">
-<script>/* Héroe: las imágenes de esta página vivían en la cuenta Cloudinary kcixfvoq,
-   que murió en jul 2026 (HTTP 404 en todo su contenido — igual que drbc4wbvw
-   antes). Mientras Joel re-genera los artes (los tiene en su historial de
-   ChatGPT), la página usa su hero de TEXTO diseñado. Para restaurar: guardar
-   los archivos en /assets/img/heroes/ y declarar aquí window.__pmxHero con
-   es/en/es-m/en-m + ar/ar-m, como hacen /import/ y /financing/. */
-window.__pmxHero=null;</script>
+<script>/* Héroe LOCAL (en el repo — regla del proyecto: nada de CDNs ajenos).
+   El preload baja la foto del primer vistazo EN PARALELO con el CSS (LCP rápido). */
+window.__pmxHero={"es":"/assets/img/heroes/faqs-es-pc.webp","en":"/assets/img/heroes/faqs-en-pc.webp","ar":"1672/941"};
+/* ⏳ Falta el arte VERTICAL de teléfono: mientras tanto, en celular se mantiene el
+   hero de TEXTO (legible) en lugar de encoger el banner 16:9. Cuando lleguen las
+   versiones de teléfono: añadir "es-m"/"en-m" + "ar-m" y borrar estas 3 líneas. */
+if(window.matchMedia&&window.matchMedia("(max-width:768px)").matches)window.__pmxHero=null;
+(function(){var H=window.__pmxHero;if(!H)return;var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var n=document.createElement("link");n.rel="preload";n.as="image";n.setAttribute("fetchpriority","high");n.href=(m?H[l+"-m"]:0)||H[l];if(n.href)document.head.appendChild(n);})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
