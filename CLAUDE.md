@@ -87,6 +87,24 @@ ahora sube con `sb.storage.from('promax')` a la carpeta `inventory/`:
   (ya vienen optimizadas) en vez de pasarlas por el proxy de Cloudinary.
 ⚠️ Pendiente del lado del cliente: correr ese SQL una vez en Supabase.
 
+## Vehículos Destacados de la portada + ORDEN manual (jul 2026)
+La sección "Vehículos Destacados" del home (`#pmxFeatured` en `index.html`)
+ahora pone SIEMPRE PRIMERO los carros marcados `featured` en el panel (antes
+`featured` solo reordenaba dentro de un round-robin variado por categoría, así
+que marcar "Destacado" NO garantizaba que saliera — queja de Jorge). Lógica
+nueva: destacados primero (ordenados por `featured_order` asc, menor = primero;
+vacío = al final por año) + relleno VARIADO por categoría hasta 12.
+- Panel (`admin/index.html`): checkbox `#fFeatured` + input nº `#fFeatOrder`
+  ("Orden en portada"). Se guarda `featured_order` en el payload. Guardado con
+  AUTO-REPARACIÓN: si la columna aún no existe, guarda sin ella y avisa el SQL.
+- El home lee el orden con un fetch APARTE y tolerante a fallos
+  (`select=id,featured_order&featured=eq.true`); si la columna no existe o falla,
+  igual renderiza (destacados primero por año). NUNCA toca la carga principal
+  del inventario (el SLIM sigue intacto → cero riesgo a los 505 carros).
+⚠️ Pendiente del cliente: correr `docs/supabase-featured-order.sql` una vez
+(agrega la columna `featured_order`). Sin correrlo, todo funciona salvo el orden
+manual (los destacados salen primero por año).
+
 ## Datos clave
 - Leads: Supabase `promax_inquiries` + webhook n8n (UCallNow) → WhatsApp
   13056761259 + email. El front SIEMPRE manda nombre+teléfono (captura modal

@@ -366,7 +366,12 @@ tbody tr.is-sel{background:rgba(239,68,68,.10);}
           <div class="field"><label>MPG Ciudad</label><input type="number" id="fMpgC" min="0"></div>
           <div class="field"><label>MPG Carretera</label><input type="number" id="fMpgH" min="0"></div>
         </div>
-        <div class="field"><label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="fFeatured" style="width:auto;accent-color:#F4DC34"> Destacado (aparece en la página principal)</label></div>
+        <div class="field"><label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="fFeatured" style="width:auto;accent-color:#F4DC34"> Destacado (aparece en la página principal)</label>
+          <div style="margin-top:8px">
+            <label for="fFeatOrder" style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">Orden en portada — solo si está destacado (1 = primero; vacío = al final)</label>
+            <input type="number" id="fFeatOrder" min="1" step="1" placeholder="ej: 1" style="width:130px">
+          </div>
+        </div>
         <div class="field"><label>Características (separadas por coma)</label><input type="text" id="fFeats" placeholder="Bluetooth, Cámara de reversa, Sunroof"></div>
         <div class="field"><label>Descripción</label><textarea id="fDesc" rows="3" placeholder="Se genera automáticamente si la dejas vacía..."></textarea></div>
         <div>
@@ -914,6 +919,7 @@ async function importJson(){
     if(d.mpg_city!=null)$('fMpgC').value=d.mpg_city;
     if(d.mpg_highway!=null)$('fMpgH').value=d.mpg_highway;
     if(d.featured!==undefined)$('fFeatured').checked=!!d.featured;
+    if(d.featured_order!=null)$('fFeatOrder').value=d.featured_order;
     if(Array.isArray(d.features))$('fFeats').value=d.features.join(', ');
     if(d.description!==undefined)$('fDesc').value=d.description||'';
     if(Array.isArray(d.gallery))$('pasteUrls').value=d.gallery.join('\n');
@@ -943,6 +949,7 @@ function openEditModal(id){
   $('fVin').value=c.vin||'';$('fStock').value=c.stock||'';
   $('fMpgC').value=c.mpg_city||'';$('fMpgH').value=c.mpg_highway||'';
   $('fFeatured').checked=!!c.featured;
+  $('fFeatOrder').value=(c.featured_order!=null?c.featured_order:'');
   $('fFeats').value=Array.isArray(c.features)?c.features.join(', '):'';
   $('fDesc').value=c.description||'';$('pasteUrls').value='';
   photos=Array.isArray(c.gallery)?c.gallery.slice():[];renderPhotos();
@@ -1026,22 +1033,29 @@ async function saveVehicle(){
     vin:$('fVin').value.trim()||null,stock:$('fStock').value.trim()||null,badge:$('fBadge').value.trim()||null,
     mpg_city:$('fMpgC').value?parseInt($('fMpgC').value,10):null,mpg_highway:$('fMpgH').value?parseInt($('fMpgH').value,10):null,
     featured:$('fFeatured').checked,
+    featured_order:($('fFeatOrder').value!==''?parseInt($('fFeatOrder').value,10):null),
     features:$('fFeats').value?$('fFeats').value.split(',').map(s=>s.trim()).filter(Boolean):[],
     description:$('fDesc').value.trim()||null,
     gallery:allPhotos,cover_image:allPhotos[0]||null
   };
   $('saveBtn').disabled=true;$('saveBtn').innerHTML='<span class="material-icons-outlined" style="font-size:16px">hourglass_top</span> Guardando...';
   try {
-    let result;
-    if (editingId) {
-      result = await sb.from(TABLE).update(body).eq('id', editingId);
-    } else {
-      body.id = 'promax-' + Math.random().toString(16).slice(2,10);
-      result = await sb.from(TABLE).insert(body);
+    if (!editingId) body.id = 'promax-' + Math.random().toString(16).slice(2,10);
+    const persist = (payload)=> editingId
+      ? sb.from(TABLE).update(payload).eq('id', editingId)
+      : sb.from(TABLE).insert(payload);
+    let result = await persist(body);
+    // Si la columna featured_order aún NO existe en la base, guarda SIN ella y avisa
+    // el SQL (una sola vez). Así el panel nunca se rompe por la columna de orden.
+    let ordPending = false;
+    if (result.error && /featured_order/i.test(String(result.error.message||result.error.hint||result.error))) {
+      const b2 = Object.assign({}, body); delete b2.featured_order;
+      result = await persist(b2);
+      ordPending = !result.error;
     }
     if (result.error) throw result.error;
-    showAlert('vehicleAlert','ok',editingId?'¡Vehículo actualizado!':'¡Vehículo agregado!');
-    setTimeout(()=>{closeVehicleModal();loadInventory();},800);
+    showAlert('vehicleAlert','ok',(editingId?'¡Vehículo actualizado!':'¡Vehículo agregado!')+(ordPending?' — para activar el ORDEN en portada corre una vez el SQL de docs/supabase-featured-order.sql en Supabase.':''));
+    setTimeout(()=>{closeVehicleModal();loadInventory();},ordPending?1800:800);
   } catch (e) {
     showAlert('vehicleAlert','err','Error: '+(e.message||e.hint||'No se pudo guardar'));
   } finally {

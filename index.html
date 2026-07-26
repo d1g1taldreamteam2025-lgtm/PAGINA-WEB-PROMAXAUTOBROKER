@@ -724,36 +724,59 @@ PMX.addTranslations({
   PMX.loadInventory().then(function(cars){
     CARS = cars;
     catTiles(cars);
-    // Destacados VARIADOS (pedido del cliente): mezcla de categorías —
-    // carros, camiones, jet ski, vans, motos… — en lugar de una sola.
-    // Se toma 1 de cada categoría por ronda (los "featured" y más nuevos
-    // primero) hasta llenar 12 tarjetas.
-    var byCat = {};
-    cars.forEach(function(c){ (byCat[c.category] = byCat[c.category] || []).push(c); });
-    Object.keys(byCat).forEach(function(k){
-      byCat[k].sort(function(a,b){ return ((b.featured?1:0)-(a.featured?1:0)) || ((b.year||0)-(a.year||0)); });
-    });
-    var lanes = ["cars","trucks_machinery","watercraft","vans","motorcycles","utv"]
-      .filter(function(k){ return byCat[k] && byCat[k].length; })
-      .map(function(k){ return byCat[k]; });
-    var feat = [];
-    for (var round = 0; feat.length < 12; round++) {
-      var added = false;
-      for (var li = 0; li < lanes.length && feat.length < 12; li++) {
-        if (lanes[li][round]) { feat.push(lanes[li][round]); added = true; }
+    // Destacados: los que Jorge marca "Destacado" en el panel van SIEMPRE PRIMERO
+    // (son los carros que más quiere vender), en el ORDEN que él fije desde el panel
+    // (campo featured_order: menor = primero; vacío = después de los numerados, por
+    // año). Las tarjetas restantes se rellenan con una MEZCLA VARIADA por categoría
+    // (carros, camiones, jet ski, vans, motos…) hasta 12, como antes.
+    function renderFeatured(orderMap){
+      orderMap = orderMap || {};
+      var featd = cars.filter(function(c){ return c.featured; }).sort(function(a,b){
+        var ao = (orderMap[a.id] != null) ? orderMap[a.id] : 1e9;
+        var bo = (orderMap[b.id] != null) ? orderMap[b.id] : 1e9;
+        return (ao - bo) || ((b.year||0) - (a.year||0));
+      });
+      var byCat = {};
+      cars.forEach(function(c){ if (c.featured) return; (byCat[c.category] = byCat[c.category] || []).push(c); });
+      Object.keys(byCat).forEach(function(k){
+        byCat[k].sort(function(a,b){ return (b.year||0) - (a.year||0); });
+      });
+      var lanes = ["cars","trucks_machinery","watercraft","vans","motorcycles","utv"]
+        .filter(function(k){ return byCat[k] && byCat[k].length; })
+        .map(function(k){ return byCat[k]; });
+      var fill = [];
+      for (var round = 0; ; round++) {
+        var added = false;
+        for (var li = 0; li < lanes.length; li++) { if (lanes[li][round]) { fill.push(lanes[li][round]); added = true; } }
+        if (!added) break;
       }
-      if (!added) break;
+      // Destacados SIEMPRE presentes; el resto se rellena hasta llegar a 12.
+      var need = Math.max(0, 12 - featd.length);
+      var feat = featd.concat(fill.slice(0, need));
+      var host = document.getElementById("pmxFeatured");
+      if (!feat.length) { var sec = document.querySelector(".pmx-featured"); if (sec) sec.style.display = "none"; return; }
+      host.innerHTML = feat.map(card).join("");
+      // Anima en cascada las tarjetas recién inyectadas (entra/sale con el scroll)
+      if (window.PMXAnim) PMXAnim.cards("#pmxFeatured");
+      // Flechas del carrusel (‹ ›); en celular también se desliza con el dedo
+      function slide(dir){ host.scrollBy({ left: dir * host.clientWidth * 0.85, behavior: "smooth" }); }
+      var fp = document.getElementById("pmxFeatPrev"), fn = document.getElementById("pmxFeatNext");
+      if (fp) fp.addEventListener("click", function(){ slide(-1); });
+      if (fn) fn.addEventListener("click", function(){ slide(1); });
     }
-    var host = document.getElementById("pmxFeatured");
-    if (!feat.length) { var sec = document.querySelector(".pmx-featured"); if (sec) sec.style.display = "none"; return; }
-    host.innerHTML = feat.map(card).join("");
-    // Anima en cascada las tarjetas recién inyectadas (entra/sale con el scroll)
-    if (window.PMXAnim) PMXAnim.cards("#pmxFeatured");
-    // Flechas del carrusel (‹ ›); en celular también se desliza con el dedo
-    function slide(dir){ host.scrollBy({ left: dir * host.clientWidth * 0.85, behavior: "smooth" }); }
-    var fp = document.getElementById("pmxFeatPrev"), fn = document.getElementById("pmxFeatNext");
-    if (fp) fp.addEventListener("click", function(){ slide(-1); });
-    if (fn) fn.addEventListener("click", function(){ slide(1); });
+    // Trae el ORDEN manual de los destacados (columna opcional featured_order).
+    // Es un fetch APARTE y tolerante: si la columna aún no existe o falla, se
+    // renderiza igual (destacados primero, por año). NUNCA rompe el inventario.
+    (function(){
+      var hayFeat = cars.some(function(c){ return c.featured; });
+      var DB = (window.PROMAX && window.PROMAX.db) || {};
+      if (!hayFeat || !DB.url || !DB.anonKey) { renderFeatured({}); return; }
+      var url = DB.url.replace(/\/$/, "") + "/rest/v1/promax_inventory?select=id,featured_order&featured=eq.true";
+      fetch(url, { headers: { apikey: DB.anonKey, Authorization: "Bearer " + DB.anonKey } })
+        .then(function(r){ return r.ok ? r.json() : []; })
+        .then(function(rows){ var m = {}; (rows||[]).forEach(function(x){ m[x.id] = x.featured_order; }); renderFeatured(m); })
+        .catch(function(){ renderFeatured({}); });
+    })();
   });
 })();
 
