@@ -19,16 +19,21 @@ así (todo verificado):
   (1672×941, WebP ~q90). Decisión de Jorge: el MISMO arte 16:9 se usa también
   en teléfono (se ve bien y evita pedir 12 verticales); por eso cada head
   declara `ar` y `ar-m` = "1672/941". El script del póster sigue blindado.
-- Videos inventario: RESTAURADOS (26-jul) con 10 reels NUEVOS que Joel escogió
-  (Jorge los pasó por Drive). Alojados LOCAL en `/assets/video/inventory/reel-01
-  ..10.mp4` (720×1280 vertical 9:16, H.264, ya vienen con faststart) y servidos
-  por `assets/data/instagram.json`. La sección "Lo más reciente en Instagram"
-  aparece en home (`data-limit="3"` → preview de 3) y en about (`#videos`, sin
-  límite → los 10; grid 5×2 en PC). Sin `poster` (el sandbox no decodifica
-  H.264 → no puedo generar miniaturas): se usa el media-fragment `#t=0.1` para
-  que el navegador real muestre el primer frame; fallback = tile oscuro + botón
-  play. CAPTIONS pendientes (Joel no me deja verlos; se piden a Jorge). Respaldo
-  de captions VIEJOS (los 8 reels muertos) en `docs/instagram-videos-respaldo.json`.
+- Videos inventario: RESTAURADOS (26-jul) con reels NUEVOS que Joel escogió
+  (Jorge los pasó por Drive). Alojados LOCAL en `/assets/video/inventory/reel-NN
+  .mp4` (720×1280 vertical 9:16, avc1/mp4a = H.264/AAC, ya vienen con faststart)
+  y servidos por `assets/data/instagram.json`. **Son 8** (Jorge mandó 10 pero
+  pidió quitar el que "sobraba": a ~3 columnas 10 deja un huérfano solo; 8 queda
+  parejo en TODOS los breakpoints — 5col:5+3, 3col:3+3+2, 2col:4×2, sin single
+  suelto). La sección "Lo más reciente en Instagram" aparece en home (`data-
+  limit="3"` → preview de 3) y en about (`#videos`, sin límite → los 8). Sin
+  `poster` (el sandbox no decodifica H.264 → no genero miniaturas): media-
+  fragment `#t=0.1` para que el navegador real muestre el primer frame; fallback
+  = tile oscuro + botón play. **Hover = reproduce CON sonido** (mouseenter:
+  muted=false+play; mouseleave: pause+muted=true+reset); el clic abre el
+  lightbox con controles. CAPTIONS quedaron vacías por decisión de Jorge ("no
+  importa, déjalo sin eso"). Respaldo de captions VIEJOS (los 8 reels muertos)
+  en `docs/instagram-videos-respaldo.json`.
 - Favicons: rescatados a `/assets/img/favicon-256.png` y `favicon-180.png`
   (estaban en una 3ª cuenta `dol89fbil`, aún viva de milagro).
 - Thumbs del catálogo: `data.js:thumb()` sirve DIRECTO la URL del dealer (el

@@ -113,12 +113,22 @@
         openLB(STATE[+a.getAttribute("data-idx")]);
       });
     }
-    // Vista previa al pasar el mouse (solo si el reel tiene video propio cargado).
+    // Vista previa al pasar el mouse: reproduce CON sonido; al salir, silencia y reinicia.
+    // (El navegador permite quitar el silencio a un video que ya se está reproduciendo tras
+    //  cualquier interacción del usuario en la página; si lo bloquea, sigue en silencio.)
     host.querySelectorAll(".pmx-ig__card").forEach(function (a) {
       var v = a.querySelector("video.pmx-ig__video");
       if (!v) return;
-      a.addEventListener("mouseenter", function () { var p = v.play(); if (p && p.catch) p.catch(function () {}); });
-      a.addEventListener("mouseleave", function () { v.pause(); try { v.currentTime = 0; } catch (_) {} });
+      a.addEventListener("mouseenter", function () {
+        v.muted = false;
+        try { v.volume = 1; } catch (_) {}
+        var p = v.play(); if (p && p.catch) p.catch(function () {});
+      });
+      a.addEventListener("mouseleave", function () {
+        v.pause();
+        v.muted = true;
+        try { v.currentTime = 0; } catch (_) {}
+      });
     });
   }
 
