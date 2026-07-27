@@ -664,6 +664,17 @@
     payload._source_url = location.href;
     payload._submitted_at = new Date().toISOString();
     payload._lang = LANG;
+    // event_id ÚNICO por envío: sirve para DEDUPLICAR el evento Lead entre el
+    // Pixel (navegador, aquí) y la Conversions API (servidor). Si el servidor
+    // manda el MISMO Lead con este event_id, Meta NO lo cuenta dos veces. Va
+    // dentro del payload → llega a n8n y a Supabase (raw) para el lado servidor.
+    payload._event_id = "lead." + (payload.form_type || payload.action_type || "lead") + "." + Date.now() + "." + Math.random().toString(16).slice(2, 10);
+    // Cookies del Pixel de Meta (_fbp / _fbc): mejoran el emparejamiento de la
+    // Conversions API del SERVIDOR (que las recibe en el payload de n8n). Best-effort.
+    try {
+      var _mck = function (n) { var m = document.cookie.match(new RegExp("(?:^|; )" + n + "=([^;]+)")); return m ? decodeURIComponent(m[1]) : ""; };
+      payload._fbp = _mck("_fbp"); payload._fbc = _mck("_fbc");
+    } catch (e) {}
 
     // 1) Guardar SIEMPRE en Supabase (registro principal del lead).
     var saved = insertInquiry(payload);
@@ -679,12 +690,31 @@
         }, 8000).then(function (r) { return !!(r && r.ok); }).catch(function () { return false; })
       : Promise.resolve(false);
 
+    // Evento "Lead" de Meta: se dispara SOLO cuando la solicitud se envió
+    // CORRECTAMENTE (Supabase guardó o el webhook confirmó), NUNCA al hacer clic.
+    // Una sola vez por envío, con parámetros y el event_id (para dedup con la
+    // Conversions API del servidor). Seguro: si el pixel está bloqueado, no rompe.
+    var leadFired = false;
+    function fireMetaLead() {
+      if (leadFired) return; leadFired = true;
+      try {
+        if (!window.fbq) return;
+        var ft = payload.form_type || payload.action_type || "lead";
+        var params = { content_category: ft, currency: "USD" };
+        var vid = payload.vehicle_id || payload.vin || payload.id;
+        if (vid) params.content_ids = [String(vid)];
+        var val = Number(payload.price || payload.vehicle_price || payload.value);
+        if (val > 0) params.value = val;
+        window.fbq("track", "Lead", params, { eventID: payload._event_id });
+      } catch (e) {}
+    }
+
     // Éxito apenas Supabase confirme (rápido). Si Supabase fallara, esperamos al
     // webhook como respaldo. Solo si NINGUNO responde mostramos error.
     return saved.then(function (ok) {
-      if (ok) return { saved: true };
+      if (ok) { fireMetaLead(); return { saved: true }; }
       return notified.then(function (n) {
-        if (n) return { saved: false, notified: true };
+        if (n) { fireMetaLead(); return { saved: false, notified: true }; }
         throw new Error("lead_not_delivered");
       });
     });

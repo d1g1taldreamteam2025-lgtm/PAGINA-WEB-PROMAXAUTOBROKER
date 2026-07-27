@@ -31,8 +31,12 @@
   // lead…), para que los anuncios optimicen por resultados reales y se pueda hacer
   // retargeting / anuncios dinámicos. Es la ÚNICA fuente de estos eventos (no se
   // duplican). Mapa: evento del sitio -> evento estándar de Meta.
-  //   whatsapp/call -> Contact  ·  form/buy -> Lead  ·  vehicle_view -> ViewContent
-  var FB_EVENTS = { whatsapp: "Contact", call: "Contact", form: "Lead", buy: "Lead", vehicle_view: "ViewContent" };
+  //   whatsapp/call -> Contact  ·  vehicle_view -> ViewContent
+  // El evento "Lead" NO va aquí: se dispara desde submitLead (site.js) SOLO al
+  // confirmar el ÉXITO del envío (no en el clic/intento), con un event_id para
+  // deduplicar con la Conversions API del servidor. Así Meta cuenta la conversión
+  // únicamente cuando la solicitud se envió correctamente.
+  var FB_EVENTS = { whatsapp: "Contact", call: "Contact", vehicle_view: "ViewContent" };
 
   var ENDPOINT = DB.url.replace(/\/$/, "") + "/rest/v1/" + (AN.table || "promax_analytics");
   var PAGE = location.pathname + (location.search && /[?&](cat|id)=/.test(location.search) ? location.search : "");
@@ -94,7 +98,6 @@
       try {
         var _fb = FB_EVENTS[event], _m = meta || {}, _p = {}, _vid = _m.vehicle_id || null;
         if (_fb === "ViewContent") { _p.content_type = "vehicle"; if (_vid) _p.content_ids = [String(_vid)]; }
-        else if (_fb === "Lead")   { _p.content_category = _m.type || "lead"; if (_vid) _p.content_ids = [String(_vid)]; }
         else if (_fb === "Contact"){ _p.content_category = (event === "call") ? "telefono" : "whatsapp"; }
         window.fbq("track", _fb, _p);
       } catch (e) {}
