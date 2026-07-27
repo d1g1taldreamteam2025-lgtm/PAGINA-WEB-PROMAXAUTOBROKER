@@ -1,76 +1,91 @@
-# Meta — evento Lead desde el SERVIDOR (Conversions API) para UCallNow
+# Meta — evento Lead desde el SERVIDOR (Conversions API) en SU n8n
 
-## Estado actual (lado web — YA hecho)
-El **Pixel** (navegador) dispara el evento **`Lead`** SOLO cuando la solicitud de
-financiamiento (y cualquier formulario) **se envía correctamente** — después de
-guardar los datos y confirmar el éxito, **nunca** al solo hacer clic. Verificado.
+## Lo primero: ESTO ES OPCIONAL. Ya funciona sin esto.
+El **Pixel del navegador** ya dispara el evento **`Lead`** cuando la solicitud se
+envía correctamente. **La conversión YA se registra en Meta.** No falta nada para
+que cuente. ✅
 
-Cada envío genera un **`_event_id` único** que viaja en el payload del lead a:
-- el **webhook de n8n** (`leadsWebhook`), y
-- Supabase (`promax_inquiries`, columna `raw`).
+La Conversions API (CAPI = mandar el Lead también desde el servidor) es un **EXTRA
+de confiabilidad**: recupera el ~10–20% de usuarios que bloquean el pixel del
+navegador (ad-blockers, iOS restrictivo). Si NO la hacen, igual se cuenta la
+mayoría de conversiones. Se puede agregar cuando quieran, sin prisa.
 
-El payload también incluye (best-effort) las cookies del pixel **`_fbp`** y **`_fbc`**
-y `_source_url`, para mejorar el emparejamiento del lado servidor.
+## Quién lo hace
+**Ustedes**, porque **ustedes tienen el n8n** (el mismo workflow "Promax — Leads"
+que ya recibe cada lead). Es agregar 2 nodos a ese workflow. No depende de nadie
+externo.
 
-## Qué falta (lado servidor — lo hace UCallNow)
-Para redundancia (sobrevive a ad-blockers e iOS), enviar el **mismo** evento `Lead`
-por la **Conversions API** desde el servidor, usando el **MISMO `_event_id`** → Meta
-**deduplica** y no cuenta doble.
+## Lo ÚNICO que necesitan pedir: un "access token" de Meta (GRATIS)
+No es algo que se compre ni que falte. Se **genera en 2 clics**, gratis, en la
+misma cuenta de Meta donde está el pixel:
 
-El lugar natural es **n8n** (ya recibe cada lead). Agregar un nodo HTTP Request:
+> Meta **Events Manager** → seleccionan el pixel `1709075950232187` → **Settings**
+> → sección **Conversions API** → **Generate access token** → copian ese texto largo.
 
+Quien tenga acceso a esa cuenta de Meta (Juan, que instaló el pixel) lo genera en
+30 segundos. **Es secreto**: va DENTRO de n8n, nunca en la web. Eso es TODO lo que
+hay que "pedir": _"Juan, genérame un access token de Conversions API del pixel
+1709075950232187"._
+
+## Cómo agregarlo al workflow (2 nodos, 5 minutos)
+En el workflow **"Promax — Leads"**, después del nodo **"Format Lead"**, conectar
+estos dos nodos nuevos (van en PARALELO, no estorban al WhatsApp/email):
+
+**Nodo 1 — Code, nombre "CAPI · armar Lead":**
+```js
+const crypto = require('crypto');
+const d = ($json && $json.raw) ? $json.raw : ($json.body || $json || {});
+const sha = (v) => v ? crypto.createHash('sha256').update(String(v)).digest('hex') : undefined;
+const email = (d.email || '').trim().toLowerCase();
+const phone = (d.phone || '').replace(/[^0-9]/g, '');   // solo dígitos, con código de país
+const user_data = {};
+if (email) user_data.em = [sha(email)];
+if (phone) user_data.ph = [sha(phone)];
+if (d._fbp) user_data.fbp = d._fbp;
+if (d._fbc) user_data.fbc = d._fbc;
+const custom_data = { content_category: d.form_type || 'lead', currency: 'USD' };
+if (d.vehicle_id) custom_data.content_ids = [String(d.vehicle_id)];
+const body = { data: [{
+  event_name: 'Lead',
+  event_time: Math.floor(Date.now() / 1000),
+  event_id: d._event_id,                 // MISMO id del navegador -> Meta DEDUPLICA
+  action_source: 'website',
+  event_source_url: d._source_url,
+  user_data,
+  custom_data
+}] };
+// Para PROBAR en Events Manager > Test Events, pon aquí tu código de prueba:
+// body.test_event_code = 'TESTxxxx';
+return { json: { capi_body: body } };
 ```
-POST https://graph.facebook.com/v20.0/1709075950232187/events?access_token=EL_TOKEN
-Content-Type: application/json
-```
+> Si su n8n bloquea `require('crypto')` en el Code node, arranquen n8n con la
+> variable de entorno `NODE_FUNCTION_ALLOW_BUILTIN=crypto` (o usen el nodo
+> **Crypto** de n8n para hashear `email` y `phone` en SHA256).
 
-Cuerpo (mapeando desde el payload del lead que ya llega a n8n):
+**Nodo 2 — HTTP Request, nombre "CAPI · enviar a Meta":**
+- **Method:** `POST`
+- **URL:** `https://graph.facebook.com/v20.0/1709075950232187/events?access_token=PEGA_AQUI_TU_TOKEN`
+- **Body:** JSON → `={{ JSON.stringify($json.capi_body) }}`
+- **Settings → On Error:** *Continue* (que un fallo de Meta nunca detenga el lead).
 
+**Conexión:** arrastren una línea desde la salida de **"Format Lead"** hacia
+**"CAPI · armar Lead"**, y de ahí a **"CAPI · enviar a Meta"**.
+
+### Copiar-pegar directo en el lienzo de n8n
+Copien este bloque y péguenlo en el canvas del workflow (Ctrl+V); luego conecten
+"Format Lead" → "CAPI · armar Lead":
 ```json
-{
-  "data": [
-    {
-      "event_name": "Lead",
-      "event_time": 1234567890,
-      "event_id": "{{ $json._event_id }}",
-      "action_source": "website",
-      "event_source_url": "{{ $json._source_url }}",
-      "user_data": {
-        "em": ["<SHA256( email en minúsculas y sin espacios )>"],
-        "ph": ["<SHA256( teléfono solo dígitos, con código de país )>"],
-        "fbp": "{{ $json._fbp }}",
-        "fbc": "{{ $json._fbc }}"
-      },
-      "custom_data": {
-        "content_category": "{{ $json.form_type }}",
-        "currency": "USD"
-      }
-    }
-  ]
-}
+{"nodes":[{"parameters":{"jsCode":"const crypto = require('crypto');\nconst d = ($json && $json.raw) ? $json.raw : ($json.body || $json || {});\nconst sha = (v) => v ? crypto.createHash('sha256').update(String(v)).digest('hex') : undefined;\nconst email = (d.email || '').trim().toLowerCase();\nconst phone = (d.phone || '').replace(/[^0-9]/g, '');\nconst user_data = {};\nif (email) user_data.em = [sha(email)];\nif (phone) user_data.ph = [sha(phone)];\nif (d._fbp) user_data.fbp = d._fbp;\nif (d._fbc) user_data.fbc = d._fbc;\nconst custom_data = { content_category: d.form_type || 'lead', currency: 'USD' };\nif (d.vehicle_id) custom_data.content_ids = [String(d.vehicle_id)];\nconst body = { data: [{ event_name: 'Lead', event_time: Math.floor(Date.now()/1000), event_id: d._event_id, action_source: 'website', event_source_url: d._source_url, user_data, custom_data }] };\nreturn { json: { capi_body: body } };"},"id":"capi-armar-lead","name":"CAPI · armar Lead","type":"n8n-nodes-base.code","typeVersion":2,"position":[480,560]},{"parameters":{"method":"POST","url":"https://graph.facebook.com/v20.0/1709075950232187/events?access_token=PEGA_AQUI_TU_TOKEN","sendBody":true,"specifyBody":"json","jsonBody":"={{ JSON.stringify($json.capi_body) }}","options":{}},"id":"capi-enviar-meta","name":"CAPI · enviar a Meta","type":"n8n-nodes-base.httpRequest","typeVersion":4.2,"position":[720,560],"onError":"continueRegularOutput"}],"connections":{"CAPI · armar Lead":{"main":[[{"node":"CAPI · enviar a Meta","type":"main","index":0}]]}}}
 ```
 
-### Reglas importantes
-1. **`event_id` = `_event_id` del payload** (NO generar uno nuevo). Es lo que hace la
-   deduplicación con el pixel del navegador. Sin esto, Meta contaría 2 leads por envío.
-2. **`event_time`** = hora en **segundos** Unix (UTC). Usar el momento del envío
-   (o `Math.floor(Date.now()/1000)`; no más de 7 días atrás).
-3. **`em` y `ph` van HASHEADOS con SHA-256**, normalizados antes de hashear:
-   - email → minúsculas + sin espacios al inicio/fin.
-   - teléfono → **solo dígitos**, incluyendo código de país (ej. `13056761259`).
-   (n8n tiene el nodo *Crypto* → SHA256, o hacerlo en un *Function* node.)
-4. **`fbp`/`fbc`** van tal cual (sin hashear); si vienen vacíos, se pueden omitir.
-5. El **access token** se genera en: Meta **Events Manager** → tu pixel →
-   *Settings* → *Conversions API* → *Generate access token*. **Es secreto** (guardarlo
-   en las credenciales de n8n, nunca en el sitio web).
+## Cómo probar
+Meta **Events Manager → Test Events**: pongan su `test_event_code` en el código,
+envíen el formulario de financiamiento, y verán el `Lead` llegar **del navegador**
+(ya) y **del servidor** (cuando agreguen estos nodos), marcado como **deduplicado**
+(cuenta 1, no 2).
 
-### Cómo probar
-- Meta **Events Manager** → *Test Events*: pega el `test_event_code` en el body
-  (`"test_event_code": "TESTxxxx"`) y verás llegar el Lead del servidor.
-- En *Events Manager* → el evento `Lead` debe mostrar **"Recibido de: Servidor y
-  Navegador"** y **deduplicado** (no el doble).
-
-## Resumen
-- **Web:** ✅ Lead en el navegador al confirmar el envío, con `_event_id` para dedup.
-- **Servidor (UCallNow):** agregar en n8n el POST a la Conversions API con ese mismo
-  `_event_id` + em/ph hasheados. El token lo pone UCallNow (es secreto de ellos).
+## Qué ya dejó lista la web (para que esto funcione)
+- El `Lead` del navegador dispara SOLO al confirmar el envío, con un **`_event_id`**
+  único.
+- Ese `_event_id` (+ cookies `_fbp`/`_fbc` + `_source_url`) viaja en el payload al
+  webhook de n8n → los nodos de arriba solo lo reutilizan. Por eso Meta deduplica.
