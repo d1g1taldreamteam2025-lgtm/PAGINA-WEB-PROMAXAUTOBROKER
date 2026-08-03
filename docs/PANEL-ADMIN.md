@@ -21,7 +21,7 @@ Ejemplo: `https://pagina-web-promaxautobroker.vercel.app/admin/`
 Con tu dominio quedará: `https://promaxautobroker.com/admin/`
 
 **Contraseñas:**
-- Login del panel: el email/clave que crees en el **Paso 3** (sugerido: `promax@promaxautobroker.com` / `ADMINPROMAX`).
+- Login del panel: el email/clave que crees en el **Paso 3** (sugerido: `Promaxautobroker@gmail.com` / `ADMINPROMAX`).
 - Herramienta bookmarklet (premium): **`PROMAX123456789`**
 
 ---
@@ -90,7 +90,7 @@ En Cloudinary (cuenta `drbc4wbvw`) → **Settings → Upload → Upload presets 
 
 ### Paso 3 — Crear el usuario del login
 En Supabase → **Authentication → Users → Add user**:
-- **Email:** `promax@promaxautobroker.com` (o el que prefieras)
+- **Email:** `Promaxautobroker@gmail.com` (el único correo real del negocio)
 - **Password:** `ADMINPROMAX` (o la que quieras)
 - Marca *Auto Confirm User* y guarda.
 
