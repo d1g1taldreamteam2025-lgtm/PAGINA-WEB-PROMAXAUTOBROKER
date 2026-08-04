@@ -285,14 +285,14 @@ placas, ni rotulación en el edificio.
 Las cadenas se reproducen LETRA POR LETRA, con esta ortografía exacta, tildes incluidas:
 
 VARIANTE EN ESPAÑOL
-  Titular:   Comprar tu carro en USA nunca fue tan fácil
+  Titular:   Somos tu broker de confianza en Estados Unidos
   Subtítulo: Compra y venta de vehículos nuevos y usados en Florida · Financiamiento flexible
 
 VARIANTE EN INGLÉS
-  Titular:   Buying your car in the USA has never been easier
+  Titular:   We are your trusted car broker in the United States
   Subtítulo: New & used vehicles in Florida · Flexible financing
 
-CONTROLES: "fácil" lleva tilde en la a y "fue" NO lleva tilde. "vehículos" lleva tilde.
+CONTROLES: "vehículos" lleva tilde.
 "USA" va en tres mayúsculas sin puntos. En inglés "easier" termina en -ier. El separador es
 un punto medio · con un espacio a cada lado. Antes de darme cada imagen, lee cada palabra y
 compárala contra este texto: una sola errata y la imagen no sirve.
@@ -345,8 +345,7 @@ texto NO se copia de la referencia, se escribe de cero en el idioma que toque.
    41-47 % aire oscuro; 47 % techo del 4Runner; 47-80 % cuerpos completos con las llantas
    enteras (el caucho toca el agua entre 79 % y 80 %); 80-91 % piso mojado con brillo medio
    y detalle; 91-100 % sacrificable. Márgenes laterales del 6 % sin nada esencial.
-   En vertical el titular se parte en DOS líneas —"Comprar tu carro en USA" / "nunca fue tan
-   fácil", y "Buying your car in the USA" / "has never been easier"— y el subtítulo también
+   En vertical el titular se parte en DOS líneas —"Somos tu broker de confianza" / "en Estados Unidos", y "We are your trusted" / "car broker in the United States"— y el subtítulo también
    se parte en dos líneas por el punto medio, eliminando el punto medio.
 4) VERTICAL 1024x1536, textos en INGLÉS. Referencia: la imagen 3. Idéntica salvo el idioma.
 
