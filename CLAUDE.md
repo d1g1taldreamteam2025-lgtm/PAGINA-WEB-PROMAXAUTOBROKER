@@ -130,6 +130,11 @@ Pixel de Meta `1709075950232187` (lo pidió Juan de UCallNow para anuncios).
   (sistemas separados). Notas de qué significa cada dato: `docs/meta-pixel-eventos.md`.
 
 ## Datos clave
+- Panel admin: el correo del usuario de login (Supabase Auth) es FICTICIO y por
+  pedido del cliente (ago 2026) NO debe aparecer en NINGÚN lado — ni escrito en
+  código/docs ni mostrado en pantalla. Las 4 páginas del panel pintan "Admin"
+  fijo en el topbar en vez de `user.email`; docs sin ejemplos con ese correo.
+  Solo se teclea al hacer login. Páginas admin nuevas: misma regla.
 - Leads: Supabase `promax_inquiries` + webhook n8n (UCallNow) → WhatsApp
   13056761259 + email. El front SIEMPRE manda nombre+teléfono (captura modal
   `PMX.captureThenWhatsApp` en site.js).

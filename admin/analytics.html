@@ -211,7 +211,7 @@ function pct(a,b){return b?Math.round(a/b*100)+'%':'0%';}
 
 /* ---------- auth (idéntico al resto del panel) ---------- */
 function showLogin(){ gateFail();document.getElementById('loginScreen').style.display='flex';document.getElementById('app').style.display='none';}
-function showApp(user){ gateReveal();document.getElementById('loginScreen').style.display='none';document.getElementById('app').style.display='block';document.getElementById('userEmail').textContent=user.email;loadAll();}
+function showApp(user){ gateReveal();document.getElementById('loginScreen').style.display='none';document.getElementById('app').style.display='block';document.getElementById('userEmail').textContent='Admin';loadAll();}
 document.getElementById('loginForm').addEventListener('submit',async(e)=>{
   e.preventDefault();
   const btn=document.getElementById('loginBtn'),err=document.getElementById('loginErr');

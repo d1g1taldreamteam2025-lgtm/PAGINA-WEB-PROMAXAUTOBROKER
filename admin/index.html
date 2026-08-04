@@ -253,7 +253,7 @@ tbody tr.is-sel{background:rgba(239,68,68,.10);}
       <a href="/admin/analytics">Analytics</a>
     </nav>
     <div class="topbar__user">
-      <span id="userEmail">—</span>
+      <span id="userEmail">Admin</span>
       <button onclick="logout()"><span class="material-icons-outlined" style="font-size:14px">logout</span> Salir</button>
     </div>
   </header>
@@ -604,7 +604,7 @@ async function logout(){
 function enterApp(user){
   $('loginScreen').style.display='none';
   $('appScreen').classList.add('is-on');
-  $('userEmail').textContent = user.email || '';
+  $('userEmail').textContent = 'Admin'; // el correo del login es ficticio: NO mostrarlo (pedido del cliente, ago 2026)
   // El splash se queda hasta que el INVENTARIO esté pintado: del splash se pasa
   // al panel ya lleno, sin el "frame" vacío cargando datos a la vista.
   loadInventory().finally(gateReveal);

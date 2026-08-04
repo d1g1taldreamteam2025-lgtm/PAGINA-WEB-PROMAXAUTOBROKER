@@ -247,7 +247,7 @@ function showLogin(){ gateFail();
 function showApp(user){ gateReveal();
   document.getElementById('loginScreen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
-  document.getElementById('userEmail').textContent = user.email;
+  document.getElementById('userEmail').textContent = 'Admin'; // el correo del login es ficticio: NO mostrarlo (pedido del cliente, ago 2026)
   loadLeads();
 }
 

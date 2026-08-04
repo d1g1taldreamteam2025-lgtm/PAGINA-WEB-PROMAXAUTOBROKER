@@ -39,7 +39,7 @@ Repo → **Settings → Secrets and variables → Actions → New repository sec
 **Opción B — login de admin** (más fácil: son las credenciales que ya usas para entrar a `/admin/`):
 | Secret | Valor |
 |---|---|
-| `PROMAX_ADMIN_EMAIL` | tu correo de admin (ej. `promax@promaxautobroker.com`) |
+| `PROMAX_ADMIN_EMAIL` | el correo con el que entras a `/admin/` |
 | `PROMAX_ADMIN_PASSWORD` | tu contraseña de admin |
 
 La anon key (pública) el robot la lee sola de `assets/js/config.js`; no hace
