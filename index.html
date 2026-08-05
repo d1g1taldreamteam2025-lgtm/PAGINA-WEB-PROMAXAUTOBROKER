@@ -39,7 +39,7 @@
    del primer vistazo baja EN PARALELO con el CSS (LCP rápido) y el celular jamás
    descarga la foto de PC. El <img> del body copia estos datos con su mini-script.
    ⚠️ Si cambias una foto, actualiza también HERO_WARM en assets/js/site.js. */
-window.__pmxHero={"es":"/assets/img/heroes/home1-es-pc.webp","en":"/assets/img/heroes/home1-en-pc.webp","es-m":"/assets/img/heroes/home1-es-movil.webp","en-m":"/assets/img/heroes/home1-en-movil.webp","ar":"1920/800","ar-m":"1122/1402"};
+window.__pmxHero={"es":"/assets/img/heroes/home1-es-pc.webp","en":"/assets/img/heroes/home1-en-pc.webp","es-m":"/assets/img/heroes/home1-es-movil.webp","en-m":"/assets/img/heroes/home1-en-movil.webp","ar":"1920/1080","ar-m":"1024/1536"};
 (function(){var H=window.__pmxHero,l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var n=document.createElement("link");n.rel="preload";n.as="image";n.setAttribute("fetchpriority","high");n.href=(m?H[l+"-m"]:0)||H[l];document.head.appendChild(n);})();</script>
 <link rel="preconnect" href="https://db.ucallnow.fun" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
@@ -90,7 +90,10 @@ window.__pmxHero={"es":"/assets/img/heroes/home1-es-pc.webp","en":"/assets/img/h
      vertical se comia el LOGO del arte 16:9. Ahora: tope 16:9, piso 2:1. */
   /* 2.40:1 = el mismo aspecto de los 3 artes de PC. Cabe casi entero en la
      primera pantalla, asi que los vehiculos se ven SIN hacer scroll. */
-  .pmx-hero2__media{height:41.667vw;}
+  /* 16:9 = el aspecto de los 3 artes de PC (los que venian 2.40 se
+     extendieron por arriba y abajo con sus propios bordes). Cover no
+     recorta nada en ningun slide. */
+  .pmx-hero2__media{height:56.25vw;}
   .pmx-hero2__track,.pmx-hero2__slide{height:100%;}
   .pmx-hero2__slide{display:block;}
   /* La imagen llena el marco (cover). object-position:center 42% = sesgo leve
@@ -109,12 +112,13 @@ window.__pmxHero={"es":"/assets/img/heroes/home1-es-pc.webp","en":"/assets/img/h
   .pmx-hero2__cta{position:static;background:#0a0a0a;padding:14px 12px 4px;gap:9px;flex-wrap:nowrap;align-items:stretch;}
   .pmx-hero2__cta .pmx-btn{flex:1 1 0;min-width:0;padding:12px 8px;font-size:12.5px;line-height:1.18;white-space:normal;text-align:center;display:flex;align-items:center;justify-content:center;}
 }
-.pmx-hero2__dots{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);display:flex;gap:10px;z-index:3;}
-@media(max-width:768px){.pmx-hero2__dots{position:static;transform:none;justify-content:center;padding:12px 0 16px;background:#0a0a0a;}}
+/* Estaticos SIEMPRE (antes flotaban sobre la foto en PC): el arte nuevo trae
+   barra inferior con web y telefono, y los puntitos la tapaban. */
+.pmx-hero2__dots{display:flex;gap:10px;z-index:3;justify-content:center;padding:12px 0 16px;background:#0a0a0a;}
 .pmx-hero2__dots button{width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.7);background:rgba(0,0,0,.4);color:#fff;font-weight:700;font-size:14px;cursor:pointer;transition:all .2s;font-family:var(--font-head);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px);}
 .pmx-hero2__dots button:hover{border-color:#fff;}
 .pmx-hero2__dots button.is-on{background:var(--brand);border-color:var(--brand);transform:scale(1.12);}
-@media(max-width:768px){.pmx-hero2__dots{bottom:10px;gap:7px;}.pmx-hero2__dots button{width:27px;height:27px;font-size:12px;}}
+@media(max-width:768px){.pmx-hero2__dots{gap:7px;}.pmx-hero2__dots button{width:27px;height:27px;font-size:12px;}}
 /* CTA CARDS */
 .pmx-ctacards{background:var(--bg-soft);}
 .pmx-ctacards__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
@@ -328,34 +332,20 @@ window.__pmxHero={"es":"/assets/img/heroes/home1-es-pc.webp","en":"/assets/img/h
          data-en="/assets/img/heroes/financing-en-pc.webp"
          data-es-m="/assets/img/heroes/financing-es-movil.webp"
          data-en-m="/assets/img/heroes/financing-en-movil.webp"
-         data-ar="1942/809" data-ar-m="1122/1402"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.onerror=function(){var sl=i.closest(".pmx-hero2__slide");if(sl){sl.style.display="none";try{window.dispatchEvent(new Event("resize"))}catch(e){}}};i.src=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script></div>
+         data-ar="1920/1080" data-ar-m="1024/1536"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.onerror=function(){var sl=i.closest(".pmx-hero2__slide");if(sl){sl.style.display="none";try{window.dispatchEvent(new Event("resize"))}catch(e){}}};i.src=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script></div>
       <!-- (Slide "$1,000 de inicial" ELIMINADO a pedido del cliente: salían personas.
            La oferta sigue viva en la banda "Oferta especial" más abajo, sin humanos.) -->
-      <!-- SLIDE 3: "Gana $500 por referir" — SOLO PC (pedido de Jorge): el arte
-           vertical disponible es 4:5 (1122×1402) y en el carrusel móvil (9:16)
-           dejaba franja negra. En teléfono este slide se AUTO-ELIMINA antes de
-           que arranque el carrusel (los puntitos se ajustan solos a 2). Si Joel
-           genera el arte 9:16, devolver data-es-m/en-m (archivos guardados en
-           /assets/img/heroes/referidos-*-movil.webp) y quitar la auto-eliminación. -->
-      <div class="pmx-hero2__slide pmx-hero2__slide--pconly"><img alt="Promax Auto Broker — Gana $500 por referir y participa por un Toyota Corolla 2026" loading="lazy" data-pconly="1"
+      <!-- SLIDE 3: "Gana $500 por referir". Ya NO es solo-PC: el carrusel movil
+           quedo en 4:5 (1122x1402), que es justo el formato del arte vertical
+           guardado, asi que entra sin franja negra. Con esto son 3 slides en
+           PC y 3 en telefono. (El slide de Venezuela se quito del home por
+           pedido del cliente, ago 2026; sigue vivo en /import/ y en el menu.) -->
+      <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Gana $500 por referir y participa por un Toyota Corolla 2026" loading="lazy"
          data-es="/assets/img/heroes/referidos-es-pc.webp"
          data-en="/assets/img/heroes/referidos-en-pc.webp"
-         data-ar="1942/809"><script>(function(){var s=document.currentScript,i=s.previousElementSibling;s.remove();
-         /* Solo-PC: en pantallas <=1024px el CSS lo oculta y NI SIQUIERA descargamos
-            la foto. Si el usuario agranda la ventana, el carrusel la hidrata sola. */
-         if(window.matchMedia&&!window.matchMedia("(min-width:1025px)").matches)return;
-         var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}
-         var a=i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.onerror=function(){var sl=i.closest(".pmx-hero2__slide");if(sl){sl.style.display="none";try{window.dispatchEvent(new Event("resize"))}catch(e){}}};i.src=i.getAttribute("data-"+l);
-         var h=i.closest("section");if(h)h.classList.add("has-img");})();</script></div>
-      <!-- SLIDE FINAL: importación a Venezuela. Va de ULTIMO en PC y en telefono
-           por pedido del cliente (ago 2026): estaba de primero y quemaba leads
-           en EE.UU. El servicio sigue vivo en /import/ y en el menu. -->
-      <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Tu broker de confianza en USA: compra, financiamiento, subastas, CARFAX e importación a Venezuela" loading="lazy"
-         data-es="/assets/img/heroes/import-es-pc.webp"
-         data-en="/assets/img/heroes/import-en-pc.webp"
-         data-es-m="/assets/img/heroes/import-es-movil.webp"
-         data-en-m="/assets/img/heroes/import-en-movil.webp"
-         data-ar="1942/809" data-ar-m="1122/1402"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.onerror=function(){var sl=i.closest(".pmx-hero2__slide");if(sl){sl.style.display="none";try{window.dispatchEvent(new Event("resize"))}catch(e){}}};i.src=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script></div>
+         data-es-m="/assets/img/heroes/referidos-es-movil.webp"
+         data-en-m="/assets/img/heroes/referidos-en-movil.webp"
+         data-ar="1920/1080" data-ar-m="1024/1536"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.onerror=function(){var sl=i.closest(".pmx-hero2__slide");if(sl){sl.style.display="none";try{window.dispatchEvent(new Event("resize"))}catch(e){}}};i.src=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script></div>
     </div>
   </div>
   <div class="pmx-hero2__cta">
