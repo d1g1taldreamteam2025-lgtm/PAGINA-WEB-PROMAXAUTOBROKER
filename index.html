@@ -85,14 +85,22 @@ window.__pmxHero={"es":"/assets/img/heroes/home1-es-pc.webp","en":"/assets/img/h
   /* PC: el hero ocupa EXACTO el primer pliegue (no desborda) y la imagen LLENA
      todo el marco (object-fit:cover) — sin barras a los lados. Las dos
      diapositivas comparten el mismo marco. */
-  .pmx-hero2__media{height:min(calc(100vh - var(--header-h)),56.25vw);}
+  /* El marco nunca se hace MAS PANORAMICO que 2:1. Si la ventana es ancha y baja
+     (mucha barra del navegador), antes se achataba hasta 2.8:1 y el recorte
+     vertical se comia el LOGO del arte 16:9. Ahora: tope 16:9, piso 2:1. */
+  .pmx-hero2__media{height:min(56.25vw,max(calc(100vh - var(--header-h)),50vw));}
   .pmx-hero2__track,.pmx-hero2__slide{height:100%;}
   .pmx-hero2__slide{display:block;}
   /* La imagen llena el marco (cover). object-position:center 42% = sesgo leve
      hacia ARRIBA: protege el LOGO (arriba) de las 3 diapositivas y el recorte
      del pliegue se va mas al fondo/vehiculos de abajo (que sangran con estilo).
      Verificado que ni el logo ni los subtitulos se cortan en pantallas reales. */
-  .pmx-hero2__slide img{width:100%;height:100%;object-fit:cover;object-position:center 42%;}
+  /* 20% = el recorte se va casi todo al PIE (reflejos, sacrificables) y protege
+     el logo, que en el arte nuevo empieza al 8.8% de la altura. */
+  .pmx-hero2__slide img{width:100%;height:100%;object-fit:cover;object-position:center 20%;}
+  /* Slides 2 y 3: su arte es 2.40:1 y en un marco 2:1 el recorte lateral se
+     comia el titular. Se muestran COMPLETOS (contain) sobre negro. */
+  .pmx-hero2__slide--wide img{object-fit:contain;background:#0a0a0a;}
   /* En PC la imagen es la protagonista: SIN botones encima (siguen en móvil).
      Selector más específico para ganarle a la regla base .pmx-hero2__cta. */
   .pmx-hero2 .pmx-hero2__cta{display:none;}
@@ -317,7 +325,7 @@ window.__pmxHero={"es":"/assets/img/heroes/home1-es-pc.webp","en":"/assets/img/h
       <!-- SLIDE 2: importación a Venezuela (imagenes propias, ya no via __pmxHero).
            Estaba de PRIMERA y quemaba leads: bajo aqui por pedido de Jorge. El
            servicio sigue vivo y se vende en /import/ y en el menu de servicios. -->
-      <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Tu broker de confianza en USA: compra, financiamiento, subastas, CARFAX e importación a Venezuela" loading="lazy"
+      <div class="pmx-hero2__slide pmx-hero2__slide--wide"><img alt="Promax Auto Broker — Tu broker de confianza en USA: compra, financiamiento, subastas, CARFAX e importación a Venezuela" loading="lazy"
          data-es="/assets/img/heroes/import-es-pc.webp"
          data-en="/assets/img/heroes/import-en-pc.webp"
          data-es-m="/assets/img/heroes/import-es-movil.webp"
@@ -331,7 +339,7 @@ window.__pmxHero={"es":"/assets/img/heroes/home1-es-pc.webp","en":"/assets/img/h
            que arranque el carrusel (los puntitos se ajustan solos a 2). Si Joel
            genera el arte 9:16, devolver data-es-m/en-m (archivos guardados en
            /assets/img/heroes/referidos-*-movil.webp) y quitar la auto-eliminación. -->
-      <div class="pmx-hero2__slide pmx-hero2__slide--pconly"><img alt="Promax Auto Broker — Gana $500 por referir y participa por un Toyota Corolla 2026" loading="lazy" data-pconly="1"
+      <div class="pmx-hero2__slide pmx-hero2__slide--pconly pmx-hero2__slide--wide"><img alt="Promax Auto Broker — Gana $500 por referir y participa por un Toyota Corolla 2026" loading="lazy" data-pconly="1"
          data-es="/assets/img/heroes/referidos-es-pc.webp"
          data-en="/assets/img/heroes/referidos-en-pc.webp"
          data-ar="1942/809"><script>(function(){var s=document.currentScript,i=s.previousElementSibling;s.remove();
