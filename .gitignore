@@ -6,3 +6,6 @@ Thumbs.db
 .idea/
 .env
 .env.local
+
+# capturas de verificacion (no son parte del sitio)
+v1-*.png
