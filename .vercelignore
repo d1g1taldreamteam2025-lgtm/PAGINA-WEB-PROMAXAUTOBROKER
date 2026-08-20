@@ -3,3 +3,10 @@ docs/
 automation/
 google-apps-script/
 **/*.py
+
+# Agregados ago-2026: estaban PUBLICOS en produccion sin que nada del sitio los
+# use. sql/ expone el esquema completo de la base; CLAUDE.md, las notas internas
+# del proyecto; tools/, el robot de inventario y su README.
+sql/
+tools/
+CLAUDE.md
