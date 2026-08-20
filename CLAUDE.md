@@ -1,5 +1,40 @@
 # Promax Auto Broker — Guía del proyecto
 
+## 🚨 REGLA DE ORO #0: PROHIBIDO probar contra el webhook de leads EN VIVO
+
+**19-ago-2026: tres agentes de una auditoría hicieron POST al webhook real para
+comprobar que estaba vivo. Resultado: al teléfono del cliente (13056761259)
+llegaron 3 mensajes de WhatsApp "PROMAX · CONTACTO", uno de ellos con
+`Nombre: _audit_test`. El encargado del sitio reclamó que se ve poco
+profesional. No puede repetirse.**
+
+`https://n8n-ucallnow.ucallnow.fun/webhook/promax-leads` **NO es un endpoint de
+pruebas**: cada POST dispara un WhatsApp y un correo REALES a la gente que
+atiende las ventas, y además crea una fila en `promax_inquiries` que ensucia el
+panel de leads (y no se puede borrar con la clave pública: la RLS solo deja
+DELETE a `authenticated`; hay que entrar a `/admin/leads.html`).
+
+Aplica a TODO: yo mismo, subagentes, workflows y scripts.
+
+**Prohibido, sin excepciones:**
+- `curl -X POST` (ni `-d`, ni `--data`, ni un `{}` vacío) contra esa URL.
+- Enviar cualquier formulario del sitio en producción.
+- Llamar a `submitLead()` contra el webhook real.
+
+**Si hay que comprobar que el webhook está arriba**, usar SOLO métodos que no
+disparen el flujo: un `HEAD`, o un `GET` (n8n responde 404 "not registered for
+GET", que YA confirma que el servicio responde), o `curl -I` al dominio. Nunca
+un POST.
+
+**Para probar formularios de verdad:** servidor local (`python3 -m http.server`)
+con `endpoints.leadsWebhook` vacío en una copia de `config.js`. El front está
+hecho para eso: si el webhook está vacío, el lead se guarda igual y el formulario
+responde éxito (`site.js`), así que se prueba el camino completo sin molestar a
+nadie.
+
+**Lo mismo para el resto de canales del cliente:** nada de mensajes de prueba por
+WhatsApp, correo, Instagram ni el formulario de referidos.
+
 ## 🚫 REGLA DE ORO: NO depender de Cloudinary (pedido de Jorge, jul 2026)
 
 La cuenta de Cloudinary `drbc4wbvw` quedó SUSPENDIDA (HTTP 401 en TODO su

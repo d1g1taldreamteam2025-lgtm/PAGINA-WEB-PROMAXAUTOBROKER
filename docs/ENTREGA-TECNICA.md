@@ -408,5 +408,9 @@ Están documentadas en `CLAUDE.md` y responden a pedidos explícitos del cliente
 - **El correo de login del panel no debe aparecer en ningún lado**, ni en código ni en
   pantalla. Las 4 páginas del panel pintan "Admin" fijo.
 - **Sin personas en los banners del hero** (se eliminó un slide por eso).
+- **Nunca probar contra el webhook de leads en producción.** Cada POST dispara un
+  WhatsApp y un correo reales al equipo de ventas y ensucia el panel de leads. Para
+  probar formularios: servidor local con `endpoints.leadsWebhook` vacío — el lead se
+  guarda igual en la base y el formulario responde éxito.
 - El slide de importación a Venezuela **se quitó del home**: el visitante en EE.UU. creía
   que el negocio era solo envíos. El servicio sigue vivo en `/import/` y en el menú.
