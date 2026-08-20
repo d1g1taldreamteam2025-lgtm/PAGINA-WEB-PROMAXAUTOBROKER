@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Exportar datos · Promax</title>
+<style>
+  :root{--gold:#f4dc34;--bg:#0c0c0c;--card:#151515;--line:#262626;--txt:#eaeaea;--mut:#9a9a9a;--ok:#16a34a;--err:#dc2626;}
+  *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--txt);
+    font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;display:flex;
+    align-items:center;justify-content:center;min-height:100vh;padding:24px;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:28px;max-width:620px;width:100%;}
+  h1{margin:0 0 6px;font-size:21px} .sub{color:var(--mut);margin:0 0 22px;font-size:14px}
+  label{display:block;font-size:13px;color:var(--mut);margin:14px 0 6px}
+  input{width:100%;padding:11px 13px;border-radius:9px;border:1px solid var(--line);
+    background:#0f0f0f;color:var(--txt);font-size:15px}
+  button{margin-top:20px;width:100%;padding:13px;border:0;border-radius:9px;
+    background:var(--gold);color:#111;font-weight:800;font-size:15px;cursor:pointer}
+  button:disabled{opacity:.55;cursor:not-allowed}
+  .msg{margin-top:16px;font-size:14px;padding:11px 13px;border-radius:9px;display:none}
+  .msg.err{display:block;background:rgba(220,38,38,.12);color:#fca5a5}
+  .msg.ok{display:block;background:rgba(22,163,74,.12);color:#86efac}
+  #log{margin-top:18px;font:13px/1.7 ui-monospace,SFMono-Regular,Menlo,monospace;
+    color:var(--mut);max-height:260px;overflow:auto;display:none}
+  #log.on{display:block} .row{display:flex;justify-content:space-between;gap:12px}
+  .row b{color:var(--txt);font-weight:600}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Exportar datos</h1>
+  <p class="sub">Descarga <b>todo</b> el contenido de la base en un solo archivo JSON,
+     para entregarlo al equipo que se hará cargo del sitio.</p>
+
+  <div id="auth">
+    <label for="em">Correo del panel</label>
+    <input id="em" type="email" autocomplete="username">
+    <label for="pw">Contraseña</label>
+    <input id="pw" type="password" autocomplete="current-password">
+    <button id="btnIn">Entrar</button>
+  </div>
+
+  <div id="zone" style="display:none">
+    <button id="btnGo">Descargar copia completa</button>
+  </div>
+
+  <div id="msg" class="msg"></div>
+  <div id="log"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL  = 'https://db.ucallnow.fun';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+/* Las 5 tablas del proyecto. La RLS solo deja leerlas con sesion iniciada,
+   por eso esta pagina pide login antes de exportar. */
+const TABLAS = ['promax_inventory','promax_inquiries','promax_referrals','promax_settings','promax_analytics'];
+const LOTE = 1000;
+
+const $ = id => document.getElementById(id);
+const say = (t, cls) => { const m = $('msg'); m.textContent = t; m.className = 'msg ' + (cls||''); };
+const line = html => { $('log').classList.add('on'); $('log').insertAdjacentHTML('beforeend', html); $('log').scrollTop = 1e6; };
+
+$('btnIn').onclick = async () => {
+  const email = $('em').value.trim(), password = $('pw').value;
+  if (!email || !password) return say('Escribe el correo y la contraseña.', 'err');
+  $('btnIn').disabled = true; say('Entrando…');
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  $('btnIn').disabled = false;
+  if (error) return say('No se pudo entrar: ' + error.message, 'err');
+  $('auth').style.display = 'none'; $('zone').style.display = 'block';
+  say('Sesión iniciada. Ya puedes descargar la copia.', 'ok');
+};
+
+/* Lee una tabla completa de a 1000 filas (analytics puede tener decenas de miles). */
+async function leerTodo(tabla) {
+  const filas = [];
+  for (let desde = 0; ; desde += LOTE) {
+    const { data, error } = await sb.from(tabla).select('*').range(desde, desde + LOTE - 1);
+    if (error) throw new Error(tabla + ': ' + error.message);
+    filas.push(...data);
+    if (data.length < LOTE) break;
+  }
+  return filas;
+}
+
+$('btnGo').onclick = async () => {
+  $('btnGo').disabled = true; $('log').innerHTML = ''; say('Descargando…');
+  const copia = { exportado: new Date().toISOString(), origen: SUPABASE_URL, tablas: {} };
+  try {
+    for (const t of TABLAS) {
+      line('<div class="row"><span>' + t + '</span><span>leyendo…</span></div>');
+      const filas = await leerTodo(t);
+      copia.tablas[t] = filas;
+      $('log').lastElementChild.innerHTML =
+        '<span>' + t + '</span><b>' + filas.length.toLocaleString('es') + ' filas</b>';
+    }
+    const blob = new Blob([JSON.stringify(copia, null, 1)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'promax-copia-' + new Date().toISOString().slice(0, 10) + '.json';
+    a.click(); URL.revokeObjectURL(a.href);
+    const total = Object.values(copia.tablas).reduce((s, f) => s + f.length, 0);
+    say('Listo: ' + total.toLocaleString('es') + ' filas descargadas. Entrega ese archivo al desarrollador.', 'ok');
+  } catch (e) {
+    say('Falló: ' + e.message, 'err');
+  }
+  $('btnGo').disabled = false;
+};
+</script>
+</body>
+</html>
