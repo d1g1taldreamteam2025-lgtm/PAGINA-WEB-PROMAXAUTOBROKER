@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Sorteo · Promax Auto Broker</title>
+<script src="/admin/gate.js"></script><!-- SÍNCRONO: decide login vs splash ANTES de pintar (sin parpadeo) -->
+<style>
+/* Fondo del NAVEGADOR también oscuro (sin fogonazo blanco al rebotar el scroll) */
+html{background:#0c0c0c;} /* sin overscroll-behavior: bloqueaba la rueda en algunos equipos */
+/* Compuerta de sesión (gate.js): con sesión guardada NO se pinta el login. */
+html.pmx-hassession #loginScreen{display:none;}
+#pmxSplash{display:none;position:fixed;inset:0;z-index:300;background:linear-gradient(135deg,#0c0c0c,#1a1a1a);align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+html.pmx-hassession #pmxSplash{display:flex;}
+html.pmx-ready #pmxSplash{display:none;}
+.pmx-splash__spin{width:34px;height:34px;border:3px solid rgba(244,220,52,.22);border-top-color:#F4DC34;border-radius:50%;animation:pmxspin .8s linear infinite;}
+@keyframes pmxspin{to{transform:rotate(360deg)}}
+</style>
+<link rel="icon" type="image/png" href="/assets/img/favicon-256.png"><link rel="apple-touch-icon" href="/assets/img/favicon-180.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',-apple-system,sans-serif;}
+body{background:#0c0c0c;color:#fff;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{cursor:pointer;border:0;font-family:inherit;}
+input,select,textarea{font-family:inherit;}
+
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#0c0c0c,#1a1a1a);}
+.login__card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:14px;padding:36px;width:100%;max-width:400px;}
+.login__card h1{font-size:22px;font-weight:800;margin-bottom:6px;}
+.login__card p{color:#888;font-size:14px;margin-bottom:24px;}
+.login__field{margin-bottom:14px;}
+.login__field label{display:block;font-size:12px;font-weight:600;color:#aaa;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+.login__field input{width:100%;padding:11px 14px;border-radius:8px;background:#0c0c0c;border:1px solid #2a2a2a;color:#fff;font-size:14px;}
+.login__field input:focus{outline:none;border-color:#F4DC34;}
+.login__btn{width:100%;background:#F4DC34;color:#0c0c0c;padding:13px;border-radius:8px;font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:.5px;margin-top:8px;}
+.login__btn:hover{background:#ffe957;}
+.login__err{background:#3a1717;border:1px solid #7a2a2a;color:#ff6e6e;padding:10px;border-radius:6px;font-size:13px;margin-top:12px;display:none;}
+
+.app{display:none;min-height:100vh;}
+.topbar{background:#0c0c0c;border-bottom:1px solid #2a2a2a;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.topbar__brand{display:flex;align-items:center;gap:12px;}
+.topbar__brand b{font-size:16px;font-weight:800;letter-spacing:.3px;}
+.topbar__brand .badge{background:#F4DC34;color:#0c0c0c;font-size:10px;font-weight:800;padding:3px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.5px;}
+.topbar__nav{display:flex;gap:6px;}
+.topbar__nav a{padding:8px 14px;border-radius:6px;font-size:13px;font-weight:600;color:#aaa;}
+.topbar__nav a:hover{background:#1a1a1a;color:#fff;}
+.topbar__nav a.active{background:#F4DC34;color:#0c0c0c;}
+.topbar__user{display:flex;align-items:center;gap:12px;font-size:13px;color:#888;}
+.topbar__user button{background:transparent;color:#888;font-size:12px;padding:6px 10px;border-radius:6px;}
+.topbar__user button:hover{background:#1a1a1a;color:#fff;}
+
+.main{padding:24px;max-width:1400px;margin:0 auto;}
+
+.setup-notice{display:none;background:#3a2e10;border:1px solid #7a5e1a;color:#f4dc34;padding:14px 16px;border-radius:10px;font-size:13.5px;margin-bottom:18px;line-height:1.5;}
+.setup-notice b{color:#fff;}
+.setup-notice code{background:#0c0c0c;padding:2px 6px;border-radius:4px;font-size:12px;}
+
+/* Progreso */
+.progress-card{background:linear-gradient(135deg,#1a1a1a,#161616);border:1px solid #2a2a2a;border-radius:14px;padding:24px;margin-bottom:18px;}
+.progress-top{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;margin-bottom:14px;}
+.progress-num{font-size:48px;font-weight:800;line-height:1;}
+.progress-num span{color:#F4DC34;}
+.progress-num small{font-size:15px;color:#888;font-weight:600;margin-left:8px;}
+.progress-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.goal-edit{display:flex;align-items:center;gap:6px;background:#0c0c0c;border:1px solid #2a2a2a;border-radius:8px;padding:5px 8px;}
+.goal-edit label{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.5px;}
+.goal-edit input{width:64px;background:transparent;border:0;color:#fff;font-size:14px;font-weight:700;text-align:center;}
+.goal-edit input:focus{outline:none;}
+.goal-edit button{background:#2a2a2a;color:#fff;font-size:11px;font-weight:700;padding:5px 9px;border-radius:5px;}
+.goal-edit button:hover{background:#F4DC34;color:#0c0c0c;}
+.btn-raffle{background:#F4DC34;color:#0c0c0c;font-weight:800;font-size:13px;padding:11px 18px;border-radius:8px;text-transform:uppercase;letter-spacing:.4px;}
+.btn-raffle:hover{background:#ffe957;}
+.btn-raffle:disabled{opacity:.4;cursor:not-allowed;}
+.btn-round{background:#0c0c0c;border:1px solid #2a2a2a;color:#aaa;font-weight:700;font-size:12px;padding:11px 14px;border-radius:8px;}
+.btn-round:hover{background:#1a1a1a;color:#fff;border-color:#444;}
+.progress-bar{height:16px;border-radius:999px;background:#0c0c0c;overflow:hidden;border:1px solid #2a2a2a;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#F4DC34,#4ade80);width:0;transition:width .6s ease;}
+.progress-sub{font-size:13px;color:#888;margin-top:10px;}
+.progress-sub b{color:#4ade80;}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px;}
+.stat{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:16px;}
+.stat__label{font-size:11px;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.stat__value{font-size:24px;font-weight:800;}
+.stat__value.gold{color:#F4DC34;}.stat__value.green{color:#4ade80;}.stat__value.blue{color:#60a5fa;}
+
+/* Formulario de registro */
+.form-card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;padding:18px 20px;margin-bottom:18px;}
+.form-card h3{font-size:15px;font-weight:800;margin-bottom:4px;}
+.form-card p{color:#888;font-size:12.5px;margin-bottom:16px;}
+.form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+@media(max-width:860px){.form-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.form-grid{grid-template-columns:1fr;}}
+.field label{display:block;font-size:11px;font-weight:600;color:#aaa;margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px;}
+.field label .req{color:#F4DC34;}
+.field input,.field select,.field textarea{width:100%;background:#0c0c0c;border:1px solid #2a2a2a;color:#fff;padding:10px 12px;border-radius:7px;font-size:13.5px;}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:#F4DC34;}
+.field.col-2{grid-column:span 2;}@media(max-width:560px){.field.col-2{grid-column:span 1;}}
+.field.col-3{grid-column:1 / -1;}
+.form-save{margin-top:14px;background:#F4DC34;color:#0c0c0c;font-weight:800;font-size:13.5px;padding:12px 26px;border-radius:8px;text-transform:uppercase;letter-spacing:.4px;}
+.form-save:hover{background:#ffe957;}
+.form-save:disabled{opacity:.5;cursor:not-allowed;}
+
+.filters{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:12px;margin-bottom:14px;display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center;}
+@media(max-width:780px){.filters{grid-template-columns:1fr;}}
+.filters input,.filters select{background:#0c0c0c;border:1px solid #2a2a2a;color:#fff;padding:10px 12px;border-radius:6px;font-size:13px;}
+.filters input:focus,.filters select:focus{outline:none;border-color:#F4DC34;}
+.filters .refresh{background:#F4DC34;color:#0c0c0c;padding:10px 18px;border-radius:6px;font-weight:700;font-size:13px;}
+
+.table-wrap{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;overflow:hidden;}
+.table-scroll{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{text-align:left;padding:12px 14px;background:#0c0c0c;border-bottom:1px solid #2a2a2a;color:#888;font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.5px;white-space:nowrap;}
+td{padding:12px 14px;border-bottom:1px solid #222;vertical-align:middle;}
+tr:hover td{background:#222;}tr:last-child td{border-bottom:0;}
+.actions{display:flex;gap:5px;flex-wrap:nowrap;}
+.actions button,.actions a{background:#0c0c0c;border:1px solid #333;color:#aaa;padding:5px 9px;border-radius:5px;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:4px;}
+.actions button:hover,.actions a:hover{background:#F4DC34;color:#0c0c0c;border-color:#F4DC34;}
+.actions .danger:hover{background:#dc2626;color:#fff;border-color:#dc2626;}
+.actions .wa:hover{background:#25D366;color:#0c0c0c;border-color:#25D366;}
+.empty{padding:60px 20px;text-align:center;color:#666;}
+.empty b{display:block;color:#aaa;margin-bottom:6px;font-size:15px;}
+
+.status-select{background:#0c0c0c;color:#fff;border:1px solid #333;padding:5px 26px 5px 10px;border-radius:5px;font-size:11px;font-weight:700;min-width:112px;cursor:pointer;appearance:none;-webkit-appearance:none;-moz-appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%23F4DC34' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");background-repeat:no-repeat;background-position:right 8px center;background-size:10px;letter-spacing:.3px;}
+.status-select:hover{border-color:#F4DC34;}
+.status-select.s-vendido{border-color:rgba(74,222,128,.5);color:#4ade80;}
+.status-select.s-proceso{border-color:rgba(244,220,52,.5);color:#F4DC34;}
+.status-select.s-referido{border-color:rgba(96,165,250,.5);color:#60a5fa;}
+.status-select option{background:#1a1a1a;color:#fff;}
+
+.tag-round{display:inline-block;background:#0c0c0c;border:1px solid #333;color:#888;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;}
+
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:20px;z-index:100;}
+.modal.open{display:flex;}
+.modal__card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;}
+.modal__head{padding:18px 22px;border-bottom:1px solid #2a2a2a;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#1a1a1a;}
+.modal__head h3{font-size:16px;font-weight:800;}
+.modal__close{background:transparent;color:#888;font-size:22px;width:32px;height:32px;border-radius:6px;}
+.modal__close:hover{background:#2a2a2a;color:#fff;}
+.modal__body{padding:22px;}
+.modal__row{display:grid;grid-template-columns:130px 1fr;gap:12px;padding:9px 0;border-bottom:1px solid #2a2a2a;font-size:13px;}
+.modal__row:last-child{border-bottom:0;}
+.modal__row b{color:#888;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;}
+.modal__row span{color:#fff;word-break:break-word;}
+
+/* Modal sorteo */
+.raffle-box{text-align:center;padding:36px 28px;}
+.raffle-box .emoji{font-size:50px;}
+.raffle-box h2{color:#F4DC34;margin:8px 0 4px;font-size:22px;}
+.raffle-box .winner{font-size:26px;font-weight:800;margin:14px 0 4px;}
+.raffle-box .info{color:#aaa;font-size:14px;margin-bottom:22px;line-height:1.5;}
+.raffle-box .info span{color:#fff;}
+.raffle-box .close{background:#F4DC34;color:#0c0c0c;font-weight:800;padding:11px 28px;border-radius:8px;}
+
+.toast{position:fixed;bottom:24px;right:24px;background:#1a1a1a;border:1px solid #F4DC34;color:#fff;padding:14px 20px;border-radius:8px;font-size:13px;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,.5);transform:translateX(120%);transition:transform .3s;}
+.toast.show{transform:translateX(0);}
+.toast.error{border-color:#dc2626;}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid #333;border-top-color:#F4DC34;border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<!-- Splash de sesión: solo se ve si YA hay sesión guardada, mientras se valida.
+     Así el login jamás parpadea al que ya está adentro. -->
+<div id="pmxSplash" role="status" aria-label="Cargando el panel">
+  <img src="/assets/img/logo-header.svg" alt="" style="height:46px;width:auto">
+  <div class="pmx-splash__spin"></div>
+  <p style="color:#8b8b8b;font-size:13px">Cargando tu panel…</p>
+</div>
+
+
+<div class="login" id="loginScreen">
+  <div class="login__card">
+    <h1>🎉 Sorteo · Promax</h1>
+    <p>Inicia sesión para registrar ventas y referidos.</p>
+    <form id="loginForm">
+      <div class="login__field"><label>Email</label><input type="email" id="email" required></div>
+      <div class="login__field"><label>Password</label><input type="password" id="password" required></div>
+      <button type="submit" class="login__btn" id="loginBtn">Entrar</button>
+      <div class="login__err" id="loginErr"></div>
+    </form>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <div class="topbar">
+    <div class="topbar__brand"><img src="/assets/img/logo-header.svg" alt="Promax Auto Broker" style="height:30px;width:auto"><span class="badge">Sorteo</span></div>
+    <nav class="topbar__nav">
+      <a href="/admin/">Inventario</a>
+      <a href="/admin/leads">Leads</a>
+      <a href="/admin/sorteo" class="active">Sorteo</a>
+      <a href="/admin/analytics">Analytics</a>
+    </nav>
+    <div class="topbar__user">
+      <span id="userEmail"></span>
+      <button id="logoutBtn">Salir</button>
+    </div>
+  </div>
+
+  <main class="main">
+
+    <div class="setup-notice" id="setupNotice">
+      ⚠️ <b>Falta crear la tabla del sorteo en Supabase.</b> Abre tu Supabase → <b>SQL Editor</b> y pega el bloque
+      que está en <code>docs/PANEL-ADMIN.md</code> (sección «Sorteo»). Es un copia-pega de una sola vez.
+    </div>
+
+    <!-- PROGRESO -->
+    <div class="progress-card">
+      <div class="progress-top">
+        <div>
+          <div class="progress-num"><span id="pSold">0</span> / <span id="pGoal">100</span><small>ventas para el sorteo</small></div>
+        </div>
+        <div class="progress-actions">
+          <div class="goal-edit">
+            <label>Meta</label>
+            <input type="number" id="goalInput" min="1" value="100">
+            <button id="goalSave">Guardar</button>
+          </div>
+          <button class="btn-round" id="newRoundBtn" title="Archiva la ronda actual y reinicia el contador en 0">↺ Nueva ronda</button>
+          <button class="btn-raffle" id="raffleBtn" disabled>Realizar sorteo 🎉</button>
+        </div>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="pFill"></div></div>
+      <div class="progress-sub" id="pSub"></div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats">
+      <div class="stat"><div class="stat__label">Registros (ronda)</div><div class="stat__value" id="sTotal">0</div></div>
+      <div class="stat"><div class="stat__label">Ventas (ronda)</div><div class="stat__value green" id="sSold">0</div></div>
+      <div class="stat"><div class="stat__label">Este mes</div><div class="stat__value blue" id="sMonth">0</div></div>
+      <div class="stat"><div class="stat__label">Ronda actual</div><div class="stat__value gold" id="sRound">1</div></div>
+    </div>
+
+    <!-- FORMULARIO -->
+    <div class="form-card">
+      <h3>➕ Registrar venta / referido</h3>
+      <p>Llena los datos del comprador. Se guardan al instante y suman al contador del sorteo.</p>
+      <form id="refForm">
+        <div class="form-grid">
+          <div class="field"><label>N° de rifa <span style="color:#777;text-transform:none;letter-spacing:0;font-weight:500">(0001–1000)</span></label><input name="ticket" type="number" min="1" max="1000" inputmode="numeric" placeholder="Ej. 35"></div>
+          <div class="field col-2"><label>Nombre y apellido <span class="req">*</span></label><input name="name" required placeholder="Ej. Juan Pérez"></div>
+          <div class="field"><label>Teléfono</label><input name="phone" type="tel" placeholder="(305) 000-0000"></div>
+          <div class="field col-2"><label>Correo electrónico</label><input name="email" type="email" placeholder="cliente@correo.com"></div>
+          <div class="field"><label>Vehículo comprado</label><input name="vehicle" placeholder="Ej. Toyota RAV4 2021"></div>
+          <div class="field col-2"><label>Dirección</label><input name="address" placeholder="Calle, ciudad, estado, ZIP"></div>
+          <div class="field"><label>VIN</label><input name="vin" placeholder="17 dígitos" maxlength="20"></div>
+          <div class="field col-2"><label>Quién ayudó a vender</label><input name="helper" placeholder="Nombre de la persona que refirió / vendió"></div>
+          <div class="field"><label>Estado</label>
+            <select name="status">
+              <option value="Vendido">Vendido</option>
+              <option value="En proceso">En proceso</option>
+              <option value="Referido">Referido</option>
+            </select>
+          </div>
+          <div class="field col-2"><label>Notas</label><textarea name="notes" rows="2" placeholder="Opcional"></textarea></div>
+        </div>
+        <button type="submit" class="form-save" id="formSave">Guardar registro</button>
+      </form>
+    </div>
+
+    <!-- FILTROS -->
+    <div class="filters">
+      <input type="text" id="searchInput" placeholder="🔍 Buscar por nombre, teléfono, correo, vehículo, VIN, quién ayudó…">
+      <select id="statusFilter">
+        <option value="">Todos los estados</option>
+        <option value="Vendido">Vendido</option>
+        <option value="En proceso">En proceso</option>
+        <option value="Referido">Referido</option>
+      </select>
+      <select id="roundFilter">
+        <option value="current">Ronda actual</option>
+        <option value="all">Todas las rondas</option>
+      </select>
+      <button class="refresh" id="refreshBtn">↻ Refrescar</button>
+    </div>
+
+    <!-- TABLA -->
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>N°</th><th>Fecha</th><th>Nombre</th><th>Contacto</th><th>Vehículo / VIN</th><th>Ayudó</th><th>Estado</th><th>Acciones</th></tr></thead>
+          <tbody id="tbody"><tr><td colspan="8" class="empty"><div class="spinner"></div> Cargando…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- MODAL VER -->
+<div class="modal" id="modal">
+  <div class="modal__card">
+    <div class="modal__head"><h3 id="modalTitle">Detalle</h3><button class="modal__close" onclick="closeModal()">×</button></div>
+    <div class="modal__body" id="modalBody"></div>
+  </div>
+</div>
+
+<!-- MODAL SORTEO -->
+<div class="modal" id="raffleModal">
+  <div class="modal__card">
+    <div class="raffle-box">
+      <div class="emoji">🎉</div>
+      <h2>¡Tenemos ganador!</h2>
+      <div class="winner" id="winnerName">—</div>
+      <div class="info" id="winnerInfo"></div>
+      <button class="close" onclick="document.getElementById('raffleModal').classList.remove('open')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://db.ucallnow.fun';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0';
+const REF_TABLE = 'promax_referrals';
+const SET_TABLE = 'promax_settings';
+const SOLD_STATUS = 'Vendido';
+const DEFAULT_GOAL = 100;
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, { auth: { persistSession: true, autoRefreshToken: true } });
+
+let allRows = [];
+let goal = DEFAULT_GOAL;
+let round = 1;
+
+/* ---------- AUTH ---------- */
+async function checkAuth(){
+  const { data:{ session } } = await sb.auth.getSession();
+  if (session) showApp(session.user); else showLogin();
+}
+function showLogin(){ gateFail(); document.getElementById('loginScreen').style.display='flex'; document.getElementById('app').style.display='none'; }
+function showApp(user){ gateReveal();
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('app').style.display='block';
+  document.getElementById('userEmail').textContent = 'Admin'; // el correo del login es ficticio: NO mostrarlo (pedido del cliente, ago 2026)
+  loadAll();
+}
+document.getElementById('loginForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const email=document.getElementById('email').value.trim();
+  const password=document.getElementById('password').value;
+  const btn=document.getElementById('loginBtn'), err=document.getElementById('loginErr');
+  err.style.display='none'; btn.disabled=true; btn.textContent='Entrando...';
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if (error){ err.textContent=error.message; err.style.display='block'; btn.disabled=false; btn.textContent='Entrar'; return; }
+  showApp(data.user);
+});
+document.getElementById('logoutBtn').addEventListener('click', async ()=>{ await sb.auth.signOut(); showLogin(); });
+
+/* ---------- HELPERS ---------- */
+const norm = s => String(s==null?'':s).trim().toLowerCase();
+function statusClass(s){ const n=norm(s); if(n==='vendido')return's-vendido'; if(n==='en proceso')return's-proceso'; return's-referido'; }
+function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function currentRows(){ return allRows.filter(r => (r.round||1)===round); }
+function soldCount(){ return currentRows().filter(r => norm(r.status)===norm(SOLD_STATUS)).length; }
+function padTicket(n){ const v=parseInt(n,10); return isNaN(v)?'':String(v).padStart(4,'0'); }
+
+/* ---------- LOAD ---------- */
+async function loadAll(){
+  document.getElementById('setupNotice').style.display='none';
+  // 1) ajustes (meta + ronda)
+  try{
+    const { data:st } = await sb.from(SET_TABLE).select('value').eq('key','raffle').maybeSingle();
+    if (st && st.value){ goal = +st.value.goal || DEFAULT_GOAL; round = +st.value.round || 1; }
+  }catch(e){}
+  // 2) registros
+  const tbody=document.getElementById('tbody');
+  const { data, error } = await sb.from(REF_TABLE).select('*').order('created_at',{ascending:false}).limit(2000);
+  if (error){
+    if ((error.message||'').match(/relation|does not exist|schema cache|find the table/i)){
+      document.getElementById('setupNotice').style.display='block';
+      tbody.innerHTML='<tr><td colspan="8" class="empty"><b>Tabla no creada todavía</b>Corre el SQL del sorteo (ver aviso arriba).</td></tr>';
+      render(); return;
+    }
+    tbody.innerHTML=`<tr><td colspan="8" class="empty"><b>Error</b>${escapeHtml(error.message)}</td></tr>`; return;
+  }
+  allRows = data || [];
+  render();
+  syncSettings(); // publica meta/ronda/contador (para la página pública de progreso)
+}
+
+/* ---------- RENDER ---------- */
+function render(){ renderProgress(); renderStats(); renderTable(); }
+
+function renderProgress(){
+  const sold=soldCount();
+  document.getElementById('pSold').textContent=sold;
+  document.getElementById('pGoal').textContent=goal;
+  document.getElementById('goalInput').value=goal;
+  const pct=Math.min(100, goal? (sold/goal*100):0);
+  document.getElementById('pFill').style.width=pct+'%';
+  const rem=Math.max(0, goal-sold);
+  document.getElementById('pSub').innerHTML = rem>0
+    ? `Faltan <b>${rem}</b> ventas para activar el sorteo.`
+    : `🎉 <b>¡Meta alcanzada!</b> Ya puedes realizar el sorteo.`;
+  document.getElementById('raffleBtn').disabled = sold < goal || sold===0;
+}
+function renderStats(){
+  const rows=currentRows();
+  document.getElementById('sTotal').textContent=rows.length;
+  document.getElementById('sSold').textContent=soldCount();
+  const ym=new Date().toISOString().slice(0,7);
+  document.getElementById('sMonth').textContent=rows.filter(r=>(r.created_at||'').slice(0,7)===ym).length;
+  document.getElementById('sRound').textContent=round;
+}
+function renderTable(){
+  const search=norm(document.getElementById('searchInput').value);
+  const sf=document.getElementById('statusFilter').value;
+  const rf=document.getElementById('roundFilter').value;
+  let rows = rf==='all' ? allRows.slice() : currentRows();
+  rows = rows.filter(r=>{
+    if (sf && norm(r.status)!==norm(sf)) return false;
+    if (search){ const blob=[r.name,r.phone,r.email,r.vehicle,r.vin,r.helper,r.address,r.notes,r.ticket,padTicket(r.ticket)].map(norm).join(' '); if(!blob.includes(search)) return false; }
+    return true;
+  });
+  const tbody=document.getElementById('tbody');
+  if (!rows.length){ tbody.innerHTML='<tr><td colspan="8" class="empty"><b>Sin registros</b>Agrega el primero con el formulario de arriba.</td></tr>'; return; }
+  tbody.innerHTML = rows.map(r=>{
+    const date=r.created_at? new Date(r.created_at).toLocaleDateString('es-ES',{day:'2-digit',month:'short'}) : '—';
+    const st=r.status||'Vendido';
+    const phoneClean=(r.phone||'').replace(/[^\d+]/g,'');
+    const wa=phoneClean? `https://wa.me/${phoneClean.replace(/^\+/,'')}`:null;
+    const mail=r.email? `mailto:${r.email}`:null;
+    const roundTag = (r.round||1)!==round ? ` <span class="tag-round">R${r.round||1}</span>` : '';
+    const tnum = r.ticket ? `<span style="font-family:monospace;font-weight:800;color:#F4DC34">${padTicket(r.ticket)}</span>` : '<span style="color:#555">—</span>';
+    return `<tr>
+      <td style="white-space:nowrap">${tnum}</td>
+      <td style="white-space:nowrap;color:#888">${date}${roundTag}</td>
+      <td><b style="color:#fff">${escapeHtml(r.name||'—')}</b></td>
+      <td>${r.phone?`<div style="color:#aaa;font-size:12px">${escapeHtml(r.phone)}</div>`:''}${r.email?`<div style="color:#888;font-size:12px">${escapeHtml(r.email)}</div>`:''}${!r.phone&&!r.email?'<span style="color:#555">—</span>':''}</td>
+      <td style="color:#aaa;font-size:12px">${escapeHtml(r.vehicle||'—')}${r.vin?`<div style="color:#666;font-size:11px;font-family:monospace">${escapeHtml(r.vin)}</div>`:''}</td>
+      <td style="color:#aaa;font-size:12px">${escapeHtml(r.helper||'—')}</td>
+      <td><select class="status-select ${statusClass(st)}" onchange="updateStatus('${r.id}',this.value)">
+        <option ${norm(st)==='vendido'?'selected':''}>Vendido</option>
+        <option ${norm(st)==='en proceso'?'selected':''}>En proceso</option>
+        <option ${norm(st)==='referido'?'selected':''}>Referido</option>
+      </select></td>
+      <td><div class="actions">
+        <button onclick="viewRow('${r.id}')">👁</button>
+        ${wa?`<a href="${wa}" target="_blank" class="wa">💬</a>`:''}
+        ${mail?`<a href="${mail}">✉️</a>`:''}
+        <button class="danger" onclick="deleteRow('${r.id}')">🗑</button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+/* ---------- ACCIONES ---------- */
+document.getElementById('refForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const f=e.target, btn=document.getElementById('formSave');
+  const row={ round };
+  new FormData(f).forEach((v,k)=>{ row[k]=String(v).trim(); });
+  if (!row.name){ toast('El nombre es obligatorio', true); return; }
+  // N° de rifa: opcional, debe ir de 1 a 1000 y no repetirse en la ronda actual
+  const rawTicket=(row.ticket||'').trim();
+  if (rawTicket){
+    const ticket=parseInt(rawTicket,10);
+    if (isNaN(ticket)||ticket<1||ticket>1000){ toast('El N° de rifa debe ir de 0001 a 1000', true); return; }
+    const taken=currentRows().find(r=>Number(r.ticket)===ticket);
+    if (taken){ toast('⚠️ El N° '+padTicket(ticket)+' ya lo tiene '+(taken.name||'otro registro'), true); return; }
+    row.ticket=ticket;
+  } else { delete row.ticket; }
+  btn.disabled=true; const old=btn.textContent; btn.textContent='Guardando…';
+  const { data, error } = await sb.from(REF_TABLE).insert(row).select().single();
+  btn.disabled=false; btn.textContent=old;
+  if (error){ toast('Error: '+error.message, true); return; }
+  if (data){ allRows.unshift(data); render(); syncSettings(); }
+  f.reset();
+  toast('✓ Registro guardado');
+});
+
+async function updateStatus(id, val){
+  const r=allRows.find(x=>x.id===id);
+  const { error } = await sb.from(REF_TABLE).update({ status: val }).eq('id', id);
+  if (error){ toast('Error: '+error.message, true); return; }
+  if (r) r.status=val;
+  render(); syncSettings();
+  toast('Estado actualizado');
+}
+async function deleteRow(id){
+  if(!confirm('¿Borrar este registro permanentemente?')) return;
+  const { error } = await sb.from(REF_TABLE).delete().eq('id', id);
+  if (error){ toast('Error: '+error.message, true); return; }
+  allRows=allRows.filter(x=>x.id!==id);
+  render(); syncSettings();
+  toast('Registro borrado');
+}
+
+/* Meta editable */
+document.getElementById('goalSave').addEventListener('click', async ()=>{
+  const v=Math.max(1, parseInt(document.getElementById('goalInput').value,10)||DEFAULT_GOAL);
+  goal=v; renderProgress(); renderStats();
+  await syncSettings();
+  toast('Meta actualizada a '+v);
+});
+
+/* Nueva ronda */
+document.getElementById('newRoundBtn').addEventListener('click', async ()=>{
+  if(!confirm('¿Iniciar una nueva ronda?\n\nEl contador vuelve a 0. Los registros actuales NO se borran: quedan archivados como ronda '+round+' (los ves con el filtro «Todas las rondas»).')) return;
+  round = round+1;
+  await syncSettings();
+  render();
+  toast('Nueva ronda iniciada (ronda '+round+')');
+});
+
+/* Sorteo */
+document.getElementById('raffleBtn').addEventListener('click', ()=>{
+  const elig=currentRows().filter(r=>norm(r.status)===norm(SOLD_STATUS));
+  if(!elig.length){ toast('Aún no hay ventas para sortear', true); return; }
+  const w=elig[Math.floor(Math.random()*elig.length)];
+  document.getElementById('winnerName').textContent = w.helper ? w.helper : (w.name||'—');
+  const bits=[];
+  if (w.ticket) bits.push('🎟️ Número: <span>'+padTicket(w.ticket)+'</span>');
+  if (w.helper) bits.push('Comprador: <span>'+escapeHtml(w.name||'—')+'</span>');
+  if (w.vehicle) bits.push('Vehículo: <span>'+escapeHtml(w.vehicle)+'</span>');
+  if (w.phone) bits.push('Tel: <span>'+escapeHtml(w.phone)+'</span>');
+  document.getElementById('winnerInfo').innerHTML = bits.join(' · ') || 'Entre '+elig.length+' ventas registradas.';
+  document.getElementById('raffleModal').classList.add('open');
+});
+
+/* Ver detalle */
+function viewRow(id){
+  const r=allRows.find(x=>x.id===id); if(!r) return;
+  document.getElementById('modalTitle').textContent = r.name || 'Detalle';
+  const date=r.created_at? new Date(r.created_at).toLocaleString('es-ES',{dateStyle:'medium',timeStyle:'short'}):'—';
+  const rows=[
+    ['N° de rifa', r.ticket?`<span style="font-family:monospace;font-weight:800;color:#F4DC34;font-size:15px">${padTicket(r.ticket)}</span>`:'—'],
+    ['Fecha',date],['Ronda','R'+(r.round||1)],['Estado',r.status||'—'],
+    ['Nombre',escapeHtml(r.name||'—')],
+    ['Teléfono', r.phone?`<a href="tel:${r.phone}" style="color:#F4DC34">${escapeHtml(r.phone)}</a>`:'—'],
+    ['Correo', r.email?`<a href="mailto:${r.email}" style="color:#F4DC34">${escapeHtml(r.email)}</a>`:'—'],
+    ['Dirección',escapeHtml(r.address||'—')],
+    ['Vehículo',escapeHtml(r.vehicle||'—')],
+    ['VIN', r.vin?`<span style="font-family:monospace">${escapeHtml(r.vin)}</span>`:'—'],
+    ['Quién ayudó',escapeHtml(r.helper||'—')],
+    ['Notas',escapeHtml(r.notes||'—')],
+  ];
+  document.getElementById('modalBody').innerHTML = rows.map(([k,v])=>`<div class="modal__row"><b>${k}</b><span>${v}</span></div>`).join('');
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){ document.getElementById('modal').classList.remove('open'); }
+document.getElementById('modal').addEventListener('click', e=>{ if(e.target.id==='modal') closeModal(); });
+document.getElementById('raffleModal').addEventListener('click', e=>{ if(e.target.id==='raffleModal') e.currentTarget.classList.remove('open'); });
+
+/* Filtros */
+document.getElementById('searchInput').addEventListener('input', renderTable);
+document.getElementById('statusFilter').addEventListener('change', renderTable);
+document.getElementById('roundFilter').addEventListener('change', renderTable);
+document.getElementById('refreshBtn').addEventListener('click', loadAll);
+
+/* Publica meta/ronda/contador en settings (para /referrals/ público, sin datos personales) */
+async function syncSettings(){
+  try{
+    await sb.from(SET_TABLE).upsert({ key:'raffle', value:{ goal, round, sold: soldCount(), updated_at: new Date().toISOString() } }, { onConflict:'key' });
+  }catch(e){}
+}
+
+/* Tiempo real */
+sb.channel('promax-referrals-changes')
+  .on('postgres_changes', { event:'*', schema:'public', table: REF_TABLE }, ()=>loadAll())
+  .subscribe();
+
+function toast(msg, isError=false){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.toggle('error',isError);
+  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+checkAuth();
+</script>
+</body>
+</html>

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Leads · Promax Auto Broker</title>
+<script src="/admin/gate.js"></script><!-- SÍNCRONO: decide login vs splash ANTES de pintar (sin parpadeo) -->
+<style>
+/* Fondo del NAVEGADOR también oscuro (sin fogonazo blanco al rebotar el scroll) */
+html{background:#0c0c0c;} /* sin overscroll-behavior: bloqueaba la rueda en algunos equipos */
+/* Compuerta de sesión (gate.js): con sesión guardada NO se pinta el login. */
+html.pmx-hassession #loginScreen{display:none;}
+#pmxSplash{display:none;position:fixed;inset:0;z-index:300;background:linear-gradient(135deg,#0c0c0c,#1a1a1a);align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+html.pmx-hassession #pmxSplash{display:flex;}
+html.pmx-ready #pmxSplash{display:none;}
+.pmx-splash__spin{width:34px;height:34px;border:3px solid rgba(244,220,52,.22);border-top-color:#F4DC34;border-radius:50%;animation:pmxspin .8s linear infinite;}
+@keyframes pmxspin{to{transform:rotate(360deg)}}
+</style>
+<link rel="icon" type="image/png" href="/assets/img/favicon-256.png"><link rel="apple-touch-icon" href="/assets/img/favicon-180.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',-apple-system,sans-serif;}
+body{background:#0c0c0c;color:#fff;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{cursor:pointer;border:0;font-family:inherit;}
+input,select,textarea{font-family:inherit;}
+
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#0c0c0c,#1a1a1a);}
+.login__card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:14px;padding:36px;width:100%;max-width:400px;}
+.login__card h1{font-size:22px;font-weight:800;margin-bottom:6px;}
+.login__card p{color:#888;font-size:14px;margin-bottom:24px;}
+.login__field{margin-bottom:14px;}
+.login__field label{display:block;font-size:12px;font-weight:600;color:#aaa;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+.login__field input{width:100%;padding:11px 14px;border-radius:8px;background:#0c0c0c;border:1px solid #2a2a2a;color:#fff;font-size:14px;}
+.login__field input:focus{outline:none;border-color:#F4DC34;}
+.login__btn{width:100%;background:#F4DC34;color:#0c0c0c;padding:13px;border-radius:8px;font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:.5px;margin-top:8px;}
+.login__btn:hover{background:#ffe957;}
+.login__err{background:#3a1717;border:1px solid #7a2a2a;color:#ff6e6e;padding:10px;border-radius:6px;font-size:13px;margin-top:12px;display:none;}
+
+.app{display:none;min-height:100vh;}
+.topbar{background:#0c0c0c;border-bottom:1px solid #2a2a2a;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.topbar__brand{display:flex;align-items:center;gap:12px;}
+.topbar__brand b{font-size:16px;font-weight:800;letter-spacing:.3px;}
+.topbar__brand .badge{background:#F4DC34;color:#0c0c0c;font-size:10px;font-weight:800;padding:3px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.5px;}
+.topbar__nav{display:flex;gap:6px;}
+.topbar__nav a{padding:8px 14px;border-radius:6px;font-size:13px;font-weight:600;color:#aaa;}
+.topbar__nav a:hover{background:#1a1a1a;color:#fff;}
+.topbar__nav a.active{background:#F4DC34;color:#0c0c0c;}
+.topbar__user{display:flex;align-items:center;gap:12px;font-size:13px;color:#888;}
+.topbar__user button{background:transparent;color:#888;font-size:12px;padding:6px 10px;border-radius:6px;}
+.topbar__user button:hover{background:#1a1a1a;color:#fff;}
+
+.main{padding:24px;max-width:1400px;margin:0 auto;}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px;}
+.stat{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:18px;}
+.stat__label{font-size:11px;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.stat__value{font-size:26px;font-weight:800;color:#fff;}
+.stat__value.gold{color:#F4DC34;}
+.stat__value.green{color:#4ade80;}
+.stat__value.blue{color:#60a5fa;}
+.stat__value.gray{color:#888;}
+
+.filters{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:14px;margin-bottom:16px;display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center;}
+@media(max-width:780px){.filters{grid-template-columns:1fr;}}
+.filters input,.filters select{background:#0c0c0c;border:1px solid #2a2a2a;color:#fff;padding:10px 12px;border-radius:6px;font-size:13px;}
+.filters input:focus,.filters select:focus{outline:none;border-color:#F4DC34;}
+.filters .refresh{background:#F4DC34;color:#0c0c0c;padding:10px 18px;border-radius:6px;font-weight:700;font-size:13px;}
+.filters .refresh:hover{background:#ffe957;}
+
+.table-wrap{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;overflow:hidden;}
+.table-scroll{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{text-align:left;padding:12px 14px;background:#0c0c0c;border-bottom:1px solid #2a2a2a;color:#888;font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.5px;white-space:nowrap;}
+td{padding:12px 14px;border-bottom:1px solid #222;vertical-align:middle;}
+tr:hover td{background:#222;}
+tr:last-child td{border-bottom:0;}
+
+.type-badge{display:inline-flex;align-items:center;gap:5px;background:#0c0c0c;border:1px solid #333;padding:4px 9px;border-radius:99px;font-size:11px;font-weight:600;white-space:nowrap;}
+
+.actions{display:flex;gap:5px;flex-wrap:nowrap;}
+.actions button,.actions a{background:#0c0c0c;border:1px solid #333;color:#aaa;padding:5px 9px;border-radius:5px;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:4px;}
+.actions button:hover,.actions a:hover{background:#F4DC34;color:#0c0c0c;border-color:#F4DC34;}
+.actions .danger:hover{background:#dc2626;color:#fff;border-color:#dc2626;}
+.actions .wa:hover{background:#25D366;color:#0c0c0c;border-color:#25D366;}
+
+.empty{padding:60px 20px;text-align:center;color:#666;}
+.empty b{display:block;color:#aaa;margin-bottom:6px;font-size:15px;}
+
+.status-select{background:#0c0c0c;color:#fff;border:1px solid #333;padding:5px 26px 5px 10px;border-radius:5px;font-size:11px;font-weight:700;min-width:118px;cursor:pointer;appearance:none;-webkit-appearance:none;-moz-appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%23F4DC34' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");background-repeat:no-repeat;background-position:right 8px center;background-size:10px;letter-spacing:.3px;text-transform:uppercase;}
+.status-select:hover{border-color:#F4DC34;}
+.status-select:focus{outline:none;border-color:#F4DC34;box-shadow:0 0 0 2px rgba(244,220,52,.2);}
+.status-select option{background:#1a1a1a;color:#fff;font-weight:600;padding:8px;}
+.status-select.s-new{border-color:rgba(96,165,250,.5);color:#60a5fa;}
+.status-select.s-contacted{border-color:rgba(244,220,52,.5);color:#F4DC34;}
+.status-select.s-closed{border-color:rgba(74,222,128,.5);color:#4ade80;}
+.status-select.s-archived{border-color:rgba(136,136,136,.5);color:#888;}
+
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;padding:20px;z-index:100;}
+.modal.open{display:flex;}
+.modal__card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:12px;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;}
+.modal__head{padding:18px 22px;border-bottom:1px solid #2a2a2a;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:#1a1a1a;}
+.modal__head h3{font-size:16px;font-weight:800;}
+.modal__close{background:transparent;color:#888;font-size:22px;width:32px;height:32px;border-radius:6px;}
+.modal__close:hover{background:#2a2a2a;color:#fff;}
+.modal__body{padding:22px;}
+.modal__row{display:grid;grid-template-columns:140px 1fr;gap:12px;padding:10px 0;border-bottom:1px solid #2a2a2a;font-size:13px;}
+.modal__row:last-child{border-bottom:0;}
+.modal__row b{color:#888;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;}
+.modal__row span{color:#fff;word-break:break-word;}
+.modal__row pre{background:#0c0c0c;padding:12px;border-radius:6px;font-size:11px;color:#aaa;overflow-x:auto;max-height:300px;font-family:'Monaco','Menlo',monospace;white-space:pre-wrap;}
+
+.toast{position:fixed;bottom:24px;right:24px;background:#1a1a1a;border:1px solid #F4DC34;color:#fff;padding:14px 20px;border-radius:8px;font-size:13px;z-index:200;box-shadow:0 8px 24px rgba(0,0,0,.5);transform:translateX(120%);transition:transform .3s;}
+.toast.show{transform:translateX(0);}
+.toast.error{border-color:#dc2626;}
+
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid #333;border-top-color:#F4DC34;border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<!-- Splash de sesión: solo se ve si YA hay sesión guardada, mientras se valida.
+     Así el login jamás parpadea al que ya está adentro. -->
+<div id="pmxSplash" role="status" aria-label="Cargando el panel">
+  <img src="/assets/img/logo-header.svg" alt="" style="height:46px;width:auto">
+  <div class="pmx-splash__spin"></div>
+  <p style="color:#8b8b8b;font-size:13px">Cargando tu panel…</p>
+</div>
+
+
+<div class="login" id="loginScreen">
+  <div class="login__card">
+    <h1>🔐 Leads · Promax</h1>
+    <p>Inicia sesión para ver los leads.</p>
+    <form id="loginForm">
+      <div class="login__field"><label>Email</label><input type="email" id="email" required></div>
+      <div class="login__field"><label>Password</label><input type="password" id="password" required></div>
+      <button type="submit" class="login__btn" id="loginBtn">Entrar</button>
+      <div class="login__err" id="loginErr"></div>
+    </form>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <div class="topbar">
+    <div class="topbar__brand"><img src="/assets/img/logo-header.svg" alt="Promax Auto Broker" style="height:30px;width:auto"><span class="badge">Leads</span></div>
+    <nav class="topbar__nav">
+      <a href="/admin/">Inventario</a>
+      <a href="/admin/leads" class="active">Leads</a>
+      <a href="/admin/sorteo">Sorteo</a>
+      <a href="/admin/analytics">Analytics</a>
+    </nav>
+    <div class="topbar__user">
+      <span id="userEmail"></span>
+      <button id="logoutBtn">Salir</button>
+    </div>
+  </div>
+
+  <main class="main">
+    <div class="stats">
+      <div class="stat"><div class="stat__label">Total</div><div class="stat__value" id="statTotal">0</div></div>
+      <div class="stat"><div class="stat__label">Nuevos</div><div class="stat__value blue" id="statNew">0</div></div>
+      <div class="stat"><div class="stat__label">Contactados</div><div class="stat__value gold" id="statContacted">0</div></div>
+      <div class="stat"><div class="stat__label">Cerrados</div><div class="stat__value green" id="statClosed">0</div></div>
+      <div class="stat"><div class="stat__label">Hoy</div><div class="stat__value gray" id="statToday">0</div></div>
+    </div>
+
+    <div class="filters">
+      <input type="text" id="searchInput" placeholder="🔍 Buscar por nombre, email, teléfono, vehículo...">
+      <select id="typeFilter">
+        <option value="">Todos los tipos</option>
+        <option value="reserve">🔒 Reserva</option>
+        <option value="quote">💰 Cotización</option>
+        <option value="question">❓ Pregunta</option>
+        <option value="testdrive">📅 Prueba de manejo</option>
+        <option value="financing">💳 Financiamiento</option>
+        <option value="financing_quick">⚡ Financiamiento rápido</option>
+        <option value="contact">📩 Contacto</option>
+        <option value="newsletter">📧 Newsletter</option>
+      </select>
+      <select id="statusFilter">
+        <option value="">Todos los status</option>
+        <option value="new">Nuevo</option>
+        <option value="contacted">Contactado</option>
+        <option value="closed">Cerrado</option>
+        <option value="archived">Archivado</option>
+      </select>
+      <button class="refresh" id="refreshBtn">↻ Refrescar</button>
+    </div>
+
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Fecha</th><th>Tipo</th><th>Nombre</th><th>Email</th><th>Teléfono</th><th>Vehículo</th><th>Status</th><th>Acciones</th></tr></thead>
+          <tbody id="leadsTbody"><tr><td colspan="8" class="empty"><div class="spinner"></div> Cargando…</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal__card">
+    <div class="modal__head"><h3 id="modalTitle">Detalle del Lead</h3><button class="modal__close" onclick="closeModal()">×</button></div>
+    <div class="modal__body" id="modalBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://db.ucallnow.fun';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0';
+const INQ_TABLE = 'promax_inquiries';
+const INV_TABLE = 'promax_inventory';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, { auth: { persistSession: true, autoRefreshToken: true } });
+
+const TYPES = {
+  reserve:         {emoji:'🔒', label:'Reserva'},
+  quote:           {emoji:'💰', label:'Cotización'},
+  question:        {emoji:'❓', label:'Pregunta'},
+  testdrive:       {emoji:'📅', label:'Prueba de manejo'},
+  financing:       {emoji:'💳', label:'Financiamiento'},
+  financing_quick: {emoji:'⚡', label:'Financiamiento rápido'},
+  contact:         {emoji:'📩', label:'Contacto'},
+  newsletter:      {emoji:'📧', label:'Newsletter'}
+};
+
+let allLeads = [];
+let vehTitles = {};   // id de vehículo -> "año marca modelo" (para el link del lead)
+let currentLead = null;
+
+async function checkAuth() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) showApp(session.user);
+  else showLogin();
+}
+
+function showLogin(){ gateFail();
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+}
+
+function showApp(user){ gateReveal();
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('userEmail').textContent = 'Admin'; // el correo del login es ficticio: NO mostrarlo (pedido del cliente, ago 2026)
+  loadLeads();
+}
+
+document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const btn = document.getElementById('loginBtn');
+  const err = document.getElementById('loginErr');
+  err.style.display = 'none';
+  btn.disabled = true; btn.textContent = 'Entrando...';
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) {
+    err.textContent = error.message;
+    err.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Entrar';
+    return;
+  }
+  showApp(data.user);
+});
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  await sb.auth.signOut();
+  showLogin();
+});
+
+async function loadLeads() {
+  const tbody = document.getElementById('leadsTbody');
+  tbody.innerHTML = '<tr><td colspan="8" class="empty"><div class="spinner"></div> Cargando…</td></tr>';
+  const { data, error } = await sb.from(INQ_TABLE).select('*').order('created_at', { ascending: false }).limit(500);
+  if (error) {
+    tbody.innerHTML = `<tr><td colspan="8" class="empty"><b>Error</b>${error.message}</td></tr>`;
+    return;
+  }
+  allLeads = data || [];
+  await loadVehicleTitles();   // nombres de los carros para los links (tolerante a fallos)
+  renderStats();
+  renderLeads();
+}
+
+// Trae "año marca modelo" de los vehículos referenciados por los leads, para
+// mostrar el NOMBRE del carro en el link (en vez del id). Si falla, no pasa
+// nada: el link igual funciona con un texto genérico ("Ver vehículo").
+async function loadVehicleTitles() {
+  try {
+    const ids = [...new Set(allLeads.map(l => l.vehicle_id).filter(Boolean))];
+    if (!ids.length) return;
+    const { data, error } = await sb.from(INV_TABLE).select('id,year,make,model').in('id', ids);
+    if (error || !data) return;
+    data.forEach(v => { vehTitles[v.id] = [v.year, v.make, v.model].filter(Boolean).join(' '); });
+  } catch (_) {}
+}
+
+function renderStats() {
+  document.getElementById('statTotal').textContent = allLeads.length;
+  document.getElementById('statNew').textContent = allLeads.filter(l => (l.status||'new') === 'new').length;
+  document.getElementById('statContacted').textContent = allLeads.filter(l => l.status === 'contacted').length;
+  document.getElementById('statClosed').textContent = allLeads.filter(l => l.status === 'closed').length;
+  const today = new Date().toISOString().slice(0,10);
+  document.getElementById('statToday').textContent = allLeads.filter(l => (l.created_at||'').slice(0,10) === today).length;
+}
+
+// Celda de vehículo: link clickeable a la ficha del carro (/vehicle/?id=…),
+// mostrando el NOMBRE del carro si lo tenemos (año marca modelo); si no, el
+// vehicle_title guardado o "Ver vehículo". Sin vehículo -> guion.
+function vehicleCell(l) {
+  if (!l.vehicle_id && !l.vehicle_title) return '<span style="color:#555">—</span>';
+  const label = escapeHtml(vehTitles[l.vehicle_id] || l.vehicle_title || 'Ver vehículo');
+  if (!l.vehicle_id) return `<span style="color:#aaa">${label}</span>`;
+  const href = '/vehicle/?id=' + encodeURIComponent(l.vehicle_id);
+  return `<a href="${href}" target="_blank" rel="noopener" title="${escapeHtml(l.vehicle_id)}" style="color:#F4DC34;text-decoration:none;font-weight:600;white-space:nowrap">${label} <span style="opacity:.65;font-weight:400">↗</span></a>`;
+}
+
+function renderLeads() {
+  const search = document.getElementById('searchInput').value.toLowerCase().trim();
+  const typeFilter = document.getElementById('typeFilter').value;
+  const statusFilter = document.getElementById('statusFilter').value;
+  const filtered = allLeads.filter(l => {
+    const ft = l.form_type || l.action_type || 'contact';
+    if (typeFilter && ft !== typeFilter) return false;
+    if (statusFilter && (l.status||'new') !== statusFilter) return false;
+    if (search) {
+      const blob = [l.name, l.email, l.phone, l.vehicle_title, l.vehicle_id, l.message].join(' ').toLowerCase();
+      if (!blob.includes(search)) return false;
+    }
+    return true;
+  });
+  const tbody = document.getElementById('leadsTbody');
+  if (!filtered.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty"><b>No hay leads</b>Ajusta los filtros o espera a que entren nuevos.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = filtered.map(l => {
+    const ft = l.form_type || l.action_type || 'contact';
+    const t = TYPES[ft] || {emoji:'📩', label:ft};
+    const status = l.status || 'new';
+    const date = new Date(l.created_at).toLocaleString('es-ES', {dateStyle:'short', timeStyle:'short'});
+    const phoneClean = (l.phone||'').replace(/[^\d+]/g,'');
+    const waLink = phoneClean ? `https://wa.me/${phoneClean.replace(/^\+/, '')}` : null;
+    const mailLink = l.email ? `mailto:${l.email}` : null;
+    return `
+      <tr>
+        <td style="white-space:nowrap;color:#888;">${date}</td>
+        <td><span class="type-badge">${t.emoji} ${t.label}</span></td>
+        <td><b style="color:#fff">${escapeHtml(l.name||'—')}</b></td>
+        <td>${l.email ? `<a href="mailto:${escapeHtml(l.email)}" style="color:#8ab4f8;font-size:12px;text-decoration:none">${escapeHtml(l.email)}</a>` : '<span style="color:#555">—</span>'}</td>
+        <td style="white-space:nowrap">${l.phone ? `<a href="tel:${phoneClean}" style="color:#ddd;font-size:12px;text-decoration:none">${escapeHtml(l.phone)}</a>` : '<span style="color:#555">—</span>'}</td>
+        <td style="font-size:12px">${vehicleCell(l)}</td>
+        <td>
+          <select class="status-select s-${status}" onchange="updateStatus('${l.id}', this.value)">
+            <option value="new"      ${status==='new'?'selected':''}>Nuevo</option>
+            <option value="contacted"${status==='contacted'?'selected':''}>Contactado</option>
+            <option value="closed"   ${status==='closed'?'selected':''}>Cerrado</option>
+            <option value="archived" ${status==='archived'?'selected':''}>Archivado</option>
+          </select>
+        </td>
+        <td>
+          <div class="actions">
+            <button onclick="viewLead('${l.id}')">👁 Ver</button>
+            ${waLink ? `<a href="${waLink}" target="_blank" class="wa">💬 WA</a>` : ''}
+            ${mailLink ? `<a href="${mailLink}">✉️</a>` : ''}
+            <button class="danger" onclick="deleteLead('${l.id}')">🗑</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+async function updateStatus(id, newStatus) {
+  const lead = allLeads.find(l => l.id === id);
+  const { error } = await sb.from(INQ_TABLE).update({ status: newStatus }).eq('id', id);
+  if (error) { toast('Error: ' + error.message, true); return; }
+  if (lead) lead.status = newStatus;
+  renderStats();
+  renderLeads();
+
+  // Auto-cierre del flujo de RESERVA
+  const ft = lead ? (lead.form_type || lead.action_type) : null;
+  if (newStatus === 'closed' && ft === 'reserve' && lead && lead.vehicle_id) {
+    const sold = confirm(
+      'Este es un lead de RESERVA cerrado para el vehículo ' + lead.vehicle_id + '.\n\n' +
+      '¿El cliente compró el vehículo?\n\n' +
+      '• OK → Marcar VENDIDO (queda fuera del inventario)\n' +
+      '• Cancel → Liberar reserva (vuelve a estar disponible)'
+    );
+    const updates = sold
+      ? { status: 'sold', reserved_at: null, reserved_by_name: null, reserved_by_email: null, reserved_by_phone: null, sold_at: new Date().toISOString() }
+      : { reserved_at: null, reserved_by_name: null, reserved_by_email: null, reserved_by_phone: null };
+    const { error: e2 } = await sb.from(INV_TABLE).update(updates).eq('id', lead.vehicle_id);
+    if (e2) toast('Error al actualizar vehículo: ' + e2.message, true);
+    else toast(sold ? '✅ Vehículo ' + lead.vehicle_id + ' marcado VENDIDO' : '✅ Reserva liberada en ' + lead.vehicle_id);
+  } else {
+    toast('Status actualizado');
+  }
+}
+
+async function deleteLead(id) {
+  if (!confirm('¿Borrar este lead permanentemente?')) return;
+  const { error } = await sb.from(INQ_TABLE).delete().eq('id', id);
+  if (error) { toast('Error: ' + error.message, true); return; }
+  allLeads = allLeads.filter(l => l.id !== id);
+  renderStats();
+  renderLeads();
+  toast('Lead borrado');
+}
+
+function viewLead(id) {
+  const l = allLeads.find(x => x.id === id);
+  if (!l) return;
+  currentLead = l;
+  const ft = l.form_type || l.action_type || 'contact';
+  const t = TYPES[ft] || {emoji:'📩', label:ft};
+  document.getElementById('modalTitle').textContent = `${t.emoji} ${t.label} · ${l.name || 'Sin nombre'}`;
+  const date = new Date(l.created_at).toLocaleString('es-ES', {dateStyle:'medium', timeStyle:'short'});
+  const rawJson = l.raw ? (typeof l.raw === 'string' ? l.raw : JSON.stringify(l.raw, null, 2)) : '—';
+  document.getElementById('modalBody').innerHTML = `
+    <div class="modal__row"><b>ID</b><span style="font-family:monospace;font-size:11px;color:#888">${l.id}</span></div>
+    <div class="modal__row"><b>Fecha</b><span>${date}</span></div>
+    <div class="modal__row"><b>Tipo</b><span>${t.emoji} ${t.label}</span></div>
+    <div class="modal__row"><b>Status</b><span>${l.status || 'new'}</span></div>
+    <div class="modal__row"><b>Nombre</b><span>${escapeHtml(l.name || '—')}</span></div>
+    <div class="modal__row"><b>Email</b><span>${l.email ? `<a href="mailto:${l.email}" style="color:#F4DC34">${escapeHtml(l.email)}</a>` : '—'}</span></div>
+    <div class="modal__row"><b>Teléfono</b><span>${l.phone ? `<a href="tel:${l.phone}" style="color:#F4DC34">${escapeHtml(l.phone)}</a>` : '—'}</span></div>
+    <div class="modal__row"><b>Vehículo</b><span>${escapeHtml(l.vehicle_title || '—')}${l.vehicle_id ? ` <code style="color:#888;font-size:11px">(${l.vehicle_id})</code>` : ''}</span></div>
+    <div class="modal__row"><b>Source URL</b><span style="font-size:12px;color:#aaa">${l.source_url ? `<a href="${l.source_url}" target="_blank" style="color:#F4DC34">${escapeHtml(l.source_url)}</a>` : '—'}</span></div>
+    <div class="modal__row"><b>Mensaje</b><span><pre>${escapeHtml(l.message || '—')}</pre></span></div>
+    <div class="modal__row"><b>Raw JSON</b><span><pre>${escapeHtml(rawJson)}</pre></span></div>
+  `;
+  document.getElementById('modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  currentLead = null;
+}
+
+document.getElementById('modal').addEventListener('click', (e) => { if (e.target.id === 'modal') closeModal(); });
+document.getElementById('searchInput').addEventListener('input', renderLeads);
+document.getElementById('typeFilter').addEventListener('change', renderLeads);
+document.getElementById('statusFilter').addEventListener('change', renderLeads);
+document.getElementById('refreshBtn').addEventListener('click', loadLeads);
+
+sb.channel('promax-inquiries-changes')
+  .on('postgres_changes', { event: '*', schema: 'public', table: INQ_TABLE }, () => loadLeads())
+  .subscribe();
+
+function toast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.toggle('error', isError);
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+checkAuth();
+</script>
+
+</body>
+</html>

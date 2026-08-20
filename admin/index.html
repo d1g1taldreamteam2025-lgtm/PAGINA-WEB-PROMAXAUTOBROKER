@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Promax · Inventario Admin</title>
+<script src="/admin/gate.js"></script><!-- SÍNCRONO: decide login vs splash ANTES de pintar (sin parpadeo) -->
+<link rel="icon" type="image/png" href="/assets/img/favicon-256.png"><link rel="apple-touch-icon" href="/assets/img/favicon-180.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Material+Icons+Outlined&display=swap" rel="stylesheet">
+<!-- (widget de Cloudinary retirado: esa cuenta quedó suspendida y daba
+     "cloud_name is disabled". Las fotos ahora suben a Supabase Storage.) -->
+<style>
+:root{--gold:#F4DC34;--gold-h:#ffe957;--bg:#0c0c0c;--card:#1a1a1a;--border:#2a2a2a;--input-bg:#0c0c0c;--text:#fff;--muted:#888;--subtle:#aaa;--green:#4ade80;--red:#dc2626;--blue:#60a5fa;--purple:#a78bfa;--brand:#A70200;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',-apple-system,sans-serif;}
+/* Fondo del NAVEGADOR también oscuro (sin fogonazo blanco al rebotar el scroll) */
+html{background:var(--bg);} /* sin overscroll-behavior: bloqueaba la rueda en algunos equipos */
+body{background:var(--bg);color:var(--text);min-height:100vh;}
+/* ---- Compuerta de sesión (gate.js): con sesión guardada NO se pinta el login;
+   se ve este splash hasta que el panel esté listo (pmx-ready). ---- */
+html.pmx-hassession #loginScreen{display:none;}
+#pmxSplash{display:none;position:fixed;inset:0;z-index:300;background:linear-gradient(135deg,#0c0c0c,#1a1a1a);align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+html.pmx-hassession #pmxSplash{display:flex;}
+html.pmx-ready #pmxSplash{display:none;}
+.pmx-splash__spin{width:34px;height:34px;border:3px solid rgba(244,220,52,.22);border-top-color:var(--gold);border-radius:50%;animation:pmxspin .8s linear infinite;}
+@keyframes pmxspin{to{transform:rotate(360deg)}}
+a{color:inherit;text-decoration:none;}
+button{cursor:pointer;border:0;font-family:inherit;}
+input,select,textarea{font-family:inherit;outline:none;}
+
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#0c0c0c,#1a1a1a);}
+.login__card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:36px;width:100%;max-width:400px;}
+.login__brand{text-align:center;margin-bottom:24px;}
+.login__brand h1{font-size:18px;font-weight:800;color:var(--gold);letter-spacing:1.5px;}
+.login__brand p{color:var(--muted);font-size:13px;margin-top:6px;}
+
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--subtle);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+.field input,.field select,.field textarea{width:100%;padding:11px 14px;border-radius:8px;background:var(--input-bg);border:1px solid var(--border);color:var(--text);font-size:14px;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(244,220,52,.15);}
+.field select option{background:var(--card);color:var(--text);}
+.field textarea{resize:vertical;min-height:80px;}
+
+.btn{padding:11px 18px;border-radius:8px;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.4px;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:all .2s;text-decoration:none;}
+.btn--primary{background:var(--gold);color:#0c0c0c;}
+.btn--primary:hover{background:var(--gold-h);transform:translateY(-1px);}
+.btn--ghost{background:#2a2a2a;color:var(--text);border:1px solid #333;}
+.btn--ghost:hover{background:#333;border-color:#444;}
+.btn--danger{background:var(--red);color:#fff;}
+.btn--danger:hover{background:#b91c1c;}
+.btn--warn{background:#f59e0b;color:#0c0c0c;}
+.btn--warn:hover{background:#d97706;}
+.btn--sm{padding:7px 12px;font-size:11px;}
+.btn-block{width:100%;}
+
+.alert{padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;}
+.alert--err{background:rgba(220,38,38,.15);color:#fca5a5;border:1px solid rgba(220,38,38,.4);}
+.alert--ok{background:rgba(74,222,128,.15);color:#86efac;border:1px solid rgba(74,222,128,.4);}
+.alert--info{background:rgba(96,165,250,.1);color:#93c5fd;border:1px solid rgba(96,165,250,.3);}
+.alert--reserve{background:rgba(167,139,250,.1);color:#c4b5fd;border:1px solid rgba(167,139,250,.4);padding:14px;border-radius:8px;margin-bottom:16px;}
+.alert--reserve h4{font-size:13px;font-weight:700;color:var(--purple);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:6px;}
+.alert--reserve .reserve-info{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 16px;font-size:13px;margin-bottom:12px;}
+.alert--reserve .reserve-info b{color:var(--muted);font-weight:600;font-size:11px;text-transform:uppercase;display:block;margin-bottom:2px;}
+.alert--reserve .reserve-info span{color:var(--text);}
+.alert--reserve .reserve-info a{color:var(--gold);text-decoration:underline;}
+
+.app{display:none;min-height:100vh;}
+.app.is-on{display:block;}
+
+.topbar{background:var(--bg);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;}
+.topbar__brand{display:flex;align-items:center;gap:12px;}
+.topbar__brand b{font-size:16px;font-weight:800;letter-spacing:.3px;color:var(--text);}
+.topbar__brand .badge{background:var(--gold);color:#0c0c0c;font-size:10px;font-weight:800;padding:3px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.5px;}
+.topbar__nav{display:flex;gap:6px;}
+.topbar__nav a{padding:8px 14px;border-radius:6px;font-size:13px;font-weight:600;color:var(--subtle);}
+.topbar__nav a:hover{background:var(--card);color:var(--text);}
+.topbar__nav a.active{background:var(--gold);color:#0c0c0c;}
+.topbar__user{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--muted);}
+.topbar__user button{background:transparent;color:var(--muted);font-size:12px;padding:6px 10px;border-radius:6px;display:inline-flex;align-items:center;gap:4px;}
+.topbar__user button:hover{background:var(--card);color:var(--text);}
+
+.main{padding:24px;max-width:1400px;margin:0 auto;}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;display:flex;align-items:center;gap:14px;}
+.stat-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.stat-icon .material-icons-outlined{font-size:22px;}
+.stat-icon--gold{background:rgba(244,220,52,.15);color:var(--gold);}
+.stat-icon--green{background:rgba(74,222,128,.15);color:var(--green);}
+.stat-icon--red{background:rgba(220,38,38,.15);color:#f87171;}
+.stat-icon--blue{background:rgba(96,165,250,.15);color:var(--blue);}
+.stat-icon--purple{background:rgba(167,139,250,.15);color:var(--purple);}
+.stat-info small{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.4px;}
+.stat-info strong{display:block;font-size:24px;font-weight:800;color:var(--text);margin-top:2px;}
+
+.toolbar{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.toolbar-search{flex:1;min-width:240px;position:relative;}
+.toolbar-search input{width:100%;padding:11px 14px 11px 38px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--input-bg);color:var(--text);}
+.toolbar-search input:focus{border-color:var(--gold);}
+.toolbar-search .material-icons-outlined{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:18px;}
+.toolbar select{padding:11px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:var(--input-bg);color:var(--text);}
+.toolbar select option{background:var(--card);color:var(--text);}
+
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;overflow-x:auto;}
+table{width:100%;border-collapse:collapse;}
+th{text-align:left;padding:12px 14px;font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;border-bottom:1px solid var(--border);background:var(--bg);}
+td{padding:14px;border-bottom:1px solid #222;font-size:14px;vertical-align:middle;}
+tr:hover td{background:#222;}
+tr:last-child td{border-bottom:0;}
+
+.veh{display:flex;align-items:center;gap:10px;}
+.veh-img{width:50px;height:38px;border-radius:6px;background:#222 no-repeat center/cover;flex-shrink:0;border:1px solid var(--border);}
+.veh-info strong{display:block;font-weight:600;color:var(--text);font-size:14px;}
+.veh-info span{font-size:12px;color:var(--muted);}
+.price{font-weight:700;color:var(--gold);font-size:15px;}
+
+.badge-stack{display:flex;flex-direction:column;gap:4px;align-items:flex-start;}
+.badge{padding:3px 10px;border-radius:99px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;display:inline-block;white-space:nowrap;}
+.badge--ok{background:rgba(74,222,128,.15);color:var(--green);border:1px solid rgba(74,222,128,.4);}
+.badge--sold{background:rgba(220,38,38,.15);color:#f87171;border:1px solid rgba(220,38,38,.4);}
+.badge--reserved{background:rgba(167,139,250,.15);color:var(--purple);border:1px solid rgba(167,139,250,.4);}
+
+.actions{display:flex;gap:6px;}
+.icon-btn{width:32px;height:32px;border-radius:6px;background:var(--input-bg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--subtle);}
+.icon-btn:hover{background:var(--gold);color:#0c0c0c;border-color:var(--gold);}
+.icon-btn .material-icons-outlined{font-size:16px;}
+
+.empty{text-align:center;padding:60px 20px;color:var(--muted);}
+.empty .material-icons-outlined{font-size:48px;color:var(--gold);margin-bottom:8px;display:block;}
+
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:flex-start;justify-content:center;padding:24px;z-index:100;overflow-y:auto;}
+.modal.is-open{display:flex;}
+.modal-box{background:var(--card);border:1px solid var(--border);border-radius:14px;width:100%;max-width:780px;margin:auto;}
+.modal-head{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.modal-head h2{font-size:18px;font-weight:700;color:var(--text);}
+.modal-close{background:transparent;font-size:22px;color:var(--muted);width:32px;height:32px;border-radius:6px;}
+.modal-close:hover{background:var(--border);color:var(--text);}
+.modal-body{padding:22px;max-height:70vh;overflow-y:auto;}
+.modal-foot{padding:14px 22px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:flex-end;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.section-label{font-size:11px;font-weight:600;color:var(--subtle);text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:8px;}
+
+.json-hint{background:rgba(244,220,52,.08);padding:12px;border-radius:8px;margin-bottom:14px;display:flex;align-items:center;gap:10px;border:1px solid rgba(244,220,52,.3);flex-wrap:wrap;}
+.json-hint span.material-icons-outlined{color:var(--gold);}
+.json-hint > div{flex:1;font-size:13px;color:var(--subtle);min-width:200px;}
+
+.photos-thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-bottom:10px;max-height:200px;overflow-y:auto;background:var(--bg);padding:10px;border-radius:8px;border:1px solid var(--border);}
+.photos-thumbs:empty{display:none;}
+.photo-thumb{position:relative;aspect-ratio:4/3;border-radius:6px;background:#222 no-repeat center/cover;border:1px solid var(--border);}
+.photo-thumb-x{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(0,0,0,.8);color:#fff;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center;border:none;}
+.photo-thumb-x:hover{background:var(--red);}
+.photo-cover{position:absolute;top:4px;left:4px;background:var(--gold);color:#0c0c0c;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;text-transform:uppercase;}
+.upload-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+/* Zona para tocar/arrastrar fotos + cola de subida (uploader de Supabase) */
+.photo-drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:18px 14px;margin-bottom:10px;border:2px dashed var(--border);border-radius:10px;background:var(--bg);color:var(--muted);text-align:center;cursor:pointer;transition:border-color .18s,background .18s,color .18s;}
+.photo-drop:hover,.photo-drop.is-over{border-color:var(--gold);background:rgba(244,220,52,.07);color:var(--text);}
+.photo-drop .material-icons-outlined{font-size:28px;color:var(--gold);}
+.photo-drop b{font-size:13.5px;}
+.photo-drop small{font-size:11.5px;opacity:.75;}
+.upload-queue{margin-bottom:10px;display:flex;flex-direction:column;gap:5px;max-height:190px;overflow-y:auto;}
+.up-item{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:7px 10px;}
+.up-item__name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:62%;color:var(--text);}
+.up-item__state{font-weight:700;white-space:nowrap;}
+.up-item__state--wait{color:var(--muted);}
+.up-item__state--go{color:var(--gold);}
+.up-item__state--ok{color:#4ade80;}
+.up-item__state--err{color:#f87171;}
+.storage-setup{margin-bottom:12px;padding:14px;border:1px solid #f8717155;border-radius:10px;background:rgba(248,113,113,.08);font-size:12.5px;line-height:1.55;}
+.storage-setup b{display:block;margin-bottom:6px;color:#fca5a5;font-size:13.5px;}
+.storage-setup p{margin:0 0 8px;color:var(--muted);}
+.upload-row .btn{flex:1;min-width:160px;}
+
+.bm-gate{text-align:center;padding:20px 0;}
+.bm-gate .lock-icon{font-size:48px;color:var(--gold);margin-bottom:12px;}
+.bm-gate h3{font-size:18px;font-weight:700;margin-bottom:8px;}
+.bm-gate p{color:var(--subtle);font-size:14px;line-height:1.6;margin-bottom:20px;max-width:420px;margin-left:auto;margin-right:auto;}
+.bm-gate .field{max-width:320px;margin:0 auto 12px;text-align:left;}
+.bm-gate .field input{text-align:center;letter-spacing:2px;font-weight:600;}
+.bm-content h3{font-size:16px;font-weight:700;margin-bottom:10px;}
+.bm-content p{color:var(--subtle);font-size:13px;line-height:1.6;margin-bottom:14px;}
+.bm-drag-area{background:rgba(244,220,52,.05);border:2px dashed rgba(244,220,52,.4);border-radius:10px;padding:30px 20px;text-align:center;margin:20px 0;}
+.bm-drag-area p{margin-bottom:14px;font-weight:600;color:var(--gold);}
+.bm-build{font-size:11px;color:var(--muted);margin-top:6px;font-family:ui-monospace,Consolas,monospace;}
+.bm-steps{background:var(--input-bg);padding:16px;border-radius:8px;border:1px solid var(--border);}
+.bm-steps ol{margin-left:20px;color:var(--subtle);font-size:13px;line-height:1.8;}
+.bm-steps b{color:var(--text);}
+/* Panel: sitios probados y optimizados para la sincronizacion */
+.bm-sites{background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.35);border-radius:10px;padding:16px 18px;margin:18px 0;}
+.bm-sites h4{font-size:13px;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.5px;margin:0 0 6px;display:flex;align-items:center;gap:6px;}
+.bm-sites .bm-sites__lead{color:var(--subtle);font-size:12.5px;line-height:1.6;margin:0 0 14px;}
+.bm-site{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-top:1px solid rgba(255,255,255,.06);}
+.bm-site:first-of-type{border-top:0;}
+.bm-site__ico{font-size:18px;line-height:1.3;flex-shrink:0;}
+.bm-site__main{flex:1;min-width:0;}
+.bm-site__name{font-size:13.5px;font-weight:700;color:var(--text);}
+.bm-site__url{font-size:11.5px;color:var(--muted);font-family:ui-monospace,Consolas,monospace;word-break:break-all;}
+.bm-site__what{font-size:12px;color:var(--subtle);margin-top:2px;}
+.bm-site__btn{flex-shrink:0;font-size:10.5px;font-weight:700;padding:4px 10px;border-radius:99px;white-space:nowrap;align-self:center;}
+.bm-site__btn--univ{background:rgba(34,197,94,.16);color:#86efac;border:1px solid rgba(34,197,94,.4);}
+.bm-site__btn--ddc{background:rgba(96,165,250,.16);color:#93c5fd;border:1px solid rgba(96,165,250,.4);}
+.bm-sites__note{font-size:12px;color:var(--subtle);line-height:1.6;margin:14px 0 0;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);}
+@media(max-width:560px){.bm-site{flex-wrap:wrap;}.bm-site__btn{align-self:flex-start;}}
+
+@media(max-width:768px){.stats{grid-template-columns:repeat(2,1fr);}.grid-2,.grid-3{grid-template-columns:1fr;}.main{padding:14px;}.topbar{padding:12px 16px;flex-wrap:wrap;gap:10px;}.topbar__nav a{padding:6px 10px;font-size:12px;}.alert--reserve .reserve-info{grid-template-columns:1fr;}}
+.col-check{width:40px;text-align:center;}
+.row-check,#checkAll{width:17px;height:17px;cursor:pointer;accent-color:#ef4444;vertical-align:middle;margin:0;}
+tbody tr.is-sel{background:rgba(239,68,68,.10);}
+.bulkbar{display:none;align-items:center;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:14px;flex-wrap:wrap;}
+.bulkbar.show{display:flex;}
+.bulkbar .bulk-count{font-weight:700;color:var(--text);}
+.bulkbar .spacer{flex:1;}
+.btn--dangerghost{background:transparent;color:#ef4444;border:1px solid #ef4444;}
+.btn:disabled{opacity:.45;cursor:not-allowed;pointer-events:none;}
+</style>
+</head>
+<body>
+
+<!-- Splash de sesión: solo se ve si YA hay sesión guardada, mientras se valida
+     y carga el inventario. Así el login jamás parpadea al que ya está adentro. -->
+<div id="pmxSplash" role="status" aria-label="Cargando el panel">
+  <img src="/assets/img/logo-header.svg" alt="" style="height:40px;width:auto">
+  <div class="pmx-splash__spin"></div>
+  <p style="color:#8b8b8b;font-size:13px">Cargando tu panel…</p>
+</div>
+
+<div class="login" id="loginScreen">
+  <div class="login__card">
+    <div class="login__brand"><img src="/assets/img/logo-footer.png" alt="Promax Auto Broker" style="height:48px;width:auto;display:block;margin:0 auto 8px"><p>Panel de Inventario</p></div>
+    <div id="loginAlert"></div>
+    <form id="loginForm">
+      <div class="field"><label>Email</label><input type="email" id="loginEmail" required autocomplete="username"></div>
+      <div class="field"><label>Password</label><input type="password" id="loginPass" required autocomplete="current-password"></div>
+      <button type="submit" class="btn btn--primary btn-block">Entrar</button>
+    </form>
+  </div>
+</div>
+
+<div class="app" id="appScreen">
+  <header class="topbar">
+    <div class="topbar__brand">
+      <img src="/assets/img/logo-header.svg" alt="Promax Auto Broker" style="height:26px;width:auto">
+      <span class="badge">Inventario</span>
+    </div>
+    <nav class="topbar__nav">
+      <a href="/admin/" class="active">Inventario</a>
+      <a href="/admin/leads">Leads</a>
+      <a href="/admin/sorteo">Sorteo</a>
+      <a href="/admin/analytics">Analytics</a>
+    </nav>
+    <div class="topbar__user">
+      <span id="userEmail">Admin</span>
+      <button onclick="logout()"><span class="material-icons-outlined" style="font-size:14px">logout</span> Salir</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="stats">
+      <div class="stat-card"><div class="stat-icon stat-icon--gold"><span class="material-icons-outlined">directions_car</span></div><div class="stat-info"><small>Total</small><strong id="statTotal">0</strong></div></div>
+      <div class="stat-card"><div class="stat-icon stat-icon--green"><span class="material-icons-outlined">check_circle</span></div><div class="stat-info"><small>Disponibles</small><strong id="statAvail">0</strong></div></div>
+      <div class="stat-card"><div class="stat-icon stat-icon--purple"><span class="material-icons-outlined">lock</span></div><div class="stat-info"><small>Reservados</small><strong id="statReserved">0</strong></div></div>
+      <div class="stat-card"><div class="stat-icon stat-icon--red"><span class="material-icons-outlined">sell</span></div><div class="stat-info"><small>Vendidos</small><strong id="statSold">0</strong></div></div>
+    </div>
+
+    <div class="toolbar">
+      <div class="toolbar-search"><span class="material-icons-outlined">search</span><input type="search" id="searchBox" placeholder="Buscar marca, modelo, VIN, stock..."></div>
+      <select id="filterCat">
+        <option value="">Todas las categorías</option>
+        <option value="cars">Carros</option>
+        <option value="trucks_machinery">Camiones y maquinaria</option>
+        <option value="vans">Vans</option>
+        <option value="motorcycles">Motos</option>
+        <option value="utv">UTV</option>
+        <option value="watercraft">Motos de agua</option>
+      </select>
+      <select id="filterStatus">
+        <option value="">Todos los estados</option>
+        <option value="available">Disponible</option>
+        <option value="reserved">🔒 Reservado</option>
+        <option value="sold">Vendido</option>
+      </select>
+      <select id="filterBody"><option value="">Todos los tipos</option><option>Sedan</option><option>SUV</option><option>Truck</option><option>Coupe</option><option>Hatchback</option><option>Wagon</option><option>Van</option><option>Convertible</option></select>
+      <select id="filterCond"><option value="">Nuevos y usados</option><option value="used">Usados</option><option value="new">Nuevos</option></select>
+      <button class="btn btn--ghost" onclick="bulkImportReal()" title="Carga/actualiza los carros del catálogo base en el panel"><span class="material-icons-outlined" style="font-size:16px">cloud_sync</span> Cargar catálogo</button>
+      <button class="btn btn--ghost" onclick="importBatch()" title="Pega un lote de vehiculos en JSON"><span class="material-icons-outlined" style="font-size:16px">library_add</span> Importar lote</button>
+      <button class="btn btn--primary" onclick="openAddModal()"><span class="material-icons-outlined" style="font-size:16px">add</span> Agregar Vehículo</button>
+    </div>
+
+    <div class="bulkbar" id="bulkBar">
+      <span class="bulk-count" id="bulkCount">0 seleccionados</span>
+      <button class="btn btn--danger" id="btnDelSelected" onclick="openDeleteSelectedModal()" disabled><span class="material-icons-outlined" style="font-size:16px">delete_sweep</span> <span id="delSelLabel">Borrar seleccionados</span></button>
+      <button class="btn btn--ghost" id="btnClearSel" onclick="clearSelection()" style="display:none">Quitar selección</button>
+      <span class="spacer"></span>
+      <button class="btn btn--dangerghost" id="btnDelAll" onclick="openDeleteAllModal()" title="Borra TODO el inventario del panel"><span class="material-icons-outlined" style="font-size:16px">delete_forever</span> <span id="delAllLabel">Borrar TODO</span></button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th class="col-check"><input type="checkbox" id="checkAll" title="Seleccionar todo lo visible"></th><th>Vehículo</th><th>Precio</th><th>Millaje</th><th>Tipo</th><th>Estado</th><th>Stock #</th><th>Acciones</th></tr></thead>
+        <tbody id="tableBody"><tr><td colspan="8" class="empty"><span class="material-icons-outlined">hourglass_top</span><p>Cargando...</p></td></tr></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<div class="modal" id="vehicleModal">
+  <div class="modal-box">
+    <div class="modal-head"><h2 id="modalTitle">Agregar Vehículo</h2><button class="modal-close" onclick="closeVehicleModal()">×</button></div>
+    <div class="modal-body">
+      <div id="vehicleAlert"></div>
+      <div id="reservationBlock" style="display:none"></div>
+      <div class="json-hint">
+        <span class="material-icons-outlined">auto_fix_high</span>
+        <div>Pega aquí el JSON del vehículo y se llena todo solo:</div>
+        <button type="button" class="btn btn--primary btn--sm" onclick="importJson()"><span class="material-icons-outlined" style="font-size:14px">content_paste</span> Pegar JSON</button>
+      </div>
+      <form id="vehicleForm">
+        <div class="grid-2">
+          <div class="field"><label>Categoría *</label><select id="fCategory" required>
+            <option value="cars">Carros</option>
+            <option value="trucks_machinery">Camiones y maquinaria</option>
+            <option value="vans">Vans</option>
+            <option value="motorcycles">Motos</option>
+            <option value="utv">UTV</option>
+            <option value="watercraft">Motos de agua</option>
+          </select></div>
+          <div class="field"><label>¿Nuevo o usado? *</label><select id="fCondition" required><option value="used">Usado (Used)</option><option value="new">Nuevo (New)</option></select></div>
+        </div>
+        <div class="grid-3">
+          <div class="field"><label>Año *</label><input type="number" id="fYear" min="1990" max="2030" required></div>
+          <div class="field"><label>Marca *</label><input type="text" id="fMake" required></div>
+          <div class="field"><label>Modelo *</label><input type="text" id="fModel" required></div>
+        </div>
+        <div class="grid-3">
+          <div class="field"><label>Versión (Trim)</label><input type="text" id="fTrim"></div>
+          <div class="field"><label>Tipo *</label><select id="fBody" required><option value="">—</option><option>Sedan</option><option>SUV</option><option>Truck</option><option>Coupe</option><option>Hatchback</option><option>Wagon</option><option>Van</option><option>Convertible</option></select></div>
+          <div class="field"><label>Estado *</label><select id="fStatus" required><option value="available">Disponible</option><option value="sold">Vendido</option></select></div>
+        </div>
+        <div class="grid-3">
+          <div class="field"><label>Precio ($) *</label><input type="number" id="fPrice" min="0" step="any" required></div>
+          <div class="field"><label>MSRP ($)</label><input type="number" id="fMsrp" min="0" step="any"></div>
+          <div class="field"><label>Millaje *</label><input type="number" id="fMileage" min="0" required></div>
+        </div>
+        <div class="grid-3">
+          <div class="field"><label>Combustible</label><select id="fFuel"><option value="">—</option><option>Gasoline</option><option>Diesel</option><option>Hybrid</option><option>Electric</option><option>Flex</option></select></div>
+          <div class="field"><label>Transmisión</label><input type="text" id="fTrans" placeholder="ej. Automática"></div>
+          <div class="field"><label>Tracción</label><select id="fDrive"><option value="">—</option><option>FWD</option><option>RWD</option><option>AWD</option><option>4WD</option></select></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label>Motor</label><input type="text" id="fEngine" placeholder="ej. 2.5L 4-Cyl"></div>
+          <div class="field"><label>Etiqueta (Badge)</label><input type="text" id="fBadge" placeholder="ej. Certificado, Oferta"></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label>Color Exterior</label><input type="text" id="fExt"></div>
+          <div class="field"><label>Color Interior</label><input type="text" id="fInt"></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label>VIN</label><input type="text" id="fVin"></div>
+          <div class="field"><label>Stock #</label><input type="text" id="fStock"></div>
+        </div>
+        <div class="grid-2">
+          <div class="field"><label>MPG Ciudad</label><input type="number" id="fMpgC" min="0"></div>
+          <div class="field"><label>MPG Carretera</label><input type="number" id="fMpgH" min="0"></div>
+        </div>
+        <div class="field"><label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="fFeatured" style="width:auto;accent-color:#F4DC34"> Destacado (aparece en la página principal)</label>
+          <div style="margin-top:8px">
+            <label for="fFeatOrder" style="font-size:12px;color:var(--muted);display:block;margin-bottom:4px">Orden en portada — solo si está destacado (1 = primero; vacío = al final)</label>
+            <input type="number" id="fFeatOrder" min="1" step="1" placeholder="ej: 1" style="width:130px">
+          </div>
+        </div>
+        <div class="field"><label>Características (separadas por coma)</label><input type="text" id="fFeats" placeholder="Bluetooth, Cámara de reversa, Sunroof"></div>
+        <div class="field"><label>Descripción</label><textarea id="fDesc" rows="3" placeholder="Se genera automáticamente si la dejas vacía..."></textarea></div>
+        <div>
+          <label class="section-label">Fotos — hasta 24 por producto (la 1ra = portada) <span id="photoCount" style="float:right;font-weight:800;color:var(--gold)">0/24</span></label>
+          <div class="photos-thumbs" id="photosThumbs"></div>
+          <input type="file" id="photoInput" accept="image/*" multiple hidden>
+          <div class="photo-drop" id="photoDrop" title="Toca o arrastra tus fotos aquí">
+            <span class="material-icons-outlined">add_photo_alternate</span>
+            <b>Toca aquí para elegir fotos</b>
+            <small>o arrástralas · se achican solas para que suban rápido</small>
+          </div>
+          <div class="upload-queue" id="uploadQueue" hidden></div>
+          <div class="storage-setup" id="storageSetup" hidden>
+            <b>⚠️ Falta activar el espacio de fotos (una sola vez)</b>
+            <p>El panel guarda las fotos en el Supabase de Promax, pero todavía no está creado el espacio. Pásale este texto a Juan para que lo pegue en el <i>SQL Editor</i> de Supabase y quedará resuelto para siempre.</p>
+            <button type="button" class="btn btn--gold" id="copySqlBtn" onclick="copyStorageSql()">Copiar el texto para Juan</button>
+            <p style="margin-top:8px">Mientras tanto puedes seguir agregando fotos pegando sus enlaces abajo.</p>
+          </div>
+          <div class="upload-row">
+            <button type="button" class="btn btn--ghost" onclick="pickPhotos()"><span class="material-icons-outlined" style="font-size:16px">cloud_upload</span> Subir Fotos</button>
+            <button type="button" class="btn btn--ghost" onclick="document.getElementById('pasteUrls').focus()"><span class="material-icons-outlined" style="font-size:16px">link</span> Pegar URLs Abajo</button>
+          </div>
+          <div class="field">
+            <label>O pega URLs de imágenes (una por línea · máx. 24 en total)</label>
+            <textarea id="pasteUrls" rows="5" placeholder="https://.../foto1.jpg" style="font-family:monospace;font-size:11px"></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn--ghost" onclick="closeVehicleModal()">Cancelar</button>
+      <button class="btn btn--primary" onclick="saveVehicle()" id="saveBtn"><span class="material-icons-outlined" style="font-size:16px">save</span> Guardar Vehículo</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="deleteModal">
+  <div class="modal-box" style="max-width:420px">
+    <div class="modal-head"><h2>¿Borrar?</h2><button class="modal-close" onclick="closeDeleteModal()">×</button></div>
+    <div class="modal-body"><p id="deleteMsg" style="color:var(--subtle);line-height:1.6">—</p></div>
+    <div class="modal-foot"><button class="btn btn--ghost" onclick="closeDeleteModal()">Cancelar</button><button class="btn btn--danger" id="deleteConfirmBtn" onclick="confirmDelete()">Borrar</button></div>
+  </div>
+</div>
+
+<div class="modal" id="batchModal">
+  <div class="modal-box" style="max-width:600px">
+    <div class="modal-head"><h2>📦 Importar lote</h2><button class="modal-close" onclick="closeBatchModal()">×</button></div>
+    <div class="modal-body">
+      <p style="color:var(--subtle);line-height:1.6;margin-bottom:10px">Pega aquí (Ctrl+V) el JSON que copiaste con <b>📦 LOTE</b> (una página) o <b>🚀 LOTE TODO</b> (todo el inventario). Aguanta listas grandes.</p>
+      <textarea id="batchText" rows="8" placeholder="Pega el JSON aquí..." style="width:100%;background:var(--input-bg);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font-family:monospace;font-size:12px;resize:vertical;box-sizing:border-box"></textarea>
+      <div id="batchInfo" style="margin-top:10px;font-weight:600;color:var(--subtle)">Pega el JSON copiado con 📦 LOTE o 🚀 LOTE TODO.</div>
+    </div>
+    <div class="modal-foot"><button class="btn btn--ghost" onclick="closeBatchModal()">Cancelar</button><button class="btn btn--primary" id="batchImportBtn" onclick="doImportBatch()" disabled>Importar</button></div>
+  </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL='https://db.ucallnow.fun';
+const SUPABASE_ANON='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0';
+/* Fotos del inventario: van al Storage del PROPIO Supabase de Promax.
+   (Antes: Cloudinary — esa cuenta se suspendió y el panel mostraba
+   "cloud_name is disabled". Regla del proyecto: nada de terceros.) */
+const STORAGE_BUCKET='promax';
+const STORAGE_FOLDER='inventory';
+const UPLOAD_MAX_SIDE=1600;   // lado mayor tras redimensionar (px)
+const UPLOAD_QUALITY=0.85;    // calidad de compresión
+// Dominio público de la web (cámbialo por tu dominio cuando lo conectes).
+const SITE_URL='https://www.promaxautobroker.com';
+const TABLE='promax_inventory';
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, { auth: { persistSession: true, autoRefreshToken: true } });
+let inventory=[],editingId=null,photos=[],deleteId=null,selectedIds=new Set(),deleteMode='single';
+const $=(id)=>document.getElementById(id);
+const fmt=(n)=>n!=null?'$'+Number(n).toLocaleString('en-US'):'—';
+const fmtNum=(n)=>n!=null?Number(n).toLocaleString('en-US'):'—';
+const esc=(s)=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function showAlert(elId,type,msg){$(elId).innerHTML='<div class="alert alert--'+type+'">'+msg+'</div>';if(type==='ok')setTimeout(()=>$(elId).innerHTML='',3000);}
+
+async function checkAuth(){
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) enterApp(session.user);
+  else {
+    gateFail(); // el token guardado estaba vencido: fuera splash, login normal
+    $('loginScreen').style.display='flex'; $('appScreen').classList.remove('is-on');
+  }
+}
+
+async function logout(){
+  await sb.auth.signOut();
+  gateFail();
+  $('loginScreen').style.display='flex';
+  $('appScreen').classList.remove('is-on');
+}
+
+function enterApp(user){
+  $('loginScreen').style.display='none';
+  $('appScreen').classList.add('is-on');
+  $('userEmail').textContent = 'Admin'; // el correo del login es ficticio: NO mostrarlo (pedido del cliente, ago 2026)
+  // El splash se queda hasta que el INVENTARIO esté pintado: del splash se pasa
+  // al panel ya lleno, sin el "frame" vacío cargando datos a la vista.
+  loadInventory().finally(gateReveal);
+}
+
+$('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  $('loginAlert').innerHTML='';
+  const btn = e.target.querySelector('button[type=submit]');
+  btn.disabled = true; btn.innerHTML = 'Entrando...';
+  const email = $('loginEmail').value.trim();
+  const password = $('loginPass').value;
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) {
+    showAlert('loginAlert','err', error.message);
+    btn.disabled = false; btn.innerHTML = 'Entrar';
+    return;
+  }
+  enterApp(data.user);
+  btn.disabled = false; btn.innerHTML = 'Entrar';
+});
+
+async function loadInventory(){
+  try {
+    // Supabase entrega máx. 1000 filas por consulta: recorremos por páginas
+    // para que el admin muestre TODO el inventario aunque sean miles.
+    const PAGE = 1000;
+    let all = [], from = 0;
+    for(;;){
+      const { data, error } = await sb.from(TABLE).select('*').order('created_at',{ascending:false}).range(from, from + PAGE - 1);
+      if (error) throw error;
+      all = all.concat(data || []);
+      if (!data || data.length < PAGE) break;
+      from += PAGE;
+    }
+    inventory = all;
+    renderTable();
+    updateStats();
+  } catch (e) {
+    console.error(e);
+    $('tableBody').innerHTML='<tr><td colspan="8" class="empty"><span class="material-icons-outlined">error_outline</span><p>Error: '+e.message+'</p></td></tr>';
+  }
+}
+
+const CAT_LABELS={cars:'Carros',trucks_machinery:'Camiones y maq.',vans:'Vans',motorcycles:'Motos',utv:'UTV',watercraft:'Motos de agua'};
+function filteredInventory(){
+  const q=($('searchBox').value||'').toLowerCase().trim();
+  const fs=$('filterStatus').value, fb=$('filterBody').value, fc=$('filterCond').value, fcat=$('filterCat').value;
+  return inventory.filter(c=>{
+    if (fcat && (c.category||'cars')!==fcat) return false;
+    if (fs === 'reserved') { if (!c.reserved_at) return false; }
+    else if (fs && c.status!==fs) return false;
+    if (fb && c.body_type!==fb) return false;
+    if (fc && (c.condition||'used')!==fc) return false;
+    if (q) { const blob=(c.year+' '+c.make+' '+c.model+' '+(c.trim||'')+' '+(c.vin||'')+' '+(c.stock||'')).toLowerCase(); if(blob.indexOf(q)===-1) return false; }
+    return true;
+  });
+}
+function renderTable(){
+  let rows=filteredInventory();
+  if(!rows.length){
+    var emptyExtra = !inventory.length ? '<div style="margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn btn--primary" onclick="bulkImportReal()"><span class="material-icons-outlined" style="font-size:16px">cloud_sync</span> Cargar catálogo (24 carros)</button><button class="btn btn--ghost" onclick="openAddModal()">Agregar uno nuevo</button></div>' : '';
+    $('tableBody').innerHTML='<tr><td colspan="8" class="empty"><span class="material-icons-outlined">inbox</span><p>'+(!inventory.length?'Aún no hay carros en el panel.':'Sin resultados con esos filtros.')+'</p>'+emptyExtra+'</td></tr>';updateBulkUI();return;}
+  $('tableBody').innerHTML=rows.map(c=>{
+    const img=c.cover_image||(Array.isArray(c.gallery)&&c.gallery[0])||'';
+    const statusCls=c.status==='available'?'badge--ok':'badge--sold';
+    const statusTxt=c.status==='available'?'Disponible':(c.status==='sold'?'Vendido':c.status);
+    const reservedBadge = c.reserved_at ? '<span class="badge badge--reserved">🔒 Reservado</span>' : '';
+    const eid=String(c.id).replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+    const sel=selectedIds.has(c.id);
+    return '<tr'+(sel?' class="is-sel"':'')+'>'+
+      '<td class="col-check"><input type="checkbox" class="row-check" data-id="'+eid+'"'+(sel?' checked':'')+'></td>'+
+      '<td><div class="veh"><div class="veh-img" style="background-image:url(&quot;'+img.replace(/"/g,'%22')+'&quot;)"></div><div class="veh-info"><strong>'+c.year+' '+c.make+' '+c.model+'</strong><span>'+(c.trim||'')+' · '+(c.exterior_color||'—')+' · '+(c.fuel||'—')+'</span></div></div></td>'+
+      '<td class="price">'+fmt(c.price)+'</td>'+
+      '<td>'+fmtNum(c.mileage)+' mi</td>'+
+      '<td><span style="font-size:11px;font-weight:700;color:var(--gold)">'+(CAT_LABELS[c.category||'cars']||c.category)+'</span><br>'+(c.body_type||'—')+' · <span style="font-size:11px;font-weight:700;color:'+(c.condition==='new'?'#4ade80':'#888')+'">'+(c.condition==='new'?'NUEVO':'Usado')+'</span></td>'+
+      '<td><div class="badge-stack"><span class="badge '+statusCls+'">'+statusTxt+'</span>'+reservedBadge+'</div></td>'+
+      '<td>'+(c.stock||'—')+'</td>'+
+      '<td><div class="actions">'+
+        '<button class="icon-btn" data-action="edit" data-id="'+eid+'" title="Editar"><span class="material-icons-outlined">edit</span></button>'+
+        '<button class="icon-btn" data-action="view" data-id="'+eid+'" title="Ver en la web"><span class="material-icons-outlined">visibility</span></button>'+
+        '<button class="icon-btn" data-action="delete" data-id="'+eid+'" title="Borrar"><span class="material-icons-outlined">delete</span></button>'+
+      '</div></td></tr>';
+  }).join('');
+  updateBulkUI();
+}
+
+function updateStats(){
+  $('statTotal').textContent=inventory.length;
+  $('statAvail').textContent=inventory.filter(c=>c.status==='available' && !c.reserved_at).length;
+  $('statReserved').textContent=inventory.filter(c=>c.reserved_at).length;
+  $('statSold').textContent=inventory.filter(c=>c.status==='sold').length;
+}
+
+const MAX_PHOTOS = 24; // TODAS las fotos del vehiculo (tope sano de 24; pedido del cliente)
+
+/* ===================== SUBIDA DE FOTOS (Supabase Storage) =====================
+   Sustituye al viejo widget de Cloudinary. Las fotos se achican en el propio
+   navegador (máx 1600px, ~85% de calidad) para que suban rápido y no engorden
+   el disco, y se guardan en el bucket 'promax' del Supabase de Promax.
+   Si el bucket todavía no existe, el panel lo explica y ofrece el SQL exacto
+   para crearlo (una sola vez) en vez de fallar en silencio. */
+const STORAGE_SQL = [
+  "-- Ejecutar UNA sola vez en el SQL Editor de Supabase --",
+  "insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)",
+  "values ('promax','promax', true, 52428800, array['image/jpeg','image/png','image/webp','image/gif'])",
+  "on conflict (id) do update set public = true, file_size_limit = 52428800,",
+  "  allowed_mime_types = array['image/jpeg','image/png','image/webp','image/gif'];",
+  "",
+  "drop policy if exists \"promax lectura publica\" on storage.objects;",
+  "create policy \"promax lectura publica\" on storage.objects",
+  "  for select using (bucket_id = 'promax');",
+  "",
+  "drop policy if exists \"promax insert auth\" on storage.objects;",
+  "create policy \"promax insert auth\" on storage.objects",
+  "  for insert to authenticated with check (bucket_id = 'promax');",
+  "",
+  "drop policy if exists \"promax update auth\" on storage.objects;",
+  "create policy \"promax update auth\" on storage.objects",
+  "  for update to authenticated using (bucket_id = 'promax');",
+  "",
+  "drop policy if exists \"promax delete auth\" on storage.objects;",
+  "create policy \"promax delete auth\" on storage.objects",
+  "  for delete to authenticated using (bucket_id = 'promax');"
+].join("\n");
+
+// WebP pesa ~30% menos que JPEG; si el navegador no sabe crearlo, usamos JPEG.
+const CAN_WEBP = (function(){
+  try { return document.createElement('canvas').toDataURL('image/webp').indexOf('data:image/webp') === 0; }
+  catch(e){ return false; }
+})();
+
+function pickPhotos(){
+  if(photos.length>=MAX_PHOTOS){showAlert('vehicleAlert','err','Máximo '+MAX_PHOTOS+' fotos por producto. Elimina alguna para subir otra.');return;}
+  const inp=$('photoInput'); if(!inp)return;
+  inp.value=''; inp.click();
+}
+
+/* Achica la foto en el navegador (nunca subimos una foto de 8MB del teléfono). */
+function shrinkImage(file){
+  return new Promise(function(resolve){
+    if(!/^image\//i.test(file.type) || /gif|svg/i.test(file.type)){
+      return resolve({ blob:file, ext:(file.name.split('.').pop()||'jpg').toLowerCase(), type:file.type||'image/jpeg' });
+    }
+    const url=URL.createObjectURL(file), img=new Image();
+    img.onload=function(){
+      try{
+        const w=img.naturalWidth, h=img.naturalHeight;
+        const scale=Math.min(1, UPLOAD_MAX_SIDE/Math.max(w,h));
+        const cw=Math.max(1,Math.round(w*scale)), ch=Math.max(1,Math.round(h*scale));
+        const cv=document.createElement('canvas'); cv.width=cw; cv.height=ch;
+        const cx=cv.getContext('2d');
+        cx.fillStyle='#fff'; cx.fillRect(0,0,cw,ch);   // fondo blanco si venía con transparencia
+        cx.drawImage(img,0,0,cw,ch);
+        const mime = CAN_WEBP ? 'image/webp' : 'image/jpeg';
+        cv.toBlob(function(blob){
+          URL.revokeObjectURL(url);
+          if(!blob) return resolve({ blob:file, ext:'jpg', type:file.type||'image/jpeg' });
+          // Si comprimir no ayudó (foto ya pequeña), nos quedamos con la original.
+          if(blob.size >= file.size && scale === 1){
+            return resolve({ blob:file, ext:(file.name.split('.').pop()||'jpg').toLowerCase(), type:file.type||'image/jpeg' });
+          }
+          resolve({ blob:blob, ext:(mime==='image/webp'?'webp':'jpg'), type:mime });
+        }, mime, UPLOAD_QUALITY);
+      }catch(e){ URL.revokeObjectURL(url); resolve({ blob:file, ext:'jpg', type:file.type||'image/jpeg' }); }
+    };
+    img.onerror=function(){ URL.revokeObjectURL(url); resolve({ blob:file, ext:'jpg', type:file.type||'image/jpeg' }); };
+    img.src=url;
+  });
+}
+
+function storageSetupNeeded(){
+  const box=$('storageSetup'); if(box) box.hidden=false;
+  showAlert('vehicleAlert','err','Falta crear el espacio de fotos en Supabase (una sola vez). Abajo tienes el texto exacto para dárselo a Juan — mientras tanto puedes pegar URLs de imágenes.');
+}
+function copyStorageSql(){
+  const done=function(){ const b=$('copySqlBtn'); if(b){ const t=b.textContent; b.textContent='¡Copiado!'; setTimeout(function(){ b.textContent=t; },2000); } };
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(STORAGE_SQL).then(done).catch(function(){ window.prompt('Copia este texto:', STORAGE_SQL); }); }
+  else { window.prompt('Copia este texto:', STORAGE_SQL); }
+}
+
+/* Si el espacio de fotos no existe, intentamos crearlo con la sesión del admin.
+   En muchos Supabase eso basta y no hay que molestar a nadie; si el servidor no
+   lo permite, devolvemos false y el panel muestra el SQL para dárselo a Juan. */
+let bucketAutoTried = false;
+async function tryCreateBucket(){
+  if(bucketAutoTried) return false;
+  bucketAutoTried = true;
+  try{
+    const { error } = await sb.storage.createBucket(STORAGE_BUCKET, {
+      public: true, fileSizeLimit: 52428800,
+      allowedMimeTypes: ['image/jpeg','image/png','image/webp','image/gif']
+    });
+    return !error;
+  }catch(e){ return false; }
+}
+
+/* Sube UNA foto y devuelve su URL pública. */
+async function uploadOnePhoto(file){
+  const shrunk = await shrinkImage(file);
+  const stamp  = Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+  const path   = STORAGE_FOLDER + '/' + stamp + '.' + shrunk.ext;
+  const opts = { contentType: shrunk.type || 'image/jpeg', cacheControl: '31536000', upsert: false };
+  let { error } = await sb.storage.from(STORAGE_BUCKET).upload(path, shrunk.blob, opts);
+  if(error && /bucket not found|not found/i.test(String(error.message||error))){
+    // Primer intento fallido por falta del espacio: probamos a crearlo y reintentamos.
+    if(await tryCreateBucket()){
+      ({ error } = await sb.storage.from(STORAGE_BUCKET).upload(path, shrunk.blob, opts));
+    }
+  }
+  if(error) throw error;
+  const { data } = sb.storage.from(STORAGE_BUCKET).getPublicUrl(path);
+  if(!data || !data.publicUrl) throw new Error('No se pudo obtener el enlace público de la foto.');
+  return data.publicUrl;
+}
+
+function uploadRow(name, state, detail){
+  return '<div class="up-item"><span class="up-item__name">'+String(name).replace(/[<>&]/g,'')+'</span>'+
+         '<span class="up-item__state up-item__state--'+state+'">'+detail+'</span></div>';
+}
+
+/* Sube la tanda completa, con contador y errores claros en español. */
+async function uploadPhotos(fileList){
+  const files=[].slice.call(fileList||[]).filter(function(f){ return /^image\//i.test(f.type); });
+  if(!files.length) return;
+  const libres = MAX_PHOTOS - photos.length;
+  if(libres<=0){ showAlert('vehicleAlert','err','Ya tienes el máximo de '+MAX_PHOTOS+' fotos.'); return; }
+  const lote = files.slice(0, libres);
+  if(files.length>libres) showAlert('vehicleAlert','info','Solo caben '+libres+' foto(s) más: se subirán las primeras '+libres+'.');
+
+  const q=$('uploadQueue');
+  if(q){ q.hidden=false; q.innerHTML = lote.map(function(f){ return uploadRow(f.name,'wait','en espera'); }).join(''); }
+  const setRow=function(i,state,detail){ if(q&&q.children[i]) q.children[i].outerHTML = uploadRow(lote[i].name, state, detail); };
+
+  let ok=0, fallos=0, faltaBucket=false;
+  for(let i=0;i<lote.length;i++){
+    setRow(i,'go','subiendo… ('+(i+1)+' de '+lote.length+')');
+    try{
+      const url = await uploadOnePhoto(lote[i]);
+      photos.push(url); renderPhotos(); ok++;
+      setRow(i,'ok','listo');
+    }catch(err){
+      fallos++;
+      const msg = String((err && (err.message||err.error||err.statusCode)) || err);
+      if(/bucket not found|not found/i.test(msg)) faltaBucket = true;
+      setRow(i,'err', /bucket not found|not found/i.test(msg) ? 'falta crear el espacio de fotos'
+            : (/exceeded|too large|payload/i.test(msg) ? 'la foto pesa demasiado'
+            : (/row-level security|unauthorized|jwt|401|403/i.test(msg) ? 'sin permiso (vuelve a iniciar sesión)'
+            : 'error: '+msg.slice(0,70))));
+    }
+  }
+  if(faltaBucket){ storageSetupNeeded(); }
+  else if(fallos && ok){ showAlert('vehicleAlert','err','Se subieron '+ok+' foto(s); '+fallos+' fallaron.'); }
+  else if(fallos){ showAlert('vehicleAlert','err','No se pudo subir ninguna foto. Revisa el detalle de arriba.'); }
+  else { showAlert('vehicleAlert','ok','¡'+ok+' foto(s) subida(s)!'); if(q) setTimeout(function(){ q.hidden=true; q.innerHTML=''; },2500); }
+}
+
+/* Conecta el input oculto y el arrastrar-y-soltar sobre la zona de fotos. */
+function wirePhotoUploader(){
+  const inp=$('photoInput');
+  if(inp && !inp.dataset.wired){
+    inp.dataset.wired='1';
+    inp.addEventListener('change', function(){ uploadPhotos(inp.files); inp.value=''; });
+  }
+  const zone=$('photoDrop');
+  if(zone && !zone.dataset.wired){
+    zone.dataset.wired='1';
+    ['dragenter','dragover'].forEach(function(ev){ zone.addEventListener(ev, function(e){ e.preventDefault(); e.stopPropagation(); zone.classList.add('is-over'); }); });
+    ['dragleave','drop'].forEach(function(ev){ zone.addEventListener(ev, function(e){ e.preventDefault(); e.stopPropagation(); zone.classList.remove('is-over'); }); });
+    zone.addEventListener('drop', function(e){ if(e.dataTransfer && e.dataTransfer.files) uploadPhotos(e.dataTransfer.files); });
+    zone.addEventListener('click', pickPhotos);
+  }
+}
+document.addEventListener('DOMContentLoaded', wirePhotoUploader);
+
+function renderPhotos(){
+  $('photosThumbs').innerHTML=photos.map((url,i)=>'<div class="photo-thumb" style="background-image:url(&quot;'+String(url).replace(/"/g,'%22')+'&quot;)">'+(i===0?'<span class="photo-cover">Portada</span>':'')+'<button type="button" class="photo-thumb-x" onclick="removePhoto('+i+')">×</button></div>').join('');
+  const pc=$('photoCount');
+  if(pc){pc.textContent=photos.length+'/'+MAX_PHOTOS;pc.style.color=photos.length>=MAX_PHOTOS?'#f87171':'var(--gold)';}
+}
+function removePhoto(i){photos.splice(i,1);renderPhotos();}
+
+async function importJson(){
+  try{
+    var text='';
+    if(navigator.clipboard && navigator.clipboard.readText){
+      try{text=await navigator.clipboard.readText();}catch(e){text=prompt('Pega el JSON aquí:')||'';}
+    } else { text=prompt('Pega el JSON aquí:')||''; }
+    if(!text)return;
+    var d=JSON.parse(text);
+    if(Array.isArray(d)){showAlert('vehicleAlert','info','Pegaste un LOTE de '+d.length+' carros. Cierra esta ventana y usa el botón "Importar lote" del panel.');return;}
+    if(d.category)$('fCategory').value=d.category;
+    if(d.year)$('fYear').value=d.year;
+    if(d.make)$('fMake').value=d.make;
+    if(d.model)$('fModel').value=d.model;
+    if(d.trim!==undefined)$('fTrim').value=d.trim||'';
+    if(d.body_type)$('fBody').value=d.body_type;
+    if(d.status)$('fStatus').value=d.status;
+    if(d.condition)$('fCondition').value=d.condition;
+    if(d.price)$('fPrice').value=d.price;
+    if(d.msrp)$('fMsrp').value=d.msrp;
+    if(d.mileage!==undefined)$('fMileage').value=d.mileage;
+    if(d.fuel)$('fFuel').value=d.fuel;
+    if(d.transmission!==undefined)$('fTrans').value=d.transmission||'';
+    if(d.drivetrain)$('fDrive').value=d.drivetrain;
+    if(d.engine!==undefined)$('fEngine').value=d.engine||'';
+    if(d.badge!==undefined)$('fBadge').value=d.badge||'';
+    if(d.exterior_color!==undefined)$('fExt').value=d.exterior_color||'';
+    if(d.interior_color!==undefined)$('fInt').value=d.interior_color||'';
+    if(d.vin!==undefined)$('fVin').value=d.vin||'';
+    if(d.stock!==undefined)$('fStock').value=d.stock||'';
+    if(d.mpg_city!=null)$('fMpgC').value=d.mpg_city;
+    if(d.mpg_highway!=null)$('fMpgH').value=d.mpg_highway;
+    if(d.featured!==undefined)$('fFeatured').checked=!!d.featured;
+    if(d.featured_order!=null)$('fFeatOrder').value=d.featured_order;
+    if(Array.isArray(d.features))$('fFeats').value=d.features.join(', ');
+    if(d.description!==undefined)$('fDesc').value=d.description||'';
+    if(Array.isArray(d.gallery))$('pasteUrls').value=d.gallery.join('\n');
+    showAlert('vehicleAlert','ok','✅ '+(d.year||'')+' '+(d.make||'')+' '+(d.model||'')+' cargado. Revisa y guarda.');
+  }catch(e){
+    showAlert('vehicleAlert','err','Error: '+e.message+'');
+  }
+}
+
+function openAddModal(){
+  editingId=null;$('modalTitle').textContent='Agregar Vehículo';$('vehicleForm').reset();$('fCategory').value='cars';photos=[];renderPhotos();
+  $('vehicleAlert').innerHTML='';$('reservationBlock').style.display='none';
+  $('fYear').value=new Date().getFullYear();$('fStatus').value='available';$('fCondition').value='used';
+  $('vehicleModal').classList.add('is-open');
+}
+
+function openEditModal(id){
+  const c=inventory.find(x=>x.id===id);if(!c)return;editingId=id;
+  $('modalTitle').textContent='Editar Vehículo';$('vehicleAlert').innerHTML='';
+  $('fCategory').value=c.category||'cars';
+  $('fYear').value=c.year||'';$('fMake').value=c.make||'';$('fModel').value=c.model||'';
+  $('fTrim').value=c.trim||'';$('fBody').value=c.body_type||'';$('fStatus').value=c.status||'available';$('fCondition').value=c.condition||'used';
+  $('fPrice').value=c.price||'';$('fMsrp').value=c.msrp||'';$('fMileage').value=c.mileage||'';
+  $('fFuel').value=c.fuel||'';$('fTrans').value=c.transmission||'';$('fDrive').value=c.drivetrain||'';
+  $('fEngine').value=c.engine||'';$('fBadge').value=c.badge||'';
+  $('fExt').value=c.exterior_color||'';$('fInt').value=c.interior_color||'';
+  $('fVin').value=c.vin||'';$('fStock').value=c.stock||'';
+  $('fMpgC').value=c.mpg_city||'';$('fMpgH').value=c.mpg_highway||'';
+  $('fFeatured').checked=!!c.featured;
+  $('fFeatOrder').value=(c.featured_order!=null?c.featured_order:'');
+  $('fFeats').value=Array.isArray(c.features)?c.features.join(', '):'';
+  $('fDesc').value=c.description||'';$('pasteUrls').value='';
+  photos=Array.isArray(c.gallery)?c.gallery.slice():[];renderPhotos();
+  const rb = $('reservationBlock');
+  if (c.reserved_at) {
+    const date = new Date(c.reserved_at).toLocaleString('es-ES',{dateStyle:'medium',timeStyle:'short'});
+    const phoneClean = (c.reserved_by_phone||'').replace(/[^\d+]/g,'');
+    const waLink = phoneClean ? 'https://wa.me/'+phoneClean.replace(/^\+/, '') : null;
+    rb.innerHTML = '<div class="alert--reserve">'+
+      '<h4><span class="material-icons-outlined" style="font-size:16px">lock</span> Vehículo Reservado</h4>'+
+      '<div class="reserve-info">'+
+        '<div><b>Nombre</b><span>'+esc(c.reserved_by_name||'—')+'</span></div>'+
+        '<div><b>Fecha</b><span>'+date+'</span></div>'+
+        '<div><b>Email</b><span>'+(c.reserved_by_email?'<a href="mailto:'+esc(c.reserved_by_email)+'">'+esc(c.reserved_by_email)+'</a>':'—')+'</span></div>'+
+        '<div><b>Teléfono</b><span>'+(c.reserved_by_phone?'<a href="tel:'+esc(c.reserved_by_phone)+'">'+esc(c.reserved_by_phone)+'</a>'+(waLink?' · <a href="'+waLink+'" target="_blank">WhatsApp</a>':''):'—')+'</span></div>'+
+      '</div>'+
+      '<div style="display:flex;gap:8px;flex-wrap:wrap">'+
+        '<button type="button" class="btn btn--warn btn--sm" onclick="liberarReserva()"><span class="material-icons-outlined" style="font-size:14px">lock_open</span> Liberar reserva</button>'+
+        '<button type="button" class="btn btn--danger btn--sm" onclick="marcarVendido()"><span class="material-icons-outlined" style="font-size:14px">sell</span> Marcar vendido</button>'+
+      '</div>'+
+    '</div>';
+    rb.style.display='block';
+  } else {
+    rb.style.display='none';
+    rb.innerHTML='';
+  }
+  $('vehicleModal').classList.add('is-open');
+}
+
+function closeVehicleModal(){$('vehicleModal').classList.remove('is-open');}
+
+async function liberarReserva(){
+  if (!editingId) return;
+  if (!confirm('¿Liberar la reserva? El carro volverá a aparecer como disponible en la web.')) return;
+  try {
+    const { error } = await sb.from(TABLE).update({
+      reserved_at: null, reserved_by_name: null, reserved_by_email: null, reserved_by_phone: null
+    }).eq('id', editingId);
+    if (error) throw error;
+    showAlert('vehicleAlert','ok','✅ Reserva liberada.');
+    setTimeout(()=>{closeVehicleModal();loadInventory();},800);
+  } catch (e) {
+    showAlert('vehicleAlert','err','Error: '+(e.message||'Failed'));
+  }
+}
+
+async function marcarVendido(){
+  if (!editingId) return;
+  if (!confirm('¿Marcar este vehículo como VENDIDO? Desaparecerá del inventario público.')) return;
+  try {
+    const { error } = await sb.from(TABLE).update({
+      status: 'sold',
+      sold_at: new Date().toISOString(),
+      reserved_at: null, reserved_by_name: null, reserved_by_email: null, reserved_by_phone: null
+    }).eq('id', editingId);
+    if (error) throw error;
+    showAlert('vehicleAlert','ok','✅ Vehículo marcado como vendido.');
+    setTimeout(()=>{closeVehicleModal();loadInventory();},800);
+  } catch (e) {
+    showAlert('vehicleAlert','err','Error: '+(e.message||'Failed'));
+  }
+}
+
+async function saveVehicle(){
+  const form=$('vehicleForm');if(!form.checkValidity()){form.reportValidity();return;}
+  const pasted=($('pasteUrls').value||'').split('\n').map(u=>u.trim()).filter(u=>u.indexOf('http')===0);
+  const allPhotos=photos.concat(pasted);
+  // Validación dura: tope de fotos por producto (MAX_PHOTOS)
+  if(allPhotos.length>MAX_PHOTOS){
+    showAlert('vehicleAlert','err','Máximo '+MAX_PHOTOS+' fotos por producto (tienes '+allPhotos.length+'). Elimina '+(allPhotos.length-MAX_PHOTOS)+' antes de guardar.');
+    return;
+  }
+  const body={
+    category:$('fCategory').value||'cars',
+    year:parseInt($('fYear').value,10),make:$('fMake').value.trim(),model:$('fModel').value.trim(),
+    trim:$('fTrim').value.trim()||null,body_type:$('fBody').value,status:$('fStatus').value,condition:$('fCondition').value,
+    price:Number($('fPrice').value),msrp:$('fMsrp').value?Number($('fMsrp').value):null,
+    mileage:parseInt($('fMileage').value,10),
+    fuel:$('fFuel').value||null,transmission:$('fTrans').value.trim()||null,drivetrain:$('fDrive').value||null,
+    engine:$('fEngine').value.trim()||null,exterior_color:$('fExt').value.trim()||null,interior_color:$('fInt').value.trim()||null,
+    vin:$('fVin').value.trim()||null,stock:$('fStock').value.trim()||null,badge:$('fBadge').value.trim()||null,
+    mpg_city:$('fMpgC').value?parseInt($('fMpgC').value,10):null,mpg_highway:$('fMpgH').value?parseInt($('fMpgH').value,10):null,
+    featured:$('fFeatured').checked,
+    featured_order:($('fFeatOrder').value!==''?parseInt($('fFeatOrder').value,10):null),
+    features:$('fFeats').value?$('fFeats').value.split(',').map(s=>s.trim()).filter(Boolean):[],
+    description:$('fDesc').value.trim()||null,
+    gallery:allPhotos,cover_image:allPhotos[0]||null
+  };
+  $('saveBtn').disabled=true;$('saveBtn').innerHTML='<span class="material-icons-outlined" style="font-size:16px">hourglass_top</span> Guardando...';
+  try {
+    if (!editingId) body.id = 'promax-' + Math.random().toString(16).slice(2,10);
+    const persist = (payload)=> editingId
+      ? sb.from(TABLE).update(payload).eq('id', editingId)
+      : sb.from(TABLE).insert(payload);
+    let result = await persist(body);
+    // Si la columna featured_order aún NO existe en la base, guarda SIN ella y avisa
+    // el SQL (una sola vez). Así el panel nunca se rompe por la columna de orden.
+    let ordPending = false;
+    if (result.error && /featured_order/i.test(String(result.error.message||result.error.hint||result.error))) {
+      const b2 = Object.assign({}, body); delete b2.featured_order;
+      result = await persist(b2);
+      ordPending = !result.error;
+    }
+    if (result.error) throw result.error;
+    showAlert('vehicleAlert','ok',(editingId?'¡Vehículo actualizado!':'¡Vehículo agregado!')+(ordPending?' — para activar el ORDEN en portada corre una vez el SQL de docs/supabase-featured-order.sql en Supabase.':''));
+    setTimeout(()=>{closeVehicleModal();loadInventory();},ordPending?1800:800);
+  } catch (e) {
+    showAlert('vehicleAlert','err','Error: '+(e.message||e.hint||'No se pudo guardar'));
+  } finally {
+    $('saveBtn').disabled=false;
+    $('saveBtn').innerHTML='<span class="material-icons-outlined" style="font-size:16px">save</span> Guardar Vehículo';
+  }
+}
+
+function openDeleteModal(id){const c=inventory.find(x=>x.id===id);if(!c)return;deleteMode='single';deleteId=id;$('deleteMsg').innerHTML='¿Seguro que quieres borrar <strong style="color:var(--text)">'+esc(c.year+' '+c.make+' '+c.model)+'</strong>? Esta acción no se puede deshacer.';$('deleteConfirmBtn').textContent='Borrar';$('deleteModal').classList.add('is-open');}
+function openDeleteSelectedModal(){var n=selectedIds.size;if(!n)return;deleteMode='selected';$('deleteMsg').innerHTML='Vas a borrar <strong style="color:var(--text)">'+n+' vehículo'+(n===1?'':'s')+'</strong> seleccionado'+(n===1?'':'s')+'. Esta acción no se puede deshacer.';$('deleteConfirmBtn').textContent='Borrar '+n;$('deleteModal').classList.add('is-open');}
+function openDeleteAllModal(){var n=inventory.length;if(!n)return;deleteMode='all';$('deleteMsg').innerHTML='⚠️ Vas a borrar <strong style="color:var(--text)">TODO el inventario ('+n+' carro'+(n===1?'':'s')+')</strong> del panel. Esta acción no se puede deshacer.';$('deleteConfirmBtn').textContent='Borrar todo';$('deleteModal').classList.add('is-open');}
+function closeDeleteModal(){$('deleteModal').classList.remove('is-open');deleteId=null;deleteMode='single';}
+async function delByIds(ids){for(var i=0;i<ids.length;i+=150){var chunk=ids.slice(i,i+150);var { error }=await sb.from(TABLE).delete().in('id',chunk);if(error)throw error;}}
+async function confirmDelete(){
+  try {
+    if(deleteMode==='all'){ const { error }=await sb.from(TABLE).delete().not('id','is',null); if(error)throw error; }
+    else if(deleteMode==='selected'){ var ids=[];selectedIds.forEach(function(x){ids.push(x);}); if(!ids.length){closeDeleteModal();return;} await delByIds(ids); }
+    else { if(!deleteId){closeDeleteModal();return;} await delByIds([deleteId]); }
+    selectedIds.clear();
+    closeDeleteModal();
+    loadInventory();
+  } catch (e) {
+    alert('Error: ' + (e.message || 'Delete failed'));
+  }
+}
+function updateBulkUI(){
+  selectedIds.forEach(function(id){ if(!inventory.some(function(c){return String(c.id)===String(id);})) selectedIds.delete(id); });
+  var n=selectedIds.size;
+  var bar=$('bulkBar'); if(bar){ if(inventory.length)bar.classList.add('show'); else bar.classList.remove('show'); }
+  if($('bulkCount'))$('bulkCount').textContent=n+' seleccionado'+(n===1?'':'s');
+  var dsel=$('btnDelSelected'); if(dsel)dsel.disabled=(n===0);
+  if($('delSelLabel'))$('delSelLabel').textContent=n>0?('Borrar seleccionados ('+n+')'):'Borrar seleccionados';
+  if($('btnClearSel'))$('btnClearSel').style.display=n>0?'':'none';
+  var dall=$('btnDelAll'); if(dall)dall.disabled=(inventory.length===0);
+  if($('delAllLabel'))$('delAllLabel').textContent='Borrar TODO ('+inventory.length+')';
+  var checks=[].slice.call(document.querySelectorAll('#tableBody .row-check'));
+  var checked=checks.filter(function(cb){return cb.checked;}).length;
+  var master=$('checkAll');
+  if(master){ master.checked=(checks.length>0&&checked===checks.length); master.indeterminate=(checked>0&&checked<checks.length); }
+}
+function toggleSelectAll(){
+  var on=$('checkAll').checked, vis=filteredInventory();
+  vis.forEach(function(c){ if(on)selectedIds.add(c.id); else selectedIds.delete(c.id); });
+  [].slice.call(document.querySelectorAll('#tableBody .row-check')).forEach(function(cb){ var id=cb.getAttribute('data-id'); var sel=selectedIds.has(id); cb.checked=sel; var tr=cb.closest('tr'); if(tr)tr.classList.toggle('is-sel',sel); });
+  updateBulkUI();
+}
+function clearSelection(){ selectedIds.clear(); [].slice.call(document.querySelectorAll('#tableBody .row-check')).forEach(function(cb){ cb.checked=false; var tr=cb.closest('tr'); if(tr)tr.classList.remove('is-sel'); }); updateBulkUI(); }
+function onRowCheck(e){ var cb=e.target; if(!cb||!cb.classList||!cb.classList.contains('row-check'))return; var id=cb.getAttribute('data-id'); if(cb.checked)selectedIds.add(id); else selectedIds.delete(id); var tr=cb.closest('tr'); if(tr)tr.classList.toggle('is-sel',cb.checked); updateBulkUI(); }
+
+// ============ IMPORTAR CATÁLOGO BASE (carros reales del JSON -> Supabase) ============
+function bodyCap(b){
+  var m={sedan:'Sedan',suv:'SUV',truck:'Truck',coupe:'Coupe',hatchback:'Hatchback',wagon:'Wagon',van:'Van',convertible:'Convertible'};
+  var k=String(b||'').toLowerCase().trim(); return m[k]||(k?k.charAt(0).toUpperCase()+k.slice(1):'Sedan');
+}
+function mapJsonToDb(r){
+  var gallery=Array.isArray(r.gallery)?r.gallery:[];
+  var cond=r.condition||(/\b(nuevo|new)\b/i.test(r.badge||'')?'new':'used');
+  var o = {
+    id:String(r.id||r.vin||r.stock||(r.year+'-'+r.make+'-'+r.model)).toLowerCase().replace(/\s+/g,'-'),
+    category:(r.category||'cars'),
+    year:parseInt(r.year,10)||null,make:r.make||'',model:r.model||'',trim:r.trim||null,
+    body_type:bodyCap(r.body_type),status:'available',condition:cond,
+    price:Number(r.price)||0,msrp:(r.msrp!=null?Number(r.msrp):null),mileage:parseInt(r.mileage,10)||0,
+    fuel:r.fuel||null,transmission:r.transmission||null,drivetrain:r.drivetrain||null,engine:null,
+    exterior_color:r.exterior_color||null,interior_color:r.interior_color||null,
+    vin:r.vin||null,stock:r.stock||null,badge:r.badge||null,mpg_city:null,mpg_highway:null,
+    featured:!!r.featured,features:Array.isArray(r.features)?r.features:[],
+    description:r.description||null,gallery:gallery,cover_image:r.cover_image||gallery[0]||null
+  };
+  if(r.source)o.source=r.source;
+  if(r.source_url)o.source_url=r.source_url;
+  return o;
+}
+async function bulkImportReal(){
+  if(!confirm('Cargar los carros del catálogo base al panel.\n\nNo borra nada: actualiza por id (los que ya existan se refrescan, los nuevos se agregan). ¿Continuar?'))return;
+  try{
+    var res=await fetch('/assets/data/inventory.json',{cache:'no-store'});
+    if(!res.ok)throw new Error('No pude leer el catálogo base.');
+    var rows=await res.json();
+    if(!Array.isArray(rows)||!rows.length)throw new Error('El catálogo base está vacío.');
+    var mapped=rows.map(mapJsonToDb);
+    var {error}=await sb.from(TABLE).upsert(mapped,{onConflict:'id'});
+    if(error)throw error;
+    alert('✅ '+mapped.length+' carros cargados/actualizados en el panel.');
+    loadInventory();
+  }catch(e){
+    var m=e.message||String(e);
+    if(/condition/i.test(m)&&/column|does not exist|schema|find/i.test(m)){
+      m='Falta crear la columna "condition" en Supabase. Corre esta línea en el SQL Editor y vuelve a intentar:\n\nalter table public.promax_inventory add column if not exists condition text default \'used\';';
+    }
+    alert('Error: '+m);
+  }
+}
+
+function batchCount(text){
+  try{ var a=JSON.parse(text); if(!Array.isArray(a))a=[a]; return a.filter(function(x){return x&&(x.make||x.model||x.vin);}).length; }catch(e){ return -1; }
+}
+function updateBatchInfo(){
+  var t=($('batchText').value||'').trim(), info=$('batchInfo'), btn=$('batchImportBtn');
+  if(!t){ info.textContent='Pega el JSON copiado con 📦 LOTE o 🚀 LOTE TODO.'; info.style.color='var(--subtle)'; btn.disabled=true; btn.textContent='Importar'; return; }
+  var n=batchCount(t);
+  if(n<0){ info.textContent='⏳ El texto aún no es un JSON completo (revisa que copiaste todo).'; info.style.color='#f59e0b'; btn.disabled=true; btn.textContent='Importar'; return; }
+  if(n===0){ info.textContent='No encontré carros en ese texto.'; info.style.color='#ef4444'; btn.disabled=true; btn.textContent='Importar'; return; }
+  info.textContent='✅ '+n+' carro'+(n===1?'':'s')+' detectado'+(n===1?'':'s')+'.'; info.style.color='var(--green)'; btn.disabled=false; btn.textContent='Importar '+n;
+}
+async function importBatch(){
+  $('batchText').value=''; updateBatchInfo();
+  $('batchModal').classList.add('is-open');
+  setTimeout(function(){ try{$('batchText').focus();}catch(e){} },50);
+  if(navigator.clipboard&&navigator.clipboard.readText){
+    try{ var t=await navigator.clipboard.readText(); if(t&&t.trim().charAt(0)==='['){ $('batchText').value=t; updateBatchInfo(); } }catch(e){}
+  }
+}
+function closeBatchModal(){ $('batchModal').classList.remove('is-open'); }
+async function doImportBatch(){
+  var btn=$('batchImportBtn');
+  try{
+    var text=($('batchText').value||'').trim();
+    if(!text)return;
+    var arr=JSON.parse(text);
+    if(!Array.isArray(arr))arr=[arr];
+    arr=arr.filter(function(x){return x&&(x.make||x.model||x.vin);});
+    if(!arr.length){alert('No encontré carros en ese JSON. Copia primero con 📦 LOTE o 🚀 LOTE TODO.');return;}
+    btn.disabled=true;
+    var mapped=arr.map(mapJsonToDb);
+    for(var i=0;i<mapped.length;i+=100){
+      var chunk=mapped.slice(i,i+100);
+      var { error }=await sb.from(TABLE).upsert(chunk,{onConflict:'id'});
+      if(error)throw error;
+      btn.textContent='Importando... '+Math.min(i+100,mapped.length)+'/'+mapped.length;
+    }
+    closeBatchModal();
+    alert('✅ '+mapped.length+' carros importados/actualizados en el panel.');
+    loadInventory();
+  }catch(e){
+    var m=e.message||String(e);
+    if(/condition/i.test(m)&&/column|does not exist|schema|find/i.test(m)){m='Falta crear la columna "condition" en Supabase. Corre esta línea en el SQL Editor y reintenta:\n\nalter table public.promax_inventory add column if not exists condition text default \'used\';';}
+    else if(/\b(source|source_url|category)\b/i.test(m)&&/column|does not exist|schema|find/i.test(m)){m='Faltan columnas nuevas en Supabase. Corre esto en el SQL Editor y reintenta:\n\nalter table public.promax_inventory add column if not exists category text default \'cars\';\nalter table public.promax_inventory add column if not exists source text;\nalter table public.promax_inventory add column if not exists source_url text;';}
+    alert('Error: '+m);
+    if(btn){btn.disabled=false;btn.textContent='Importar';}
+  }
+}
+
+
+['searchBox','filterStatus','filterBody','filterCond','filterCat'].forEach(id=>{$(id).addEventListener('input',renderTable);$(id).addEventListener('change',renderTable);});
+if($('checkAll'))$('checkAll').addEventListener('change',toggleSelectAll);
+$('tableBody').addEventListener('change',onRowCheck);
+if($('batchText'))$('batchText').addEventListener('input',updateBatchInfo);
+
+$('tableBody').addEventListener('click', function(e){
+  const btn = e.target.closest('[data-action]');
+  if(!btn) return;
+  const id = btn.getAttribute('data-id');
+  const action = btn.getAttribute('data-action');
+  if (action === 'edit') openEditModal(id);
+  else if (action === 'view') window.open(SITE_URL + '/vehicle/?id='+encodeURIComponent(id), '_blank');
+  else if (action === 'delete') openDeleteModal(id);
+});
+
+checkAuth();
+</script>
+</body>
+</html>

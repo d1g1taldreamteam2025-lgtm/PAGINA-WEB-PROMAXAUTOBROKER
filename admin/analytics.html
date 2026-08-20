@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Analytics · Promax Auto Broker</title>
+<script src="/admin/gate.js"></script><!-- SÍNCRONO: decide login vs splash ANTES de pintar (sin parpadeo) -->
+<style>
+/* Fondo del NAVEGADOR también oscuro (sin fogonazo blanco al rebotar el scroll) */
+html{background:#0c0c0c;} /* sin overscroll-behavior: bloqueaba la rueda en algunos equipos */
+/* Compuerta de sesión (gate.js): con sesión guardada NO se pinta el login. */
+html.pmx-hassession #loginScreen{display:none;}
+#pmxSplash{display:none;position:fixed;inset:0;z-index:300;background:linear-gradient(135deg,#0c0c0c,#1a1a1a);align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+html.pmx-hassession #pmxSplash{display:flex;}
+html.pmx-ready #pmxSplash{display:none;}
+.pmx-splash__spin{width:34px;height:34px;border:3px solid rgba(244,220,52,.22);border-top-color:#F4DC34;border-radius:50%;animation:pmxspin .8s linear infinite;}
+@keyframes pmxspin{to{transform:rotate(360deg)}}
+</style>
+<link rel="icon" type="image/png" href="/assets/img/favicon-256.png"><link rel="apple-touch-icon" href="/assets/img/favicon-180.png">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',-apple-system,sans-serif;}
+body{background:#0c0c0c;color:#fff;min-height:100vh;}
+a{color:inherit;text-decoration:none;}
+button{cursor:pointer;border:0;font-family:inherit;}
+input,select{font-family:inherit;}
+
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:linear-gradient(135deg,#0c0c0c,#1a1a1a);}
+.login__card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:14px;padding:36px;width:100%;max-width:400px;}
+.login__card h1{font-size:22px;font-weight:800;margin-bottom:6px;}
+.login__card p{color:#888;font-size:14px;margin-bottom:24px;}
+.login__field{margin-bottom:14px;}
+.login__field label{display:block;font-size:12px;font-weight:600;color:#aaa;margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+.login__field input{width:100%;padding:11px 14px;border-radius:8px;background:#0c0c0c;border:1px solid #2a2a2a;color:#fff;font-size:14px;}
+.login__field input:focus{outline:none;border-color:#F4DC34;}
+.login__btn{width:100%;background:#F4DC34;color:#0c0c0c;padding:13px;border-radius:8px;font-weight:800;font-size:14px;text-transform:uppercase;letter-spacing:.5px;margin-top:8px;}
+.login__btn:hover{background:#ffe957;}
+.login__err{background:#3a1717;border:1px solid #7a2a2a;color:#ff6e6e;padding:10px;border-radius:6px;font-size:13px;margin-top:12px;display:none;}
+
+.app{display:none;min-height:100vh;}
+.topbar{background:#0c0c0c;border-bottom:1px solid #2a2a2a;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:10;flex-wrap:wrap;gap:10px;}
+.topbar__brand{display:flex;align-items:center;gap:12px;}
+.topbar__brand .badge{background:#F4DC34;color:#0c0c0c;font-size:10px;font-weight:800;padding:3px 8px;border-radius:99px;text-transform:uppercase;letter-spacing:.5px;}
+.topbar__nav{display:flex;gap:6px;flex-wrap:wrap;}
+.topbar__nav a{padding:8px 14px;border-radius:6px;font-size:13px;font-weight:600;color:#aaa;}
+.topbar__nav a:hover{background:#1a1a1a;color:#fff;}
+.topbar__nav a.active{background:#F4DC34;color:#0c0c0c;}
+.topbar__user{display:flex;align-items:center;gap:12px;font-size:13px;color:#888;}
+.topbar__user button{background:transparent;color:#888;font-size:12px;padding:6px 10px;border-radius:6px;}
+.topbar__user button:hover{background:#1a1a1a;color:#fff;}
+
+.main{padding:24px;max-width:1400px;margin:0 auto;}
+
+.filters{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:14px;margin-bottom:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.filters select{background:#0c0c0c;border:1px solid #2a2a2a;color:#fff;padding:10px 12px;border-radius:6px;font-size:13px;}
+.filters select:focus{outline:none;border-color:#F4DC34;}
+.filters .refresh{background:#F4DC34;color:#0c0c0c;padding:10px 18px;border-radius:6px;font-weight:700;font-size:13px;}
+.filters .refresh:hover{background:#ffe957;}
+.filters .note{color:#666;font-size:12px;margin-left:auto;}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px;}
+.stat{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;padding:18px;}
+.stat__label{font-size:11px;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+.stat__value{font-size:26px;font-weight:800;color:#fff;}
+.stat__value.gold{color:#F4DC34;}
+.stat__value.green{color:#4ade80;}
+.stat__value.blue{color:#60a5fa;}
+.stat__value.gray{color:#888;}
+.stat__sub{font-size:11px;color:#666;margin-top:4px;}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+@media(max-width:900px){.grid2{grid-template-columns:1fr;}}
+.card{background:#1a1a1a;border:1px solid #2a2a2a;border-radius:10px;overflow:hidden;}
+.card__head{padding:14px 16px;border-bottom:1px solid #2a2a2a;font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#aaa;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;}
+.card__body{padding:16px;}
+
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{text-align:left;padding:10px 14px;background:#0c0c0c;border-bottom:1px solid #2a2a2a;color:#888;font-weight:700;text-transform:uppercase;font-size:11px;letter-spacing:.5px;white-space:nowrap;}
+td{padding:10px 14px;border-bottom:1px solid #222;vertical-align:middle;}
+tr:hover td{background:#222;}
+tr:last-child td{border-bottom:0;}
+td .bar{display:inline-block;height:8px;background:#F4DC34;border-radius:4px;margin-right:8px;vertical-align:middle;min-width:2px;}
+td .bar.green{background:#4ade80;}
+
+.chart{display:flex;align-items:flex-end;gap:4px;height:180px;padding:16px;overflow-x:auto;}
+.chart .col{flex:1;min-width:14px;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;height:100%;position:relative;}
+.chart .col .v{background:#F4DC34;border-radius:3px 3px 0 0;min-height:2px;}
+.chart .col .w{background:#4ade80;border-radius:2px;min-height:0;}
+.chart .col .lbl{font-size:9px;color:#666;text-align:center;margin-top:4px;white-space:nowrap;}
+.legend{display:flex;gap:16px;padding:0 16px 12px;font-size:11px;color:#888;}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px;}
+
+.heatwrap{display:flex;justify-content:center;padding:16px;}
+.heat{position:relative;background:linear-gradient(#151515,#101010);border:1px solid #2a2a2a;border-radius:8px;overflow:hidden;}
+.heat .dot{position:absolute;border-radius:50%;pointer-events:none;}
+.heat .mark{position:absolute;left:0;right:0;border-top:1px dashed #2a2a2a;color:#555;font-size:9px;padding:1px 4px;}
+.empty{padding:60px 20px;text-align:center;color:#666;}
+.empty b{display:block;color:#aaa;margin-bottom:6px;font-size:15px;}
+.spinner{display:inline-block;width:14px;height:14px;border:2px solid #333;border-top-color:#F4DC34;border-radius:50%;animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.hint{background:#14140a;border:1px solid #3a3413;color:#c9b73a;font-size:12px;border-radius:8px;padding:10px 14px;margin-bottom:16px;display:none;}
+</style>
+</head>
+<body>
+
+<!-- Splash de sesión: solo se ve si YA hay sesión guardada, mientras se valida.
+     Así el login jamás parpadea al que ya está adentro. -->
+<div id="pmxSplash" role="status" aria-label="Cargando el panel">
+  <img src="/assets/img/logo-header.svg" alt="" style="height:46px;width:auto">
+  <div class="pmx-splash__spin"></div>
+  <p style="color:#8b8b8b;font-size:13px">Cargando tu panel…</p>
+</div>
+
+
+<div class="login" id="loginScreen">
+  <div class="login__card">
+    <h1>📊 Analytics · Promax</h1>
+    <p>Inicia sesión para ver el tráfico de tu página.</p>
+    <form id="loginForm">
+      <div class="login__field"><label>Email</label><input type="email" id="email" required></div>
+      <div class="login__field"><label>Password</label><input type="password" id="password" required></div>
+      <button type="submit" class="login__btn" id="loginBtn">Entrar</button>
+      <div class="login__err" id="loginErr"></div>
+    </form>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <div class="topbar">
+    <div class="topbar__brand"><img src="/assets/img/logo-header.svg" alt="Promax Auto Broker" style="height:30px;width:auto"><span class="badge">Analytics</span></div>
+    <nav class="topbar__nav">
+      <a href="/admin/">Inventario</a>
+      <a href="/admin/leads">Leads</a>
+      <a href="/admin/sorteo">Sorteo</a>
+      <a href="/admin/analytics" class="active">Analytics</a>
+    </nav>
+    <div class="topbar__user"><span id="userEmail"></span><button id="logoutBtn">Salir</button></div>
+  </div>
+
+  <main class="main">
+    <div class="hint" id="setupHint"><b>Aún no hay datos.</b> Si acabas de activar la medición, ejecuta <code>sql/analytics.sql</code> en Supabase (SQL Editor) y espera a que entren visitas. Cada visita al sitio empezará a aparecer aquí sola.</div>
+
+    <div class="filters">
+      <select id="fRange">
+        <option value="1">Hoy</option>
+        <option value="7" selected>Últimos 7 días</option>
+        <option value="30">Últimos 30 días</option>
+        <option value="90">Últimos 90 días</option>
+      </select>
+      <select id="fDevice">
+        <option value="">Todos los dispositivos</option>
+        <option value="mobile">📱 Móvil</option>
+        <option value="desktop">💻 Computadora</option>
+      </select>
+      <button class="refresh" id="btnRefresh">Actualizar</button>
+      <span class="note" id="fNote"></span>
+    </div>
+
+    <div class="stats" id="statCards"></div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="card__head"><span>Visitas por día</span></div>
+      <div class="chart" id="chart"></div>
+      <div class="legend"><span><i style="background:#F4DC34"></i>Visitas</span><span><i style="background:#4ade80"></i>Clics WhatsApp</span></div>
+    </div>
+
+    <div class="grid2">
+      <div class="card"><div class="card__head">Páginas más visitadas</div><div class="table-scroll"><table id="tPages"></table></div></div>
+      <div class="card"><div class="card__head">Vehículos más vistos</div><div class="table-scroll"><table id="tVehicles"></table></div></div>
+    </div>
+    <div class="grid2">
+      <div class="card"><div class="card__head">De dónde llegan (fuentes)</div><div class="table-scroll"><table id="tSources"></table></div></div>
+      <div class="card"><div class="card__head">Embudo de conversión</div><div class="card__body" id="funnel"></div></div>
+    </div>
+    <div class="grid2">
+      <div class="card"><div class="card__head">Dispositivo e idioma</div><div class="card__body" id="split"></div></div>
+      <div class="card"><div class="card__head">Popup 15% OFF + filtros usados</div><div class="card__body" id="popupBox"></div></div>
+    </div>
+
+    <div class="card" style="margin-bottom:24px">
+      <div class="card__head">
+        <span>🔥 Mapa de calor de clics</span>
+        <span style="display:flex;gap:8px;align-items:center">
+          <select id="heatPage" style="background:#0c0c0c;border:1px solid #2a2a2a;color:#fff;padding:7px 10px;border-radius:6px;font-size:12px"></select>
+          <select id="heatDevice" style="background:#0c0c0c;border:1px solid #2a2a2a;color:#fff;padding:7px 10px;border-radius:6px;font-size:12px">
+            <option value="mobile">📱 Móvil</option>
+            <option value="desktop">💻 Computadora</option>
+          </select>
+        </span>
+      </div>
+      <div class="heatwrap"><div class="heat" id="heat"></div></div>
+      <p style="color:#666;font-size:11px;padding:0 16px 14px;text-align:center">Cada punto es un clic real. El rectángulo representa el largo COMPLETO de la página (arriba = inicio, abajo = final). Más brillante = más clics.</p>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://db.ucallnow.fun';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0';
+const AN_TABLE = 'promax_analytics';
+const INV_TABLE = 'promax_inventory';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON, { auth: { persistSession: true, autoRefreshToken: true } });
+
+let EVENTS = [];
+
+function esc(s){const d=document.createElement('div');d.textContent=String(s==null?'':s);return d.innerHTML;}
+function num(n){return (Number(n)||0).toLocaleString('en-US');}
+function pct(a,b){return b?Math.round(a/b*100)+'%':'0%';}
+
+/* ---------- auth (idéntico al resto del panel) ---------- */
+function showLogin(){ gateFail();document.getElementById('loginScreen').style.display='flex';document.getElementById('app').style.display='none';}
+function showApp(user){ gateReveal();document.getElementById('loginScreen').style.display='none';document.getElementById('app').style.display='block';document.getElementById('userEmail').textContent='Admin';loadAll();}
+document.getElementById('loginForm').addEventListener('submit',async(e)=>{
+  e.preventDefault();
+  const btn=document.getElementById('loginBtn'),err=document.getElementById('loginErr');
+  btn.innerHTML='<span class="spinner"></span>';err.style.display='none';
+  const {data,error}=await sb.auth.signInWithPassword({email:document.getElementById('email').value,password:document.getElementById('password').value});
+  btn.textContent='Entrar';
+  if(error){err.textContent='Credenciales incorrectas.';err.style.display='block';return;}
+  showApp(data.user);
+});
+document.getElementById('logoutBtn').addEventListener('click',async()=>{await sb.auth.signOut();showLogin();});
+
+/* ---------- carga de eventos (paginada: aguanta cientos de miles) ---------- */
+async function fetchEvents(days,device){
+  const since=new Date(Date.now()-days*864e5); since.setHours(0,0,0,0);
+  const rows=[]; const PAGE=1000; const MAX=60000;
+  for(let from=0;from<MAX;from+=PAGE){
+    let q=sb.from(AN_TABLE).select('ts,event,page,ref,utm,device,lang,meta,session_id,visitor_id').gte('ts',since.toISOString()).order('ts',{ascending:false}).range(from,from+PAGE-1);
+    if(device) q=q.eq('device',device);
+    const {data,error}=await q;
+    if(error) throw error;
+    rows.push(...(data||[]));
+    if(!data||data.length<PAGE) break;
+  }
+  return rows;
+}
+
+function groupCount(rows,keyFn){
+  const m=new Map();
+  rows.forEach(r=>{const k=keyFn(r);if(k==null||k==='')return;m.set(k,(m.get(k)||0)+1);});
+  return [...m.entries()].sort((a,b)=>b[1]-a[1]);
+}
+
+async function loadAll(){
+  const days=+document.getElementById('fRange').value;
+  const device=document.getElementById('fDevice').value;
+  const note=document.getElementById('fNote');
+  note.innerHTML='<span class="spinner"></span> cargando…';
+  try{
+    EVENTS=await fetchEvents(days,device);
+  }catch(e){
+    note.textContent='';
+    document.getElementById('setupHint').style.display='block';
+    document.getElementById('setupHint').innerHTML='<b>No pude leer la tabla de analytics.</b> Ejecuta <code>sql/analytics.sql</code> en Supabase (SQL Editor → Run) y recarga. Detalle: '+esc(e.message||e);
+    return;
+  }
+  document.getElementById('setupHint').style.display=EVENTS.length?'none':'block';
+  note.textContent=num(EVENTS.length)+' eventos · actualizado '+new Date().toLocaleTimeString();
+  render(days);
+}
+
+function render(days){
+  const ev=EVENTS;
+  const pv=ev.filter(e=>e.event==='pageview');
+  const visitors=new Set(pv.map(e=>e.visitor_id)).size;
+  const sessions=new Set(pv.map(e=>e.session_id)).size;
+  const vviews=ev.filter(e=>e.event==='vehicle_view');
+  const wa=ev.filter(e=>e.event==='whatsapp');
+  const calls=ev.filter(e=>e.event==='call');
+  const leads=ev.filter(e=>e.event==='form');
+  const shares=ev.filter(e=>e.event==='share');
+
+  /* tarjetas */
+  const cards=[
+    ['Visitas (páginas vistas)',num(pv.length),'gold'],
+    ['Visitantes únicos',num(visitors),''],
+    ['Sesiones',num(sessions),''],
+    ['Vehículos vistos',num(vviews.length),'blue'],
+    ['Clics WhatsApp',num(wa.length),'green'],
+    ['Llamadas',num(calls.length),'green'],
+    ['Leads (formularios)',num(leads.length),'gold'],
+    ['Conversión visita→lead',pct(leads.length,sessions),'green'],
+  ];
+  document.getElementById('statCards').innerHTML=cards.map(c=>'<div class="stat"><div class="stat__label">'+c[0]+'</div><div class="stat__value '+c[2]+'">'+c[1]+'</div></div>').join('');
+
+  /* grafico por dia */
+  const byDay=new Map(), waDay=new Map();
+  for(let i=days-1;i>=0;i--){const d=new Date(Date.now()-i*864e5);const k=d.toISOString().slice(0,10);byDay.set(k,0);waDay.set(k,0);}
+  pv.forEach(e=>{const k=String(e.ts).slice(0,10);if(byDay.has(k))byDay.set(k,byDay.get(k)+1);});
+  wa.forEach(e=>{const k=String(e.ts).slice(0,10);if(waDay.has(k))waDay.set(k,waDay.get(k)+1);});
+  const max=Math.max(1,...byDay.values());
+  document.getElementById('chart').innerHTML=[...byDay.entries()].map(([k,v])=>{
+    const w=waDay.get(k)||0;
+    const lbl=days<=7?k.slice(5):(k.slice(8)==='01'||v===max?k.slice(5):'');
+    return '<div class="col" title="'+k+': '+v+' visitas, '+w+' WhatsApp"><div class="w" style="height:'+Math.round(w/max*100)+'%"></div><div class="v" style="height:'+Math.max(2,Math.round(v/max*100))+'%"></div><div class="lbl">'+lbl+'</div></div>';
+  }).join('');
+
+  /* top paginas */
+  const pages=groupCount(pv,e=>e.page).slice(0,10);
+  const pmax=Math.max(1,...pages.map(p=>p[1]));
+  document.getElementById('tPages').innerHTML='<tr><th>Página</th><th>Visitas</th></tr>'+(pages.map(p=>'<tr><td>'+esc(p[0])+'</td><td><span class="bar" style="width:'+Math.round(p[1]/pmax*80)+'px"></span>'+num(p[1])+'</td></tr>').join('')||'<tr><td colspan="2" class="empty">Sin datos aún</td></tr>');
+
+  /* top vehiculos (con nombre real) */
+  const vech=groupCount(vviews,e=>(e.meta&&e.meta.vehicle_id)||null).slice(0,10);
+  renderVehicles(vech);
+
+  /* fuentes */
+  const srcs=groupCount(pv,e=>{
+    if(e.utm&&e.utm.utm_source) return '📣 '+e.utm.utm_source+(e.utm.utm_campaign?' · '+e.utm.utm_campaign:'');
+    if(!e.ref) return '🔗 Directo (escribió la URL / WhatsApp)';
+    try{const h=new URL(e.ref).hostname.replace(/^www\./,'');return h.includes('promaxautobroker')?null:'🌐 '+h;}catch(x){return null;}
+  }).slice(0,10);
+  document.getElementById('tSources').innerHTML='<tr><th>Fuente</th><th>Visitas</th></tr>'+(srcs.map(s=>'<tr><td>'+esc(s[0])+'</td><td>'+num(s[1])+'</td></tr>').join('')||'<tr><td colspan="2" class="empty">Sin datos aún</td></tr>');
+
+  /* embudo */
+  const steps=[['Visitas',sessions],['Vieron un vehículo',new Set(vviews.map(e=>e.session_id)).size],['Contactaron (WA/llamada)',new Set(wa.concat(calls).map(e=>e.session_id)).size],['Dejaron sus datos (lead)',new Set(leads.map(e=>e.session_id)).size]];
+  const smax=Math.max(1,steps[0][1]);
+  document.getElementById('funnel').innerHTML=steps.map((s,i)=>'<div style="margin-bottom:10px"><div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">'+s[0]+' — <b style="color:#fff">'+num(s[1])+'</b> ('+pct(s[1],smax)+')</div><div style="height:14px;border-radius:7px;background:#0c0c0c;overflow:hidden"><div style="height:100%;width:'+Math.max(2,Math.round(s[1]/smax*100))+'%;background:'+(i===3?'#4ade80':'#F4DC34')+';border-radius:7px"></div></div></div>').join('');
+
+  /* dispositivo + idioma */
+  const dev=groupCount(pv,e=>e.device); const lng=groupCount(pv,e=>e.lang);
+  document.getElementById('split').innerHTML =
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px"><div>'+
+    dev.map(d=>'<div style="margin-bottom:8px;font-size:13px">'+(d[0]==='mobile'?'📱 Móvil':'💻 Computadora')+' <b style="float:right">'+pct(d[1],pv.length)+'</b></div>').join('')+
+    '</div><div>'+lng.map(l=>'<div style="margin-bottom:8px;font-size:13px">'+(l[0]==='es'?'🇪🇸 Español':'🇺🇸 English')+' <b style="float:right">'+pct(l[1],pv.length)+'</b></div>').join('')+'</div></div>';
+
+  /* popup + filtros */
+  const pop=ev.filter(e=>e.event==='popup');
+  const opens=pop.filter(p=>p.meta&&p.meta.what==='open').length;
+  const accepts=pop.filter(p=>p.meta&&p.meta.what==='accept').length;
+  const filters=groupCount(ev.filter(e=>e.event==='filter'),e=>e.meta?(e.meta.kind+': '+e.meta.value):null).slice(0,6);
+  document.getElementById('popupBox').innerHTML =
+    '<div style="font-size:13px;margin-bottom:14px">Popup mostrado <b>'+num(opens)+'</b> veces · aceptado <b style="color:#4ade80">'+num(accepts)+'</b> ('+pct(accepts,opens)+') · compartir usado <b>'+num(shares.length)+'</b></div>'+
+    (filters.length?'<table>'+filters.map(f=>'<tr><td style="padding:6px 0;border:0;font-size:12px;color:#aaa">'+esc(f[0])+'</td><td style="padding:6px 0;border:0;text-align:right"><b>'+num(f[1])+'</b></td></tr>').join('')+'</table>':'<div style="color:#666;font-size:12px">Aún no se usan filtros.</div>');
+
+  /* selector del mapa de calor (elige solo el dispositivo que SÍ tiene clics) */
+  const heats=ev.filter(e=>e.event==='heat');
+  const heatPages=groupCount(heats,e=>e.page).slice(0,15);
+  const hp=document.getElementById('heatPage');
+  hp.innerHTML=heatPages.map(p=>'<option value="'+esc(p[0])+'">'+esc(p[0])+' ('+num(p[1])+' clics)</option>').join('')||'<option value="">Sin clics aún</option>';
+  const byDev=groupCount(heats,e=>e.device);
+  if(byDev.length) document.getElementById('heatDevice').value=byDev[0][0];
+  renderHeat();
+}
+
+async function renderVehicles(vech){
+  const t=document.getElementById('tVehicles');
+  if(!vech.length){t.innerHTML='<tr><th>Vehículo</th><th>Vistas</th></tr><tr><td colspan="2" class="empty">Sin datos aún</td></tr>';return;}
+  let names={};
+  try{
+    const {data}=await sb.from(INV_TABLE).select('id,year,make,model,trim,price').in('id',vech.map(v=>v[0]));
+    (data||[]).forEach(r=>{names[r.id]=r.year+' '+r.make+' '+r.model+(r.trim?' '+r.trim:'')+(r.price?' — $'+num(r.price):'');});
+  }catch(e){}
+  const vmax=Math.max(1,...vech.map(v=>v[1]));
+  t.innerHTML='<tr><th>Vehículo</th><th>Vistas</th></tr>'+vech.map(v=>'<tr><td><a href="/vehicle/?id='+encodeURIComponent(v[0])+'" target="_blank" style="color:#F4DC34">'+esc(names[v[0]]||v[0])+'</a></td><td><span class="bar" style="width:'+Math.round(v[1]/vmax*70)+'px"></span>'+num(v[1])+'</td></tr>').join('');
+}
+
+function renderHeat(){
+  const page=document.getElementById('heatPage').value;
+  const dev=document.getElementById('heatDevice').value;
+  const box=document.getElementById('heat');
+  const W=dev==='mobile'?300:640, H=dev==='mobile'?560:420;
+  box.style.width=W+'px'; box.style.height=H+'px';
+  const clicks=EVENTS.filter(e=>e.event==='heat'&&e.page===page&&e.device===dev&&e.meta);
+  let html='<div class="mark" style="top:0">inicio de la página</div><div class="mark" style="top:50%">mitad</div><div class="mark" style="bottom:0;border-top:0;border-bottom:1px dashed #2a2a2a">final</div>';
+  /* agrupamos en celdas de 4% para intensidad */
+  const cells=new Map();
+  clicks.forEach(c=>{const cx=Math.min(24,Math.floor((c.meta.x||0)/4)),cy=Math.min(24,Math.floor((c.meta.y||0)/4));const k=cx+'_'+cy;cells.set(k,(cells.get(k)||0)+1);});
+  const cmax=Math.max(1,...cells.values());
+  cells.forEach((n,k)=>{
+    const [cx,cy]=k.split('_').map(Number);
+    const a=0.25+0.75*(n/cmax), r=6+Math.round(10*(n/cmax));
+    html+='<div class="dot" style="left:'+(cx*4+2)+'%;top:'+(cy*4+2)+'%;width:'+r+'px;height:'+r+'px;margin:-'+(r/2)+'px;background:radial-gradient(circle,rgba(244,220,52,'+a.toFixed(2)+'),rgba(244,60,20,'+(a*0.35).toFixed(2)+') 60%,transparent 75%)"></div>';
+  });
+  if(!clicks.length) html+='<div class="empty" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">Sin clics registrados aquí todavía</div>';
+  box.innerHTML=html;
+}
+
+document.getElementById('btnRefresh').addEventListener('click',loadAll);
+document.getElementById('fRange').addEventListener('change',loadAll);
+document.getElementById('fDevice').addEventListener('change',loadAll);
+document.getElementById('heatPage').addEventListener('change',renderHeat);
+document.getElementById('heatDevice').addEventListener('change',renderHeat);
+
+async function checkAuth(){
+  const {data}=await sb.auth.getSession();
+  if(data.session) showApp(data.session.user); else showLogin();
+}
+checkAuth();
+</script>
+</body>
+</html>

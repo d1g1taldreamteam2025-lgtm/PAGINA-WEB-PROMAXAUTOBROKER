@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Promax Auto Broker | Somos tu broker de confianza en Estados Unidos</title>
+<meta name="description" content="Compra y venta de vehículos nuevos y usados en Miami, Florida. Carros, camionetas, vans y motos con financiamiento flexible: aceptamos ITIN. Pre-califica en minutos con Promax Auto Broker.">
+<!-- Open Graph / Twitter (vista previa al compartir en WhatsApp, redes) -->
+<link rel="canonical" href="https://www.promaxautobroker.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Promax Auto Broker">
+<meta property="og:locale" content="es_US">
+<meta property="og:title" content="Promax Auto Broker | Somos tu broker de confianza en Estados Unidos">
+<meta property="og:description" content="Compra y venta de vehículos nuevos y usados en Miami, Florida. Financiamiento flexible, aceptamos ITIN. Pre-califica en minutos.">
+<meta property="og:url" content="https://www.promaxautobroker.com/">
+<meta property="og:image" content="https://www.promaxautobroker.com/assets/img/promax-og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Promax Auto Broker">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Promax Auto Broker | Somos tu broker de confianza en Estados Unidos">
+<meta name="twitter:description" content="Compra y venta de vehículos nuevos y usados en Miami, Florida. Financiamiento flexible, aceptamos ITIN. Pre-califica en minutos.">
+<meta name="twitter:image" content="https://www.promaxautobroker.com/assets/img/promax-og.png">
+<script src="/assets/js/config.js"></script>
+<script>/* Arranque TEMPRANO del inventario: el fetch sale AHORA, en paralelo con
+   CSS/fuentes; data.js (fetchPage) reutiliza esta respuesta y la primera visita
+   gana 200-500ms. ⚠️ La consulta debe ser IDÉNTICA a la de assets/js/data.js
+   (SLIM + gallery->3 + limit/offset); si cambias una, cambia la otra. */
+(function(){try{
+  var ep=(window.PROMAX||{}).endpoints||{};
+  if(ep.inventorySource!=="api"||!ep.inventoryApiUrl)return;
+  var SLIM="id,stock,category,year,make,model,trim,body_type,price,msrp,mileage,fuel,transmission,drivetrain,condition,badge,featured,cover_image,created_at";
+  var u=ep.inventoryApiUrl;
+  u=(u.indexOf("select=*")>-1?u.replace("select=*","select="+SLIM):u+"&select="+SLIM)+"&gallery->3=not.is.null"+"&limit=1000&offset=0";
+  window.__pmxEarlyInv={u:u,p:fetch(u,{headers:{apikey:ep.inventoryApiKey,Authorization:"Bearer "+ep.inventoryApiKey,Prefer:"count=exact"}}).catch(function(){return null})};
+}catch(e){}})();</script>
+<script>/* Héroe de la página — ÚNICA fuente de sus variantes (idioma × PC/celular).
+   Se elige AQUÍ, antes de las hojas de estilo, y se inyecta un preload: la foto
+   del primer vistazo baja EN PARALELO con el CSS (LCP rápido) y el celular jamás
+   descarga la foto de PC. El <img> del body copia estos datos con su mini-script.
+   ⚠️ Si cambias una foto, actualiza también HERO_WARM en assets/js/site.js. */
+window.__pmxHero={"es":"/assets/img/heroes/home1-es-pc.webp","en":"/assets/img/heroes/home1-en-pc.webp","es-m":"/assets/img/heroes/home1-es-movil.webp","en-m":"/assets/img/heroes/home1-en-movil.webp","ar":"1920/1080","ar-m":"1024/1536"};
+(function(){var H=window.__pmxHero,l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var n=document.createElement("link");n.rel="preload";n.as="image";n.setAttribute("fetchpriority","high");n.href=(m?H[l+"-m"]:0)||H[l];document.head.appendChild(n);})();</script>
+<link rel="preconnect" href="https://db.ucallnow.fun" crossorigin>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/theme.css">
+<link rel="icon" type="image/png" href="/assets/img/favicon-256.png"><link rel="apple-touch-icon" href="/assets/img/favicon-180.png">
+<!-- Anti-parpadeo: marca <html> para ocultar lo que GSAP animará. anim.js lo
+     retira si el usuario pide menos movimiento o si GSAP no llega a cargar. -->
+<script>(function(){try{var m=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;if(!m)document.documentElement.className+=" pmx-ganim";}catch(e){}})();</script>
+<style>
+/* HERO */
+.pmx-hero{position:relative;min-height:580px;display:flex;align-items:center;color:#fff;overflow:hidden;background:#0a0a0a;}
+.pmx-hero__bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1600&q=80') center/cover no-repeat;animation:pmxKen 22s ease-in-out infinite alternate;z-index:0;}
+.pmx-hero__ov{position:absolute;inset:0;background:linear-gradient(120deg,rgba(10,10,10,.9) 0%,rgba(10,10,10,.5) 58%,rgba(167,2,0,.28) 100%);z-index:1;}
+.pmx-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--brand),var(--accent),var(--brand));z-index:3;}
+.pmx-hero__inner{position:relative;z-index:2;max-width:var(--maxw);margin:0 auto;padding:80px 48px;width:100%;}
+.pmx-hero__eyebrow{display:inline-block;font-size:13px;font-weight:800;letter-spacing:2px;text-transform:uppercase;color:#fff;background:rgba(167,2,0,.9);padding:6px 14px;border-radius:999px;margin-bottom:18px;}
+.pmx-hero h1{font-size:54px;font-weight:800;letter-spacing:-1.2px;margin:0 0 16px;max-width:760px;line-height:1.08;}
+.pmx-hero p{font-size:19px;color:rgba(255,255,255,.9);max-width:560px;margin:0 0 30px;}
+.pmx-hero__cta{display:flex;gap:14px;flex-wrap:wrap;}
+@media(max-width:768px){.pmx-hero{min-height:480px;}.pmx-hero__inner{padding:56px 24px;}.pmx-hero h1{font-size:34px;}.pmx-hero p{font-size:16px;}}
+/* HERO CARRUSEL */
+.pmx-hero2{position:relative;overflow:hidden;background:#0a0a0a;}
+.pmx-hero2::after{content:'';position:absolute;left:0;right:0;bottom:0;height:34%;background:linear-gradient(to top,rgba(0,0,0,.55),transparent);pointer-events:none;z-index:1;}
+.pmx-hero2__track{display:flex;transition:transform .6s cubic-bezier(.4,0,.2,1);}
+.pmx-hero2__slide{flex:0 0 100%;display:block;line-height:0;}
+/* Slides marcados SOLO-PC: se ocultan en la MISMA medida en que el header pasa a
+   su version movil (1024px), no en 768. Antes el corte era 768 y entre 769-1024px
+   (tablet, telefono en horizontal, ventana angosta) se veia el banner ancho con
+   una franja negra debajo. display:none los saca del flex: el carrusel recuenta
+   y los puntitos quedan en 2. */
+@media(max-width:1024px){ .pmx-hero2__slide--pconly{ display:none !important; } }
+/* Móvil: póster vertical a ancho completo, sin barras ni recortes. */
+.pmx-hero2__slide img{width:100%;height:auto;display:block;}
+/* PC: el hero ocupa EXACTAMENTE el primer pliegue (nunca más alto que la
+   pantalla visible ni que 16:9) y la imagen se ve COMPLETA y centrada
+   (object-fit:contain) — sin cortes arriba/abajo ni a los lados. Las DOS
+   diapositivas comparten el mismo marco, así se ven idénticas. */
+@media(min-width:769px){
+  /* PC: el hero ocupa EXACTO el primer pliegue (no desborda) y la imagen LLENA
+     todo el marco (object-fit:cover) — sin barras a los lados. Las dos
+     diapositivas comparten el mismo marco. */
+  /* El marco nunca se hace MAS PANORAMICO que 2:1. Si la ventana es ancha y baja
+     (mucha barra del navegador), antes se achataba hasta 2.8:1 y el recorte
+     vertical se comia el LOGO del arte 16:9. Ahora: tope 16:9, piso 2:1. */
+  /* 2.40:1 = el mismo aspecto de los 3 artes de PC. Cabe casi entero en la
+     primera pantalla, asi que los vehiculos se ven SIN hacer scroll. */
+  /* 16:9 = el aspecto de los 3 artes de PC (los que venian 2.40 se
+     extendieron por arriba y abajo con sus propios bordes). Cover no
+     recorta nada en ningun slide. */
+  .pmx-hero2__media{height:56.25vw;}
+  .pmx-hero2__track,.pmx-hero2__slide{height:100%;}
+  .pmx-hero2__slide{display:block;}
+  /* La imagen llena el marco (cover). object-position:center 42% = sesgo leve
+     hacia ARRIBA: protege el LOGO (arriba) de las 3 diapositivas y el recorte
+     del pliegue se va mas al fondo/vehiculos de abajo (que sangran con estilo).
+     Verificado que ni el logo ni los subtitulos se cortan en pantallas reales. */
+  /* Los TRES artes de PC son 16:9, igual que el marco: cover no recorta NADA. */
+  .pmx-hero2__slide img{width:100%;height:100%;object-fit:cover;object-position:center;}
+  /* En PC la imagen es la protagonista: SIN botones encima (siguen en móvil).
+     Selector más específico para ganarle a la regla base .pmx-hero2__cta. */
+  .pmx-hero2 .pmx-hero2__cta{display:none;}
+}
+.pmx-hero2__cta{position:absolute;left:0;right:0;bottom:62px;z-index:3;display:flex;gap:14px;justify-content:center;flex-wrap:wrap;padding:0 16px;}
+/* Móvil: los botones NO tapan el póster — van DEBAJO de la imagen, en franja propia */
+@media(max-width:768px){
+  .pmx-hero2__cta{position:static;background:#0a0a0a;padding:14px 12px 4px;gap:9px;flex-wrap:nowrap;align-items:stretch;}
+  .pmx-hero2__cta .pmx-btn{flex:1 1 0;min-width:0;padding:12px 8px;font-size:12.5px;line-height:1.18;white-space:normal;text-align:center;display:flex;align-items:center;justify-content:center;}
+}
+/* Estaticos SIEMPRE (antes flotaban sobre la foto en PC): el arte nuevo trae
+   barra inferior con web y telefono, y los puntitos la tapaban. */
+.pmx-hero2__dots{display:flex;gap:10px;z-index:3;justify-content:center;padding:12px 0 16px;background:#0a0a0a;}
+.pmx-hero2__dots button{width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.7);background:rgba(0,0,0,.4);color:#fff;font-weight:700;font-size:14px;cursor:pointer;transition:all .2s;font-family:var(--font-head);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(2px);}
+.pmx-hero2__dots button:hover{border-color:#fff;}
+.pmx-hero2__dots button.is-on{background:var(--brand);border-color:var(--brand);transform:scale(1.12);}
+@media(max-width:768px){.pmx-hero2__dots{gap:7px;}.pmx-hero2__dots button{width:27px;height:27px;font-size:12px;}}
+/* CTA CARDS */
+.pmx-ctacards{background:var(--bg-soft);}
+.pmx-ctacards__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+.pmx-ctacard{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:40px 28px;text-align:center;text-decoration:none;color:var(--ink);transition:all .25s;display:flex;flex-direction:column;align-items:center;}
+.pmx-ctacard:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:var(--brand);}
+.pmx-ctacard__ic{width:70px;height:70px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;margin-bottom:18px;}
+.pmx-ctacard h3{font-size:21px;margin:0 0 8px;}
+.pmx-ctacard p{font-size:15px;color:var(--text-muted);margin:0;}
+@media(max-width:900px){.pmx-ctacards__grid{grid-template-columns:1fr;}}
+/* (tarjeta de vehículo .pmx-vcard vive en theme.css — compartida) */
+/* WHY */
+.pmx-why__grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+.pmx-why__item{text-align:center;padding:28px 18px;}
+.pmx-why__ic{width:64px;height:64px;border-radius:16px;background:var(--brand-soft);color:var(--brand);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+.pmx-why__item h3{font-size:18px;margin:0 0 8px;}
+.pmx-why__item p{font-size:14.5px;color:var(--text-muted);margin:0;line-height:1.6;}
+@media(max-width:900px){.pmx-why__grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.pmx-why__grid{grid-template-columns:1fr;}}
+/* REVIEWS */
+.pmx-reviews__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+@media(max-width:900px){.pmx-reviews__grid{grid-template-columns:1fr;}}
+.pmx-review{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:26px 24px;}
+.pmx-review__stars{color:var(--brand);font-size:18px;margin-bottom:12px;}
+.pmx-review p{font-size:15px;line-height:1.6;color:#37475a;font-style:italic;margin:0 0 16px;}
+.pmx-review__author strong{display:block;color:var(--ink);font-size:14px;}
+.pmx-review__author span{color:var(--text-faint);font-size:13px;}
+/* SEO BLOCK */
+.pmx-seo{border-top:4px solid var(--brand);}
+.pmx-seo__inner{max-width:920px;margin:0 auto;padding:0 24px;}
+.pmx-seo h2{font-size:32px;margin:0 0 18px;color:var(--ink);}
+.pmx-seo h3{font-size:21px;margin:28px 0 10px;color:var(--ink);}
+.pmx-seo p{font-size:16px;line-height:1.75;color:#37475a;margin:0 0 14px;}
+/* INVITACIÓN A VIDEOS (toast que aparece tras 30s en el home) */
+.pmx-vinvite{position:fixed;z-index:9500;left:24px;bottom:118px;width:344px;max-width:calc(100vw - 32px);background:#fff;border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:14px;box-shadow:0 18px 50px rgba(0,0,0,.25);padding:18px 18px 18px 16px;display:flex;gap:14px;align-items:flex-start;opacity:0;transform:translateY(18px);transition:opacity .3s ease,transform .3s cubic-bezier(.2,.7,.3,1);}
+.pmx-vinvite.is-open{opacity:1;transform:translateY(0);}
+.pmx-vinvite__ic{flex:0 0 auto;width:42px;height:42px;border-radius:50%;background:var(--brand-soft);color:var(--brand);display:flex;align-items:center;justify-content:center;}
+.pmx-vinvite__ic svg{width:22px;height:22px;}
+.pmx-vinvite__body{flex:1;min-width:0;}
+.pmx-vinvite__q{margin:0 0 12px;font-size:15px;font-weight:600;color:var(--ink);line-height:1.35;}
+.pmx-vinvite__cta{appearance:none;border:0;cursor:pointer;background:var(--brand);color:#fff;font-family:var(--font-head);font-weight:700;font-size:14px;padding:10px 18px;border-radius:999px;transition:background .2s,transform .2s;}
+.pmx-vinvite__cta:hover{background:var(--brand-dark);transform:translateY(-1px);}
+.pmx-vinvite__x{position:absolute;top:8px;right:10px;border:0;background:none;cursor:pointer;font-size:22px;line-height:1;color:var(--text-faint);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.pmx-vinvite__x:hover{color:var(--ink);background:var(--bg-soft);}
+.pmx-vid-glow{animation:pmxVidGlow 2.2s ease;}
+@keyframes pmxVidGlow{0%,100%{box-shadow:none;}30%,70%{box-shadow:inset 0 0 0 3px var(--brand);}}
+@media(max-width:600px){.pmx-vinvite{left:12px;right:12px;bottom:90px;width:auto;}}
+.pmx-at-footer .pmx-vinvite{display:none!important;}
+/* Home: centrar los 3 videos del inventario */
+#pmxVideos .pmx-ig__grid{grid-template-columns:repeat(3,1fr);max-width:760px;margin-left:auto;margin-right:auto;}
+/* Móvil: fila deslizable con snap (3 videos en 2 columnas dejaba un hueco feo) */
+@media(max-width:680px){
+  #pmxVideos .pmx-ig__grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;max-width:none;padding:2px 4px 12px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  #pmxVideos .pmx-ig__grid::-webkit-scrollbar{display:none;}
+  #pmxVideos .pmx-ig__card{flex:0 0 58vw;scroll-snap-align:center;}
+}
+/* ACTIVIDAD EN VIVO (señales que ciclan): estilos compartidos en theme.css */
+/* ORBITA DE MARCAS (estilo Specter: logos que orbitan y reaccionan al scroll) */
+.pmx-brands{overflow:hidden;} /* los logos que orbitan jamás ensanchan la página */
+.pmx-orbit{position:relative;width:min(540px,92vw);margin:6px auto 0;}
+@media(max-width:480px){.pmx-orbit{width:min(540px,80vw);}}
+.pmx-orbit::before{content:"";display:block;padding-top:100%;}
+.pmx-orbit__glow{position:absolute;left:50%;top:50%;width:48%;height:48%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(167,2,0,.16),rgba(244,220,52,.07) 55%,transparent 72%);filter:blur(4px);pointer-events:none;}
+.pmx-orbit__circle{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);border:1.5px dashed rgba(13,15,18,.12);border-radius:50%;pointer-events:none;}
+.pmx-orbit__circle--out{width:92%;height:92%;}
+.pmx-orbit__circle--in{width:64%;height:64%;}
+.pmx-orbit__core{position:absolute;left:50%;top:50%;width:48%;height:32%;transform:translate(-50%,-50%);background:#fff;border:1px solid var(--line);border-radius:22px;box-shadow:0 24px 56px rgba(0,0,0,.16);display:flex;align-items:center;justify-content:center;padding:4%;z-index:4;}
+.pmx-orbit__core img{max-width:100%;max-height:100%;object-fit:contain;}
+.pmx-orbit__badge{position:absolute;left:50%;top:50%;width:clamp(52px,12.8%,74px);height:clamp(52px,12.8%,74px);z-index:3;will-change:transform;}
+.pmx-orbit__badgein{width:100%;height:100%;background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:0 12px 28px rgba(0,0,0,.12);display:flex;align-items:center;justify-content:center;padding:7%;transition:box-shadow .25s,transform .25s;}
+.pmx-orbit__badgein:hover{box-shadow:0 18px 38px rgba(0,0,0,.2);transform:scale(1.08);}
+.pmx-orbit__badgein img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px;}
+.pmx-orbit__badgein span{font:800 12px/1 var(--font-head);color:var(--ink);text-align:center;letter-spacing:.3px;}
+@media(max-width:560px){.pmx-orbit__badgein{border-radius:14px;padding:7%;}.pmx-orbit__badgein span{font-size:10px;}}
+/* RESEÑAS EN MOVIMIENTO (carrusel continuo estilo Specter) */
+.pmx-revmar{position:relative;overflow:hidden;}
+.pmx-revmar::before,.pmx-revmar::after{content:"";position:absolute;top:0;bottom:0;width:90px;z-index:2;pointer-events:none;}
+.pmx-revmar::before{left:0;background:linear-gradient(90deg,#fff,rgba(255,255,255,0));}
+.pmx-revmar::after{right:0;background:linear-gradient(270deg,#fff,rgba(255,255,255,0));}
+.pmx-revmar__row{display:flex;width:max-content;}
+.pmx-revmar__row+.pmx-revmar__row{margin-top:20px;}
+.pmx-revmar__row--a{animation:pmxRevScroll 58s linear infinite;}
+.pmx-revmar__row--b{animation:pmxRevScroll 72s linear infinite reverse;}
+.pmx-revmar:hover .pmx-revmar__row{animation-play-state:paused;}
+@keyframes pmxRevScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.pmx-rev{flex:0 0 366px;width:366px;margin-right:20px;background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:0 12px 30px rgba(0,0,0,.07);padding:24px 24px 20px;display:flex;flex-direction:column;gap:13px;}
+.pmx-rev__stars{color:var(--brand);font-size:16px;letter-spacing:2px;line-height:1;}
+.pmx-rev__text{margin:0;font-size:15px;line-height:1.62;color:var(--text);}
+.pmx-rev__by{display:flex;align-items:center;gap:12px;margin-top:auto;}
+.pmx-rev__av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font:800 17px/1 var(--font-head);flex:0 0 auto;}
+.pmx-rev__meta{display:flex;flex-direction:column;line-height:1.3;min-width:0;}
+.pmx-rev__meta strong{font-size:14.5px;color:var(--ink);}
+.pmx-rev__meta small{font-size:12px;color:var(--text-faint);}
+@media(max-width:560px){.pmx-rev{padding:20px;}}
+@media (prefers-reduced-motion: reduce){.pmx-revmar{overflow-x:auto;}.pmx-revmar__row{animation:none;}}
+/* Móvil: la cinta sigue ANIMADA pero súper lenta, para alcanzar a leer cada
+   tarjeta. Al tocarla se pausa. */
+@media(max-width:680px){
+  .pmx-rev{flex:0 0 280px;width:280px;}
+  .pmx-revmar__row--a{animation-duration:150s;}
+  .pmx-revmar__row--b{animation-duration:185s;}
+  .pmx-revmar::before,.pmx-revmar::after{width:28px;}
+}
+.pmx-revmar:active .pmx-revmar__row{animation-play-state:paused;}
+/* CINTA DE CONFIANZA (logos + sellos en movimiento, estilo Specter) */
+.pmx-trust{padding-top:46px;padding-bottom:46px;}
+.pmx-trust__lead{text-align:center;color:var(--text-muted);font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin:0 0 22px;}
+.pmx-trustmar{position:relative;overflow:hidden;}
+.pmx-trustmar::before,.pmx-trustmar::after{content:"";position:absolute;top:0;bottom:0;width:90px;z-index:2;pointer-events:none;}
+.pmx-trustmar::before{left:0;background:linear-gradient(90deg,#EFEDEE,rgba(239,237,238,0));}
+.pmx-trustmar::after{right:0;background:linear-gradient(270deg,#EFEDEE,rgba(239,237,238,0));}
+.pmx-trustmar__row{display:flex;width:max-content;animation:pmxRevScroll 46s linear infinite;}
+.pmx-trustmar:hover .pmx-trustmar__row{animation-play-state:paused;}
+.pmx-tchip{flex:0 0 auto;margin-right:16px;height:60px;display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:0 24px;background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.05);}
+.pmx-tchip img{max-height:30px;width:auto;object-fit:contain;transition:transform .25s;}
+.pmx-tchip:hover img{transform:scale(1.07);}
+.pmx-tchip__name{font:800 16px var(--font-head);color:var(--ink);white-space:nowrap;}
+.pmx-tchip__seal{font:700 14px var(--font-body);color:var(--ink);white-space:nowrap;display:inline-flex;align-items:center;gap:8px;}
+.pmx-tchip__seal svg{color:var(--brand);flex:0 0 auto;}
+@media(max-width:560px){.pmx-tchip{height:52px;padding:0 18px;margin-right:12px;}.pmx-tchip__seal{font-size:13px;}.pmx-trustmar::before,.pmx-trustmar::after{width:46px;}}
+@media (prefers-reduced-motion: reduce){.pmx-trustmar{overflow-x:auto;}.pmx-trustmar__row{animation:none;}}
+
+/* OFERTA $1,000 DE INICIAL */
+.pmx-d1k{background:radial-gradient(130% 170% at 85% 15%, rgba(194,26,18,.38), transparent 55%),linear-gradient(118deg,#0A0B0D 34%,#190604 72%,#3a0a05);color:#fff;padding:clamp(60px,8.4vw,104px) 0;position:relative;overflow:hidden;border-top:1px solid rgba(255,255,255,.06);border-bottom:1px solid rgba(255,255,255,.06);}
+.pmx-d1k__in{text-align:center;position:relative;z-index:1;}
+.pmx-d1k__kicker{display:inline-block;font:800 11px var(--font-head);letter-spacing:2.4px;text-transform:uppercase;color:var(--accent);background:rgba(244,220,52,.1);border:1px solid rgba(244,220,52,.32);padding:8px 17px;border-radius:999px;margin-bottom:20px;}
+.pmx-d1k__title{font-size:clamp(31px,5.6vw,58px);font-weight:800;line-height:1.05;margin:0 0 14px;letter-spacing:-.02em;}
+.pmx-d1k__title em{font-style:normal;color:var(--brand-2);}
+.pmx-d1k__sub{color:#C9CED6;font-size:clamp(14px,1.7vw,17.5px);margin:0 0 28px;}
+.pmx-d1k__cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+/* DOS CAMINOS (USA / Venezuela) */
+/* 6 servicios (todo lo que ofrece Promax): 3 columnas en PC, 2 en tablet, 1 en celular */
+.pmx-paths__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+@media(max-width:1024px){.pmx-paths__grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:640px){.pmx-paths__grid{grid-template-columns:1fr;}}
+.pmx-path{position:relative;display:flex;flex-direction:column;gap:10px;padding:30px 28px;border-radius:var(--radius-lg);text-decoration:none;color:var(--ink);background:#fff;border:1.5px solid var(--line);transition:transform .22s,box-shadow .22s,border-color .22s;overflow:hidden;}
+.pmx-path:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:transparent;}
+.pmx-path__ic{width:52px;height:52px;border-radius:14px;background:var(--brand-soft);color:var(--brand);display:flex;align-items:center;justify-content:center;padding:11px;}
+.pmx-path__ic svg{width:100%;height:100%;}
+.pmx-path h3{margin:4px 0 0;font-size:22px;}
+.pmx-path p{margin:0;color:var(--text-muted);font-size:15px;line-height:1.6;}
+.pmx-path__go{margin-top:auto;padding-top:10px;font:800 13.5px var(--font-head);color:var(--brand);}
+.pmx-path--ve{background:linear-gradient(140deg,#131519,#1d0906 70%,#3a0a05);color:#fff;border-color:rgba(226,59,46,.35);}
+.pmx-path--ve p{color:#C9CED6;}
+.pmx-path--ve .pmx-path__ic{background:rgba(226,59,46,.16);color:var(--brand-2);}
+.pmx-path--ve .pmx-path__go{color:var(--brand-2);}
+/* Categorías: tiles solo con stock + fila discreta de "próximamente" */
+.pmx-cats__soon{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px;}
+.pmx-cats__soonlbl{font:700 12px var(--font-head);letter-spacing:1px;text-transform:uppercase;color:var(--dk-muted);margin-right:4px;}
+.pmx-cats__soon .pmx-chip{background:rgba(255,255,255,.05);border-color:var(--dk-line);color:var(--dk-muted);}
+.pmx-cats__soon .pmx-chip:hover{border-color:rgba(255,255,255,.5);color:#fff;transform:none;}
+.pmx-cats .pmx-cattile:only-of-type{grid-column:1/-1;min-height:150px;}
+/* CATEGORÍAS (sección oscura bajo el hero) */
+.pmx-homecats .pmx-eyebrow{color:var(--brand-2);}
+/* Carrusel horizontal de Destacados (variedad + flechas; pedido del cliente) */
+.pmx-hswrap{position:relative;}
+/* min-height: reserva el alto de las tarjetas ANTES de que carguen — cuando
+   llegan, la sección no crece ni empuja el resto de la página (cero saltos). */
+#pmxFeatured{min-height:440px;}
+#pmxFeatured.pmx-hscroll{display:flex;gap:22px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;padding:6px 4px 18px;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--brand) transparent;}
+/* Sin barra VERTICAL fantasma mientras las tarjetas animan su entrada */
+#pmxFeatured.pmx-hscroll::-webkit-scrollbar:vertical{display:none;}
+#pmxFeatured.pmx-hscroll > article{flex:0 0 340px;scroll-snap-align:start;}
+#pmxFeatured.pmx-hscroll > p{flex:1;text-align:center;}
+@media(max-width:480px){#pmxFeatured.pmx-hscroll > article{flex-basis:82vw;}}
+.pmx-harrow{position:absolute;top:42%;transform:translateY(-50%);z-index:5;width:46px;height:46px;border-radius:50%;border:0;background:var(--ink);color:#fff;font-size:24px;line-height:1;cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;transition:background .2s,transform .2s;}
+.pmx-harrow:hover{background:var(--brand);transform:translateY(-50%) scale(1.07);}
+.pmx-harrow--prev{left:-12px;}
+.pmx-harrow--next{right:-12px;}
+@media(max-width:768px){.pmx-harrow{width:38px;height:38px;font-size:20px;}.pmx-harrow--prev{left:-6px;}.pmx-harrow--next{right:-6px;}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"AutoDealer","name":"Promax Auto Broker",
+"url":"https://www.promaxautobroker.com","telephone":"+1-305-676-1259",
+"image":"https://www.promaxautobroker.com/assets/img/promax-og.png",
+"address":{"@type":"PostalAddress","streetAddress":"7875 NW 107 Ave","addressLocality":"Miami","addressRegion":"FL","postalCode":"33178","addressCountry":"US"},
+"geo":{"@type":"GeoCoordinates","latitude":25.8245,"longitude":-80.3663},
+"areaServed":[{"@type":"Country","name":"United States"},{"@type":"Country","name":"Venezuela"}],
+"openingHours":["Mo-Sa 09:00-19:00","Su 11:00-17:00"],
+"priceRange":"$$",
+"sameAs":["https://www.instagram.com/promaxautobroker/","https://www.facebook.com/104409542167703","https://www.tiktok.com/@promaxautobroker","https://www.youtube.com/@Promaxautobroker"]}
+</script>
+  <!-- Meta Pixel (Facebook) — ver /assets/js/meta-pixel.js -->
+  <script src="/assets/js/meta-pixel.js"></script>
+  <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=1709075950232187&ev=PageView&noscript=1"/></noscript>
+  <!-- End Meta Pixel -->
+</head>
+<body>
+
+<!-- HERO CARRUSEL -->
+<!-- H1 para buscadores (invisible): el hero es visual, pero Google necesita un h1 con keywords -->
+<h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0">Promax Auto Broker — Compra y venta de autos nuevos y usados en Miami, Florida: somos tu broker de confianza en Estados Unidos, con financiamiento flexible y ITIN</h1>
+<section class="pmx-hero2" id="pmxHero" aria-label="Promax Auto Broker" data-anim-root data-parallax-root>
+  <div class="pmx-hero2__media">
+    <div class="pmx-hero2__track" id="pmxHeroTrack">
+      <!-- Sin src fijo: el mini-script de al lado elige AL INSTANTE la variante
+           correcta (idioma + PC/celular) antes del primer pintado, así el celular
+           nunca carga la foto de PC primero (adiós al doble salto). data-ar
+           reserva el alto exacto para que la página no brinque mientras carga. -->
+      <!-- SLIDE 1 (principal): "Pre-califica en minutos" — arte SIN mensaje de
+           Venezuela. Pedido de Jorge (ago 2026): el visitante en EE.UU. entraba,
+           veia "compra en USA y recibelo en Venezuela" y se salia creyendo que
+           el negocio era solo envios. La importacion baja al slide 2.
+           Lee sus imágenes de __pmxHero (arriba), que ademas se PRECARGA como LCP.
+           ⚠️ Cuando llegue el arte nuevo de compra-en-USA, reemplaza __pmxHero. -->
+      <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Encuentra tu vehículo ideal: carros, camiones, vanes, motos, UTV y motos de agua en todo Estados Unidos" fetchpriority="high" loading="eager"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.onerror=function(){var sl=i.closest(".pmx-hero2__slide");if(sl){sl.style.display="none";try{window.dispatchEvent(new Event("resize"))}catch(e){}}};i.src=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script></div>
+      <!-- SLIDE 2: financiamiento. Agregado ago 2026 a pedido del cliente para
+           dar mas contenido en telefono (el movil pasa de 2 a 3 slides). Usa los
+           mismos artes de /financing/, que ya vienen en los 4 formatos. -->
+      <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Financiamiento flexible: aprobación rápida, bajo pago inicial y aceptamos ITIN" loading="lazy"
+         data-es="/assets/img/heroes/financing-es-pc.webp"
+         data-en="/assets/img/heroes/financing-en-pc.webp"
+         data-es-m="/assets/img/heroes/financing-es-movil.webp"
+         data-en-m="/assets/img/heroes/financing-en-movil.webp"
+         data-ar="1920/1080" data-ar-m="1024/1536"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.onerror=function(){var sl=i.closest(".pmx-hero2__slide");if(sl){sl.style.display="none";try{window.dispatchEvent(new Event("resize"))}catch(e){}}};i.src=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script></div>
+      <!-- (Slide "$1,000 de inicial" ELIMINADO a pedido del cliente: salían personas.
+           La oferta sigue viva en la banda "Oferta especial" más abajo, sin humanos.) -->
+      <!-- SLIDE 3: "Gana $500 por referir". Ya NO es solo-PC: el carrusel movil
+           quedo en 4:5 (1122x1402), que es justo el formato del arte vertical
+           guardado, asi que entra sin franja negra. Con esto son 3 slides en
+           PC y 3 en telefono. (El slide de Venezuela se quito del home por
+           pedido del cliente, ago 2026; sigue vivo en /import/ y en el menu.) -->
+      <div class="pmx-hero2__slide"><img alt="Promax Auto Broker — Gana $500 por referir y participa por un Toyota Corolla 2026" loading="lazy"
+         data-es="/assets/img/heroes/referidos-es-pc.webp"
+         data-en="/assets/img/heroes/referidos-en-pc.webp"
+         data-es-m="/assets/img/heroes/referidos-es-movil.webp"
+         data-en-m="/assets/img/heroes/referidos-en-movil.webp"
+         data-ar="1920/1080" data-ar-m="1024/1536"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.onerror=function(){var sl=i.closest(".pmx-hero2__slide");if(sl){sl.style.display="none";try{window.dispatchEvent(new Event("resize"))}catch(e){}}};i.src=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(h)h.classList.add("has-img");s.remove();})();</script></div>
+    </div>
+  </div>
+  <div class="pmx-hero2__cta">
+    <a href="/inventory/" class="pmx-btn pmx-btn--primary pmx-pulse" data-i18n="h_cta1">Comprar en USA</a>
+    <a href="/financing/" class="pmx-btn pmx-btn--ghost-light" data-i18n="h_cta2">Pre-califica en minutos</a>
+  </div>
+  <div class="pmx-hero2__dots" id="pmxHeroDots"></div>
+</section>
+
+<!-- CATEGORÍAS (todo el catálogo en un solo lugar) -->
+<section class="pmx-section pmx-section--dark pmx-homecats">
+  <div class="pmx-container">
+    <div class="pmx-section__head">
+      <span class="pmx-eyebrow" data-i18n="home_cats_eyebrow">Todo en un solo lugar</span>
+      <h2 data-i18n="home_cats_title">Explora por categoría</h2>
+      <p data-i18n="home_cats_sub">Carros, camiones y maquinaria, vans, motos, UTV y motos de agua — todo con financiamiento flexible.</p>
+    </div>
+    <div class="pmx-cats" id="pmxCatTiles"></div>
+  </div>
+</section>
+
+<!-- OFERTA $1,000 DE INICIAL (banner llamativo) -->
+<section class="pmx-d1k">
+  <div class="pmx-container pmx-d1k__in">
+    <span class="pmx-d1k__kicker" data-i18n="d1k_kicker">Oferta especial</span>
+    <h2 class="pmx-d1k__title"><span data-i18n="d1k_t1">Llévate el vehículo que quieras</span><br><em data-i18n="d1k_t2">desde $1,000 de inicial</em></h2>
+    <p class="pmx-d1k__sub" data-i18n="d1k_sub">Aprobación rápida · Aceptamos ITIN · Sin impacto en tu crédito</p>
+    <div class="pmx-d1k__cta">
+      <a href="/financing/apply/" class="pmx-btn pmx-btn--primary pmx-pulse" data-i18n="d1k_cta">Quiero mi pre-aprobación</a>
+      <a class="pmx-btn pmx-btn--wa" id="pmxD1kWa" href="#" target="_blank" rel="noopener" data-i18n="d1k_wa">Pregunta por WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<!-- DOS CAMINOS: comprar en USA o importar a Venezuela -->
+<section class="pmx-section pmx-paths">
+  <div class="pmx-container">
+    <div class="pmx-section__head">
+      <span class="pmx-eyebrow" data-i18n="paths_eyebrow">Full broker · USA & Venezuela</span>
+      <h2 data-i18n="paths_title">¿Qué quieres hacer hoy?</h2>
+      <p data-i18n="paths_sub">Compra en Estados Unidos o importa a Venezuela — vehículos, maquinaria y confianza, de punta a punta.</p>
+    </div>
+    <div class="pmx-paths__grid">
+      <a class="pmx-path" href="/inventory/">
+        <span class="pmx-path__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4.3 16.3H3a1 1 0 0 1-1-1v-2.2a1.6 1.6 0 0 1 1.2-1.55L5.4 11l1.9-3.1A2 2 0 0 1 9 7h4.6a2 2 0 0 1 1.6.8L17.4 11l3.4.85A1.6 1.6 0 0 1 22 13.4v1.9a1 1 0 0 1-1 1h-1.3"/><path d="M9.3 16.3h5.4"/><path d="M5.4 11h12"/><circle cx="6.9" cy="16.3" r="2.1"/><circle cx="17.1" cy="16.3" r="2.1"/></svg></span>
+        <h3 data-i18n="path_usa_t">Comprar en USA</h3>
+        <p data-i18n="path_usa_s">Vehículos y maquinaria en todo el país, con financiamiento flexible y entrega donde estés.</p>
+        <span class="pmx-path__go" data-i18n="path_usa_cta">Ver catálogo →</span>
+      </a>
+      <a class="pmx-path pmx-path--ve" href="/import/">
+        <span class="pmx-path__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14.5 4.5 11h6.8l1.7 3.5"/><path d="M6.3 11V7.5h4.2V11"/><path d="M2.4 18.2 3 14.5h15.4l3.2 1.1-1.5 2.6"/><path d="M2 21c1.9 1.3 3.9 1.3 5.8 0s3.9-1.3 5.8 0 3.9 1.3 5.8 0"/></svg></span>
+        <h3 data-i18n="path_ve_t">Importar a Venezuela</h3>
+        <p data-i18n="path_ve_s">Compramos, inspeccionamos y exportamos tu vehículo o maquinaria hasta el puerto — con seguimiento total.</p>
+        <span class="pmx-path__go" data-i18n="path_ve_cta">Cómo funciona →</span>
+      </a>
+      <a class="pmx-path" href="/financing/">
+        <span class="pmx-path__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M3 9.5h18"/><path d="M7 14.5h4"/><circle cx="16.8" cy="14.5" r="1.4"/></svg></span>
+        <h3 data-i18n="path_fin_t">Financiamiento</h3>
+        <p data-i18n="path_fin_s">Pre-califica en minutos sin afectar tu crédito — aceptamos ITIN y primer comprador.</p>
+        <span class="pmx-path__go" data-i18n="path_fin_cta">Pre-calificar →</span>
+      </a>
+      <a class="pmx-path" href="/auction/">
+        <span class="pmx-path__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m9 8.5 5.5 5.5"/><path d="m11.5 6 6.5 6.5"/><path d="M8 10 5 13l2.5 2.5L10.5 12"/><path d="M13.5 4.5 16 7l-2.5 2.5L11 7z"/><path d="M3 20.5h11"/><path d="m14.2 13.2 6 6"/></svg></span>
+        <h3 data-i18n="path_au_t">Compra en Subasta</h3>
+        <p data-i18n="path_au_s">Accede a subastas exclusivas de dealers y ahorra miles en tu próximo vehículo.</p>
+        <span class="pmx-path__go" data-i18n="path_au_cta">Cómo funciona →</span>
+      </a>
+      <a class="pmx-path" href="/carfax/">
+        <span class="pmx-path__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 3.5V6h6V3.5"/><path d="m8.7 12.2 2.1 2.1 4.5-4.5"/><path d="M9 17h6"/></svg></span>
+        <h3 data-i18n="path_cf_t">Reporte CARFAX $15</h3>
+        <p data-i18n="path_cf_s">Conoce el historial real de cualquier vehículo antes de comprar: accidentes, dueños y millaje.</p>
+        <span class="pmx-path__go" data-i18n="path_cf_cta">Pedir mi reporte →</span>
+      </a>
+      <a class="pmx-path" href="/referrals/">
+        <span class="pmx-path__ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="8" width="17" height="4" rx="1.2"/><path d="M5 12v7.5a1.5 1.5 0 0 0 1.5 1.5h11a1.5 1.5 0 0 0 1.5-1.5V12"/><path d="M12 8v13"/><path d="M12 8c-1.8 0-3.8-.8-3.8-2.6C8.2 3.9 9.3 3 10.5 3c1.7 0 2.6 1.7 1.5 5z"/><path d="M12 8c1.8 0 3.8-.8 3.8-2.6C15.8 3.9 14.7 3 13.5 3c-1.7 0-2.6 1.7-1.5 5z"/></svg></span>
+        <h3 data-i18n="path_rf_t">Gana $500 por referir</h3>
+        <p data-i18n="path_rf_s">Refiere a un comprador, gana $500 y participa por un Toyota Corolla 2026.</p>
+        <span class="pmx-path__go" data-i18n="path_rf_cta">Participar →</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- (Las 3 tarjetas CTA se retiraron: las categorías y los dos caminos cumplen ese rol) -->
+
+<!-- STATS BAND (contadores animados) -->
+<section class="pmx-stats">
+  <div class="pmx-stats__grid">
+    <div class="pmx-stats__item"><h3><span data-count="500" data-pre="+">+0</span></h3><p data-i18n="st_sold">Vehículos vendidos</p></div>
+    <div class="pmx-stats__item"><h3><span data-count="4.9">0</span><small>★</small></h3><p data-i18n="st_rating">Calificación Google</p></div>
+    <div class="pmx-stats__item"><h3><span data-count="12" data-suf="+">0+</span></h3><p data-i18n="st_lenders">Prestamistas aliados</p></div>
+    <div class="pmx-stats__item"><h3><span data-count="100" data-suf="%">0%</span></h3><p data-i18n="st_inspected">Inspeccionados</p></div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<section class="pmx-divider"><div class="pmx-divider__inner"><span class="pmx-divider__icon">★</span><span class="pmx-divider__text" data-i18n="div1">Vehículos nuevos y usados de calidad</span><span class="pmx-divider__icon">★</span></div></section>
+
+<!-- FEATURED -->
+<section class="pmx-section pmx-featured" data-anim-root data-parallax-root>
+  <div class="pmx-deco" data-parallax="-26" aria-hidden="true"></div>
+  <div class="pmx-container">
+    <div class="pmx-section__head">
+      <span class="pmx-eyebrow" data-anim="up" data-i18n="feat_eyebrow">Selección</span>
+      <h2 data-anim="text" data-i18n="feat_title">Vehículos Destacados</h2>
+      <p data-anim="up" data-anim-delay="0.12" data-i18n="feat_sub">Seleccionados de nuestras últimas llegadas</p>
+    </div>
+    <!-- Carrusel horizontal (pedido del cliente): variedad de categorías y
+         flechas para deslizar; en celular se desliza con el dedo. -->
+    <div class="pmx-hswrap">
+      <button class="pmx-harrow pmx-harrow--prev" id="pmxFeatPrev" type="button" aria-label="Ver anteriores">‹</button>
+      <div class="pmx-vgrid pmx-hscroll" id="pmxFeatured" data-anim="stagger" data-anim-defer><div class="pmx-skel" style="flex:0 0 340px"></div><div class="pmx-skel" style="flex:0 0 340px"></div><div class="pmx-skel" style="flex:0 0 340px"></div><div class="pmx-skel" style="flex:0 0 340px"></div></div>
+      <button class="pmx-harrow pmx-harrow--next" id="pmxFeatNext" type="button" aria-label="Ver siguientes">›</button>
+    </div>
+    <div style="text-align:center;margin-top:36px" data-anim="up"><a href="/inventory/" class="pmx-btn pmx-btn--ghost" data-i18n="feat_all">Ver Todo el Inventario</a></div>
+  </div>
+</section>
+
+
+
+<!-- VIDEOS DE INVENTARIO -->
+<section id="pmxVideos" class="pmx-section pmx-ig">
+  <div class="pmx-container">
+    <div class="pmx-ig__head pmx-reveal">
+      <div>
+        <span class="pmx-eyebrow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <span data-i18n="home_vid_eyebrow">Inventario en video</span>
+        </span>
+        <h2 data-i18n="home_vid_title">Videos de nuestro inventario</h2>
+        <p data-i18n="home_vid_sub">Mira nuestros vehículos en acción. Toca un video para verlo en pantalla completa con sonido.</p>
+      </div>
+      <a id="pmxIGFollow" class="pmx-ig__follow" href="https://www.instagram.com/promaxautobroker/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4"/><circle cx="17.6" cy="6.4" r="1.1" fill="currentColor" stroke="none"/></svg>
+        <span data-i18n="ig_follow">Seguir en Instagram</span>
+      </a>
+    </div>
+    <div id="pmxIGGrid" class="pmx-ig__grid pmx-reveal" data-limit="3">
+      <p style="grid-column:1/-1;text-align:center;color:#888;padding:30px" data-i18n="ig_loading">Cargando videos…</p>
+    </div>
+    <div style="text-align:center;margin-top:36px"><a href="/about/#videos" class="pmx-btn pmx-btn--ghost" data-i18n="home_vid_all">Ver todos los videos</a></div>
+  </div>
+</section>
+
+<!-- MARCAS QUE MANEJAMOS -->
+<section class="pmx-section pmx-brands">
+  <div class="pmx-container">
+    <div class="pmx-section__head">
+      <span class="pmx-eyebrow" data-i18n="home_brands_eyebrow">Variedad de inventario</span>
+      <h2 data-i18n="home_brands_title">Marcas que manejamos</h2>
+      <p data-i18n="home_brands_sub">Especialistas en Toyota — lo bueno y confiable. ¿Buscas otra marca? Pregúntanos y con gusto te ayudamos.</p>
+    </div>
+    <div class="pmx-orbit" id="pmxOrbit" aria-hidden="true">
+      <span class="pmx-orbit__glow"></span>
+      <span class="pmx-orbit__circle pmx-orbit__circle--out"></span>
+      <span class="pmx-orbit__circle pmx-orbit__circle--in"></span>
+      <div class="pmx-orbit__core"><img loading="lazy" src="/assets/img/logo-footer.png" alt="Promax Auto Broker" onerror="this.style.display='none'"></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="pmx-section pmx-section--soft">
+  <div class="pmx-container">
+    <div class="pmx-section__head">
+      <span class="pmx-eyebrow" data-i18n="why_eyebrow">Por qué Promax</span>
+      <h2 data-i18n="why_title">Lo que nos hace diferentes</h2>
+    </div>
+    <div class="pmx-why__grid">
+      <div class="pmx-why__item"><span class="pmx-why__ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span><h3 data-i18n="why1_t">Precios honestos</h3><p data-i18n="why1_s">El precio que ves es el que pagas. Sin cargos sorpresa.</p></div>
+      <div class="pmx-why__item"><span class="pmx-why__ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span><h3 data-i18n="why2_t">Financiamiento flexible</h3><p data-i18n="why2_s">Trabajamos con varios prestamistas. Aceptamos ITIN.</p></div>
+      <div class="pmx-why__item"><span class="pmx-why__ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg></span><h3 data-i18n="why3_t">Inspeccionados</h3><p data-i18n="why3_s">Cada vehículo pasa por una revisión de calidad.</p></div>
+      <div class="pmx-why__item"><span class="pmx-why__ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><h3 data-i18n="why4_t">Trato personal</h3><p data-i18n="why4_s">Te asesoramos en español de principio a fin.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER DARK -->
+<section class="pmx-divider pmx-divider--dark"><div class="pmx-divider__inner"><span class="pmx-divider__icon">★</span><span class="pmx-divider__text" data-i18n="div2">Únete a +500 clientes satisfechos</span><span class="pmx-divider__icon">★</span></div></section>
+
+<!-- REVIEWS -->
+<section class="pmx-section">
+  <div class="pmx-container">
+    <div class="pmx-section__head">
+      <h2 data-i18n="rev_title">Lo que dicen nuestros clientes</h2>
+      <p style="display:inline-flex;align-items:center;gap:9px;flex-wrap:wrap;justify-content:center"><img loading="lazy" src="/assets/img/google-g.svg" alt="Google" style="height:22px;width:22px"><span style="color:var(--brand);font-size:20px">★★★★★</span> <strong>4.9 / 5</strong> <span data-i18n="rev_count">basado en reseñas de Google</span></p>
+    </div>
+    <div class="pmx-revmar" id="pmxRevMar" aria-label="Reseñas de clientes en Google"></div>
+  </div>
+</section>
+
+<!-- RESPALDO / CONFIANZA (cinta de logos y sellos en movimiento) -->
+<section class="pmx-section pmx-section--soft pmx-trust">
+  <div class="pmx-container">
+    <p class="pmx-trust__lead" data-i18n="trust_lead">Respaldados por aliados de confianza y cientos de clientes felices</p>
+    <div class="pmx-trustmar" id="pmxTrustMar" aria-label="Aliados y sellos de confianza"></div>
+  </div>
+</section>
+
+<!-- SEO -->
+<section class="pmx-section pmx-seo">
+  <div class="pmx-seo__inner">
+    <h2 data-i18n="seo_t">Tu broker de autos de confianza</h2>
+    <p data-i18n="seo_p1">Promax Auto Broker ayuda a las familias a encontrar el vehículo adecuado para su estilo de vida y presupuesto, con un proceso claro y honesto.</p>
+    <h3 data-i18n="seo_h1">Lo que nos hace diferentes</h3>
+    <p data-i18n="seo_p2">Cada vehículo pasa por una inspección de calidad y trabajamos con una amplia red de prestamistas para conseguirte la mejor opción, incluso si estás construyendo tu crédito o tienes ITIN.</p>
+    <h3 data-i18n="seo_h2">Marcas que manejamos</h3>
+    <p data-i18n="seo_p3">Toyota, Honda, Ford, Chevrolet, Hyundai, Kia, Nissan, BMW y más.</p>
+  </div>
+</section>
+
+
+
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/site.js"></script>
+<script src="/assets/js/instagram.js"></script>
+<script src="/assets/js/data.js"></script>
+<!-- Motor de animaciones al scroll: GSAP + ScrollTrigger (debe ir antes de anim.js) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="/assets/js/anim.js"></script>
+<script>
+PMX.addTranslations({
+  es: {
+    foot_email_ph:"tu@email.com", loading:"Cargando vehículos...",
+    h_eyebrow:"Broker de autos · USA",
+    h_title:"Encuentra tu próximo carro con quien sí te asesora.",
+    h_sub:"En Promax trabajamos para ti: vehículos inspeccionados, precios honestos y financiamiento a tu medida — incluso con crédito en construcción o ITIN.",
+    h_cta1:"Comprar en USA", h_cta2:"Pre-califica en minutos", h_applycar:"Aplicar para un auto",
+    cc1_t:"Buscar Carros", cc1_s:"Explora todo nuestro inventario",
+    cc2_t:"Promociones", cc2_s:"Vehículos bajo $20k y ofertas",
+    cc3_t:"Financiamiento", cc3_s:"Pre-califica en minutos",
+    st_sold:"Vehículos vendidos", st_rating:"Calificación Google", st_lenders:"Prestamistas aliados", st_inspected:"Inspeccionados",
+    div1:"Vehículos nuevos y usados de calidad",
+    feat_eyebrow:"Selección", feat_title:"Vehículos Destacados", feat_sub:"Seleccionados de nuestras últimas llegadas", feat_all:"Ver Todo el Inventario",
+    why_eyebrow:"Por qué Promax", why_title:"Lo que nos hace diferentes",
+    why1_t:"Precios honestos", why1_s:"El precio que ves es el que pagas. Sin cargos sorpresa.",
+    why2_t:"Financiamiento flexible", why2_s:"Trabajamos con varios prestamistas. Aceptamos ITIN.",
+    why3_t:"Inspeccionados", why3_s:"Cada vehículo pasa por una revisión de calidad.",
+    why4_t:"Trato personal", why4_s:"Te asesoramos en español de principio a fin.",
+    div2:"Únete a +500 clientes satisfechos",
+    rev_title:"Lo que dicen nuestros clientes", rev_count:"basado en reseñas de Google", rev_verified:"· Cliente verificado",
+    trust_lead:"Respaldados por aliados de confianza y cientos de clientes felices",
+    rev1:'"Me explicaron todo el financiamiento con paciencia, sin presión. Salí con mi carro el mismo día y entendiendo cada pago."',
+    rev2:'"Tenía miedo por mi crédito pero me ayudaron a calificar. Todo transparente, sin cargos escondidos. Recomendados."',
+    rev3:'"Atención de primera en español. Me consiguieron justo el carro que buscaba a buen precio. Volvería sin dudarlo."',
+    seo_t:"Tu broker de vehículos en toda USA — y tu puente a Venezuela",
+    seo_p1:"Promax Auto Broker ayuda a familias y negocios en todo Estados Unidos a comprar carros, camiones, maquinaria, vans, motos y más — y además gestionamos la exportación completa a Venezuela. Un proceso claro y honesto, de punta a punta.",
+    seo_h1:"Lo que nos hace diferentes",
+    seo_p2:"Cada vehículo pasa por una inspección de calidad y trabajamos con una amplia red de prestamistas para conseguirte la mejor opción, incluso si estás construyendo tu crédito o tienes ITIN.",
+    seo_h2:"Marcas que manejamos", seo_p3:"Toyota, Honda, Ford, Chevrolet, Hyundai, Kia, Nissan, BMW y más.",
+    home_vid_eyebrow:"Inventario en video", home_vid_title:"Videos de nuestro inventario", home_vid_all:"Ver todos los videos",
+    home_brands_eyebrow:"Variedad de inventario", home_brands_title:"Marcas que manejamos",
+    home_brands_sub:"Especialistas en Toyota — lo bueno y confiable. ¿Buscas otra marca? Pregúntanos y con gusto te ayudamos.",
+    live_pill:"En vivo", live_title:"Promax en movimiento", live_sub:"Reservas, aprobaciones y nuevas llegadas — en tiempo real.",
+    home_vid_sub:"Mira nuestros vehículos en acción. Toca un video para verlo en pantalla completa con sonido.",
+    vid_invite_q:"¿Te gustaría ver videos de nuestro inventario?", vid_invite_yes:"Ver videos", vid_invite_close:"Cerrar",
+    btn_details:"Ver Detalles", btn_prequal:"Pre-Calificar", price_ask:"Consultar precio",
+    home_cats_eyebrow:"Todo en un solo lugar", home_cats_title:"Explora por categoría",
+    home_cats_sub:"Carros, camiones y maquinaria, vans, motos, UTV y motos de agua — todo con financiamiento flexible.",
+    home_cats_n:"disponibles", home_cats_soon:"Próximamente", home_cats_soonlbl:"Próximamente:",
+    d1k_kicker:"Oferta especial", d1k_t1:"Llévate el vehículo que quieras", d1k_t2:"desde $1,000 de inicial",
+    d1k_sub:"Aprobación rápida · Aceptamos ITIN · Sin impacto en tu crédito",
+    d1k_cta:"Quiero mi pre-aprobación", d1k_wa:"Pregunta por WhatsApp",
+    paths_eyebrow:"Full broker · USA & Venezuela", paths_title:"¿Qué quieres hacer hoy?",
+    paths_sub:"Compra, financia, subasta, verifica con CARFAX o importa a Venezuela — todo con un solo broker de confianza.",
+    path_usa_t:"Comprar en USA", path_usa_s:"Vehículos y maquinaria en todo el país, con financiamiento flexible y entrega donde estés.", path_usa_cta:"Ver catálogo →",
+    path_ve_t:"Importar a Venezuela", path_ve_s:"Compramos, inspeccionamos y exportamos tu vehículo o maquinaria hasta el puerto — con seguimiento total.", path_ve_cta:"Cómo funciona →",
+    path_fin_t:"Financiamiento", path_fin_s:"Pre-califica en minutos sin afectar tu crédito — aceptamos ITIN y primer comprador.", path_fin_cta:"Pre-calificar →",
+    path_au_t:"Compra en Subasta", path_au_s:"Accede a subastas exclusivas de dealers y ahorra miles en tu próximo vehículo.", path_au_cta:"Cómo funciona →",
+    path_cf_t:"Reporte CARFAX $15", path_cf_s:"Conoce el historial real de cualquier vehículo antes de comprar: accidentes, dueños y millaje.", path_cf_cta:"Pedir mi reporte →",
+    path_rf_t:"Gana $500 por referir", path_rf_s:"Refiere a un comprador, gana $500 y participa por un Toyota Corolla 2026.", path_rf_cta:"Participar →",
+  },
+  en: {
+    foot_email_ph:"your@email.com", loading:"Loading vehicles...",
+    h_eyebrow:"Auto broker · USA",
+    h_title:"Find your next car with someone who actually advises you.",
+    h_sub:"At Promax we work for you: inspected vehicles, honest pricing, and financing that fits — even with building credit or ITIN.",
+    h_cta1:"Buy in the USA", h_cta2:"Get pre-qualified", h_applycar:"Apply for a car",
+    cc1_t:"Search Cars", cc1_s:"Browse our full inventory",
+    cc2_t:"Promotions", cc2_s:"Vehicles under $20k and deals",
+    cc3_t:"Financing", cc3_s:"Get pre-qualified in minutes",
+    st_sold:"Vehicles sold", st_rating:"Google Rating", st_lenders:"Partner lenders", st_inspected:"Inspected",
+    div1:"Quality new and pre-owned vehicles",
+    feat_eyebrow:"Selection", feat_title:"Featured Vehicles", feat_sub:"Hand-picked from our latest arrivals", feat_all:"View All Inventory",
+    why_eyebrow:"Why Promax", why_title:"What makes us different",
+    why1_t:"Honest pricing", why1_s:"The price you see is the price you pay. No surprise fees.",
+    why2_t:"Flexible financing", why2_s:"We work with many lenders. ITIN accepted.",
+    why3_t:"Inspected", why3_s:"Every vehicle goes through a quality check.",
+    why4_t:"Personal service", why4_s:"We guide you in Spanish from start to finish.",
+    div2:"Join +500 happy customers",
+    rev_title:"What our customers say", rev_count:"based on Google reviews", rev_verified:"· Verified customer",
+    trust_lead:"Backed by trusted partners and hundreds of happy customers",
+    rev1:'"They explained all the financing patiently, no pressure. I drove home the same day understanding every payment."',
+    rev2:'"I was worried about my credit but they helped me qualify. All transparent, no hidden fees. Recommended."',
+    rev3:'"First-class service in Spanish. They found the exact car I wanted at a great price. Would come back without hesitation."',
+    seo_t:"Your vehicle broker across the USA — and your bridge to Venezuela",
+    seo_p1:"Promax Auto Broker helps families and businesses across the United States buy cars, trucks, machinery, vans, motorcycles and more — and we also handle full export to Venezuela. A clear, honest process end to end.",
+    seo_h1:"What makes us different",
+    seo_p2:"Every vehicle goes through a quality inspection and we work with a wide network of lenders to get you the best option, even if you're building credit or have an ITIN.",
+    seo_h2:"Brands we carry", seo_p3:"Toyota, Honda, Ford, Chevrolet, Hyundai, Kia, Nissan, BMW and more.",
+    home_vid_eyebrow:"Inventory in video", home_vid_title:"Our inventory videos", home_vid_all:"Watch all videos",
+    home_brands_eyebrow:"Inventory variety", home_brands_title:"Brands we carry",
+    home_brands_sub:"Toyota specialists — the good and reliable. Looking for another brand? Just ask and we'll gladly help.",
+    live_pill:"Live", live_title:"Promax in motion", live_sub:"Reservations, approvals and new arrivals — in real time.",
+    home_vid_sub:"See our vehicles in action. Tap a video to watch it fullscreen with sound.",
+    vid_invite_q:"Would you like to see videos of our inventory?", vid_invite_yes:"Watch videos", vid_invite_close:"Close",
+    btn_details:"View Details", btn_prequal:"Pre-Qualify", price_ask:"Call for price",
+    home_cats_eyebrow:"Everything in one place", home_cats_title:"Browse by category",
+    home_cats_sub:"Cars, trucks & machinery, vans, motorcycles, UTV and watercraft — all with flexible financing.",
+    home_cats_n:"available", home_cats_soon:"Coming soon", home_cats_soonlbl:"Coming soon:",
+    d1k_kicker:"Special offer", d1k_t1:"Drive home the vehicle you want", d1k_t2:"from $1,000 down",
+    d1k_sub:"Fast approval · ITIN accepted · No impact on your credit",
+    d1k_cta:"Get my pre-approval", d1k_wa:"Ask on WhatsApp",
+    paths_eyebrow:"Full broker · USA & Venezuela", paths_title:"What do you want to do today?",
+    paths_sub:"Buy, finance, bid at auction, verify with CARFAX or import to Venezuela — all with one trusted broker.",
+    path_usa_t:"Buy in the USA", path_usa_s:"Vehicles and machinery nationwide, with flexible financing and delivery wherever you are.", path_usa_cta:"Browse catalog →",
+    path_ve_t:"Import to Venezuela", path_ve_s:"We buy, inspect and export your vehicle or machinery to the port — with full tracking.", path_ve_cta:"How it works →",
+    path_fin_t:"Financing", path_fin_s:"Pre-qualify in minutes with no impact to your credit — ITIN and first-time buyers welcome.", path_fin_cta:"Pre-qualify →",
+    path_au_t:"Buy at Auction", path_au_s:"Access dealer-only auctions and save thousands on your next vehicle.", path_au_cta:"How it works →",
+    path_cf_t:"CARFAX Report $15", path_cf_s:"Know any vehicle's real history before you buy: accidents, owners and mileage.", path_cf_cta:"Get my report →",
+    path_rf_t:"Earn $500 per referral", path_rf_s:"Refer a buyer, earn $500 and enter to win a 2026 Toyota Corolla.", path_rf_cta:"Join now →",
+  }
+});
+
+(function(){
+  function money(n){return "$"+(Number(n)||0).toLocaleString("en-US");}
+  function num(n){return (Number(n)||0).toLocaleString("en-US");}
+  var CARS = [];
+  function card(c, i){
+    var typeLabel = (c.category && c.category!=="cars") ? PMX.catLabel(c.category) : "";
+    var specs = [];
+    if (c.mileage>0) specs.push(num(c.mileage)+' mi');
+    if (c.fuel) specs.push(c.fuel);
+    if (c.drivetrain) specs.push(c.drivetrain);
+    return '<article class="pmx-vcard">'+
+      '<a href="/vehicle/?id='+encodeURIComponent(c.id)+'" style="text-decoration:none;color:inherit;display:contents">'+
+      '<div class="pmx-vcard__img">'+
+        '<img class="pmx-vcard__ph" alt="'+(c.year+' '+c.make+' '+c.model).replace(/"/g,'&quot;')+'" src="'+String(c.thumb||c.image).replace(/"/g,'&quot;')+'" data-orig="'+String(c.image).replace(/"/g,'&quot;')+'"'+(i<8?' loading="eager" fetchpriority="high" decoding="sync"':' loading="lazy" decoding="async"')+'>'+
+        (c.badge?'<span class="pmx-vcard__badge">'+c.badge+'</span>':'')+
+        (typeLabel?'<span class="pmx-vcard__type">'+typeLabel+'</span>':'')+
+      '</div></a>'+
+      '<div class="pmx-vcard__body">'+
+        '<h3 class="pmx-vcard__title">'+c.year+' '+c.make+' '+c.model+(c.trim?' '+c.trim:'')+'</h3>'+
+        (specs.length?'<div class="pmx-vcard__specs">'+specs.map(function(s){return '<span>'+s+'</span>';}).join("")+'</div>':'')+
+        '<div class="pmx-vcard__price">'+(c.price>0?money(c.price):PMX.t("price_ask"))+'</div>'+
+        '<div class="pmx-vcard__actions">'+
+          '<a href="/vehicle/?id='+encodeURIComponent(c.id)+'" class="pmx-btn pmx-btn--primary">'+PMX.t("btn_details")+'</a>'+
+          '<a href="/financing/apply/?vin='+c.id+'" class="pmx-btn pmx-btn--ghost">'+PMX.t("btn_prequal")+'</a>'+
+        '</div>'+
+      '</div></article>';
+  }
+  // Tiles de categoría con conteo real del inventario
+  function catTiles(cars){
+    var host = document.getElementById("pmxCatTiles");
+    if (!host || !PMX.categories) return;
+    var counts = {};
+    (cars||[]).forEach(function(c){ counts[c.category]=(counts[c.category]||0)+1; });
+    // Tiles grandes SOLO para categorías con stock; el resto en una fila
+    // discreta de "Próximamente" (menos carga visual, pedido del cliente).
+    var conStock = PMX.categories().filter(function(c){ return (counts[c.slug]||0)>0; });
+    var pronto  = PMX.categories().filter(function(c){ return !(counts[c.slug]||0); });
+    var tiles = conStock.map(function(c){
+      var n = counts[c.slug]||0;
+      return '<a class="pmx-cattile" href="/inventory/?cat='+c.slug+'">'+
+        '<span class="pmx-cattile__ic" aria-hidden="true">'+(PMX.catSvg?PMX.catSvg(c.slug):'')+'</span>'+
+        '<span class="pmx-cattile__name">'+PMX.catLabel(c.slug)+'</span>'+
+        '<span class="pmx-cattile__meta">'+
+          '<span class="pmx-cattile__count">'+n+' '+PMX.t("home_cats_n")+'</span>'+
+          '<span class="pmx-cattile__go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>'+
+        '</span>'+
+      '</a>';
+    }).join("");
+    var chips = pronto.length
+      ? '<div class="pmx-cats__soon"><span class="pmx-cats__soonlbl">'+PMX.t("home_cats_soonlbl")+'</span>'+
+        pronto.map(function(c){
+          return '<a class="pmx-chip" href="/inventory/?cat='+c.slug+'"><span class="pmx-cati pmx-cati--sm">'+(PMX.catSvg?PMX.catSvg(c.slug):'')+'</span> '+PMX.catLabel(c.slug)+'</a>';
+        }).join("")+'</div>'
+      : '';
+    host.innerHTML = tiles + chips;
+  }
+  window.addEventListener("pmx-lang", function(){ catTiles(CARS); });
+  function wireD1k(){
+    var a = document.getElementById('pmxD1kWa'); if(!a || !window.PMX || !PMX.waUrl) return;
+    var en = PMX.lang && PMX.lang()==='en';
+    a.href = PMX.waUrl(en ? 'Hi Promax, I want to take advantage of the $1,000 down offer'
+                          : 'Hola Promax, quiero aprovechar la oferta de $1,000 de inicial');
+  }
+  wireD1k();
+  window.addEventListener("pmx-lang", wireD1k);
+  PMX.loadInventory().then(function(cars){
+    CARS = cars;
+    catTiles(cars);
+    // Destacados: los que Jorge marca "Destacado" en el panel van SIEMPRE PRIMERO
+    // (son los carros que más quiere vender), en el ORDEN que él fije desde el panel
+    // (campo featured_order: menor = primero; vacío = después de los numerados, por
+    // año). Las tarjetas restantes se rellenan con una MEZCLA VARIADA por categoría
+    // (carros, camiones, jet ski, vans, motos…) hasta 12, como antes.
+    function renderFeatured(orderMap){
+      orderMap = orderMap || {};
+      var featd = cars.filter(function(c){ return c.featured; }).sort(function(a,b){
+        var ao = (orderMap[a.id] != null) ? orderMap[a.id] : 1e9;
+        var bo = (orderMap[b.id] != null) ? orderMap[b.id] : 1e9;
+        return (ao - bo) || ((b.year||0) - (a.year||0));
+      });
+      var byCat = {};
+      cars.forEach(function(c){ if (c.featured) return; (byCat[c.category] = byCat[c.category] || []).push(c); });
+      Object.keys(byCat).forEach(function(k){
+        byCat[k].sort(function(a,b){ return (b.year||0) - (a.year||0); });
+      });
+      var lanes = ["cars","trucks_machinery","watercraft","vans","motorcycles","utv"]
+        .filter(function(k){ return byCat[k] && byCat[k].length; })
+        .map(function(k){ return byCat[k]; });
+      var fill = [];
+      for (var round = 0; ; round++) {
+        var added = false;
+        for (var li = 0; li < lanes.length; li++) { if (lanes[li][round]) { fill.push(lanes[li][round]); added = true; } }
+        if (!added) break;
+      }
+      // Destacados SIEMPRE presentes; el resto se rellena hasta llegar a 12.
+      var need = Math.max(0, 12 - featd.length);
+      var feat = featd.concat(fill.slice(0, need));
+      var host = document.getElementById("pmxFeatured");
+      if (!feat.length) { var sec = document.querySelector(".pmx-featured"); if (sec) sec.style.display = "none"; return; }
+      host.innerHTML = feat.map(card).join("");
+      // Anima en cascada las tarjetas recién inyectadas (entra/sale con el scroll)
+      if (window.PMXAnim) PMXAnim.cards("#pmxFeatured");
+      // Flechas del carrusel (‹ ›); en celular también se desliza con el dedo
+      function slide(dir){ host.scrollBy({ left: dir * host.clientWidth * 0.85, behavior: "smooth" }); }
+      var fp = document.getElementById("pmxFeatPrev"), fn = document.getElementById("pmxFeatNext");
+      if (fp) fp.addEventListener("click", function(){ slide(-1); });
+      if (fn) fn.addEventListener("click", function(){ slide(1); });
+    }
+    // Trae el ORDEN manual de los destacados (columna opcional featured_order).
+    // Es un fetch APARTE y tolerante: si la columna aún no existe o falla, se
+    // renderiza igual (destacados primero, por año). NUNCA rompe el inventario.
+    (function(){
+      var hayFeat = cars.some(function(c){ return c.featured; });
+      var DB = (window.PROMAX && window.PROMAX.db) || {};
+      if (!hayFeat || !DB.url || !DB.anonKey) { renderFeatured({}); return; }
+      var url = DB.url.replace(/\/$/, "") + "/rest/v1/promax_inventory?select=id,featured_order&featured=eq.true";
+      fetch(url, { headers: { apikey: DB.anonKey, Authorization: "Bearer " + DB.anonKey } })
+        .then(function(r){ return r.ok ? r.json() : []; })
+        .then(function(rows){ var m = {}; (rows||[]).forEach(function(x){ m[x.id] = x.featured_order; }); renderFeatured(m); })
+        .catch(function(){ renderFeatured({}); });
+    })();
+  });
+})();
+
+/* Invitación a ver los videos: aparece tras ~30s de interacción en el home,
+   una sola vez por sesión, y solo si el usuario aún no llegó a la sección. */
+(function(){
+  var KEY = "pmx_vidinvite";
+  var el = document.getElementById("pmxVInvite");
+  var target = document.getElementById("pmxVideos");
+  if (!el || !target) return;
+  try { if (sessionStorage.getItem(KEY)) return; } catch(e){}
+
+  var secs = 0, interacted = false, shown = false, timer = null;
+  function seen(){ var r = target.getBoundingClientRect(); return r.top < window.innerHeight * 0.6; }
+  function remember(){ try { sessionStorage.setItem(KEY, "1"); } catch(e){} }
+  function stop(){ if (timer) { clearInterval(timer); timer = null; } }
+
+  function dismiss(){
+    el.classList.remove("is-open");
+    setTimeout(function(){ el.hidden = true; }, 320);
+    remember();
+  }
+  function show(){
+    if (shown) return; shown = true; stop();
+    if (seen()) { remember(); return; }            // ya vio los videos: no molestar
+    if (window.PMX){ var x = el.querySelector(".pmx-vinvite__x"); if (x) x.setAttribute("aria-label", PMX.t("vid_invite_close")); }
+    el.hidden = false;
+    requestAnimationFrame(function(){ el.classList.add("is-open"); });
+  }
+
+  el.querySelector(".pmx-vinvite__x").addEventListener("click", dismiss);
+  el.querySelector(".pmx-vinvite__cta").addEventListener("click", function(){
+    dismiss();
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+    target.classList.add("pmx-vid-glow");
+    setTimeout(function(){ target.classList.remove("pmx-vid-glow"); }, 2300);
+  });
+
+  ["scroll","mousemove","keydown","touchstart","pointerdown","click"].forEach(function(ev){
+    window.addEventListener(ev, function(){ interacted = true; }, { once:true, passive:true });
+  });
+  timer = setInterval(function(){
+    if (document.hidden || !interacted) return;     // solo cuenta tiempo activo y visible
+    if (++secs >= 30) show();
+  }, 1000);
+})();
+
+/* Carrusel del inicio: numerado, bilingüe (ES/EN) y automático */
+(function(){
+  var track = document.getElementById('pmxHeroTrack');
+  var dotsWrap = document.getElementById('pmxHeroDots');
+  var hero = document.getElementById('pmxHero');
+  if (!track || !dotsWrap || !hero) return;
+  // Los slides SOLO-PC se ocultan por CSS en pantallas chicas: el carrusel cuenta
+  // unicamente los VISIBLES (asi los puntitos y el desplazamiento siempre cuadran)
+  // y se recalcula al girar el telefono o cambiar el tamano de la ventana.
+  var all = [].slice.call(track.querySelectorAll('.pmx-hero2__slide'));
+  var n = 0, i = 0, timer = null, dots = [];
+
+  function isVisible(el){
+    return window.getComputedStyle ? window.getComputedStyle(el).display !== 'none' : true;
+  }
+  function hydrate(el){
+    // Un slide que estaba oculto (solo-PC) puede volverse visible al agrandar la
+    // ventana: recien entonces le damos su foto (no gastamos datos en celular).
+    var img = el.querySelector('img');
+    if (!img || img.getAttribute('src')) return;
+    var l = 'es'; try { if (localStorage.getItem('pmx_lang') === 'en') l = 'en'; } catch (e) {}
+    var m = window.matchMedia && window.matchMedia('(max-width:768px)').matches;
+    var ar = m ? (img.getAttribute('data-ar-m') || img.getAttribute('data-ar')) : img.getAttribute('data-ar');
+    if (ar) img.style.aspectRatio = 'auto ' + ar;
+    var src = (m ? img.getAttribute('data-' + l + '-m') : null) || img.getAttribute('data-' + l);
+    if (src) img.src = src;
+  }
+  function build(){
+    var vis = all.filter(isVisible);
+    vis.forEach(hydrate);
+    n = vis.length;
+    dotsWrap.innerHTML = '';
+    for (var d = 0; d < n; d++) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.textContent = String(d + 1);
+      b.setAttribute('aria-label', 'Ir a la imagen ' + (d + 1));
+      (function(idx){ b.addEventListener('click', function(){ go(idx); start(); }); })(d);
+      dotsWrap.appendChild(b);
+    }
+    dots = dotsWrap.querySelectorAll('button');
+    if (i >= n) i = 0;
+    go(i);
+  }
+
+  function go(idx){
+    if (!n) return;
+    i = (idx + n) % n;
+    track.style.transform = 'translateX(-' + (i * 100) + '%)';
+    for (var k = 0; k < dots.length; k++) dots[k].classList.toggle('is-on', k === i);
+  }
+  function start(){ if (timer) clearInterval(timer); timer = setInterval(function(){ go(i + 1); }, 3500); }
+  // (El cambio de idioma/tamaño de las imágenes lo maneja site.js de forma
+  //  centralizada y SIN pantallazo — applyHeroImgs con precarga; aquí ya no.)
+  hero.addEventListener('mouseenter', function(){ if (timer) clearInterval(timer); });
+  hero.addEventListener('mouseleave', start);
+  // Tocar el póster abre WhatsApp anunciando que viene de la web (pedido del cliente)
+  track.style.cursor = 'pointer';
+  track.addEventListener('click', function(){
+    var en = window.PMX && PMX.lang && PMX.lang() === 'en';
+    var msg = en ? 'Hi Promax, I saw your website and I want more information'
+                 : 'Hola Promax, vi su página web y quiero más información';
+    if (window.PMX && PMX.waUrl) window.open(PMX.waUrl(msg), '_blank', 'noopener');
+  });
+  build(); start();
+  // Al rotar el telefono o cambiar el tamano de la ventana, recontar (con calma).
+  var rz = null;
+  window.addEventListener('resize', function(){
+    if (rz) clearTimeout(rz);
+    rz = setTimeout(function(){ var vis = all.filter(isVisible).length; if (vis !== n) build(); }, 200);
+  });
+})();
+
+/* (feed 'en vivo' retirado a pedido del cliente) */
+
+/* Órbita de marcas: logos que orbitan suavemente y reaccionan al scroll (estilo Specter) */
+(function(){
+  var stage = document.getElementById('pmxOrbit');
+  if (!stage) return;
+  var BRANDS = [
+    {img:'/assets/img/brands/toyota.png', n:'Toyota'},
+    {img:'/assets/img/brands/honda.png', n:'Honda'},
+    {img:'/assets/img/brands/ford.png', n:'Ford'},
+    {img:'/assets/img/brands/chevrolet.png', n:'Chevrolet'},
+    {img:'/assets/img/brands/hyundai.png', n:'Hyundai'},
+    {img:'/assets/img/brands/kia.png', n:'Kia'},
+    {img:'/assets/img/brands/nissan.png', n:'Nissan'},
+    {img:'/assets/img/brands/bmw.png', n:'BMW'},
+    {img:'/assets/img/brands/mazda.png', n:'Mazda'},
+    {img:'/assets/img/brands/jeep.png', n:'Jeep'},
+    {img:'/assets/img/brands/lexus.png', n:'Lexus'},
+    {img:'/assets/img/brands/subaru.png', n:'Subaru'}
+  ];
+  var outer = BRANDS.slice(0,7), inner = BRANDS.slice(7);
+  var badges = [];
+  function add(b, ring, base){
+    var w = document.createElement('div'); w.className = 'pmx-orbit__badge';
+    var inr = document.createElement('div'); inr.className = 'pmx-orbit__badgein';
+    // Sin URL de logo (CDN viejo suspendido): chip de TEXTO directo, sin request.
+    if (!b.img) { inr.innerHTML = '<span>'+b.n+'</span>'; }
+    else {
+      var img = document.createElement('img'); img.src = b.img; img.alt = b.n; img.loading = 'lazy';
+      img.onerror = function(){ inr.innerHTML = '<span>'+b.n+'</span>'; };
+      inr.appendChild(img);
+    }
+    w.appendChild(inr); stage.appendChild(w);
+    badges.push({ w:w, inr:inr, ring:ring, base:base });
+  }
+  outer.forEach(function(b,i){ add(b, 'out', (360/outer.length)*i); });
+  inner.forEach(function(b,i){ add(b, 'in', (360/inner.length)*i + 30); });
+  var Aout = 0, Ain = 20;
+  function layout(){
+    var R = stage.offsetWidth/2, Ro = R*0.92, Ri = R*0.64;
+    for (var i=0;i<badges.length;i++){
+      var bd = badges[i], a = bd.base + (bd.ring==='out'?Aout:Ain), r = bd.ring==='out'?Ro:Ri;
+      bd.w.style.transform = 'translate(-50%,-50%) rotate('+a+'deg) translateY(-'+r+'px)';
+      bd.inr.style.transform = 'rotate('+(-a)+'deg)';
+    }
+  }
+  var RM = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  if (RM){ layout(); window.addEventListener('resize', layout); return; }
+  var lastY = window.pageYOffset||0, raf = null, running = false;
+  function frame(){
+    var y = window.pageYOffset||0, dv = y-lastY; lastY = y;
+    if (dv>40) dv=40; else if (dv<-40) dv=-40;
+    Aout += 0.05 + dv*0.05;
+    Ain  -= 0.07 + dv*0.06;
+    layout();
+    raf = requestAnimationFrame(frame);
+  }
+  function inView(){ var r = stage.getBoundingClientRect(); return r.bottom>0 && r.top<(window.innerHeight||0); }
+  function start(){ if (running) return; running = true; lastY = window.pageYOffset||0; raf = requestAnimationFrame(frame); }
+  function stop(){ running = false; if (raf) cancelAnimationFrame(raf); raf = null; }
+  layout();
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(function(es){ es.forEach(function(e){ e.isIntersecting ? start() : stop(); }); }, { threshold: 0.04 }).observe(stage);
+  } else { start(); }
+  document.addEventListener('visibilitychange', function(){ if (document.hidden) stop(); else if (inView()) start(); });
+})();
+
+/* Reseñas en movimiento: dos filas de tarjetas que se deslizan sin parar (estilo Specter) */
+(function(){
+  var host = document.getElementById('pmxRevMar');
+  if (!host) return;
+  function lang(){ return (window.PMX && PMX.lang && PMX.lang()) || 'es'; }
+  var VERIF = { es:'Cliente verificado', en:'Verified customer' };
+  var R = [
+    {n:'Maricela I.', c:'#A70200', city:'Miami, FL', es:'Me explicaron todo el financiamiento con paciencia y sin presión. Salí con mi carro el mismo día entendiendo cada pago.', en:'They explained all the financing patiently and with no pressure. I drove home the same day understanding every payment.'},
+    {n:'Carlos R.', c:'#15803d', city:'Doral, FL', es:'Tenía miedo por mi crédito, pero me ayudaron a calificar. Todo transparente, sin cargos escondidos.', en:'I was worried about my credit, but they helped me qualify. Everything transparent, no hidden fees.'},
+    {n:'Ana L.', c:'#2563eb', city:'Hialeah, FL', es:'Atención de primera en español. Me consiguieron justo el carro que buscaba a buen precio.', en:'First-class service in Spanish. They found the exact car I wanted at a great price.'},
+    {n:'José M.', c:'#b45309', city:'Kendall, FL', es:'Apliqué con ITIN y me aprobaron rápido. El equipo siempre disponible para mis dudas.', en:'I applied with ITIN and got approved fast. The team was always available for my questions.'},
+    {n:'Gabriela S.', c:'#7c3aed', city:'Orlando, FL', es:'Me sentí acompañada en todo el proceso. Mi SUV quedó hermosa y al precio justo.', en:'I felt supported through the whole process. My SUV is beautiful and fairly priced.'},
+    {n:'Luis A.', c:'#0891b2', city:'Tampa, FL', es:'Pago inicial bajo y me llevé el carro el mismo día. Proceso clarísimo, sin letra chiquita.', en:'Low down payment and I took the car the same day. Crystal-clear process, no fine print.'},
+    {n:'Daniela P.', c:'#be185d', city:'Homestead, FL', es:'Buscaba una Toyota y me consiguieron una impecable. Honestos y muy profesionales.', en:'I wanted a Toyota and they found me a flawless one. Honest and very professional.'},
+    {n:'Roberto C.', c:'#c2410c', city:'Sweetwater, FL', es:'Me ayudaron a construir crédito con mi primer carro financiado. ¡Gracias Promax!', en:'They helped me build credit with my first financed car. Thank you Promax!'},
+    {n:'Yarisbeth G.', c:'#0f766e', city:'Miami Lakes, FL', es:'La mejor atención, en español y sin presión. Recomiendo Promax a toda mi familia.', en:'The best service, in Spanish and pressure-free. I recommend Promax to my whole family.'},
+    {n:'Andrés V.', c:'#4338ca', city:'Fort Myers, FL', es:'Me asesoraron paso a paso para llevar mi camioneta a Venezuela. Todo claro y cumplido.', en:'They guided me step by step to take my truck to Venezuela. Everything clear and on time.'}
+  ];
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]; }); }
+  function card(r){
+    var L = lang(), meta = (VERIF[L]||VERIF.es) + ' · ' + r.city;
+    return '<article class="pmx-rev">'+
+      '<div class="pmx-rev__stars">★★★★★</div>'+
+      '<p class="pmx-rev__text">' + esc(r[L]||r.es) + '</p>'+
+      '<div class="pmx-rev__by"><span class="pmx-rev__av" style="background:'+r.c+'">'+esc(r.n.charAt(0))+'</span>'+
+      '<span class="pmx-rev__meta"><strong>'+esc(r.n)+'</strong><small>'+esc(meta)+'</small></span></div>'+
+      '</article>';
+  }
+  function build(){
+    var a = R.slice(0,5).map(card).join(''), b = R.slice(5).map(card).join('');
+    host.innerHTML =
+      '<div class="pmx-revmar__row pmx-revmar__row--a">'+a+a+'</div>'+
+      '<div class="pmx-revmar__row pmx-revmar__row--b">'+b+b+'</div>';
+  }
+  build();
+  window.addEventListener('pmx-lang', build);
+})();
+
+/* Cinta de confianza: logos de aliados + sellos, en movimiento continuo (estilo Specter) */
+(function(){
+  var host = document.getElementById('pmxTrustMar');
+  if (!host) return;
+  function lang(){ return (window.PMX && PMX.lang && PMX.lang()) || 'es'; }
+  var check = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+  var LOGOS = [
+    {img:'/assets/img/banks/ally.png', n:'Ally'},
+    {img:'/assets/img/banks/capitalone.png', n:'Capital One'},
+    {img:'/assets/img/banks/chase.png', n:'Chase'},
+    {img:'/assets/img/banks/wellsfargo.png', n:'Wells Fargo'},
+    {img:'/assets/img/banks/santander.png', n:'Santander'},
+    {img:'/assets/img/banks/servicecu.webp', n:'Service CU'}
+  ];
+  var SEALS = [
+    {es:'Google 4.9 ★', en:'Google 4.9 ★'},
+    {es:'Aceptamos ITIN', en:'ITIN accepted'},
+    {es:'Sin SSN', en:'No SSN required'},
+    {es:'Entrega el mismo día', en:'Same-day delivery'},
+    {es:'Vehículos inspeccionados', en:'Inspected vehicles'},
+    {es:'Atención en español', en:'Service in Spanish'}
+  ];
+  function esc(v){ return String(v).replace(/[&<>"]/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]; }); }
+  function logoChip(l){
+    if (!l.img) return '<span class="pmx-tchip"><span class="pmx-tchip__name">'+esc(l.n)+'</span></span>';
+    return '<span class="pmx-tchip"><img src="'+l.img+'" alt="'+esc(l.n)+'" data-name="'+esc(l.n)+'" loading="lazy"></span>';
+  }
+  function sealChip(s){ var L = lang(); return '<span class="pmx-tchip"><span class="pmx-tchip__seal">'+check+'<span>'+esc(s[L]||s.es)+'</span></span></span>'; }
+  function build(){
+    var items = [], m = Math.max(LOGOS.length, SEALS.length), i;
+    for (i=0;i<m;i++){ if (LOGOS[i]) items.push(logoChip(LOGOS[i])); if (SEALS[i]) items.push(sealChip(SEALS[i])); }
+    var html = items.join('');
+    host.innerHTML = '<div class="pmx-trustmar__row">'+html+html+'</div>';
+    host.querySelectorAll('.pmx-tchip img').forEach(function(img){
+      img.onerror = function(){ var sp = document.createElement('span'); sp.className = 'pmx-tchip__name'; sp.textContent = img.getAttribute('data-name'); img.replaceWith(sp); };
+      if (img.complete && img.naturalWidth === 0) img.onerror();
+    });
+  }
+  build();
+  window.addEventListener('pmx-lang', build);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catálogo | Promax Auto Broker</title>
+<meta name="description" content="Explora el catálogo de Promax Auto Broker: carros, camiones y maquinaria, vans, motos, UTV y motos de agua. Filtra por categoría, marca, precio y año. Financiamiento flexible.">
+<!-- Open Graph / Twitter (vista previa al compartir en WhatsApp, redes) -->
+<link rel="canonical" href="https://www.promaxautobroker.com/inventory/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Promax Auto Broker">
+<meta property="og:locale" content="es_US">
+<meta property="og:title" content="Inventario | Promax Auto Broker">
+<meta property="og:description" content="Explora el inventario de Promax Auto Broker. Filtra por marca, precio, año y más. Vehículos inspeccionados con financiamiento flexible.">
+<meta property="og:url" content="https://www.promaxautobroker.com/inventory/">
+<meta property="og:image" content="https://www.promaxautobroker.com/assets/img/promax-og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Promax Auto Broker">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Inventario | Promax Auto Broker">
+<meta name="twitter:description" content="Explora el inventario de Promax Auto Broker. Filtra por marca, precio, año y más. Vehículos inspeccionados con financiamiento flexible.">
+<meta name="twitter:image" content="https://www.promaxautobroker.com/assets/img/promax-og.png">
+<script src="/assets/js/config.js"></script>
+<script>/* Arranque TEMPRANO del inventario: el fetch sale AHORA, en paralelo con
+   CSS/fuentes; data.js (fetchPage) reutiliza esta respuesta y la primera visita
+   gana 200-500ms. ⚠️ La consulta debe ser IDÉNTICA a la de assets/js/data.js
+   (SLIM + gallery->3 + limit/offset); si cambias una, cambia la otra. */
+(function(){try{
+  var ep=(window.PROMAX||{}).endpoints||{};
+  if(ep.inventorySource!=="api"||!ep.inventoryApiUrl)return;
+  var SLIM="id,stock,category,year,make,model,trim,body_type,price,msrp,mileage,fuel,transmission,drivetrain,condition,badge,featured,cover_image,created_at";
+  var u=ep.inventoryApiUrl;
+  u=(u.indexOf("select=*")>-1?u.replace("select=*","select="+SLIM):u+"&select="+SLIM)+"&gallery->3=not.is.null"+"&limit=1000&offset=0";
+  window.__pmxEarlyInv={u:u,p:fetch(u,{headers:{apikey:ep.inventoryApiKey,Authorization:"Bearer "+ep.inventoryApiKey,Prefer:"count=exact"}}).catch(function(){return null})};
+}catch(e){}})();</script>
+<script>/* Héroe LOCAL (en el repo — regla del proyecto: nada de CDNs ajenos).
+   El preload baja la foto del primer vistazo EN PARALELO con el CSS (LCP rápido). */
+window.__pmxHero={"es":"/assets/img/heroes/inventory-es-pc.webp","en":"/assets/img/heroes/inventory-en-pc.webp","ar":"1672/941","ar-m":"1672/941"};
+(function(){var H=window.__pmxHero;if(!H)return;var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var n=document.createElement("link");n.rel="preload";n.as="image";n.setAttribute("fetchpriority","high");n.href=(m?H[l+"-m"]:0)||H[l];if(n.href)document.head.appendChild(n);})();</script>
+<link rel="preconnect" href="https://db.ucallnow.fun" crossorigin>
+<link rel="preconnect" href="https://www.hgreg.com">
+<link rel="preconnect" href="https://cfwww.hgreg.com">
+<link rel="dns-prefetch" href="https://assets.cai-media-management.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/assets/css/theme.css">
+<link rel="icon" type="image/png" href="/assets/img/favicon-256.png"><link rel="apple-touch-icon" href="/assets/img/favicon-180.png">
+<style>
+.pmx-invhero{background:#0d0f12;color:#fff;padding:0 0 22px;text-align:center;position:relative;}
+.pmx-invhero__poster{display:block;width:100%;height:auto;object-fit:contain;object-position:center;}
+/* PC: el banner llena EXACTO el primer pliegue (como el home). La foto es 16:9
+   de "zona segura": el recorte del pliegue solo se come fondo oscuro. */
+@media(min-width:769px){.pmx-invhero__poster{height:clamp(37vw,calc(100vh - var(--header-h)),56.25vw);object-fit:cover;object-position:center;}}
+.pmx-invhero::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--brand),var(--brand-2),var(--brand));}
+.pmx-invhero h1{font-size:46px;margin:14px 0 12px;letter-spacing:-1px;}
+.pmx-invhero p{font-size:17px;color:rgba(255,255,255,.85);margin:0 0 26px;}
+.pmx-invstats{display:inline-flex;gap:30px;flex-wrap:wrap;justify-content:center;margin-top:18px;}
+.pmx-invstat{display:flex;flex-direction:column;gap:4px;color:rgba(255,255,255,.7);font-size:12px;text-transform:uppercase;letter-spacing:1px;}
+.pmx-invstat strong{font-family:var(--font-head);color:var(--brand-2);font-size:26px;}
+@media(max-width:768px){.pmx-invhero h1{font-size:30px;}}
+/* top con el alto VIVO del header (plegado al escrolear): mover el top de un
+   sticky solo desliza esta barra, NO reacomoda la página (cero saltos). */
+.pmx-toolbar{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:var(--header-h-live,var(--header-h));z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.04);}
+.pmx-toolbar__in{max-width:var(--maxw);margin:0 auto;padding:14px 24px;}
+.pmx-qfs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.pmx-qf{display:inline-flex;align-items:center;gap:6px;padding:9px 15px;border:2px solid var(--line);background:#fff;border-radius:999px;font:600 13px var(--font-body);color:var(--ink);cursor:pointer;transition:all .2s;}
+.pmx-qf:hover{border-color:var(--brand);color:var(--brand);}
+.pmx-qf.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+/* Condición USADOS|NUEVOS compacta, integrada en la misma fila de filtros */
+.pmx-condtabs{display:inline-flex;gap:4px;background:#fff;border:2px solid var(--line);border-radius:999px;padding:4px;}
+.pmx-condtab{text-align:center;padding:8px 18px;border-radius:999px;font:800 13px var(--font-head);color:var(--text-muted);cursor:pointer;background:transparent;transition:all .2s;letter-spacing:.3px;border:0;}
+.pmx-qfs{align-items:center;}
+.pmx-qfs__sep{width:1px;align-self:stretch;background:var(--line);margin:0 4px;}
+#pmxVanTypes{display:inline-flex;gap:8px;}
+#pmxVanTypes .pmx-qf.active{background:var(--brand);border-color:var(--brand);}
+.pmx-sel{max-width:210px;text-transform:uppercase;}
+.pmx-sel:disabled{opacity:.55;cursor:not-allowed;}
+@media(max-width:640px){.pmx-sel{max-width:none;flex:1 1 45%;}}
+.pmx-condtab:hover{color:var(--ink);}
+.pmx-condtab.active{background:var(--brand);color:#fff;box-shadow:0 6px 16px rgba(167,2,0,.25);}
+.pmx-controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+.pmx-search{flex:1;min-width:220px;display:inline-flex;align-items:center;gap:8px;padding:0 14px;border:2px solid var(--line);border-radius:10px;background:var(--bg-soft);}
+.pmx-search:focus-within{border-color:var(--brand);background:#fff;}
+.pmx-search input{flex:1;border:0;background:transparent;padding:12px 0;font:14px var(--font-body);outline:0;}
+.pmx-sort{padding:11px 14px;border:2px solid var(--line);border-radius:10px;font:600 14px var(--font-body);cursor:pointer;background:#fff;}
+.pmx-filterbtn{display:none;align-items:center;gap:6px;padding:11px 16px;border:2px solid var(--ink);background:var(--ink);color:#fff;border-radius:10px;font:700 14px var(--font-body);cursor:pointer;}
+.pmx-filterbtn__count{background:var(--brand);color:#fff;padding:1px 7px;border-radius:999px;font-size:11px;}
+.pmx-filterbtn__count:empty{display:none;}
+.pmx-invmain{display:grid;grid-template-columns:280px 1fr;gap:30px;max-width:var(--maxw);margin:0 auto;padding:32px 24px 80px;}
+.pmx-sidebar{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px;height:fit-content;position:sticky;top:calc(var(--header-h-live,var(--header-h)) + 120px);}
+.pmx-sidebar__head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line);}
+.pmx-sidebar__head h3{margin:0;font-size:17px;display:inline-flex;gap:8px;align-items:center;}
+.pmx-sidebar__close{display:none;background:none;border:0;cursor:pointer;}
+.pmx-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+/* Chips de filtros ACTIVOS del sidebar (con ✕) — no confundir con los chips de categoría */
+#pmxChips .pmx-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;background:var(--brand-soft);color:var(--brand-dark);border:1px solid rgba(194,26,18,.3);border-radius:999px;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font-body);}
+#pmxChips .pmx-chip:hover{background:var(--brand);color:#fff;}
+/* Barra de categorías (Todo + Carros, Camiones, Vans, Motos, UTV, Motos de agua) */
+.pmx-catbar{display:flex;gap:9px;flex-wrap:nowrap;overflow-x:auto;padding:2px 2px 8px;margin-bottom:14px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.pmx-catbar::-webkit-scrollbar{display:none;}
+@media(min-width:981px){.pmx-catbar{flex-wrap:wrap;overflow:visible;justify-content:center;}}
+.pmx-clear{display:none;align-items:center;justify-content:center;gap:6px;width:100%;background:none;border:1px solid var(--line);color:var(--ink);padding:8px;border-radius:8px;font:600 13px var(--font-body);cursor:pointer;margin-bottom:14px;}
+.pmx-clear:hover{background:var(--ink);color:#fff;}
+.pmx-fg{border-bottom:1px solid var(--line-soft);padding:14px 0;}
+.pmx-fg:last-child{border-bottom:0;}
+.pmx-fg summary{cursor:pointer;font:700 14px var(--font-head);list-style:none;display:flex;justify-content:space-between;align-items:center;}
+.pmx-fg summary::-webkit-details-marker{display:none;}
+.pmx-fg summary::after{content:'+';color:var(--brand);font-size:20px;}
+.pmx-fg[open] summary::after{content:'−';}
+.pmx-fg__body{padding-top:12px;display:flex;flex-direction:column;gap:6px;max-height:230px;overflow:auto;}
+.pmx-check{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;padding:4px 6px;border-radius:6px;}
+.pmx-check:hover{background:var(--bg-soft);}
+.pmx-check input{accent-color:var(--brand);width:16px;height:16px;}
+.pmx-check span:first-of-type{flex:1;}
+.pmx-count{color:var(--text-faint);font-size:11px;}
+.pmx-range{display:flex;align-items:center;gap:8px;}
+.pmx-range input{flex:1;min-width:0;padding:9px 11px;border:1.5px solid var(--line);border-radius:8px;font:13px var(--font-body);background:var(--bg-soft);}
+.pmx-range input:focus{border-color:var(--brand);background:#fff;outline:0;}
+.pmx-results__bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+.pmx-results__bar .count strong{font-family:var(--font-head);font-size:24px;color:var(--ink);}
+.pmx-results__bar .count{color:var(--text-muted);}
+.pmx-results__bar a{color:var(--brand);font-weight:600;font-size:14px;text-decoration:none;}
+.pmx-empty{grid-column:1/-1;text-align:center;padding:70px 20px;background:#fff;border:2px dashed var(--line);border-radius:var(--radius);}
+.pmx-empty h3{font-size:22px;margin:0 0 8px;}
+.pmx-empty p{color:var(--text-muted);margin:0 0 18px;}
+.pmx-pagination{display:flex;justify-content:center;gap:6px;margin-top:32px;flex-wrap:wrap;}
+.pmx-page{min-width:38px;height:38px;padding:0 12px;border:2px solid var(--line);background:#fff;border-radius:8px;font:700 14px var(--font-body);cursor:pointer;}
+.pmx-page:hover:not(:disabled){border-color:var(--brand);}
+.pmx-page.active{background:var(--ink);color:#fff;border-color:var(--ink);}
+.pmx-page:disabled{opacity:.4;cursor:not-allowed;}
+.pmx-page--dots{border:0;cursor:default;}
+.pmx-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:60;}
+.pmx-overlay.open{display:block;}
+@media(max-width:980px){
+  .pmx-invmain{grid-template-columns:1fr;}
+  .pmx-filterbtn{display:inline-flex;}
+  .pmx-sidebar{position:fixed;top:0;left:0;bottom:0;width:320px;max-width:90vw;z-index:70;transform:translateX(-100%);transition:transform .3s;overflow:auto;border-radius:0;}
+  .pmx-sidebar.open{transform:translateX(0);}
+  .pmx-sidebar__close{display:inline-flex;}
+}
+/* Cliente: TODO el filtrado en MAYÚSCULAS (búsquedas, marcas, selecciones),
+   funciona igual en español e inglés porque es solo presentación. */
+#pmxCats button, #pmxCats a, .pmx-catbar button, .pmx-catbar a,
+.pmx-condtab, .pmx-qf, .pmx-sort, #pmxSearch,
+#pmxMake .pmx-check > span:first-of-type, #pmxBody .pmx-check > span:first-of-type,
+.pmx-fg > summary, #pmxChips .pmx-chip, .pmx-clear { text-transform: uppercase; }
+#pmxSearch::placeholder { text-transform: uppercase; }
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Inicio","item":"https://www.promaxautobroker.com/"},{"@type":"ListItem","position":2,"name":"Catálogo de vehículos","item":"https://www.promaxautobroker.com/inventory/"}]}
+</script>
+  <!-- Meta Pixel (Facebook) — ver /assets/js/meta-pixel.js -->
+  <script src="/assets/js/meta-pixel.js"></script>
+  <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=1709075950232187&ev=PageView&noscript=1"/></noscript>
+  <!-- End Meta Pixel -->
+</head>
+<body>
+
+<section class="pmx-invhero">
+  <h1 data-i18n="inv_title" style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">Encuentra tu vehículo ideal</h1>
+  <!-- Sin src fijo: el mini-script elige la variante correcta (idioma + PC/celular)
+       ANTES del primer pintado; data-ar reserva el alto (sin saltos al cargar). -->
+  <img class="pmx-invhero__poster" alt="Promax Auto Broker — Encuentra tu vehículo ideal" loading="eager" fetchpriority="high"><script>(function(){var s=document.currentScript,i=s.previousElementSibling,H=window.__pmxHero;if(H&&!i.getAttribute("data-es")){["es","en","es-m","en-m","ar","ar-m","ar-m-es"].forEach(function(k){if(H[k])i.setAttribute("data-"+k,H[k]);});}var l="es";try{if(localStorage.getItem("pmx_lang")==="en")l="en"}catch(e){}var m=window.matchMedia&&window.matchMedia("(max-width:768px)").matches;var u=(m?i.getAttribute("data-"+l+"-m"):0)||i.getAttribute("data-"+l);var h=i.closest("section");if(u){var a=m?((l==="es"&&i.getAttribute("data-ar-m-es"))||i.getAttribute("data-ar-m")):i.getAttribute("data-ar");if(a)i.style.aspectRatio="auto "+a;i.onerror=function(){if(h)h.classList.remove("has-img");i.style.display="none";};i.src=u;if(h)h.classList.add("has-img");}else{i.style.display="none";}s.remove();})();</script>
+  <div class="pmx-invstats">
+    <span class="pmx-invstat"><strong id="pmxStatCount">0</strong> <span data-i18n="inv_available">Disponibles</span></span>
+    <span class="pmx-invstat"><strong>4.9★</strong> <span data-i18n="inv_rating">Calificación</span></span>
+    <span class="pmx-invstat"><strong>+500</strong> <span data-i18n="inv_sold">Vendidos</span></span>
+  </div>
+</section>
+
+<div class="pmx-toolbar">
+  <div class="pmx-toolbar__in">
+    <div class="pmx-catbar" id="pmxCats" role="tablist" aria-label="Categorías"></div>
+    <!-- Una sola fila: condición (USADOS | NUEVOS, sin "todos") + filtros rápidos.
+         Pedido del cliente: menos renglones y sin la opción "TODOS". -->
+    <div class="pmx-qfs">
+      <div class="pmx-condtabs" id="pmxCondTabs">
+        <button class="pmx-condtab" data-cond="used" data-i18n="cond_used">Usados</button>
+        <button class="pmx-condtab" data-cond="new" data-i18n="cond_new">Nuevos</button>
+      </div>
+      <span class="pmx-qfs__sep" aria-hidden="true"></span>
+      <button class="pmx-qf" data-quick="under-20k" data-i18n="qf_20">Bajo $20k</button>
+      <button class="pmx-qf" data-quick="under-10k" data-i18n="qf_10">Bajo $10k</button>
+      <button class="pmx-qf" data-quick="suv" data-i18n="qf_suv">SUVs</button>
+      <button class="pmx-qf" data-quick="sedan" data-i18n="qf_sedan">Sedanes</button>
+      <button class="pmx-qf" data-quick="truck" data-i18n="qf_truck">Camionetas</button>
+      <span id="pmxVanTypes" style="display:none">
+        <button class="pmx-qf" data-vantype="work" data-i18n="vt_work">Vans de trabajo</button>
+        <button class="pmx-qf" data-vantype="pass" data-i18n="vt_pass">Vans de pasajeros</button>
+      </span>
+    </div>
+    <div class="pmx-controls">
+      <!-- Búsqueda estilo concesionario: MARCA -> MODELO (pedido del cliente) -->
+      <select class="pmx-sort pmx-sel" id="pmxMakeSel" aria-label="Marca"></select>
+      <select class="pmx-sort pmx-sel" id="pmxModelSel" aria-label="Modelo" disabled></select>
+      <label class="pmx-search"><span class="material-icons-outlined" style="color:#9a9a9a">search</span><input type="search" id="pmxSearch" data-i18n-ph="inv_search_ph" placeholder="Buscar por marca, modelo, año..."></label>
+      <select class="pmx-sort" id="pmxSort">
+        <option value="new" data-i18n="sort_new">Variado</option>
+        <option value="price-asc" data-i18n="sort_pa">Precio: menor a mayor</option>
+        <option value="price-desc" data-i18n="sort_pd">Precio: mayor a menor</option>
+        <option value="mileage-asc" data-i18n="sort_ma">Millaje: menor a mayor</option>
+        <option value="year-desc" data-i18n="sort_yd">Año: nuevo a viejo</option>
+      </select>
+      <button class="pmx-filterbtn" id="pmxFilterBtn"><span class="material-icons-outlined" style="font-size:18px">tune</span><span data-i18n="inv_filters">Filtros</span> <span class="pmx-filterbtn__count" id="pmxFilterCount"></span></button>
+    </div>
+  </div>
+</div>
+
+<div class="pmx-invmain">
+  <aside class="pmx-sidebar" id="pmxSidebar">
+    <div class="pmx-sidebar__head">
+      <h3><span class="material-icons-outlined" style="color:var(--brand)">tune</span> <span data-i18n="inv_refine">Refinar búsqueda</span></h3>
+      <button class="pmx-sidebar__close" id="pmxSidebarClose"><span class="material-icons-outlined">close</span></button>
+    </div>
+    <div class="pmx-chips" id="pmxChips"></div>
+    <button class="pmx-clear" id="pmxClear"><span class="material-icons-outlined" style="font-size:16px">delete_sweep</span><span data-i18n="inv_clear">Limpiar filtros</span></button>
+    <!-- La MARCA y el MODELO ahora se eligen arriba (selects estilo concesionario) -->
+    <details class="pmx-fg" open><summary data-i18n="f_body">Carrocería</summary><div class="pmx-fg__body" id="pmxBody"></div></details>
+    <details class="pmx-fg"><summary data-i18n="f_price">Precio</summary><div class="pmx-fg__body"><div class="pmx-range"><input type="number" id="pmxPriceMin" data-i18n-ph="ph_min" placeholder="Mín"><span>—</span><input type="number" id="pmxPriceMax" data-i18n-ph="ph_max" placeholder="Máx"></div></div></details>
+    <details class="pmx-fg"><summary data-i18n="f_year">Año</summary><div class="pmx-fg__body"><div class="pmx-range"><input type="number" id="pmxYearMin" data-i18n-ph="ph_from" placeholder="Desde"><span>—</span><input type="number" id="pmxYearMax" data-i18n-ph="ph_to" placeholder="Hasta"></div></div></details>
+    <details class="pmx-fg"><summary data-i18n="f_mileage">Millaje</summary><div class="pmx-fg__body"><div class="pmx-range"><input type="number" id="pmxMileageMax" data-i18n-ph="ph_maxmi" placeholder="Millas máx"></div></div></details>
+  </aside>
+
+  <div class="pmx-results" id="pmxResults">
+    <div class="pmx-results__bar">
+      <span class="count"><strong id="pmxCount">0</strong> <span data-i18n="inv_match">vehículos</span></span>
+      <a href="/contact/"><span data-i18n="inv_help">¿Necesitas ayuda? Escríbenos</span></a>
+    </div>
+    <!-- min-height inline: reserva el alto mientras cargan los carros para que
+         el pie de página no suba y luego baje de golpe (cero saltos). -->
+    <div class="pmx-vgrid" id="pmxGrid" style="min-height:440px"><div class="pmx-skel"></div><div class="pmx-skel"></div><div class="pmx-skel"></div><div class="pmx-skel"></div><div class="pmx-skel"></div><div class="pmx-skel"></div><div class="pmx-skel"></div><div class="pmx-skel"></div></div>
+    <div class="pmx-pagination" id="pmxPagination"></div>
+  </div>
+</div>
+<div class="pmx-overlay" id="pmxOverlay"></div>
+
+<script src="/assets/js/config.js"></script>
+<script src="/assets/js/site.js"></script>
+<script src="/assets/js/data.js"></script>
+<script src="/assets/js/inventory.js"></script>
+</body>
+</html>

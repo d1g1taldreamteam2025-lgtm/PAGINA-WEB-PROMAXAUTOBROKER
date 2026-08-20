@@ -1,0 +1,4 @@
+# Archivos internos que NO deben publicarse en el sitio
+docs/
+sql/
+**/*.py

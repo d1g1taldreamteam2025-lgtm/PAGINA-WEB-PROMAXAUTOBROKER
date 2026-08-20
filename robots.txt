@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /referrals/
+Disallow: /admin/
+
+Sitemap: https://www.promaxautobroker.com/sitemap.xml
+Sitemap: https://www.promaxautobroker.com/sitemap-vehicles.xml
