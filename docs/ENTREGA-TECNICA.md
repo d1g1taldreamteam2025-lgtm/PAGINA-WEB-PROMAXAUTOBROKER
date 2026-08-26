@@ -27,8 +27,8 @@ inventario, los leads con nombres y teléfonos de clientes, y los datos del sort
 
 | Servicio | Host actual | Qué sostiene |
 |---|---|---|
-| Base de datos + Storage | `db.ucallnow.fun` (Supabase self-hosted) | Inventario (521 vehículos), leads, analytics, sorteo, login del panel, 181 fotos |
-| Webhook de leads | `n8n-ucallnow.ucallnow.fun` | Aviso por WhatsApp y correo al vendedor |
+| Base de datos + Storage | Supabase self-hosted (servidor de la agencia) | Inventario (521 vehículos), leads, analytics, sorteo, login del panel, 181 fotos |
+| Webhook de leads | n8n (servidor de la agencia) | Aviso por WhatsApp y correo al vendedor |
 | Gateway de WhatsApp | Evolution API interno de la agencia | Envío del mensaje de aviso |
 
 El propio `config.js` anota que *"reutiliza el mismo servidor de Family Key"*: es
@@ -345,7 +345,7 @@ Secuencia obligatoria por dependencias. **Total estimado: 25–37 horas (4–5 d
 ### Paso 3 — Fotos
 
 Subir las 181 fotos al bucket nuevo y correr un `UPDATE` que reemplace
-`https://db.ucallnow.fun/storage/v1/object/public/promax/` por la URL nueva en `cover_image`
+la ruta de fotos anterior (ya reemplazada por `/assets/img/inventory/…` en el export SQL) por la URL en `cover_image`
 y dentro del jsonb `gallery` de esos 16 vehículos.
 
 ### Paso 4 — Las 17 referencias exactas

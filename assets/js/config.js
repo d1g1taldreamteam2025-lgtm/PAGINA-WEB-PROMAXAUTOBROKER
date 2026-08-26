@@ -87,13 +87,13 @@ window.PROMAX = {
   /* ---------- INTEGRACIONES / BACKEND ---------- */
   endpoints: {
     // Webhook n8n que recibe los leads y los envía por WhatsApp/email (ver /automation).
-    leadsWebhook: "https://n8n-ucallnow.ucallnow.fun/webhook/promax-leads",
+    leadsWebhook: "",
 
     // Inventario EN VIVO desde Supabase (lo controla el panel admin). Si la tabla
     // está vacía o falla, la web usa /assets/data/inventory.json como respaldo.
     inventorySource: "api",
-    inventoryApiUrl: "https://db.ucallnow.fun/rest/v1/promax_inventory?select=*&status=eq.available&order=created_at.desc",
-    inventoryApiKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0",
+    inventoryApiUrl: "REEMPLAZAR_CON_TU_SUPABASE/rest/v1/promax_inventory?select=*&status=eq.available&order=created_at.desc",
+    inventoryApiKey: "REEMPLAZAR_CON_TU_SUPABASE_ANON_KEY",
 
     // Google Apps Script Web App para REFERIDOS -> Google Sheet.
     referralsScriptUrl: "",                          // <-- CONFIRMAR
@@ -108,8 +108,8 @@ window.PROMAX = {
   /* ---------- BASE DE DATOS (Supabase) — leads + panel admin ---------- */
   // Reutiliza el mismo servidor de Family Key, con tablas propias de Promax.
   db: {
-    url: "https://db.ucallnow.fun",
-    anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0",
+    url: "REEMPLAZAR_CON_TU_SUPABASE_URL",
+    anonKey: "REEMPLAZAR_CON_TU_SUPABASE_ANON_KEY",
     inquiriesTable: "promax_inquiries",
   },
 
